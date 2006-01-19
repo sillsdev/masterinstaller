@@ -154,7 +154,7 @@
 	<tr>
 	<td align="right">Title:</td>
 	<td><input id="OverallTitle" type="text" onselect="InputTextSelected(this);" size="30" onfocus="this.select();" title="Overall title of master installer" onchange="InvalidateCompiledFiles();"/></td>
-	<script type="text/javascript">document.getElementById("OverallTitle").value="<xsl:value-of select="OverallTitle"/>"</script>
+	<script type="text/javascript">document.getElementById("OverallTitle").value="<xsl:value-of select="Title"/>"</script>
 	</tr>
 	<tr>
 	<td align="right">Product selection dialog subtitle:</td>
@@ -177,18 +177,18 @@
 		<script type="text/javascript">document.getElementById("BackgroundBmp").value="<xsl:value-of select="ListBackground"/>"</script>
 		<br/>
 		X-offest:&#160;<input id="OffsetX" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset background bitmap of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("OffsetX").value="0"</script>
+		<script type="text/javascript">document.getElementById("OffsetX").value="<xsl:value-of select="ListBackground/@OffsetX"/>"</script>
 		&#160;&#160;Y-offset:&#160;<input id="OffsetY" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of vertical pixels (positive = down) to offset background bitmap of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("OffsetY").value="0"</script>
+		<script type="text/javascript">document.getElementById("OffsetY").value="<xsl:value-of select="ListBackground/@OffsetY"/>"</script>
 		<br/>
 		Blend left:&#160;<input id="BlendLeft" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at left of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("BlendLeft").value="100"</script>
+		<script type="text/javascript">document.getElementById("BlendLeft").value="<xsl:value-of select="ListBackground/@BlendLeft"/>"</script>
 		&#160;&#160;Blend right:&#160;<input id="BlendRight" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at right of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("BlendRight").value="100"</script>
+		<script type="text/javascript">document.getElementById("BlendRight").value="<xsl:value-of select="ListBackground/@BlendRight"/>"</script>
 		&#160;&#160;Blend top:&#160;<input id="BlendTop" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at top of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("BlendTop").value="100"</script>
+		<script type="text/javascript">document.getElementById("BlendTop").value="<xsl:value-of select="ListBackground/@BlendTop"/>"</script>
 		&#160;&#160;Blend bottom:&#160;<input id="BlendBottom" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at bottom of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("BlendBottom").value="100"</script>
+		<script type="text/javascript">document.getElementById("BlendBottom").value="<xsl:value-of select="ListBackground/@BlendBottom"/>"</script>
 	</td>
 	</tr>
 	<tr>
@@ -2147,6 +2147,20 @@ function ApplyCheckBoxSetting(xmlDoc, ElementId, XPath)
 // Make changes to an XML documemt, according to user's settings:
 function ApplyUserSettings(xmlDoc)
 {
+	// Settings from derived paths:
+	var ProductsPathNode = xmlDoc.selectSingleNode("/MasterInstaller/AutoConfigure/ProductsPath");
+	if (ProductsPathNode)
+	{
+		ProductsPathNode.removeAttribute("ParallelProductsFolder");
+		ProductsPathNode.text = GetSourceRelativePathPrepend();
+	}
+	var CDsPathNode = xmlDoc.selectSingleNode("/MasterInstaller/AutoConfigure/CDsPath");
+	if (CDsPathNode)
+	{
+		CDsPathNode.removeAttribute("ParallelCDsFolder");
+		CDsPathNode.text = GetCdImageRelativePathPrepend();
+	}
+
 	// Settings from Project Setup:
 	ApplyEditBoxSetting(xmlDoc, "CppFilePath", "/MasterInstaller/AutoConfigure/CppFilePath");
 	ApplyEditBoxSetting(xmlDoc, "CdImagePath", "/MasterInstaller/AutoConfigure/CdImagePath");

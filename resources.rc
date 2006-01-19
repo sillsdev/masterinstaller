@@ -1,0 +1,378 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAIN_ICON           ICON                    "Setup.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AVI
+//
+
+ANIMATIONFILE           AVI                     "Active.avi"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Auto-generated resources:
+//
+#include "AutoResources.rc"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG_DISPLAY_REPORT DIALOGEX 0, 0, 362, 203
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "&OK",IDOK,156,182,50,14
+    EDITTEXT        IDC_EDIT_REPORT,7,68,348,107,ES_MULTILINE | 
+                    ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
+    CTEXT           "",IDC_STATIC_REPORT_INTRO,7,7,348,60
+    PUSHBUTTON      "More details...",IDC_BUTTON_MORE_DETAILS,7,182,50,14
+END
+
+IDD_DIALOG_MAIN_PRODUCT_SELECT DIALOGEX 0, 0, 400, 60
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,146,39,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,204,39,50,14
+    PUSHBUTTON      "",IDC_BUTTON_MAIN_HELP,266,39,65,14
+	PUSHBUTTON      "",IDC_BUTTON_TERMS,69,39,65,14
+    PUSHBUTTON      "Re-enter Key...",IDC_BUTTON_REENTER_KEY,5,39,56,14
+    CTEXT           "Please select which products you would like to install.",
+                    IDC_STATIC,7,7,386,10
+END
+
+IDD_DIALOG_STATUS DIALOGEX 0, 0, 371, 67
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,133,46,105,14
+    PUSHBUTTON      "Continue",IDC_BUTTON_CONTINUE,20,44,105,16
+    CTEXT           "",IDC_STATIC_STATUS_MAIN,7,7,285,16
+    CTEXT           "",IDC_STATIC_STATUS_SUB,7,24,285,8
+    CONTROL         "",IDC_ANIMATE_STATUS,"SysAnimate32",ACS_CENTER | 
+                    ACS_AUTOPLAY,299,7,65,48
+    CTEXT           "",IDC_STATIC_STATUS_3RD,7,33,283,8
+END
+
+IDD_DIALOG_NO_ANIMATION_STATUS DIALOGEX 0, 0, 304, 66
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,99,46,105,14
+    CTEXT           "",IDC_STATIC_STATUS_MAIN,7,7,290,16
+    CTEXT           "",IDC_STATIC_STATUS_SUB,7,24,290,8
+    CTEXT           "",IDC_STATIC_STATUS_3RD,7,33,290,8
+END
+
+IDD_DIALOG_PAUSE_FOR_REBOOT DIALOGEX 0, 0, 188, 93
+STYLE DS_SYSMODAL | DS_SETFONT | DS_MODALFRAME | DS_NOIDLEMSG | 
+    DS_SETFOREGROUND | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION
+EXSTYLE WS_EX_NOPARENTNOTIFY | WS_EX_TOPMOST
+CAPTION "SIL Software Installation"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CTEXT           "Waiting for system to reboot.",IDC_STATIC,7,7,174,79,
+                    SS_CENTERIMAGE | WS_BORDER,WS_EX_DLGMODALFRAME | 
+                    WS_EX_CLIENTEDGE
+END
+
+IDD_DIALOG_REBOOT_COUNTDOWN DIALOGEX 0, 0, 267, 70
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Reboot now!",IDOK,42,49,50,14
+    CTEXT           "The computer must now reboot. Please leave the CD in the drive, as the installation process will continue automatically after the reboot.",
+                    IDC_STATIC,7,7,253,18
+    RTEXT           "Reboot will happen automatically in",IDC_STATIC,7,31,
+                    166,8
+    CTEXT           "180",IDC_STATIC_REBOOT_COUNTDOWN,173,31,13,8
+    LTEXT           "seconds.",IDC_STATIC,187,31,30,8
+    PUSHBUTTON      "Cancel",IDCANCEL,108,49,50,14
+    PUSHBUTTON      "Pause",IDC_BUTTON_PAUSE_RESUME,174,49,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DIALOG_DISPLAY_REPORT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 355
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 196
+    END
+
+    IDD_DIALOG_MAIN_PRODUCT_SELECT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 393
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 53
+    END
+
+    IDD_DIALOG_STATUS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 364
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 55
+    END
+
+    IDD_DIALOG_NO_ANIMATION_STATUS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 297
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 54
+    END
+
+    IDD_DIALOG_PAUSE_FOR_REBOOT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 181
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 86
+    END
+
+    IDD_DIALOG_REBOOT_COUNTDOWN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 260
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 63
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDC_ERROR               "Error"
+    IDC_ERROR_IS_FATAL      "The installation cannot continue."
+    IDC_ERROR_INTERNAL      "An internal error has occurred: %s"
+    IDC_ERROR_PREREQUISITE_FAIL 
+                            "The prerequisite software %s failed to install. Therefore, installation of %s will not be attempted."
+    IDC_ERROR_PREREQUISITE_PRIOR_FAIL 
+                            "A previous attempt to install the prerequisite software %s failed. Therefore, installation of %s will not be attempted."
+    IDC_ERROR_DEPENDENT_INTRO 
+                            "Some of the required supporting software was not installed. Below are the details."
+    IDC_ERROR_DEPENDENT_INSTRUCTION 
+                            "In order to install the software, you should correct whatever problem prevented it from installing, then run this Setup program again. You will then have the option to install just the required supporting software."
+    IDC_ERROR_DEPENDENT_WILD_GUESS 
+                            "Setup cannot determine what is preventing the installation. The problem may possibly be solved by simply rebooting your computer, but it could be that your computer has run out of disk space, or there is something wrong with its configuration."
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_ERROR_NEED_ADMIN_ACCESS 
+                            "You do not have administrator access on this machine. %s can only be installed if the user logged on has administrator access."
+    IDC_ERROR_NEED_WIN2K_OR_BETTER 
+                            "Your version of the Windows operating system will not allow installation of %s. You must have Windows 2000 or better."
+    IDC_ERROR_CORRUPT_RECORD 
+                            "Information recorded last time this program was run is corrupt. Installation process will now restart."
+    IDC_ERROR_USER_ABORT    "Installation terminated by user."
+    IDC_ERROR_KEY_DLL       "Cannot process product key."
+    IDC_ERROR_INSTALLATION  "Installation of %s failed."
+    IDC_ERROR_USER_QUIT_INSTALLER "You quit the installation of %s."
+    IDC_ERROR_FILE_MISSING  "Internal error - The correct CD is in place, but a critical file was not found. %s will be skipped."
+    IDC_ERROR_READ_REG      "Cannot read system Registry."
+    IDC_ERROR_WRITE_REG     "Cannot write to system Registry."
+    IDC_ERROR_REMOVE_REG    "Cannot remove Registry settings."
+    IDC_ERROR_REBOOT_FAILED "System cannot perform automatic reboot. Please reboot computer now."
+    IDC_ERROR_CREATE_STATUS_DLG 
+                            "ERROR! Could not create the status dialog. This installation will now attempt to continue, but you will only get intermittent information about what is happening. If this is acceptable, press OK. To quit the installer altogether, press Cancel."
+    IDC_ERROR_INSTALL_NEVER "The installation was never attempted."
+    IDC_ERROR_INSTALL_ERROR "There was an error during installation."
+    IDC_ERROR_INSTALL_INTERRUPTED "The installation was interrupted."
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_ERROR_INSTALL_USER_SKIP "You chose to skip this product."
+    IDC_ERROR_INSTALL_NEED_WIN2K 
+                            "This product requires Windows 2000 or better."
+    IDC_ERROR_INSTALL_NEED_ADMIN 
+                            "You need administrator privileges to install this product."
+    IDC_ERROR_INSTALL_FILE_NOT_FOUND 
+                            "The installer file was not in the expected location."
+    IDC_ERROR_INSTALL_PREREQUISITES 
+                            "%s could not be installed because the following prerequisites were not installed:"
+    IDC_ERROR_LOG_FILE_INVALID "Log file '%s' could not be opened."
+    IDC_ERROR_TOO_MANY_KEY_GUESSES 
+                            "You have reached the maximum number of Product Key attempts."
+    IDC_ERROR_LANGUAGE_INCOMPATIBLE 
+                            "Windows operating system language incompatibility"
+    IDC_ERROR_LANGUAGE_INCOMPATIBLE_1 
+                            "This application cannot currently be installed on this machine. It depends on the software listed below, which is not available on this CD in the language of your Windows operating system. You need to download the software from the Internet, install it, then run this setup program again."
+    IDC_ERROR_LANGUAGE_INCOMPATIBLE_2 
+                            "This software list has been copied to the clipboard. You should paste it somewhere (e.g. Notepad) immediately, if you want to keep a record of it."
+    IDC_ERROR_LANGUAGE_INCOMPATIBLE_URL 
+                            " - Follow the links from this website: "
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_MESSAGE_INSERT      "Please insert %s."
+    IDC_MESSAGE_NOTHING_SELECTED 
+                            "You have not chosen any products to install. This installation will end."
+    IDC_MESSAGE_INITIALIZING "Initializing..."
+    IDC_MESSAGE_INSTALLING  "Installing %s."
+    IDC_MESSAGE_EVALUATING  "Evaluating last installation"
+    IDC_MESSAGE_DEPENDENCIES "Evaluating product dependencies"
+    IDC_MESSAGE_REMAINING   "Number of products left to install (after this one): %d"
+    IDC_MESSAGE_RETRY_INSTRUCTIONS 
+                            "If you would like to stop installing software altogether, press Abort. If you would like to try again to install this product, press Retry. If you would like to skip this product and go on to the next, press Ignore."
+    IDC_MESSAGE_FINISHED    "%s has finished."
+    IDC_MESSAGE_PENDING_REBOOT 
+                            "The computer should be rebooted now, otherwise some software may not function correctly. Press OK to reboot immediately, or Cancel if you would prefer to do this later yourself."
+    IDC_MESSAGE_CONFIRM_SKIP 
+                            "Are you sure you wish to skip installation of this product?"
+    IDC_MESSAGE_SKIPORCANCEL 
+                            "When you have inserted the CD, press Retry. If you would like to skip the installation of %s, press Ignore. If you would like to quit the whole installation, press Abort."
+    IDC_MESSAGE_PREREQUISITES "Prerequisites"
+    IDC_MESSAGE_PREREQUISITE_INTRO 
+                            "The software you have selected requires certain other third party software to be installed first. These will be installed automatically for you. Below is a list of all the required software. Simply press Continue. Some installations may ask to reboot your computer. You should allow these, but don't cancel %s, or remove the CD. %s will then continue where it left off."
+    IDC_MESSAGE_REQUIREMENTS "Additional Requirements"
+    IDC_MESSAGE_REQUIREMENT_INTRO 
+                            "The SIL Software on this machine requires certain other third party software. This will be installed automatically for you. Below is a list of all the required software. Simply press Continue. Some installations may ask to reboot your computer. You should allow these, but don't cancel %s, or remove the CD. %s will then continue where it left off."
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_MESSAGE_CONFIRM_QUIT 
+                            "Are you sure you want to quit without installing this required software?"
+    IDC_MESSAGE_CONFIRM_QUIT_GENERAL 
+                            "Are you sure you want to quit installing further software?"
+    IDC_MESSAGE_BASIC_LIST  "Basic list..."
+    IDC_MESSAGE_MORE_DETAILS "More details..."
+    IDC_MESSAGE_CONFIRM_QUIT_REBOOT 
+                            "If you quit now, your new SIL software may not work properly. In addition, you will have to reboot your machine manually, else some of your exisitng software may fail. Only quit if you know what you are doing. Are you sure you want to quit?"
+    IDC_MESSAGE_ALREADY_INSTALLED "(already installed)"
+    IDC_MESSAGE_CONFIRM_QUIT_MAIN 
+                            "Are you sure you want to quit without installing any software?"
+    IDC_MESSAGE_CONFIRM_QUIT_WHOLE 
+                            "Are you sure you want to quit installing further software?\n\nNote: Even if an installation message is telling you to quit all other programs, do not quit this one."
+    IDC_MESSAGE_QUITTING_P  "Waiting till %s has installed. If you want to quit immediately, you must abort that installation, too."
+    IDC_MESSAGE_QUITTING    "Stopping..."
+    IDC_MESSAGE_GENERIC_INSTALLER "currently running installer"
+    IDC_MESSAGE_PAUSE       "Pause"
+    IDC_MESSAGE_RESUME      "Resume"
+    IDC_MESSAGE_REQUIRED_SOFTWARE "Required supporting software"
+    IDC_MESSAGE_NEEDED_BY   "needed by"
+    IDC_MESSAGE_NOTHING_UNLOCKED 
+                            "That product key does not unlock any protected products. This may indicate that the key was typed incorrectly. Would you like to re-enter your key?"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_MESSAGE_PRODUCT_NOT_INSTALLED 
+                            "Product not installed: %s. These are the consequences:"
+    IDC_MESSAGE_LOG_IN_CLIPBOARD 
+                            "A fatal error has occurred. A log of the activities of this installation process has been written to the Clipboard. If you want the possible causes of the error to be analyzed, it is recommended that you paste this log into a text file or email message."
+    IDC_MESSAGE_CONTINUE    "Continue"
+    IDC_MESSAGE_MORE_PREREQUISITES 
+                            "The above products have prerequisites of their own:"
+    IDC_MESSAGE_MORE_REQUIREMENTS 
+                            "The above products have requirements of their own:"
+    IDC_MESSAGE_CONSEQUENCES "These are the consequences:"
+    IDC_MESSAGE_NEED_WIN2K  "- needs Windows 2000 or better"
+    IDC_MESSAGE_NEED_ADMIN_PRIV "- needs administrator rights"
+    IDC_MESSAGE_MUST_WAIT   "Please press Continue when this installation has fininshed."
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_BUTTON_CONTINUE     "Continue"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

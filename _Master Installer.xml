@@ -1,0 +1,967 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="ConfigureMasterInstaller.xsl" ?>
+<MasterInstaller>
+	<AutoConfigure>
+		<CppFilePath/>
+		<ProductsPath ParallelProductsFolder="true"></ProductsPath>
+		<CDsPath ParallelCDsFolder="true"></CDsPath>
+		<ExternalHelpSource>Documents\SILSoftwareSupport</ExternalHelpSource>
+		<ExternalHelpDestination>SILSoftwareSupport</ExternalHelpDestination>
+		<TermsOfUseSource>Documents\TermsOfUse\License SIL Freeware.rtf</TermsOfUseSource>
+		<TermsOfUseDestination></TermsOfUseDestination>
+		<CdImagePath>NewCd</CdImagePath>
+		<CdSize>700</CdSize>
+		<MinFileSize>2048</MinFileSize>
+	</AutoConfigure>
+	<General>
+		<Title/>
+		<ListSubtitle/>
+		<ListBackground/>
+		<ListEvenOneProduct>false</ListEvenOneProduct>
+		<ListSpacingAdjust></ListSpacingAdjust>
+		<InfoButtonAdjust></InfoButtonAdjust>
+		<StartFromAnyCD>false</StartFromAnyCD>
+		<KeyPromptNeedsShiftCtrl>false</KeyPromptNeedsShiftCtrl>
+		<GetKeyTitle>SIL Software Product Key</GetKeyTitle>
+		<ExternalHelpFile>SILSoftwareSupport\Index.htm</ExternalHelpFile>
+		<HelpButtonText>Software Support...</HelpButtonText>
+		<TermsOfUseFile>License SIL Freeware.rtf</TermsOfUseFile>
+		<TermsButtonText>Terms of Use...</TermsButtonText>
+	</General>
+	<Products>
+		<Product>
+			<AutoConfigure>
+				<Title>FW (Trunk build from \\cana)</Title>
+				<Source NameWhenLocked="setup.msi">\\cana\LSDev\Installers\Release\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
+				<SetupHelp>Documents\FieldWorks\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+				<WhenLocked>
+					<Destination>1</Destination>
+					<Substitutions>
+						<CriticalFile>1\setup.msi</CriticalFile>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 3.0</Title>
+			<Tag>FW_T</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{59EDA034-26E5-4B7A-9924-335BA200B461}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="EncCvtrs_T" MinVersion="1.1"/>
+			<Preinstall>RemoveFirstLexTextAlpha</Preinstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1</Title>
+				<Tag>DN_T</Tag>
+				<MsiFeature>DNr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1 (Debug)</Title>
+				<Tag>DN_T</Tag>
+				<MsiFeature>DNd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta</Title>
+				<Tag>LT_T</Tag>
+				<MsiFeature>LTr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta (Debug)</Title>
+				<Tag>LT_T</Tag>
+				<MsiFeature>LTd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor</Title>
+				<Tag>TLE_T</Tag>
+				<MsiFeature>TLEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Topics List Editor (Debug)</Title>
+				<Tag>TLE_T</Tag>
+				<MsiFeature>TLEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.0</Title>
+				<Tag>TE_T</Tag>
+				<MsiFeature>TEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.0 (Debug)</Title>
+				<Tag>TE_T</Tag>
+				<MsiFeature>TEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.1</Title>
+				<Tag>WP_T</Tag>
+				<MsiFeature>WPr</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks WorldPad (Debug)</Title>
+				<Tag>WP_T</Tag>
+				<MsiFeature>WPd</MsiFeature>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>FW (From source control repository)</Title>
+				<Source NameWhenLocked="setup.msi">Installers\FieldWorks\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
+				<SetupHelp>Documents\FieldWorks\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+				<WhenLocked>
+					<Destination>1</Destination>
+					<Substitutions>
+						<CriticalFile>1\setup.msi</CriticalFile>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 3.0</Title>
+			<Tag>FW</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{59EDA034-26E5-4B7A-9924-335BA200B461}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="1.1"/>
+			<Preinstall>RemoveFirstLexTextAlpha</Preinstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1</Title>
+				<Tag>DN</Tag>
+				<MsiFeature>DNr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1 (Debug)</Title>
+				<Tag>DN</Tag>
+				<MsiFeature>DNd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta</Title>
+				<Tag>LT</Tag>
+				<MsiFeature>LTr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta (Debug)</Title>
+				<Tag>LT</Tag>
+				<MsiFeature>LTd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor</Title>
+				<Tag>TLE</Tag>
+				<MsiFeature>TLEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Topics List Editor (Debug)</Title>
+				<Tag>TLE</Tag>
+				<MsiFeature>TLEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.0</Title>
+				<Tag>TE</Tag>
+				<MsiFeature>TEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.0 (Debug)</Title>
+				<Tag>TE</Tag>
+				<MsiFeature>TEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.1</Title>
+				<Tag>WP</Tag>
+				<MsiFeature>WPr</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks WorldPad (Debug)</Title>
+				<Tag>WP</Tag>
+				<MsiFeature>WPd</MsiFeature>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Encoding Converters (Trunk build from \\cana)</Title>
+				<Source>\\cana\LSDev\Installers\Release\SetupCnvrtrs.msi</Source>
+				<Destination>Utilities\Encoding Converters</Destination>
+			</AutoConfigure>
+			<Title>SIL Converters and Repository</Title>
+			<Tag>EncCvtrs_T</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
+			<Install MsiFlags="/qb" MsiVersion="1.1"/>
+			<StatusWindow>Show</StatusWindow>
+			<ProductCode>{25AEB008-3E0B-4057-A66B-2F3C50228E0E}</ProductCode>
+			<Commentary>Please wait while the Converters are installed.</Commentary>
+			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Encoding Converters (From source control repository)</Title>
+				<Source>Installers\Encoding Converters\SetupCnvrtrs.msi</Source>
+				<Destination>Utilities\Encoding Converters</Destination>
+			</AutoConfigure>
+			<Title>SIL Converters and Repository</Title>
+			<Tag>EncCvtrs</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
+			<Install MsiFlags="/qb" MsiVersion="1.1"/>
+			<StatusWindow>Show</StatusWindow>
+			<ProductCode>{25AEB008-3E0B-4057-A66B-2F3C50228E0E}</ProductCode>
+			<Commentary>Please wait while the Converters are installed.</Commentary>
+			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+		</Product>
+		<Product KeyId="2" Version="4.2">
+			<AutoConfigure>
+				<Title>TW4 (From source control repository)</Title>
+				<Source NameWhenLocked="setup.msi">Installers\Translator's Workplace 4 Update 2\TW4Update.msi</Source>
+				<SetupHelp>Documents\Translator's Workplace 4 Update 2\SetupTW.rtf</SetupHelp>
+				<Destination>TW4</Destination>
+				<WhenLocked>
+					<Destination>2</Destination>
+					<Substitutions>
+						<CriticalFile>2\setup.msi</CriticalFile>
+						<Install>MsiExec.exe /i 2\setup.msi</Install>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>Translator's Workplace 4.0 Update 2</Title>
+			<Tag>TW4</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>TW4\TW4Update.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>This installer may take a few minutes to start from the CD.</Commentary>
+			<ProductCode>{D938E793-A00B-4849-BCA8-9C25B4A6C081}</ProductCode>
+			<Help>TW4\SetupTW.rtf</Help>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+		</Product>
+		<Product KeyId="1" Version="5.0">
+			<AutoConfigure>
+				<Title>BART 5 (From source control repository)</Title>
+				<Source NameWhenLocked="setup.msi">Installers\BART 5\SetupBart.msi</Source>
+				<SetupHelp>Documents\BART 5\SetupBART.rtf</SetupHelp>
+				<Destination>BART5</Destination>
+				<WhenLocked>
+					<Destination>3</Destination>
+					<Substitutions>
+						<CriticalFile>3\setup.msi</CriticalFile>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>Bart 5 Beta</Title>
+			<Tag>BART5</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>BART5\SetupBart.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Help>BART5\SetupBART.rtf</Help>
+			<ProductCode>{2E38FB46-1985-4112-9727-B8C012A317A6}</ProductCode>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Adapt It 2.4.1.i (English)</Title>
+				<Source>Installers\Adapt It\English_setupai.exe</Source>
+				<Source>Installers\Adapt It\BTPrep.exe</Source>
+				<SetupHelp>Documents\Adapt It\Adapt It.rtf</SetupHelp>
+				<Destination>Adapt It</Destination>
+			</AutoConfigure>
+			<Title>Adapt It 2.4.1.i (English)</Title>
+			<Tag>Adaptit</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Adapt It\English_setupai.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence>TestAdaptitPresence</TestPresence>
+			<Help>Adapt It\Adapt It.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Adapt It Unicode 2.4.1.i (English)</Title>
+				<Source>Installers\Adapt It\English_setupai_u.exe</Source>
+				<Destination>Adapt It</Destination>
+			</AutoConfigure>
+			<Title>Adapt It Unicode 2.4.1.i (English)</Title>
+			<Tag>AdaptitU</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Adapt It\English_setupai_u.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence>TestAdaptitUPresence</TestPresence>
+			<Help>Adapt It\Adapt It.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Adapt It 2.4.1.i (French)</Title>
+				<Source>Installers\Adapt It\French_setupai.exe</Source>
+				<Destination>Adapt It</Destination>
+			</AutoConfigure>
+			<Title>Adapt It 2.4.1.i (French)</Title>
+			<Tag>AdaptitF</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Adapt It\French_setupai.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence>TestAdaptitFPresence</TestPresence>
+			<Help>Adapt It\Adapt It.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Adapt It Unicode 2.4.1.i (French)</Title>
+				<Source>Installers\Adapt It\French_setupai_u.exe</Source>
+				<Destination>Adapt It</Destination>
+			</AutoConfigure>
+			<Title>Adapt It Unicode 2.4.1.i (French)</Title>
+			<Tag>AdaptitUF</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Adapt It\French_setupai_u.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence>TestAdaptitUFPresence</TestPresence>
+			<Help>Adapt It\Adapt It.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Adapt It 2.4.1.i (Indonesian)</Title>
+				<Source>Installers\Adapt It\Indonesian_setupai.exe</Source>
+				<Destination>Adapt It</Destination>
+			</AutoConfigure>
+			<Title>Adapt It 2.4.1.i (Indonesian)</Title>
+			<Tag>AdaptitI</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Adapt It\Indonesian_setupai.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence>TestAdaptitIPresence</TestPresence>
+			<Help>Adapt It\Adapt It.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Adapt It Unicode 2.4.1.i (Indonesian)</Title>
+				<Source>Installers\Adapt It\Indonesian_setupai_u.exe</Source>
+				<Destination>Adapt It</Destination>
+			</AutoConfigure>
+			<Title>Adapt It Unicode 2.4.1.i (Indonesian)</Title>
+			<Tag>AdaptitUI</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Adapt It\Indonesian_setupai_u.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence>TestAdaptitUIPresence</TestPresence>
+			<Help>Adapt It\Adapt It.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Adapt It Unicode 2.4.1.i (Mandarin)</Title>
+				<Source>Installers\Adapt It\Mandarin_setupai_u.exe</Source>
+				<Destination>Adapt It</Destination>
+			</AutoConfigure>
+			<Title>Adapt It Unicode 2.4.1.i (Mandarin)</Title>
+			<Tag>AdaptitUM</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Adapt It\Mandarin_setupai_u.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence>TestAdaptitUMPresence</TestPresence>
+			<Help>Adapt It\Adapt It.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Adapt It 2.4.1.i (Spanish)</Title>
+				<Source>Installers\Adapt It\Spanish_setupai.exe</Source>
+				<Destination>Adapt It</Destination>
+			</AutoConfigure>
+			<Title>Adapt It 2.4.1.i (Spanish)</Title>
+			<Tag>AdaptitS</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Adapt It\Spanish_setupai.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence>TestAdaptitSPresence</TestPresence>
+			<Help>Adapt It\Adapt It.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Adapt It Unicode 2.4.1.i (Spanish)</Title>
+				<Source>Installers\Adapt It\Spanish_setupai_u.exe</Source>
+				<Destination>Adapt It</Destination>
+			</AutoConfigure>
+			<Title>Adapt It Unicode 2.4.1.i (Spanish)</Title>
+			<Tag>AdaptitUS</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Adapt It\Spanish_setupai_u.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence>TestAdaptitUSPresence</TestPresence>
+			<Help>Adapt It\Adapt It.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>PAWS Starter Kit 0.4.1.17222 Beta</Title>
+				<Source>Installers\PAWS Starter Kit\PAWSSKInstaller.msi</Source>
+				<SetupHelp>Documents\PAWS Starter Kit\PAWS starter kit.rtf</SetupHelp>
+				<Destination>PAWS Starter Kit</Destination>
+			</AutoConfigure>
+			<Title>PAWS Starter Kit 0.4.1.17222 Beta</Title>
+			<Tag>PAWS</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>PAWS Starter Kit\PAWSSKInstaller.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{C25A0D3E-32D8-4F91-A4DD-7CD5BCE21C3A}</ProductCode>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
+			<Prerequisite Tag=".NET_SP1" MinVersion="1"/>
+			<Requires Tag="IE" MinVersion="6.0" FailMsg="The program may not run correctly."/>
+			<Requires Tag="MSXML4" FailMsg="The program may not run correctly."/>
+			<Help>PAWS Starter Kit\PAWS starter kit.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>SIL Clipboard Encoding Converter (From source control repository)</Title>
+				<Source>Installers\Clipboard Encoding Converters\ClipboardEncConverter.msi</Source>
+				<Source>Installers\Clipboard Encoding Converters\*.dot</Source>
+				<Destination>Utilities\Encoding Converters</Destination>
+			</AutoConfigure>
+			<Title>SIL Clipboard Encoding Converter</Title>
+			<Tag>ClipEC</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\Encoding Converters\ClipboardEncConverter.msi</CriticalFile>
+			<Install MsiFlags="/qb"/>
+			<StatusWindow>Show</StatusWindow>
+			<ProductCode>{1754401C-BEBE-415E-B0DF-9B6E0420E2F8}</ProductCode>
+			<Commentary>Please wait while the Clipboard Converters are installed.</Commentary>
+			<Prerequisite Tag="EncCvtrs"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Carla Studio</Title>
+				<Source>Installers\CarlaStudio</Source>
+				<SetupHelp>Documents\CarlaStudio\CarlaStudio.rtf</SetupHelp>
+				<Destination>CarlaStudio</Destination>
+			</AutoConfigure>
+			<Title>Carla Studio</Title>
+			<Tag>CarlaStudio 2.8.2</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>CarlaStudio\Setup.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow StatusPauseWin98="true">Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence>TestCarlaStudioPresence</TestPresence>
+			<Help>CarlaStudio\CarlaStudio.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Lexique Pro (with demo db)</Title>
+				<Source>Installers\Lexique Pro</Source>
+				<SetupHelp>Documents\Lexique Pro\Lexique Pro.rtf</SetupHelp>
+				<Destination>Lexique Pro</Destination>
+			</AutoConfigure>
+			<Title>Lexique Pro 2.4.6 (with demo db)</Title>
+			<Tag>Lexique</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Lexique Pro\Lexique Pro 2.4.6 - Setup (with demo db).exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence>TestLexiquePresence</TestPresence>
+			<Help>Lexique Pro\Lexique Pro.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>PalmSurv (on its own)</Title>
+				<Source>Installers\PalmSurv\PalmSurv.msi</Source>
+				<SetupHelp>Documents\PalmSurv\SetupPS.rtf</SetupHelp>
+				<Destination>PalmSurv</Destination>
+			</AutoConfigure>
+			<Title>PalmSurv 1.6</Title>
+			<Tag>PalmSurv</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<Preinstall Type="External" IgnoreError="true">msiexec.exe /qn /i {4B7F9BA4-F7F4-4607-B2BF-5A3D102B943B} REMOVE=PalmSurv</Preinstall>
+			<CriticalFile>PalmSurv\PalmSurv.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{BFC16536-B1DC-4192-B3A5-2564A240A91F}</ProductCode>
+			<Help>PalmSurv\SetupPS.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>PalmSurv Converter (on its own, goes with PalmSurv)</Title>
+				<Source>Installers\PalmSurv\PalmSurv Converter.msi</Source>
+				<Destination>PalmSurv</Destination>
+			</AutoConfigure>
+			<Title>PalmSurv Converter 1.6</Title>
+			<Tag>PalmSurvConverter</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<Preinstall Type="External" IgnoreError="true">msiexec.exe /qn /i {4B7F9BA4-F7F4-4607-B2BF-5A3D102B943B} REMOVE=PalmSurv</Preinstall>
+			<CriticalFile>PalmSurv\PalmSurv Converter.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{839DC33E-4F29-4A7A-983D-FAA9441AD703}</ProductCode>
+			<Help>PalmSurv\SetupPS.rtf</Help>
+			<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>SF Converter 2.3</Title>
+				<Source>Installers\SF Converter</Source>
+				<SetupHelp>Documents\SF Converter\SF Converter.rtf</SetupHelp>
+				<Destination>SF Converter</Destination>
+			</AutoConfigure>
+			<Title>SF Converter 2.3</Title>
+			<Tag>SFConv</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>SF Converter\Setup.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow StatusPauseWin98="true">Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<Help>SF Converter\SF Converter.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Shoebox 5.0</Title>
+				<Source>Installers\Shoebox</Source>
+				<SetupHelp>Documents\Shoebox\Shoebox.rtf</SetupHelp>
+				<Destination>Shoebox</Destination>
+			</AutoConfigure>
+			<Title>Shoebox 5.0</Title>
+			<Tag>Shoebox</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Shoebox\ShSetup.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions on installer dialogs.</Commentary>
+<!-- test is unreliable			<TestPresence>TestShoebox50Presence</TestPresence> -->
+			<Help>Shoebox\Shoebox.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Speech Tools 2.2</Title>
+				<Source>Installers\Speech Tools</Source>
+				<SetupHelp>Documents\Speech Tools\SETUPST.HLP</SetupHelp>
+				<Destination>Speech Tools</Destination>
+			</AutoConfigure>
+			<Title>Speech Tools 2.2</Title>
+			<Tag>SpeechTools</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Speech Tools\SpeechTools.msi</CriticalFile>
+			<Install/>
+			<Commentary>Follow intructions in installer dialogs.</Commentary>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{6723942B-3948-4CD5-9526-2683DB19A967}</ProductCode>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Help>Speech Tools\SETUPST.HLP</Help>
+			<Feature>
+				<Title>Speech Tools IPA Help 2.04</Title>
+				<Tag>IPA Help</Tag>
+				<MsiFeature>IPA_Help</MsiFeature>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The word list feature will not work."/>
+			</Feature>
+			<Feature>
+				<Title>Speech Analyzer 2.7</Title>
+				<Tag>SA</Tag>
+				<MsiFeature>Speech_Analyzer</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>Speech Tools Phonology Assistant 2.2</Title>
+				<Tag>PA</Tag>
+				<MsiFeature>Phonology_Assistant</MsiFeature>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Toolbox 1.4</Title>
+				<Source>Installers\ToolBox</Source>
+				<SetupHelp>Documents\ToolBox\ToolBox.rtf</SetupHelp>
+				<Destination>ToolBox</Destination>
+			</AutoConfigure>
+			<Title>Toolbox 1.4</Title>
+			<Tag>Toolbox</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Toolbox\InstallToolbox14.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions on installer dialogs.</Commentary>
+			<TestPresence>TestToolbox14Presence</TestPresence>
+			<Help>Toolbox\Toolbox.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Vocabulary Manager 5.7.3</Title>
+				<Source>Installers\Vocabulary Manager</Source>
+				<SetupHelp>Documents\Vocabulary Manager\Vocabulary Manager.rtf</SetupHelp>
+				<Destination>Vocabulary Manager</Destination>
+			</AutoConfigure>
+			<Title>Vocabulary Manager 5.7.3</Title>
+			<Tag>Vocab</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>Vocabulary Manager\VMSetup.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{42875299-D900-4D11-A91C-845C90A2780B}</ProductCode>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="DirectX" MinVersion="4.8.0"/>
+			<Help>Vocabulary Manager\Vocabulary Manager.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>WordSurv 5.0 Beta</Title>
+				<Source>Installers\WordSurv</Source>
+				<SetupHelp>Documents\WordSurv\SETUPWS.HLP</SetupHelp>
+				<Destination>WordSurv</Destination>
+			</AutoConfigure>
+			<Title>WordSurv 5.0 Beta</Title>
+			<Tag>WordSurv</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>WordSurv\SetupWS.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{4B7F9BA4-F7F4-4607-B2BF-5A3D102B943B}</ProductCode>
+			<Help>WordSurv\SETUPWS.HLP</Help>
+		</Product>		
+		<Product>
+			<AutoConfigure>
+				<Title>NRSI Resources</Title>
+				<Source>Documents\Resources</Source>
+				<SetupHelp>Documents\Resources\ReadMe - Resources.rtf</SetupHelp>
+				<Destination>Resources</Destination>
+			</AutoConfigure>
+			<Title>Resources on this CD</Title>
+			<Tag>Resources</Tag>
+			<Help>Resources\ReadMe - Resources.rtf</Help>
+		</Product>		
+		<Product>
+			<AutoConfigure>
+				<Title>Microsoft SQL Server Desktop Engine Service Pack 4</Title>
+				<Source>3rd Party\MSDE 2000 SP4</Source>
+				<Destination>Utilities\MSDE</Destination>
+			</AutoConfigure>
+			<Title>Microsoft SQL Server Desktop Engine Service Pack 4 (MSDE 2000 SP4)</Title>
+			<Tag>MSDE</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\MSDE\setup.exe</CriticalFile>
+			<Preinstall>RemoveAnyPreviousMSDE</Preinstall>
+<!--			<Install Flag="g_fExistingMsdeNeedsUpgrade">
+				<True>Utilities\MSDE\setup.exe /upgradesp sqlrun DISABLENETWORKPROTOCOLS=0 INSTANCENAME=SILFW /L*v C:\MSDELog.log</True>
+				<False>Utilities\MSDE\setup.exe DISABLENETWORKPROTOCOLS=0 TARGETDIR="[HKEY_LOCAL_MACHINE\SOFTWARE\SIL\FieldWorks::RootDir]" INSTANCENAME=SILFW SECURITYMODE=SQL SAPWD=inscrutable /L*v C:\MSDELog.log</False>
+			</Install> -->
+			<Install>$CriticalFile$ DISABLENETWORKPROTOCOLS=0 TARGETDIR="[HKEY_LOCAL_MACHINE\SOFTWARE\SIL\FieldWorks::RootDir]" INSTANCENAME=SILFW SECURITYMODE=SQL SAPWD=inscrutable /L*v C:\MSDELog.log</Install>
+			<StatusWindow>Monitor</StatusWindow>
+			<Commentary>Please wait while MSDE installs.</Commentary>
+			<TestPresence Version="8.00.194">TestMsdeSILFWPresence</TestPresence>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>MSXML2</Title>
+				<Source>3rd Party\MSXML2</Source>
+				<Destination>Utilities\MSXML</Destination>
+			</AutoConfigure>
+			<Title>Microsoft XML Core Services 2</Title>
+			<Tag>MSXML2</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\MSXML\msxml2.msi</CriticalFile>
+			<Install>MsiExec.exe /i $CriticalFile$ /qb</Install>
+			<StatusWindow>Show</StatusWindow>
+			<TestPresence>TestXml2Presence</TestPresence>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>MSXML4</Title>
+				<Source>3rd Party\MSXML4</Source>
+				<Destination>Utilities\MSXML</Destination>
+			</AutoConfigure>
+			<Title>Microsoft XML Core Services 4</Title>
+			<Tag>MSXML4</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\MSXML\msxml4.msi</CriticalFile>
+			<Install>MsiExec.exe /i $CriticalFile$ /qb</Install>
+			<StatusWindow>Show</StatusWindow>
+			<TestPresence>TestXml4Presence</TestPresence>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows XP Service Pack 1</Title>
+				<Source>3rd Party\Win XP SP1</Source>
+				<Destination>Utilities\Win XP SP1</Destination>
+			</AutoConfigure>
+			<Title>Windows XP Service Pack 1</Title>
+			<Tag>Win XP SP1</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\Win XP SP1\XPSP1.EXE</CriticalFile>
+			<Install>Utilities\Win XP SP1\XPSP1.EXE</Install>
+			<TestPresence>TestWinXpSp1Presence</TestPresence>
+			<Commentary>Follow instructions in installer wizard.</Commentary>
+			<StatusWindow>Monitor</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>.NET Runtime 1.1</Title>
+				<Source>3rd Party\DotNet 1.1</Source>
+				<Destination>Utilities\DotNet</Destination>
+			</AutoConfigure>
+			<Title>Microsoft .NET Runtime version 1.1</Title>
+			<Tag>.NET</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\DotNet\dotnetfx.exe</CriticalFile>
+			<Install>$CriticalFile$ /q:a /c:"install /l /q"</Install>
+			<TestPresence Version="1.1.4322.0">TestDotNetPresence</TestPresence>
+			<Commentary>This installation may take a few minutes, without visible sign of progress.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<Prerequisite Tag="IE" MinVersion="5.01"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>.NET Runtime 1.1 SP1</Title>
+				<Source>3rd Party\DotNet 1.1 SP1</Source>
+				<Destination>Utilities\DotNet</Destination>
+			</AutoConfigure>
+			<Title>Microsoft .NET Runtime 1.1 Service Pack 1</Title>
+			<Tag>.NET_SP1</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\DotNet\NDP1.1sp1-KB867460-X86.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<TestPresence Version="1">TestDotNet1point1SPPresence</TestPresence>
+			<Commentary>Please follow instructions on installer dialogs.</Commentary>
+			<StatusWindow>Monitor 5000</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<Prerequisite Tag=".NET" Version="1.1.4322"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Internet Explorer 6.0 SP1 (English)</Title>
+				<Source>3rd Party\IE60</Source>
+				<Destination>Utilities\IE60</Destination>
+			</AutoConfigure>
+			<Title>Microsoft Internet Explorer 6.0 SP1</Title>
+			<Tag>IE</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>$LANG$09$Utilities\IE60\ie6setup.exe</CriticalFile>
+			<DownloadURL>http://www.microsoft.com/windows/ie/default.mspx</DownloadURL>
+			<Install>$CriticalFile$</Install>
+			<Commentary>Please select default choices in dialogs.</Commentary>
+			<StatusWindow>Monitor</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<TestPresence Version="6.0.2800.1106">TestIePresence</TestPresence>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Microsoft Text Services Framework (for Windows 2000)</Title>
+				<Source>3rd Party\TSF</Source>
+				<Destination>Utilities\TSF</Destination>
+			</AutoConfigure>
+			<Title>Microsoft Text Services Framework</Title>
+			<Tag>MS TSF</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\TSF\mstsf10.exe</CriticalFile>
+			<Install>$CriticalFile$ /VALLUSERS=1</Install>
+			<TestPresence>TestTsfPresence</TestPresence>
+			<Commentary>Follow instructions in installer wizard.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Keyman 6.2 (build 174) Standard (not free)</Title>
+				<Source>3rd Party\Keyman 6.2.174 Standard</Source>
+				<Destination>Utilities\Keyman62</Destination>
+			</AutoConfigure>
+			<Title>Keyman 6.2 (Requires licensing via Internet)</Title>
+			<Tag>KeymanS</Tag>
+			<CriticalFile>Utilities\Keyman62\keyman6-2-174-0.exe</CriticalFile>
+			<Help>Utilities\Keyman62\Standard_Edition.rtf</Help>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Show</StatusWindow>
+			<Commentary>Please select 'Install' from the first menu, and read the new license information.</Commentary>
+			<FlushReboot>true</FlushReboot>
+			<TestPresence Version="6.2.174">TestKeymanStandardPresence</TestPresence>
+			<Prerequisite Tag="IE" MinVersion="5.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Keyman 6.2 (build 174) Home (free)</Title>
+				<Source>3rd Party\Keyman 6.2.174 Home</Source>
+				<Destination>Utilities\Keyman62</Destination>
+			</AutoConfigure>
+			<Title>Keyman 6.2 (Free - Home Use)</Title>
+			<Tag>KeymanH</Tag>
+			<CriticalFile>Utilities\Keyman62\keyman_free_6-2-174-0.exe</CriticalFile>
+			<Help>Utilities\Keyman62\Home_Use_Edition.rtf</Help>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Show</StatusWindow>
+			<Commentary>Please select 'Install' from the first menu.</Commentary>
+			<FlushReboot>true</FlushReboot>
+			<TestPresence Version="6.2.174">TestKeymanHomePresence</TestPresence>
+			<Prerequisite Tag="IE" MinVersion="5.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Adobe Acrobat Reader 5.0</Title>
+				<Source>3rd Party\Adobe Reader 5.0</Source>
+				<Destination>Utilities\Acrobat Reader</Destination>
+			</AutoConfigure>
+			<Title>Adobe Acrobat Reader 5.0</Title>
+			<Tag>Acrobat</Tag>
+			<CriticalFile>Utilities\Acrobat Reader\rp505enu.exe</CriticalFile>
+			<Install>Utilities\Acrobat Reader\rp505enu.exe</Install>
+			<Commentary>Follow instructions in installer wizard.</Commentary>
+			<StatusWindow>Monitor</StatusWindow>
+			<TestPresence Version="5.0">TestAcrobatReaderPresence</TestPresence>
+			<FlushReboot>true</FlushReboot>
+			<RebootTestRegPending>true</RebootTestRegPending>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>DirectX 9.0c</Title>
+				<Source>3rd Party\DirectX 9c</Source>
+				<Destination>Utilities\DirectX</Destination>
+			</AutoConfigure>
+			<Title>DirectX 9.0c</Title>
+			<Tag>DirectX</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\DirectX\DXSETUP.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<Commentary>Please select default choices in dialogs.</Commentary>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<TestPresence Version="4.9.0">TestDirectXPresence</TestPresence>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows Installer 2.0 (Win 2K and up only)</Title>
+				<Source>3rd Party\Windows Installer 2 (Win 2K and up)</Source>
+				<Destination>Utilities\MSInstall</Destination>
+			</AutoConfigure>
+			<Title>Windows Installer 2.0</Title>
+			<Tag>WI2</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<CriticalFile>Utilities\MSInstall\instmsiw.exe</CriticalFile>
+			<Install>$CriticalFile$ /c:"msiinst.exe /delayrebootq"</Install>
+			<TestPresence Version="2.0">TestWinInstallerPresence</TestPresence>
+			<Commentary>Please wait a few moments.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows Installer 2.0 (both versions)</Title>
+				<Source>3rd Party\Windows Installer 2 (Win 2K and up)</Source>
+				<Source>3rd Party\Windows Installer 2 (Win 98)</Source>
+				<Destination>Utilities\MSInstall</Destination>
+			</AutoConfigure>
+			<Title>Windows Installer 2.0</Title>
+			<Tag>WI2</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile Flag="g_fLessThanWin2k">
+				<True>Utilities\MSInstall\instmsia.exe</True>
+				<False>Utilities\MSInstall\instmsiw.exe</False>
+			</CriticalFile>
+			<Install>$CriticalFile$ /c:"msiinst.exe /delayrebootq"</Install>
+			<TestPresence Version="2.0">TestWinInstallerPresence</TestPresence>
+			<Commentary>Please wait a few moments.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+		</Product>
+	</Products>
+</MasterInstaller>

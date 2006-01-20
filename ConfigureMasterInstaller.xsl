@@ -545,7 +545,7 @@ function VerifyPage(CurrentStage)
 
 			// Check for existence of External Help file(s):
 			Path = document.getElementById("ExternalHelpSource").value;
-			if (!fso.FileExists(Path) && !fso.FolderExists(Path))
+			if (Path.length > 0 && !fso.FileExists(Path) && !fso.FolderExists(Path))
 			{
 				Errors += "The External Help Source Path does not point to an existing file or folder.\n";
 				Errors += "\tYou must correct this, if you want to include External Help file(s) in the master installer.\n";
@@ -554,7 +554,7 @@ function VerifyPage(CurrentStage)
 
 			// Check for existence of Terms of Use file(s):
 			Path = document.getElementById("TermsOfUseSource").value;
-			if (!fso.FileExists(Path) && !fso.FolderExists(Path))
+			if (Path.length > 0 && !fso.FileExists(Path) && !fso.FolderExists(Path))
 			{
 				Errors += "The Terms of Use Source Path does not point to an existing file or folder.\n";
 				Errors += "\tYou must correct this, if you want to include Terms of Use file(s) in the master installer.\n";
@@ -1499,17 +1499,37 @@ function GenerateExtHelpAndTermsFileLists()
 {
 	// Do the same for the External Help file(s):
 	var ExternalHelpSource = document.getElementById("ExternalHelpSource").value;
-	var Recurse = false;
-	if (fso.FolderExists(ExternalHelpSource))
-		Recurse = true;
-	ExternalHelpFileData = GetFileList(ExternalHelpSource, Recurse);
+	if (ExternalHelpSource.length > 0)
+	{
+		var Recurse = false;
+		if (fso.FolderExists(ExternalHelpSource))
+			Recurse = true;
+		ExternalHelpFileData = GetFileList(ExternalHelpSource, Recurse);
+	}
+	else
+	{
+		// Set up empty values:
+		ExternalHelpFileData = new Object();
+		ExternalHelpFileData.FileList = new Array();
+		ExternalHelpFileData.RootFolder = "";
+	}
 
 	// Do the same for the Terms of Use file(s):
 	var TermsOfUseSource = document.getElementById("TermsOfUseSource").value;
-	Recurse = false;
-	if (fso.FolderExists(TermsOfUseSource))
-		Recurse = true;
-	TermsOfUseFileData = GetFileList(TermsOfUseSource, Recurse);
+	if (TermsOfUseSource.length > 0)
+	{
+		Recurse = false;
+		if (fso.FolderExists(TermsOfUseSource))
+			Recurse = true;
+		TermsOfUseFileData = GetFileList(TermsOfUseSource, Recurse);
+	}
+	else
+	{
+		// Set up empty values:
+		TermsOfUseFileData = new Object();
+		TermsOfUseFileData.FileList = new Array();
+		TermsOfUseFileData.RootFolder = "";
+	}
 }
 
 // Builds an array of total file sizes, one total for each product.
@@ -1808,6 +1828,18 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fDeleteJ
 			var tso = fso.OpenTextFile(fso.BuildPath(NewCompilationFolder, XmlFileName), 2, true);
 			tso.Write(xmlDoc.xml);
 			tso.Close();
+			
+			// If we are to gather files too, we'll write a second copy of the XML file in the
+			// 'root' CD folder:
+			if (fGatherFiles)
+			{
+				var CdImagePath = document.getElementById('CdImagePath').value;
+				MakeSureFolderExists(CdImagePath);
+				tso = fso.OpenTextFile(fso.BuildPath(CdImagePath, XmlFileName), 2, true);
+				tso.Write(xmlDoc.xml);
+				tso.Close();
+			}
+
 			if (fDisplayCommentary)
 				AddCommentary(1, "Done.", false);
 		}

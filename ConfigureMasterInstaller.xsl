@@ -174,7 +174,7 @@
 		<br/>
 		Bitmap:&#160;
 		<input id="BackgroundBmp" type="text" onselect="InputTextSelected(this);" size="40" onfocus="this.select();" title="Bitmap to use as background in product selection dialog box" onchange="InvalidateCompiledFiles();"/>
-		<script type="text/javascript">document.getElementById("BackgroundBmp").value="<xsl:value-of select="ListBackground"/>"</script>
+		<script type="text/javascript">document.getElementById("BackgroundBmp").value="<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="ListBackground"/></xsl:call-template>"</script>
 		<br/>
 		X-offest:&#160;<input id="OffsetX" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset background bitmap of product selection dialog box"/>
 		<script type="text/javascript">document.getElementById("OffsetX").value="<xsl:value-of select="ListBackground/@OffsetX"/>"</script>

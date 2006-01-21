@@ -1269,6 +1269,7 @@ function MakeSureFolderExists(strDir)
 // DOS file attributes also can be specified.
 // Works by using the DOS dir command, redirecting output to a temp file, then
 // reading in the file.
+// Filters out any .svn folders (Subversion metadata).
 function GetFileList(FileSpec, RecurseSubfolders, Attributes)
 {
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
@@ -1324,7 +1325,7 @@ function GetFileList(FileSpec, RecurseSubfolders, Attributes)
 		else // we have to add the root folder to the file name
 			CurrentFile = fso.BuildPath(RootFolder, File.ReadLine());
 
-		// Make sure there is nothring from Subversion in the path:
+		// Make sure there is nothing from Subversion in the path:
 		if (CurrentFile.search(".svn") < 0)
 		{
 			FileList[Index] = CurrentFile;
@@ -1612,7 +1613,7 @@ function RemoveTrailingBackslash(path)
 }
 
 
-// Varibales used in the commentary table while building a CD image:
+// Variable used in the commentary table while building a CD image:
 var CommentaryColumns = 2;
 
 

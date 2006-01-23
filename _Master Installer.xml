@@ -38,6 +38,8 @@
 				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\TEReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\License.rtf</Source>
+				<Source>Documents\FieldWorks\TechSupport.rtf</Source>
 				<SetupHelp>Documents\FieldWorks\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 				<WhenLocked>

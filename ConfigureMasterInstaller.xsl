@@ -109,9 +109,9 @@
 	<script type="text/javascript">document.getElementById("CdImagePath").value=CheckCDsRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="CdImagePath"/></xsl:call-template>");</script>
 	</tr>
 	<tr>
-	<td align="right">CD volume label prefix: </td><td><input id="CdLabelPrefix" type="text" onselect="InputTextSelected(this);" size="10" onfocus="this.select();" title="The text to be used as the basis for each CD's volume label. Each Cd's index will be added to form its default label."/></td>
+	<td align="right">CD volume label template: <br/><span style="font-size:70%">(Leave blank unless anticipating multiple CD set.)</span></td><td><input id="CdLabelPrefix" type="text" onselect="InputTextSelected(this);" size="10" onfocus="this.select();" title="The text to be used as the basis for each CD's volume label. Each Cd's index will be added to form its default label."/></td>
 	</tr>
-	<tr><th align="right">General Setup</th></tr>
+	<tr><th align="right"><br/>General Setup</th></tr>
 	<tr>
 	<td align="right">C++ file path:</td><td><input id="CppFilePath" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of C++ files used to compile the master installer."/></td>
 	<script type="text/javascript">document.getElementById("CppFilePath").value=CheckRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="CppFilePath"/></xsl:call-template>");</script>
@@ -252,7 +252,10 @@
 	<table>
 	<xsl:for-each select="Product">
 		<tr>
-		<td align="right"><xsl:value-of select="AutoConfigure/Title"/><input id="ProductTitle{count(preceding-sibling::Product)}" type="checkbox" onclick="showPage('ProductSetup{count(preceding-sibling::Product)}', this.checked); InvalidateCompiledFiles();"/></td>
+		<td align="right"><xsl:value-of select="AutoConfigure/Title"/>
+		<input id="ProductTitle{count(preceding-sibling::Product)}" type="checkbox" onclick="showPage('ProductSetup{count(preceding-sibling::Product)}', this.checked); InvalidateCompiledFiles();">
+		<xsl:if test="@List='true'"><xsl:attribute name="checked">true</xsl:attribute></xsl:if>
+		</input></td>
 		<td>
 			<span id="ProductSetup{count(preceding-sibling::Product)}" style="position:absolute; visibility:hidden">
 			<xsl:if test="not(string-length(@KeyId)=0)">
@@ -299,7 +302,9 @@
 			<tr id="ProductCdTr{count(preceding-sibling::Product)}" style="display:none">
 				<td align="center"><xsl:value-of select="AutoConfigure/Title"/></td>
 				<td align="center" id="FileSize{count(preceding-sibling::Product)}"></td>
-				<td align="center"><input id="ProductCD{count(preceding-sibling::Product)}" onkeyup="UpdateCdTotals();" type="text" size="2" value="0" title="Index of CD to place this product on. Zero-based." onfocus="this.select();"/></td>
+				<td align="center"><input id="ProductCD{count(preceding-sibling::Product)}" value="0" onkeyup="UpdateCdTotals();" type="text" size="2" title="Index of CD to place this product on. Zero-based." onfocus="this.select();">
+				<xsl:if test="CD"><xsl:attribute name="value"><xsl:value-of select="CD"/></xsl:attribute></xsl:if>
+				</input></td>
 			</tr>
 		</xsl:for-each>
 	</table>
@@ -317,8 +322,8 @@
 		<xsl:for-each select="/MasterInstaller/Products/Product">
 			<tr id="CdTr{count(preceding-sibling::Product)}" style="display:none">
 				<td align="center"><xsl:number value="count(preceding-sibling::Product)"/></td>
-				<td align="center"><input id="CdTitle{count(preceding-sibling::Product)}" type="text" size="30" title="Title to display to user for CD {count(preceding-sibling::Product)}" onfocus="this.select();"/></td>
-				<td align="center"><input id="CdLabel{count(preceding-sibling::Product)}" type="text" title="Volume label of CD {count(preceding-sibling::Product)}" onfocus="this.select();"/></td>
+				<td align="center"><input id="CdTitle{count(preceding-sibling::Product)}" type="text" size="30" value="{/MasterInstaller/CDs/CD[1 + current()/CD]/Title}" title="Title to display to user for CD {count(preceding-sibling::Product)}" onfocus="this.select();"/></td>
+				<td align="center"><input id="CdLabel{count(preceding-sibling::Product)}" type="text" value="{/MasterInstaller/CDs/CD[1 + current()/CD]/VolumeLabel}" title="Volume label of CD {count(preceding-sibling::Product)}" onfocus="this.select();"/></td>
 				<td align="center" id="CdUsed{count(preceding-sibling::Product)}"></td>
 				<td align="center" id="CdSpace{count(preceding-sibling::Product)}"></td>
 				<td align="left" id="CdNotes{count(preceding-sibling::Product)}" style="font-size:70%"></td>

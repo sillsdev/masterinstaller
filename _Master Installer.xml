@@ -948,7 +948,7 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Windows Installer 2.0 (both versions)</Title>
+				<Title>Windows Installer 2.0 (Win 98 and up - takes up more space)</Title>
 				<Source>3rd Party\Windows Installer 2 (Win 2K and up)</Source>
 				<Source>3rd Party\Windows Installer 2 (Win 98)</Source>
 				<Destination>Utilities\MSInstall</Destination>

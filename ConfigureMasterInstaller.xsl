@@ -102,44 +102,44 @@
 <xsl:template match="/MasterInstaller/AutoConfigure">
 	<table>
 	<tr>
-	<td align="right">Output XML file name: </td><td><input id="XmlFileName" type="text" onselect="InputTextSelected(this);" size="35" onfocus="this.select();" value="NewInstaller.xml" title="File name of new XML file used to compile the master installer."/></td>
+	<td align="right"><b>Output XML file name: </b></td><td><input id="XmlFileName" type="text" onselect="InputTextSelected(this);" size="35" onfocus="this.select();" value="NewInstaller.xml" title="File name of new XML file used to compile the master installer."/></td>
 	</tr>
 	<tr>
-	<td align="right">CD image path: </td><td><input id="CdImagePath" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Target directory for files to be burned onto CD. If the directory does not exist, it will be created. If it does exist, it ought to be empty."/></td>
+	<td align="right"><b>CD image path: </b></td><td><input id="CdImagePath" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Target directory for files to be burned onto CD. If the directory does not exist, it will be created. If it does exist, it ought to be empty."/></td>
 	<script type="text/javascript">document.getElementById("CdImagePath").value=CheckCDsRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="CdImagePath"/></xsl:call-template>");</script>
 	</tr>
 	<tr>
-	<td align="right">CD volume label template: <br/><span style="font-size:70%">(Leave blank unless anticipating multiple CD set.)</span></td><td><input id="CdLabelPrefix" type="text" onselect="InputTextSelected(this);" size="10" onfocus="this.select();" title="The text to be used as the basis for each CD's volume label. Each Cd's index will be added to form its default label."/></td>
+	<td align="right"><b>CD volume label template: </b><br/><span style="font-size:70%">(Leave blank unless anticipating multiple CD set.)</span></td><td><input id="CdLabelPrefix" type="text" onselect="InputTextSelected(this);" size="10" onfocus="this.select();" title="The text to be used as the basis for each CD's volume label. Each Cd's index will be added to form its default label."/></td>
 	</tr>
-	<tr><th align="right"><br/>General Setup</th></tr>
+	<tr><th align="right" style="font-size:130%"><br/>General Setup</th></tr>
 	<tr>
-	<td align="right">C++ file path:</td><td><input id="CppFilePath" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of C++ files used to compile the master installer."/></td>
+	<td align="right"><b>C++ file path:</b></td><td><input id="CppFilePath" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of C++ files used to compile the master installer."/></td>
 	<script type="text/javascript">document.getElementById("CppFilePath").value=CheckRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="CppFilePath"/></xsl:call-template>");</script>
 	</tr>
 	<tr>
-	<td align="right">External Help source path:</td><td><input id="ExternalHelpSource" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of files used to implement Software Support on the CD." onkeyup="TestExternalHelpSource();"/></td>
+	<td align="right"><b>External Help source path:</b></td><td><input id="ExternalHelpSource" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of files used to implement Software Support on the CD." onkeyup="TestExternalHelpSource();"/></td>
 	<script type="text/javascript">document.getElementById("ExternalHelpSource").value=CheckSourceRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="ExternalHelpSource"/></xsl:call-template>");</script>
 	</tr>
 	<tr>
-	<td align="right">External Help destination folder:</td>
+	<td align="right"><b>External Help destination folder:</b></td>
 	<td><input id="ExternalHelpFileDest" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Relative path from master installer to root folder of external help file(s) - ONLY IF SOURCE PATH IS A FOLDER"/></td>
 	<script type="text/javascript">document.getElementById("ExternalHelpFileDest").value="<xsl:value-of select="ExternalHelpDestination"/>"</script>
 	</tr>
 	<tr>
-	<td align="right">Terms of use source path:</td><td><input id="TermsOfUseSource" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of file(s) used as Terms of Use document(s)." onkeyup="TestTermsOfUseSource();"/></td>
+	<td align="right"><b>Terms of use source path:</b></td><td><input id="TermsOfUseSource" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of file(s) used as Terms of Use document(s)." onkeyup="TestTermsOfUseSource();"/></td>
 	<script type="text/javascript">document.getElementById("TermsOfUseSource").value=CheckSourceRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="TermsOfUseSource"/></xsl:call-template>");</script>
 	</tr>
 	<tr>
-	<td align="right">Terms of Use destination folder:</td>
+	<td align="right"><b>Terms of Use destination folder:</b></td>
 	<td><input id="TermsOfUseFileDest" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Relative path from master installer to root folder of Terms of Use file(s) - ONLY IF SOURCE PATH IS A FOLDER"/></td>
 	<script type="text/javascript">document.getElementById("TermsOfUseFileDest").value="<xsl:value-of select="TermsOfUseDestination"/>";</script>
 	</tr>
 	<tr>
-	<td align="right">CD size (MB): </td><td><input id="CdSize" type="text" onselect="InputTextSelected(this);" size="5" onfocus="this.select();" title="Capacity of individual target CD"/></td>
+	<td align="right"><b>CD size (MB): </b></td><td><input id="CdSize" type="text" onselect="InputTextSelected(this);" size="5" onfocus="this.select();" title="Capacity of individual target CD"/></td>
 	<script type="text/javascript">document.getElementById("CdSize").value="<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="CdSize"/></xsl:call-template>"</script>
 	</tr>
 	<tr>
-	<td align="right">Min file size (Bytes): </td><td><input id="MinFileSize" type="text" onselect="InputTextSelected(this);" size="5" onfocus="this.select();" title="The amount of space actually used on CD for a 1-byte file"/></td>
+	<td align="right"><b>Min file size (Bytes): </b></td><td><input id="MinFileSize" type="text" onselect="InputTextSelected(this);" size="5" onfocus="this.select();" title="The amount of space actually used on CD for a 1-byte file"/></td>
 	<script type="text/javascript">document.getElementById("MinFileSize").value="<xsl:value-of select="MinFileSize"/>"</script>
 	</tr>
 	</table>
@@ -152,92 +152,138 @@
 <xsl:template match="/MasterInstaller/General">
 	<table>
 	<tr>
-	<td align="right">Title:</td>
+	<td align="right"><b>Title:</b></td>
 	<td><input id="OverallTitle" type="text" onselect="InputTextSelected(this);" size="30" onfocus="this.select();" title="Overall title of master installer" onchange="InvalidateCompiledFiles();"/></td>
 	<script type="text/javascript">document.getElementById("OverallTitle").value="<xsl:value-of select="Title"/>"</script>
 	</tr>
 	<tr>
-	<td align="right">Product selection dialog subtitle:</td>
+	<td align="right"><b>Product selection dialog subtitle:</b></td>
 	<td><input id="ListSubtitle" type="text" onselect="InputTextSelected(this);" size="30" onfocus="this.select();" title="Text appended to overall title in product selection dialog box" onchange="InvalidateCompiledFiles();"/></td>
 	<script type="text/javascript">document.getElementById("ListSubtitle").value="<xsl:value-of select="ListSubtitle"/>"</script>
 	</tr>
 	<tr>
-	<td align="right">Product selection dialog background:</td>
+	<td align="right"><b>Product selection dialog background:</b></td>
 	<td>
-		Main color: <select name="ListBackground">
-			<option value="None">Blank</option>
-			<option value="Green">Green (Redistributable – no caution needed)</option>
-			<option value="Yellow">Yellow (Redistributable - caution Bible Translation Edition)</option>
-			<option value="Red">Red (Not Redistributable – encumbered)</option>
-			<option value="Blue">Blue (Not Redistributable – commercial)</option>
-		</select>
-		<br/>
-		Bitmap:&#160;
-		<input id="BackgroundBmp" type="text" onselect="InputTextSelected(this);" size="40" onfocus="this.select();" title="Bitmap to use as background in product selection dialog box" onchange="InvalidateCompiledFiles();"/>
-		<script type="text/javascript">document.getElementById("BackgroundBmp").value="<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="ListBackground"/></xsl:call-template>"</script>
-		<br/>
-		X-offest:&#160;<input id="OffsetX" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset background bitmap of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("OffsetX").value="<xsl:value-of select="ListBackground/@OffsetX"/>"</script>
-		&#160;&#160;Y-offset:&#160;<input id="OffsetY" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of vertical pixels (positive = down) to offset background bitmap of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("OffsetY").value="<xsl:value-of select="ListBackground/@OffsetY"/>"</script>
-		<br/>
-		Blend left:&#160;<input id="BlendLeft" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at left of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("BlendLeft").value="<xsl:value-of select="ListBackground/@BlendLeft"/>"</script>
-		&#160;&#160;Blend right:&#160;<input id="BlendRight" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at right of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("BlendRight").value="<xsl:value-of select="ListBackground/@BlendRight"/>"</script>
-		&#160;&#160;Blend top:&#160;<input id="BlendTop" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at top of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("BlendTop").value="<xsl:value-of select="ListBackground/@BlendTop"/>"</script>
-		&#160;&#160;Blend bottom:&#160;<input id="BlendBottom" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at bottom of product selection dialog box"/>
-		<script type="text/javascript">document.getElementById("BlendBottom").value="<xsl:value-of select="ListBackground/@BlendBottom"/>"</script>
+		<table border="1">
+		<tr>
+			<td align="right">Main color:</td>
+			<td>
+				<select name="ListBackground">
+					<option value="None">Blank</option>
+					<option value="Green">Green (Redistributable – no caution needed)</option>
+					<option value="Yellow">Yellow (Redistributable - caution Bible Translation Edition)</option>
+					<option value="Red">Red (Not Redistributable – encumbered)</option>
+					<option value="Blue">Blue (Not Redistributable – commercial)</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right">Bitmap source folder:</td>
+			<td>
+				<input id="BackgroundBmpFolder" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Folder to search for bitmaps to use as background in product selection dialog box"/>
+				<script type="text/javascript">document.getElementById("BackgroundBmpFolder").value=CheckRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="ListBackground/@DefaultFolder"/></xsl:call-template>");</script>
+			</td>
+		</tr>
+		<tr>
+			<td align="right">Bitmap file:</td>
+			<td>
+				<select name="ListBackgroundBmp" onchange="InvalidateCompiledFiles();"><option value="None">None</option></select>
+				&#160;<button id="RefreshBitmapList" title="Scan above folder for bitmap files." onclick="RefreshBitmapList();">Refresh List</button>
+			</td>
+			<script type="text/javascript">RefreshBitmapList();</script>
+		</tr>
+		<tr>
+			<td align="right">X-offest:</td>
+			<td>
+				<input id="OffsetX" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset background bitmap of product selection dialog box"/>
+				<script type="text/javascript">document.getElementById("OffsetX").value="<xsl:value-of select="ListBackground/@OffsetX"/>"</script>
+			</td>
+		</tr>
+		<tr>
+			<td align="right">Y-offest:</td>
+			<td>
+			<input id="OffsetY" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of vertical pixels (positive = down) to offset background bitmap of product selection dialog box"/>
+			<script type="text/javascript">document.getElementById("OffsetY").value="<xsl:value-of select="ListBackground/@OffsetY"/>"</script>
+			</td>
+		</tr>
+		<tr>
+			<td align="right">Blend left:</td>
+			<td>
+				<input id="BlendLeft" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at left of product selection dialog box"/>
+				<script type="text/javascript">document.getElementById("BlendLeft").value="<xsl:value-of select="ListBackground/@BlendLeft"/>"</script>
+			</td>
+		</tr>
+		<tr>
+			<td align="right">Blend right:</td>
+			<td>
+				<input id="BlendRight" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at right of product selection dialog box"/>
+				<script type="text/javascript">document.getElementById("BlendRight").value="<xsl:value-of select="ListBackground/@BlendRight"/>"</script>
+			</td>
+		</tr>
+		<tr>
+			<td align="right">Blend top:</td>
+			<td>
+				<input id="BlendTop" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at top of product selection dialog box"/>
+				<script type="text/javascript">document.getElementById("BlendTop").value="<xsl:value-of select="ListBackground/@BlendTop"/>"</script>
+			</td>
+		</tr>
+		<tr>
+			<td align="right">Blend bottom:</td>
+			<td>
+				<input id="BlendBottom" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at bottom of product selection dialog box"/>
+				<script type="text/javascript">document.getElementById("BlendBottom").value="<xsl:value-of select="ListBackground/@BlendBottom"/>"</script>
+			</td>
+		</tr>
+		</table>
 	</td>
 	</tr>
 	<tr>
-	<td align="right">Allow start from any CD in set</td>
+	<td align="right"><b>Allow start from any CD in set</b></td>
 	<td><input id="StartFromAnyCD" type="checkbox" title="If not checked, user must start from CD 1, otherwise a message will be displayed asking them to switch to CD 1."/></td>
 	<script type="text/javascript">document.getElementById("StartFromAnyCD").checked=<xsl:value-of select="StartFromAnyCD"/>;</script>
 	</tr>
 	<tr>
-	<td align="right">List even one product</td>
+	<td align="right"><b>List even one product</b></td>
 	<td><input id="ListEvenOneProduct" type="checkbox" title="If checked, the user will get a list of products to select even if there is only one product. If not checked and there is only one product, it will be installed automatically."/></td>
 	<script type="text/javascript">document.getElementById("ListEvenOneProduct").checked=<xsl:value-of select="ListEvenOneProduct"/></script>
 	</tr>
 	<tr>
-	<td align="right">List spacing adjust:</td>
+	<td align="right"><b>List spacing adjust:</b></td>
 	<td><input id="ListSpacingAdjust" type="text" onselect="InputTextSelected(this);" size="4" title="Number of pixels to adjust vertical spacing by, in main product list. Negative numbers are allowed, and they reduce the spacing." onfocus="this.select();"/></td>
 	<script type="text/javascript">document.getElementById("ListSpacingAdjust").value="<xsl:value-of select="ListSpacingAdjust"/>"</script>
 	</tr>
 	<tr>
-	<td align="right">'?' button adjust:</td>
+	<td align="right"><b>'?' button adjust:</b></td>
 	<td><input id="InfoButtonAdjust" type="text" onselect="InputTextSelected(this);" size="4" onfocus="this.select();" title="Number of pixels to adjust ? button size by, in main product list.Negative numbers are allowed, and they reduce the button size."/></td>
 	<script type="text/javascript">document.getElementById("InfoButtonAdjust").value="<xsl:value-of select="InfoButtonAdjust"/>"</script>
 	</tr>
 	<tr>
-	<td align="right">Secret product key prompt</td>
+	<td align="right"><b>Secret product key prompt</b></td>
 	<td><input id="KeyPromptNeedsShiftCtrl" type="checkbox" title="If checked, user must press [shift] + [ctrl] at startup in order to get a prompt for a Product Key."/></td>
 	<script type="text/javascript">document.getElementById("KeyPromptNeedsShiftCtrl").checked=<xsl:value-of select="KeyPromptNeedsShiftCtrl"/>;</script>
 	</tr>
 	<tr>
-	<td align="right">Get Key Title:</td>
+	<td align="right"><b>Get Key Title:</b></td>
 	<td><input id="GetKeyTitle" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Title of dialog asking for product key (if applicable)" onchange="InvalidateCompiledFiles();"/></td>
 	<script type="text/javascript">document.getElementById("GetKeyTitle").value="<xsl:value-of select="GetKeyTitle"/>"</script>
 	</tr>
 	<tr>
-	<td align="right">External help file:</td>
+	<td align="right"><b>External help file:</b></td>
 	<td><input id="ExternalHelpFile" type="text" onselect="InputTextSelected(this);" size="50" onfocus="this.select();" title="Relative path from master installer to main help file" onchange="InvalidateCompiledFiles();"/></td>
 	<script type="text/javascript">document.getElementById("ExternalHelpFile").value='<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="ExternalHelpFile"/></xsl:call-template>'</script>
 	</tr>
 	<tr>
-	<td align="right">Help button text:</td>
+	<td align="right"><b>Help button text:</b></td>
 	<td><input id="HelpButtonText" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Text on main help button" onchange="InvalidateCompiledFiles();"/></td>
 	<script type="text/javascript">document.getElementById("HelpButtonText").value="<xsl:value-of select="HelpButtonText"/>"</script>
 	</tr>
 	<tr>
-	<td align="right">Terms of Use file:</td>
+	<td align="right"><b>Terms of Use file:</b></td>
 	<td><input id="TermsOfUseFile" type="text" onselect="InputTextSelected(this);" size="50" onfocus="this.select();" title="Relative path from master installer to Terms of Use file" onchange="InvalidateCompiledFiles();"/></td>
 	<script type="text/javascript">document.getElementById("TermsOfUseFile").value='<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="TermsOfUseFile"/></xsl:call-template>'</script>
 	</tr>
 	<tr>
-	<td align="right">Terms of Use button text:</td>
+	<td align="right"><b>Terms of Use button text:</b></td>
 	<td><input id="TermsButtonText" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Text on Terms of Use button" onchange="InvalidateCompiledFiles();"/></td>
 	<script type="text/javascript">document.getElementById("TermsButtonText").value="<xsl:value-of select="TermsButtonText"/>"</script>
 	</tr>
@@ -567,18 +613,21 @@ function VerifyPage(CurrentStage)
 			}
 			break;
 		case 2:
-			// Check for existence of Background Bitmap file:
-			Path = document.getElementById("BackgroundBmp").value;
-			if (Path.length > 0)
+			// If a Background Bitmap file is selected, make sure the blend values are not all zero:
+			var BmpList = document.getElementById("ListBackgroundBmp");
+			if (BmpList.value != "None")
 			{
-				if (!fso.FileExists(Path))
+				if (document.getElementById("BlendLeft").value == 0
+					&& document.getElementById("BlendRight").value == 0
+					&& document.getElementById("BlendTop").value == 0
+					&& document.getElementById("BlendBottom").value == 0)
 				{
-					Errors += "The Product selection dialog background bitmap file is not a valid file.\n";
-					Errors += "\tYou must correct this, if you want to use a background bitmap.\n";
+					Errors += "You have selected a background bitmap, but the blend values are all zero.\n";
+					Errors += "\tYou must set blend values, if you want the background bitmap to be visible.\n";
 					CulpritElement = document.getElementById("BackgroundBmp");
 				}
 			}
-			break;
+			break;		
 	}
 	if (Errors.length > 0)
 	{
@@ -836,6 +885,39 @@ function addCommas(nStr)
 function InvalidateCompiledFiles()
 {
 	CompiledFilesSizesKnown = false;
+}
+
+// Populates the ListBackgroundBmp combo box with the names of any bitmap files found in the bitmap
+// folder specified in the BackgroundBmpFolder element.
+function RefreshBitmapList()
+{
+	var BitmapsFolder = document.getElementById("BackgroundBmpFolder").value;
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+	var Folder = fso.GetFolder(BitmapsFolder);
+	var fc = new Enumerator(Folder.files);
+	document.getElementById("ListBackgroundBmp").options[0].text = "None";
+	var count = 1;
+	var fSelected = false;
+	var OriginalPath = document.XMLDocument.selectSingleNode("/MasterInstaller/General/ListBackground").text;
+	for (; !fc.atEnd(); fc.moveNext())
+	{
+		var File = fc.item();
+		if (File.Name.slice(-4).toLowerCase() == ".bmp")
+		{
+			document.getElementById("ListBackgroundBmp").options[count] = new Option(File.Name, File.Name);
+			if (fso.BuildPath(BitmapsFolder, File.Name) == OriginalPath)
+			{
+				document.getElementById("ListBackgroundBmp").options[count].selected = true;
+				fSelected = true;
+			}
+			count++;
+		}
+	}
+	document.getElementById("ListBackgroundBmp").options.length = count;
+	if (!fSelected && OriginalPath.length > 0)
+	{
+		alert('Warning: Background bitmap specification "' + OriginalPath + '" is not valid.');
+	}
 }
 
 // Records last input text element to get text selected.
@@ -1719,7 +1801,7 @@ function GetXmlFileName()
 	var XmlFileName = document.getElementById('XmlFileName').value;
 	
 	// If user didn't append the .xml extension, we'll do it:
-	if (XmlFileName.slice(-4) != ".xml")
+	if (XmlFileName.slice(-4).toLowerCase() != ".xml")
 		XmlFileName += ".xml";
 
 	return XmlFileName;
@@ -2209,7 +2291,14 @@ function ApplyUserSettings(xmlDoc)
 	
 	// For the product selection dialog background, put the bitmap file path as the main value,
 	// and translate the color selection into our RGB values as atrributes:
-	ApplyEditBoxSetting(xmlDoc, "BackgroundBmp", "/MasterInstaller/General/ListBackground")
+	var BmpList = document.getElementById("ListBackgroundBmp");
+	if (BmpList.value != "None")
+	{
+		var fso = new ActiveXObject("Scripting.FileSystemObject");
+		var BmpFolder = document.getElementById("BackgroundBmpFolder").value;
+		var Node = xmlDoc.selectSingleNode("/MasterInstaller/General/ListBackground");
+		Node.text = fso.BuildPath(BmpFolder, BmpList.value);
+	}
 	var ColorSelectionElement = document.getElementById("ListBackground");
 	var rgbRed = 0;
 	var rgbGreen = 0;

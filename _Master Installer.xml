@@ -16,7 +16,7 @@
 	<General>
 		<Title/>
 		<ListSubtitle/>
-		<ListBackground/>
+		<ListBackground DefaultFolder="Bitmaps"/>
 		<ListEvenOneProduct>false</ListEvenOneProduct>
 		<ListSpacingAdjust></ListSpacingAdjust>
 		<InfoButtonAdjust></InfoButtonAdjust>

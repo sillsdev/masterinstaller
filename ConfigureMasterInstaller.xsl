@@ -15,7 +15,7 @@
     <xsl:call-template name="script"/>
   </head>
   <body onload="Initialize();" bgcolor="#F8F8C8">
-	<span style="font-size:250%"><b>Master Installer Configuration </b></span><span style="font-size:80%">by <a href="mailto:alistair_imrie@sil.org">Alistair Imrie</a></span>
+	<span style="font-size:250%"><b>Master Installer Configuration </b></span><span style="font-size:80%">by <a href="mailto:alistair_imrie@sil.org?subject=Master Installer Auto-configuration Tool">Alistair Imrie</a></span>
 	<br/>&#169; 2006 <a href="http://www.sil.org">SIL International</a><br/><br/>
 	<button id="PrevButton" onclick='PrevStage()' disabled="true">&lt; Previous</button>
 	<button id="NextButton" onclick='NextStage()' title='On to General Configuration'>&#160;&#160;&#160;&#160;Next &gt;&#160;&#160;</button>
@@ -27,7 +27,7 @@
 	</div>
 	<div id="Stage1" style="position:absolute; visibility:hidden">
 		<h2>Project Setup</h2>
-		<h3>Make sure you have update products and Master Installer files from the Subversion repository.</h3>
+		<h3>Make sure you have up-to-date products and Master Installer files from the Subversion repository.</h3>
 	    <xsl:apply-templates select="/MasterInstaller/AutoConfigure"/>
 	</div>
 	<div id="Stage2" style="position:absolute; visibility:hidden">

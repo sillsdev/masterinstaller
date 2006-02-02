@@ -12,9 +12,11 @@ struct DiskDetail
 	const char * m_pszVolumeLabel;
 };
 
+
 #include "ConfigDisks.cpp"
 
 static const int kctDiskDetails = sizeof(DiskDetails) / sizeof(DiskDetails[0]);
+
 
 DiskManager_t::DiskManager_t()
 {

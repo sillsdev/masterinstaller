@@ -504,10 +504,10 @@ function Initialize()
 function GetDocumentFolder()
 {
 	var iLastBackslash = document.URLUnencoded.lastIndexOf("\\");
-	var iEndOfProtocal = 0;
+	var iEndOfProtocol = 0;
 	if (document.URLUnencoded.slice(0, 7) == "file://")
-		iEndOfProtocal = 7;
-	return document.URLUnencoded.substr(iEndOfProtocal, iLastBackslash - iEndOfProtocal);
+		iEndOfProtocol = 7;
+	return document.URLUnencoded.substr(iEndOfProtocol, iLastBackslash - iEndOfProtocol);
 }
 
 // Analyzes whether the given path is a relative path or a full path specification.
@@ -2561,7 +2561,7 @@ function WriteAutorunInfFile(TargetFolder)
 // of the destination.
 function GetDestinationFolder(SourcePath, RootFolder, TargetRoot)
 {
-	// Make sure the target pathreflects any folders that may have been recursed:
+	// Make sure the target path reflects any folders that may have been recursed:
 	var TargetFullPath = TargetRoot;
 	// Add to TargetFullPath any folder path between the RootFolder and the actual file name:
 	if (SourcePath.slice(0, RootFolder.length) != RootFolder)

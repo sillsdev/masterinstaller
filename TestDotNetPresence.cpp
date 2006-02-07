@@ -9,8 +9,20 @@ bool TestDotNetPresence(const char * pszMinVersion, const char * pszMaxVersion,
 	LONG lResult;
 	HKEY hKey = NULL;
 
-	char * pszMin = strdup(pszMinVersion);
-	char * pszMax = strdup(pszMaxVersion);
+	char * pszMin;
+	char * pszMax;
+
+	// Check if min and max values were specified:
+	if (pszMinVersion)
+		pszMin = strdup(pszMinVersion);
+	else
+		pszMin = strdup("0.0");
+
+	if (pszMaxVersion)
+		pszMax = strdup(pszMaxVersion);
+	else
+		pszMax = strdup("32767.32767");
+
 	// Terminate version strings at second '.' if exists:
 	char * pszDot = strchr(pszMin, '.');
 	if (pszDot)

@@ -1,6 +1,10 @@
 // Tests for presence of Service Packs for Microsoft .NET 1.1
 bool TestDotNet1point1SPPresence(const char * pszMinVersion, const char * pszMaxVersion, const char * /*pszCriticalFile*/)
 {
+	// First of all, if .NET 2.0 or higher is present, this SP is irrelevant:
+	if (TestDotNetPresence("2.0", NULL, NULL))
+		return true; // pretend the SP is present, since it isn't needed anyway.
+
 	DWORD nMinVersion = 0;
 	DWORD nMaxVersion = 0xFFFFFFFF;
 	if (pszMinVersion)

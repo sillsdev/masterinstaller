@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
   xmlns:html="http://www.w3.org/1999/xhtml"
@@ -71,6 +71,10 @@
 		</div>
 		<input id="GatherFiles" type="checkbox" title="Gather files needed for your CD image into one folder."/>Gather files for CD image<br/>
 		<script type="text/javascript">document.getElementById("GatherFiles").checked=true;</script>
+		<input id="BuildIso" type="checkbox" title="Create ISO file which can be burned directly to CD. Requires Magic ISO console utility ($30)."/>Build ISO Cd Image<br/>
+		<script type="text/javascript">document.getElementById("BuildIso").checked=true;</script>
+		<input id="BuildSfx" type="checkbox" title="Creates .exe file which extracts all files and folders needed on CD. Assumes 7-Zip utility is present."/>Build self-extracting zip of CD contents<br/>
+		<script type="text/javascript">document.getElementById("BuildSfx").checked=false;</script>
 		<input id="DeleteJunk" type="checkbox" title="Delete temporary files that are created during compilation and linking."/>Clean up afterwards
 		<script type="text/javascript">document.getElementById("DeleteJunk").checked=true;</script>
 		<br/>
@@ -573,7 +577,7 @@ function VerifyPage(CurrentStage)
 				}
 
 				// Check for existence of Help File Cruncher:
-				Path = document.getElementById("CppFilePath").value;
+				Path = GetUtilsPath();
 				Path = fso.BuildPath(Path, "CrunchHelpFiles.exe");
 				if (!fso.FileExists(Path))
 				{
@@ -1271,6 +1275,7 @@ function UpdateCdTotals()
 	
 	for (iCd = 0; iCd < MaxNumCds; iCd++)
 	{
+		// See if the current CD is a start-up CD:
 		if (iCd == 0 || (StartFromAnyCD && CdDetails[iCd].CdInUse()))
 		{
 			// Each start-up CD must have setup.exe and Autorun.inf:
@@ -1319,7 +1324,7 @@ function UpdateCdTotals()
 				else
 					alert("Error - ExternalHelpFileData does not exist, but ExternalHelpSize is needed.");
 			}
-		}
+		} // End if this is a start-up CD
 		CdDetails[iCd].DisplayNotes += "Does not include general overhead space requirements.\n";
 	}
 	showCdRows();
@@ -1733,7 +1738,7 @@ function sleep(numberMillis)
 }
 
 // Add some text to the commentary table.
-function AddCommentary(Column, Text, fNewRow)
+function AddCommentary(Column, Text, fNewRow, fUseInnerHtml)
 {
 	// If the user has pressed the Stop! button, this is where we halt the build
 	// process:
@@ -1762,7 +1767,10 @@ function AddCommentary(Column, Text, fNewRow)
 	else
 		Cell = Table.rows[Table.rows.length - 1].cells[Column];
 		
-	Cell.innerText = Text;
+	if (fUseInnerHtml == true)
+		Cell.innerHTML = Text
+	else
+		Cell.innerText = Text;
 	sleep(10);
 }
 
@@ -1775,7 +1783,7 @@ function PrelimCompile()
 	showPage('PrelimCompileActiveDiv', true);
 	showPage('Stage5', false);
 	
-	if (BuildCd(true, true, true, false, true, false) != 0)
+	if (BuildCd(true, true, true, false, false, false, true, false) != 0)
 		alert("The build has failed. Estimated values will still be used. Run a full build (from the last configuration page) to get more information about the error.");
 	
 	showPage('PrelimCompileActiveDiv', false);
@@ -1791,6 +1799,8 @@ function detailsEntered()
 		document.getElementById('CompileHelps').checked,
 		document.getElementById('Compile').checked,
 		document.getElementById('GatherFiles').checked,
+		document.getElementById('BuildIso').checked,
+		document.getElementById('BuildSfx').checked,
 		document.getElementById('DeleteJunk').checked,
 		true);
 }
@@ -1824,6 +1834,14 @@ function GetCppFilePath()
 	return CppFilePath;
 }
 
+// Returns the location of the Utils folder which contains various tools.
+// This location is based on the C++ Path.
+function GetUtilsPath()
+{
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+	return fso.BuildPath(GetCppFilePath(), "Utils");
+}
+
 // Returns the location of the (compiled) InstallerHelp.dll file.
 // This location may be modified by the user.
 function GetInstallerHelpDllFilePath()
@@ -1846,16 +1864,28 @@ function DeleteIfExists(FilePath)
 	}
 }
 
+// For some unknown reason, the fso.CopyFile() method sometimes fails
+// with a "permission denied" error. This method uses DOS to do the file
+// copy instead:
+function AltCopy(Source, Dest)
+{
+	var Cmd = 'cmd /Q /D /C copy "' + Source + '" "' + Dest + '"';
+	var shellObj = new ActiveXObject("WScript.Shell");
+	shellObj.Run(Cmd, 0, true);
+}
+
 // Builds a complete CD (set) image.
 // Params:
 //	fWriteXml - true if the reulting XML configuration document is to be saved;
 //	fCompileHelps - true if any products are locked and need their setup help embedding in InstallerHelp2.dll;
 //	fCompileSetup - true if Setup.exe is to be compiled;
 //	fGatherFiles - true if all files for the CD are to be collected and copied to the CD image folder(s);
+//	fCreateIso - true if CD image (ISO file) is to be produced. Only works if files are gathered and the miso.exe file in Utils folder is licensed.
+//	fCreateSfx - true if self-extracting 7-zip file of gathered files is to be produced. Only works if files are gathered and the 7za.exe and 7zC.sfx files are in the Utils folder.
 //	fDeleteJunk - true if temp files created during compilation and linking are to be deleted;
 //	fDisplayCommentary - true if a running commentary is to be displayed during build.
 // Note that the order actions needed to build the CD image is not necessarily reflected by the order of paramters.
-function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fDeleteJunk, fDisplayCommentary)
+function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fCreateIso, fCreateSfx, fDeleteJunk, fDisplayCommentary)
 {
 	if (fDisplayCommentary)
 		AddCommentary(0, "Initializing...", true);
@@ -1907,6 +1937,10 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fDeleteJ
 		if (fDisplayCommentary)
 			AddCommentary(1, "Done.", false);
 
+		// Find out where we have to copy stuff to:
+		var CdImagePath = document.getElementById('CdImagePath').value;
+		CdImagePath = RemoveTrailingBackslash(CdImagePath);
+
 		if (fWriteXml)
 		{
 			if (fDisplayCommentary)
@@ -1921,7 +1955,6 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fDeleteJ
 			// 'root' CD folder:
 			if (fGatherFiles)
 			{
-				var CdImagePath = document.getElementById('CdImagePath').value;
 				MakeSureFolderExists(CdImagePath);
 				tso = fso.OpenTextFile(fso.BuildPath(CdImagePath, XmlFileName), 2, true);
 				tso.Write(xmlDoc.xml);
@@ -2037,7 +2070,57 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fDeleteJ
 		{
 			if (fDisplayCommentary)
 				AddCommentary(0, "Gathering files to disk image folder...", true);
-			GatherFiles();
+			GatherFiles(CdImagePath);
+			if (fDisplayCommentary)
+				AddCommentary(1, "Done.", false);
+		}
+		if (fCreateIso)
+		{
+			if (fDisplayCommentary)
+				AddCommentary(0, "Creating ISO CD image(s)...", true);
+
+			// Iterate over every CD:
+			for (iCd = 0; iCd < MaxNumCds; iCd++)
+			{
+				// Only bother with CDs known to be needed:
+				if (CdDetails[iCd].CdInUse())
+				{
+					// Generate full folder path to the current CD image:
+					var CdFolder = GetCdFolderPath(CdImagePath, iCd);
+					
+					var shellObj = new ActiveXObject("WScript.Shell");
+					shellObj.Run('wscript.exe "' + fso.BuildPath(GetUtilsPath(), "CdImage.js") + '" "' + CdFolder + '"', 0, true);
+
+					if (fDisplayCommentary)
+						AddCommentary(1, "Done.", false);
+				}
+			}
+		}
+		if (fCreateSfx)
+		{
+			if (fDisplayCommentary)
+				AddCommentary(0, "Creating self extracting 7-zip file.<br/><b>This will continue to run after the 'all finished' message.</b>", true, true);
+
+			// Get path to the 7za.exe and 7zC.sfx files in the Utils folder:
+			var ExePath = fso.BuildPath(GetUtilsPath(), "7za.exe");
+			var SfxPath = fso.BuildPath(GetUtilsPath(), "7zC.sfx");
+
+			// Iterate over every CD:
+			for (iCd = 0; iCd < MaxNumCds; iCd++)
+			{
+				// Only bother with CDs known to be needed:
+				if (CdDetails[iCd].CdInUse())
+				{
+					var CdFolder = GetCdFolderPath(CdImagePath, iCd);
+					var shellObj = new ActiveXObject("WScript.Shell");
+					shellObj.CurrentDirectory = CdImagePath;
+					var Cmd = '"' + ExePath + '" a "-sfx' + SfxPath + '" "' + GetCdLabel(iCd) + '.exe" "' + GetCdLabel(iCd) + '\\*" -r -mx=9 -mmt=on';
+					shellObj.Run(Cmd, 1, false);
+				}
+			}
+
+			if (fDisplayCommentary)
+				AddCommentary(1, "Done.", false);
 		}
 	}
 	catch(err)
@@ -2047,10 +2130,11 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fDeleteJ
 	}
 	if (fDisplayCommentary)
 	{
-		var Table = document.getElementById("CommentaryTable");
-		var Row = Table.insertRow();
-		var Cell = Row.insertCell();
-		Cell.innerHTML = "<h2>" + FinalComment + "</h2>";
+		AddCommentary(0, "<h2>" + FinalComment + "</h2>", true, true);
+//		var Table = document.getElementById("CommentaryTable");
+//		var Row = Table.insertRow();
+//		var Cell = Row.insertCell();
+//		Cell.innerHTML = "<h2>" + FinalComment + "</h2>";
 		var PanicStopButton = document.getElementById("PanicStopButton");
 		PanicStopButton.disabled = true;
 		PrevButton.disabled = false;
@@ -2093,7 +2177,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 		AddCommentary(0, "Crunching help files...", true);
 
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	var HelpFileCruncher = fso.BuildPath(GetCppFilePath(), "CrunchHelpFiles.exe");
+	var HelpFileCruncher = fso.BuildPath(GetUtilsPath(), "CrunchHelpFiles.exe");
 
 	// Check that HelpFileCruncher exists:
 	if (!fso.FileExists(HelpFileCruncher))
@@ -2575,8 +2659,26 @@ function GetDestinationFolder(SourcePath, RootFolder, TargetRoot)
 	return TargetFullPath;
 }
 
+// Fetch label for given CD:
+function GetCdLabel(CdIndex)
+{
+	CdLabelElement = document.getElementById('CdLabel' + CdIndex);
+	var CdLabel = CdLabelElement.value;
+	if (CdLabel == "")
+		CdLabel = CdIndex;
+	return CdLabel;
+}
+
+// Generate full folder path to the given CD's image:
+function GetCdFolderPath(CdImagePath, CdIndex)
+{
+	var CdFolder = CdImagePath;
+	CdFolder += "\\" + GetCdLabel(CdIndex);
+	return CdFolder;
+}
+
 // Copies files from their various sources to the CD image set.
-function GatherFiles()
+function GatherFiles(CdImagePath)
 {
 	// Find out how many bytes we need to copy, for our progress indicator:
 	var TotalBytesToCopy = 0;
@@ -2585,9 +2687,7 @@ function GatherFiles()
 			TotalBytesToCopy += ProductSizes[iProduct];
 	var TotalDone = 0;
 
-	// Find out where we have to copy stuff to:
-	var CdImagePath = document.getElementById('CdImagePath').value;
-	CdImagePath = RemoveTrailingBackslash(CdImagePath);
+	var StartFromAnyCD = document.getElementById("StartFromAnyCD").checked;
 	
 	// Get helper objects:
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
@@ -2596,20 +2696,16 @@ function GatherFiles()
 	// Determine how we are to handle certain relative paths:
 	var RelativePathPrepend = GetSourceRelativePathPrepend();
 
-	// Iterate over every CD:	
+	// Iterate over every CD:
 	for (iCd = 0; iCd < MaxNumCds; iCd++)
 	{
 		// Only bother with CDs known to be needed:
 		if (CdDetails[iCd].CdInUse())
 		{
 			// Generate full folder path to the current CD image:
-			var CdFolder = CdImagePath;
-			CdLabelElement = document.getElementById('CdLabel' + iCd);
-			var CdLabel = CdLabelElement.value;
-			if (CdLabel == "")
-				CdLabel = iCd;
-			AddCommentary(0, "Disk: " + CdLabel, true);
-			CdFolder += "\\" + CdLabel + "\\";
+			var CdFolder = GetCdFolderPath(CdImagePath, iCd);
+			AddCommentary(0, "Disk: " + iCd, true);
+			CdFolder += "\\";
 			MakeSureFolderExists(CdFolder);
 
 			// See if we need Setup.exe and autorun.inf files:
@@ -2635,7 +2731,7 @@ function GatherFiles()
 			}			
 			
 			// See if we need InstallerHelp2.dll:
-			var UsingInstallerHelp2Dll = (IsAnyProductLocked() && (iCd == 0 || document.getElementById("StartFromAnyCD").checked));
+			var UsingInstallerHelp2Dll = (IsAnyProductLocked() && (iCd == 0 || StartFromAnyCD));
 			if (UsingInstallerHelp2Dll)
 			{
 				AddCommentary(1, "Copying InstallerHelp2.dll", false);
@@ -2643,7 +2739,7 @@ function GatherFiles()
 			}
 
 			// See if we need External Help file(s):
-			if (ExternalHelpNeeded)
+			if (ExternalHelpNeeded && (iCd == 0 || StartFromAnyCD))
 			{
 				AddCommentary(1, "Copying External Help file(s)", false);
 				if (!ExternalHelpFileData)
@@ -2665,21 +2761,18 @@ function GatherFiles()
 					TargetFullPath = fso.BuildPath(TargetFullPath, fso.GetFileName(SourcePath));
 
 					// For some unknown reason, the fso.CopyFile() method fails
-					// with a "permission denied" error, so we'll force DOS to
-					// to the file copy instead:
-					var Cmd = 'cmd /Q /D /C copy "' + FileList[i] + '" "' + TargetFullPath + '"';
-
-					shellObj.Run(Cmd, 0, true);
-
+					// with a "permission denied" error, so we'll use our alternate
+					// function instead:
+					AltCopy(FileList[i], TargetFullPath);
 					//fso.CopyFile(FileList[i], Destination, true);
 
 					if (!fso.FileExists(TargetFullPath))
 						AddCommentary(0, "Error - could not copy from\n" + FileList[i] + " to\n" + TargetFullPath, true);
 				} // Next file
 			}
-			
+
 			// See if we need Terms of Use file(s):
-			if (TermsOfUseNeeded)
+			if (TermsOfUseNeeded && (iCd == 0 || StartFromAnyCD))
 			{
 				AddCommentary(1, "Copying Terms of Use file(s)", false);
 				if (!TermsOfUseFileData)
@@ -2701,11 +2794,9 @@ function GatherFiles()
 					TargetFullPath = fso.BuildPath(TargetFullPath, fso.GetFileName(SourcePath));
 
 					// For some unknown reason, the fso.CopyFile() method fails
-					// with a "permission denied" error, so we'll force DOS to
-					// to the file copy instead:
-					var Cmd = 'cmd /Q /D /C copy "' + FileList[i] + '" "' + TargetFullPath + '"';
-					shellObj.Run(Cmd, 0, true);
-
+					// with a "permission denied" error, so we'll use our alternate
+					// function instead:
+					AltCopy(FileList[i], TargetFullPath);
 					//fso.CopyFile(FileList[i], Destination, true);
 
 					if (!fso.FileExists(TargetFullPath))
@@ -2748,11 +2839,9 @@ function GatherFiles()
 									TargetFullPath = fso.BuildPath(TargetFullPath, fso.GetFileName(SourcePath));
 
 								// For some unknown reason, the fso.CopyFile() method fails
-								// with a "permission denied" error, so we'll force DOS to
-								// to the file copy instead:
-								var Cmd = 'cmd /Q /D /C copy "' + FileList[i] + '" "' + TargetFullPath + '"';
-								shellObj.Run(Cmd, 0, true);
-
+								// with a "permission denied" error, so we'll use our alternate
+								// function instead:
+								AltCopy(FileList[i], TargetFullPath);
 								//fso.CopyFile(FileList[i], Destination, true);
 
 								if (!fso.FileExists(TargetFullPath))
@@ -2770,8 +2859,10 @@ function GatherFiles()
 								// Check if source path is relative:
 								var HelpSource = CheckProductRelativePath(SetupHelpNode.text, RelativePathPrepend);
 
-								var Cmd = 'cmd /Q /D /C copy "' + HelpSource + '" "' + CdFolder + SetupHelpTargetNode.text + '"';
-								shellObj.Run(Cmd, 0, true);
+								// For some unknown reason, the fso.CopyFile() method fails
+								// with a "permission denied" error, so we'll use our alternate
+								// function instead:
+								AltCopy(HelpSource, CdFolder + SetupHelpTargetNode.text);
 							}
 						}
 

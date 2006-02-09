@@ -59,7 +59,7 @@
 			<ProductCode>{59EDA034-26E5-4B7A-9924-335BA200B461}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs_T" MinVersion="1.1"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="1.1"/>
 			<Preinstall>RemoveFirstLexTextAlpha</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.1</Title>
@@ -244,42 +244,6 @@
 				<Tag>WP</Tag>
 				<MsiFeature>WPd</MsiFeature>
 			</Feature>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Encoding Converters (Trunk build from \\cana)</Title>
-				<Source>\\cana\LSDev\Installers\Release\SetupCnvrtrs.msi</Source>
-				<Destination>Utilities\Encoding Converters</Destination>
-			</AutoConfigure>
-			<Title>SIL Converters and Repository</Title>
-			<Tag>EncCvtrs_T</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
-			<Install MsiFlags="/qb" MsiVersion="1.1"/>
-			<StatusWindow>Show</StatusWindow>
-			<ProductCode>{25AEB008-3E0B-4057-A66B-2F3C50228E0E}</ProductCode>
-			<Commentary>Please wait while the Converters are installed.</Commentary>
-			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Encoding Converters (From source control repository)</Title>
-				<Source>Installers\Encoding Converters\SetupCnvrtrs.msi</Source>
-				<Destination>Utilities\Encoding Converters</Destination>
-			</AutoConfigure>
-			<Title>SIL Converters and Repository</Title>
-			<Tag>EncCvtrs</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
-			<Install MsiFlags="/qb" MsiVersion="1.1"/>
-			<StatusWindow>Show</StatusWindow>
-			<ProductCode>{25AEB008-3E0B-4057-A66B-2F3C50228E0E}</ProductCode>
-			<Commentary>Please wait while the Converters are installed.</Commentary>
-			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 		</Product>
 		<Product KeyId="2" Version="4.2">
 			<AutoConfigure>
@@ -735,6 +699,76 @@
 		</Product>		
 		<Product>
 			<AutoConfigure>
+				<Title>Keyman 6.2 (build 174) Standard (not free)</Title>
+				<Source>3rd Party\Keyman 6.2.174 Standard</Source>
+				<Destination>Utilities\Keyman62</Destination>
+			</AutoConfigure>
+			<Title>Keyman 6.2 (Requires licensing via Internet)</Title>
+			<Tag>KeymanS</Tag>
+			<CriticalFile>Utilities\Keyman62\keyman6-2-174-0.exe</CriticalFile>
+			<Help>Utilities\Keyman62\Standard_Edition.rtf</Help>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Show</StatusWindow>
+			<Commentary>Please select 'Install' from the first menu, and read the new license information.</Commentary>
+			<FlushReboot>true</FlushReboot>
+			<TestPresence Version="6.2.174">TestKeymanStandardPresence</TestPresence>
+			<Prerequisite Tag="IE" MinVersion="5.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Keyman 6.2 (build 174) Home (free)</Title>
+				<Source>3rd Party\Keyman 6.2.174 Home</Source>
+				<Destination>Utilities\Keyman62</Destination>
+			</AutoConfigure>
+			<Title>Keyman 6.2 (Free - Home Use)</Title>
+			<Tag>KeymanH</Tag>
+			<CriticalFile>Utilities\Keyman62\keyman_free_6-2-174-0.exe</CriticalFile>
+			<Help>Utilities\Keyman62\Home_Use_Edition.rtf</Help>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Show</StatusWindow>
+			<Commentary>Please select 'Install' from the first menu.</Commentary>
+			<FlushReboot>true</FlushReboot>
+			<TestPresence Version="6.2.174">TestKeymanHomePresence</TestPresence>
+			<Prerequisite Tag="IE" MinVersion="5.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Encoding Converters (Trunk build from \\cana)</Title>
+				<Source>\\cana\LSDev\Installers\Release\SetupCnvrtrs.msi</Source>
+				<Destination>Utilities\Encoding Converters</Destination>
+			</AutoConfigure>
+			<Title>SIL Converters and Repository</Title>
+			<Tag>EncCvtrs</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
+			<Install MsiFlags="/qb" MsiVersion="1.1"/>
+			<StatusWindow>Show</StatusWindow>
+			<ProductCode>{25AEB008-3E0B-4057-A66B-2F3C50228E0E}</ProductCode>
+			<Commentary>Please wait while the Converters are installed.</Commentary>
+			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Encoding Converters (From source control repository)</Title>
+				<Source>Installers\Encoding Converters\SetupCnvrtrs.msi</Source>
+				<Destination>Utilities\Encoding Converters</Destination>
+			</AutoConfigure>
+			<Title>SIL Converters and Repository</Title>
+			<Tag>EncCvtrs</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
+			<Install MsiFlags="/qb" MsiVersion="1.1"/>
+			<StatusWindow>Show</StatusWindow>
+			<ProductCode>{25AEB008-3E0B-4057-A66B-2F3C50228E0E}</ProductCode>
+			<Commentary>Please wait while the Converters are installed.</Commentary>
+			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Microsoft SQL Server Desktop Engine Service Pack 4</Title>
 				<Source>3rd Party\MSDE 2000 SP4</Source>
 				<Destination>Utilities\MSDE</Destination>
@@ -863,40 +897,6 @@
 			<TestPresence>TestTsfPresence</TestPresence>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Show</StatusWindow>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Keyman 6.2 (build 174) Standard (not free)</Title>
-				<Source>3rd Party\Keyman 6.2.174 Standard</Source>
-				<Destination>Utilities\Keyman62</Destination>
-			</AutoConfigure>
-			<Title>Keyman 6.2 (Requires licensing via Internet)</Title>
-			<Tag>KeymanS</Tag>
-			<CriticalFile>Utilities\Keyman62\keyman6-2-174-0.exe</CriticalFile>
-			<Help>Utilities\Keyman62\Standard_Edition.rtf</Help>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Show</StatusWindow>
-			<Commentary>Please select 'Install' from the first menu, and read the new license information.</Commentary>
-			<FlushReboot>true</FlushReboot>
-			<TestPresence Version="6.2.174">TestKeymanStandardPresence</TestPresence>
-			<Prerequisite Tag="IE" MinVersion="5.0"/>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Keyman 6.2 (build 174) Home (free)</Title>
-				<Source>3rd Party\Keyman 6.2.174 Home</Source>
-				<Destination>Utilities\Keyman62</Destination>
-			</AutoConfigure>
-			<Title>Keyman 6.2 (Free - Home Use)</Title>
-			<Tag>KeymanH</Tag>
-			<CriticalFile>Utilities\Keyman62\keyman_free_6-2-174-0.exe</CriticalFile>
-			<Help>Utilities\Keyman62\Home_Use_Edition.rtf</Help>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Show</StatusWindow>
-			<Commentary>Please select 'Install' from the first menu.</Commentary>
-			<FlushReboot>true</FlushReboot>
-			<TestPresence Version="6.2.174">TestKeymanHomePresence</TestPresence>
-			<Prerequisite Tag="IE" MinVersion="5.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>

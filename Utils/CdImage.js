@@ -1,6 +1,9 @@
 // JScript to control creation of a CD image (ISO file).
 // Called with one parameter: The full path to a folder whose name will be used as the
 // Volume Label for the CD, and whose contents will form the CD content.
+// If the parameter is "-register", then this script merely sets up the registry
+// creating a shell extension, so that a folder can be right-clicked on to create a
+// CD image from that folder's contents.
 // Prerequisite: Must have MagicISO Console tool either in C:\Program Files\MagicISO or
 // somewhere in PATH.
 // MagicISO can be downloaded from www.magiciso.com, but costs $30 to run properly.
@@ -16,6 +19,46 @@ if (WScript.Arguments.Length < 1)
 	WScript.Echo("ERROR - needs 1 argument: CD Volume Label.");
 	WScript.Quit();
 }
+
+// Check for the -register parameter:
+if (WScript.Arguments.Item(0) == "-register")
+{
+	// Get path of this script:
+	var iLastBackslash = WScript.ScriptFullName.lastIndexOf("\\");
+	var Path = WScript.ScriptFullName.slice(0, iLastBackslash);
+	
+	// Build a version of the Path with doubled up backslashes:
+	var aFolder = Path.split("\\");
+	var bs2Path = "";
+	for (i = 0; i < aFolder.length; i++)
+	{
+		if (i > 0)
+			bs2Path += "\\\\";
+		bs2Path += aFolder[i];
+	}
+	
+	// Write registry settings:
+	var RegFile = fso.BuildPath(Path, "CdImage.reg");
+	var tso = fso.OpenTextFile(RegFile, 2, true);
+	tso.WriteLine('Windows Registry Editor Version 5.00');
+	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\CD_Image]');
+	tso.WriteLine('"EditFlags"=hex:01,00,00,00');
+	tso.WriteLine('@="Make CD image with this label"');
+	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\CD_Image\\command]');
+	// OK, deep breath, now:
+	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CdImage.js\\" \\"%1\\"\"');
+	tso.Close();
+	
+	// Run Regedit with the new file:
+	var Cmd = 'Regedit.exe "' + RegFile + '"';
+	shellObj.Run(Cmd, 0, true);
+	
+	// Delete RegFile:
+	fso.DeleteFile(RegFile);
+
+	WScript.Quit();
+}
+
 var SourceFolder = WScript.Arguments.Item(0);
 if (!fso.FolderExists(SourceFolder))
 {

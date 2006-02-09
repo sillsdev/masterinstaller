@@ -91,6 +91,7 @@ var iLastBackslash = SourceFolder.lastIndexOf("\\");
 var VolumeLabel = SourceFolder.slice(iLastBackslash + 1);
 
 // Get list of all files to be used in CD image:
+var fFoundSvn = false;
 var FileList = GetFileList(SourceFolder, true);
 
 // Initiate creation of .iso file (in batch file):
@@ -99,19 +100,31 @@ tso.WriteLine("@echo off");
 tso.Close();
 MagicISO("-l " + VolumeLabel + " -aj -l2 -k2");
 
-// Add files:
-for (i = 0; i < FileList.length; i++)
+// If we found any .svn folders, we have to set up a batch file adding individual
+// files to the ISO one by one.
+// If we didn't find and .svn folders, we can add the whole lot in one go, without
+// actually using the list!
+if (fFoundSvn)
 {
-	// See if there are any subfolders to be put in the CD image:
-	var PathMinusSource = FileList[i].slice(SourceFolder.length + 1);
-	var iLastBackslash = PathMinusSource.lastIndexOf("\\");
-	var CmdLine = "";
-	if (iLastBackslash != -1)
+	// Add files:
+	for (i = 0; i < FileList.length; i++)
 	{
-		var LocalPath = PathMinusSource.slice(0, iLastBackslash);
-		CmdLine += ' -c "' + LocalPath + '" -f "' + LocalPath + '"';
+		// See if there are any subfolders to be put in the CD image:
+		var PathMinusSource = FileList[i].slice(SourceFolder.length + 1);
+		var iLastBackslash = PathMinusSource.lastIndexOf("\\");
+		var CmdLine = "";
+		if (iLastBackslash != -1)
+		{
+			var LocalPath = PathMinusSource.slice(0, iLastBackslash);
+			CmdLine += ' -c "' + LocalPath + '" -f "' + LocalPath + '"';
+		}
+		CmdLine += ' -a "' + FileList[i] + '"';
+		MagicISO(CmdLine);
 	}
-	CmdLine += ' -a "' + FileList[i] + '"';
+}
+else
+{
+	var CmdLine = ' -a "' + SourceFolder + '\\*"';
 	MagicISO(CmdLine);
 }
 
@@ -126,7 +139,8 @@ fso.DeleteFile(BatchFile);
 // Adds to the batch file a call to the MagicISO Console tool with the specified command line.
 function MagicISO(CmdLine)
 {
-	Cmd = 'cmd /D /C ""' + MagicISOFile + '" "' + IsoFile + '" ' + CmdLine + '"';
+//	Cmd = 'cmd /D /C ""' + MagicISOFile + '" "' + IsoFile + '" ' + CmdLine + '"';
+	Cmd = '"' + MagicISOFile + '" "' + IsoFile + '" ' + CmdLine;
 //	shellObj.Run(Cmd, 0, true); // Put this line back if you remove the batch file mechanism.
 	var tso = fso.OpenTextFile(BatchFile, 8, true);
 	tso.WriteLine(Cmd);
@@ -141,6 +155,7 @@ function MagicISO(CmdLine)
 // Filters out any .svn folders (Subversion metadata).
 function GetFileList(FileSpec, RecurseSubfolders)
 {
+	fFoundSvn = false;
 	var Attributes = '-D';
 
 	// Get the root folder at the base of the search:
@@ -195,6 +210,8 @@ function GetFileList(FileSpec, RecurseSubfolders)
 			FileList[Index] = CurrentFile;
 			Index++;
 		}
+		else
+			fFoundSvn = true;
 	}
 	File.Close();
 	fso.DeleteFile(TempFilePath);

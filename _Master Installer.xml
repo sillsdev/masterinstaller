@@ -166,7 +166,7 @@
 			<ProductCode>{59EDA034-26E5-4B7A-9924-335BA200B461}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs" MinVersion="1.1"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="1.0.2"/>
 			<Preinstall>RemoveFirstLexTextAlpha</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.1</Title>
@@ -230,6 +230,96 @@
 				<Title>FieldWorks Translation Editor 1.0 (Debug)</Title>
 				<Tag>TE</Tag>
 				<MsiFeature>TEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.1</Title>
+				<Tag>WP</Tag>
+				<MsiFeature>WPr</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks WorldPad (Debug)</Title>
+				<Tag>WP</Tag>
+				<MsiFeature>WPd</MsiFeature>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>FW **without TE** (From source control repository)</Title>
+				<Source NameWhenLocked="setup.msi">Installers\FieldWorks without TE\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks without TE\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
+				<SetupHelp>Documents\FieldWorks without TE\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+				<WhenLocked>
+					<Destination>1</Destination>
+					<Substitutions>
+						<CriticalFile>1\setup.msi</CriticalFile>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 3.0</Title>
+			<Tag>FW_No_TE</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{59EDA034-26E5-4B7A-9924-335BA200B461}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="1.0.2"/>
+			<Preinstall>RemoveFirstLexTextAlpha</Preinstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1</Title>
+				<Tag>DN</Tag>
+				<MsiFeature>DNr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1 (Debug)</Title>
+				<Tag>DN</Tag>
+				<MsiFeature>DNd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta</Title>
+				<Tag>LT</Tag>
+				<MsiFeature>LTr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta (Debug)</Title>
+				<Tag>LT</Tag>
+				<MsiFeature>LTd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor</Title>
+				<Tag>TLE</Tag>
+				<MsiFeature>TLEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Topics List Editor (Debug)</Title>
+				<Tag>TLE</Tag>
+				<MsiFeature>TLEd</MsiFeature>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks WorldPad 2.1</Title>
@@ -760,9 +850,9 @@
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
-			<Install MsiFlags="/qb" MsiVersion="1.1"/>
+			<Install MsiFlags="/qb" MsiVersion="1.0.2"/>
 			<StatusWindow>Show</StatusWindow>
-			<ProductCode>{25AEB008-3E0B-4057-A66B-2F3C50228E0E}</ProductCode>
+			<ProductCode>{C4BEF638-52A5-4480-96BB-B54BDDF566D8}</ProductCode>
 			<Commentary>Please wait while the Converters are installed.</Commentary>
 			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
@@ -813,6 +903,7 @@
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\MSXML\msxml4.msi</CriticalFile>
 			<Install>MsiExec.exe /i $CriticalFile$ /qb</Install>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=3144b72b-b4f2-46da-b4b6-c5d7485f2b42&amp;DisplayLang=en</DownloadURL>
 			<StatusWindow>Show</StatusWindow>
 			<TestPresence>TestXml4Presence</TestPresence>
 		</Product>
@@ -828,6 +919,7 @@
 			<CriticalFile>Utilities\Win XP SP1\XPSP1.EXE</CriticalFile>
 			<Install>Utilities\Win XP SP1\XPSP1.EXE</Install>
 			<TestPresence>TestWinXpSp1Presence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/windowsxp/downloads/updates/sp1/default.mspx</DownloadURL>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Monitor</StatusWindow>
 			<FlushReboot>true</FlushReboot>
@@ -844,6 +936,7 @@
 			<CriticalFile>Utilities\DotNet\dotnetfx.exe</CriticalFile>
 			<Install>$CriticalFile$ /q:a /c:"install /l /q"</Install>
 			<TestPresence Version="1.1.4322.0">TestDotNetPresence</TestPresence>
+			<DownloadURL>http://msdn.microsoft.com/netframework/downloads/framework1_1</DownloadURL>
 			<Commentary>This installation may take a few minutes, without visible sign of progress.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 			<FlushReboot>true</FlushReboot>
@@ -858,6 +951,7 @@
 			<Title>Microsoft .NET Runtime 1.1 Service Pack 1</Title>
 			<Tag>.NET_SP1</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?displaylang=en&amp;FamilyID=A8F5654F-088E-40B2-BBDB-A83353618B38</DownloadURL>
 			<CriticalFile>Utilities\DotNet\NDP1.1sp1-KB867460-X86.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<TestPresence Version="1">TestDotNet1point1SPPresence</TestPresence>
@@ -892,6 +986,7 @@
 			<Title>Microsoft Text Services Framework</Title>
 			<Tag>MS TSF</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
+			<DownloadURL>http://www.microsoft.com/downloads/release.asp?releaseid=29130</DownloadURL>
 			<CriticalFile>Utilities\TSF\mstsf10.exe</CriticalFile>
 			<Install>$CriticalFile$ /VALLUSERS=1</Install>
 			<TestPresence>TestTsfPresence</TestPresence>
@@ -908,6 +1003,7 @@
 			<Tag>Acrobat</Tag>
 			<CriticalFile>Utilities\Acrobat Reader\rp505enu.exe</CriticalFile>
 			<Install>Utilities\Acrobat Reader\rp505enu.exe</Install>
+			<DownloadURL>http://www.adobe.com/products/acrobat/readstep2.html</DownloadURL>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Monitor</StatusWindow>
 			<TestPresence Version="5.0">TestAcrobatReaderPresence</TestPresence>
@@ -925,6 +1021,7 @@
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\DirectX\DXSETUP.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
+			<DownloadURL>http://www.microsoft.com/windows/directx/downloads</DownloadURL>
 			<Commentary>Please select default choices in dialogs.</Commentary>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<FlushReboot>true</FlushReboot>
@@ -943,6 +1040,7 @@
 			<CriticalFile>Utilities\MSInstall\instmsiw.exe</CriticalFile>
 			<Install>$CriticalFile$ /c:"msiinst.exe /delayrebootq"</Install>
 			<TestPresence Version="2.0">TestWinInstallerPresence</TestPresence>
+			<DownloadURL>http://msdn.microsoft.com/library/en-us/msi/setup/windows_installer_redistributables.asp</DownloadURL>
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 		</Product>
@@ -962,6 +1060,7 @@
 			</CriticalFile>
 			<Install>$CriticalFile$ /c:"msiinst.exe /delayrebootq"</Install>
 			<TestPresence Version="2.0">TestWinInstallerPresence</TestPresence>
+			<DownloadURL>http://msdn.microsoft.com/library/en-us/msi/setup/windows_installer_redistributables.asp</DownloadURL>
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 		</Product>

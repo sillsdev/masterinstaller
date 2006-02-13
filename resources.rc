@@ -250,7 +250,8 @@ BEGIN
     IDC_ERROR_KEY_DLL       "Cannot process product key."
     IDC_ERROR_INSTALLATION  "Installation of %s failed."
     IDC_ERROR_USER_QUIT_INSTALLER "You quit the installation of %s."
-    IDC_ERROR_FILE_MISSING  "Internal error - The correct CD is in place, but a critical file was not found. %s will be skipped."
+    IDC_ERROR_FILE_MISSING_URL  "%s is not on this CD, and will be skipped for now. You will need to install this software yourself. To obtain it, try following the links at %s."
+    IDC_ERROR_FILE_MISSING  "%s is not on this CD, and will be skipped for now. You will need to install this software yourself. No data is available on where to obtain this software."
     IDC_ERROR_READ_REG      "Cannot read system Registry."
     IDC_ERROR_WRITE_REG     "Cannot write to system Registry."
     IDC_ERROR_REMOVE_REG    "Cannot remove Registry settings."
@@ -271,6 +272,8 @@ BEGIN
                             "You need administrator privileges to install this product."
     IDC_ERROR_INSTALL_FILE_NOT_FOUND 
                             "The installer file was not in the expected location."
+    IDC_ERROR_INSTALL_FILE_NOT_FOUND_EXTRA
+                            "Try looking at the following website:"
     IDC_ERROR_INSTALL_PREREQUISITES 
                             "%s could not be installed because the following prerequisites were not installed:"
     IDC_ERROR_LOG_FILE_INVALID "Log file '%s' could not be opened."

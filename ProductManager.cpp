@@ -685,7 +685,13 @@ bool SoftwareProduct::Install()
 		}
 		else if (nFileResult == DiskManager_t::knFileNotFoundCorrectCd)
 		{
-			HandleError(kNonFatal, false, IDC_ERROR_FILE_MISSING, m_kpszNiceName);
+			// The software is not on the CD, so assume it is a "Lite" CD, where
+			// user has to do some work himself:
+			const char * pszUrl = GetDownloadUrl();
+			if (pszUrl)
+				HandleError(kNonFatal, false, IDC_ERROR_FILE_MISSING_URL, m_kpszNiceName, pszUrl);
+			else
+				HandleError(kNonFatal, false, IDC_ERROR_FILE_MISSING, m_kpszNiceName);
 			m_InstallStatus = InstallFailedFileNotFound;
 			return false;
 		}
@@ -1509,6 +1515,7 @@ char * ProductManager_t::GenInstallFailureReport(int iProduct, int nIndent) cons
 
 	// See what the reason for the failure was:
 	int ridReason = 0;
+	char * pszExtraInfo = NULL;
 	switch (Products[iProduct].m_InstallStatus)
 	{
 	case SoftwareProduct::InstallNotAttempted:
@@ -1531,11 +1538,19 @@ char * ProductManager_t::GenInstallFailureReport(int iProduct, int nIndent) cons
 		break;
 	case SoftwareProduct::InstallFailedFileNotFound:
 		ridReason = IDC_ERROR_INSTALL_FILE_NOT_FOUND;
+		if (Products[iProduct].GetDownloadUrl())
+			pszExtraInfo = new_sprintf(" %s %s", FetchString(IDC_ERROR_INSTALL_FILE_NOT_FOUND_EXTRA), Products[iProduct].GetDownloadUrl());
 		break;
 	}
 	if (ridReason)
 	{
 		new_sprintf_concat(pszReport, 0, FetchString(ridReason));
+		if (pszExtraInfo)
+		{
+			new_sprintf_concat(pszReport, 0, pszExtraInfo);
+			delete[] pszExtraInfo;
+			pszExtraInfo = NULL;
+		}
 
 		// See if any of its prerequisites are missing:
 		char * pszPrereqRpt = GenPrerequisiteFailureReport(iProduct, nIndent);

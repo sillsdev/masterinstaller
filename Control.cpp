@@ -219,27 +219,32 @@ void MasterInstaller_t::Run()
 			m_nPhase = phaseMain;
 			fShowDependencies = true;
 
-			// Display Prerequisites, if any:
-			g_Log.Write("Testing for prerequisites of chosen products:");
-			if (m_ppmProductManager->PrerequisitesNeeded(m_rgiChosenMainProducts))
-			{
-				// There are some prerequisites:
-				g_Log.Write("Prerequisites are needed.");
-
-				// Display report dialog:
-				char * pszTitle = new_sprintf("%s - %s", g_pszTitle,
-					FetchString(IDC_MESSAGE_PREREQUISITES));
-				char * pszIntro = new_sprintf(FetchString(IDC_MESSAGE_PREREQUISITE_INTRO),
-					g_pszTitle, g_pszTitle);
-				char * pszContinue = new_sprintf(FetchString(IDC_MESSAGE_CONTINUE));
-				m_ppmProductManager->ShowReport(pszTitle, pszIntro, pszContinue, true, true,
-					IProductManager::rptPrerequisitesShort, true, &m_rgiChosenMainProducts);
-				delete[] pszTitle;
-				delete[] pszIntro;
-				delete[] pszContinue;
-			} // End if any pre-requisite products are needed.
+			if (g_fManualInstall)
+				g_Log.Write("Manual mode: not testing for prerequisites of chosen products.");
 			else
-				g_Log.Write("No prerequisites are needed.");
+			{
+				// Display Prerequisites, if any:
+				g_Log.Write("Testing for prerequisites of chosen products:");
+				if (m_ppmProductManager->PrerequisitesNeeded(m_rgiChosenMainProducts))
+				{
+					// There are some prerequisites:
+					g_Log.Write("Prerequisites are needed.");
+
+					// Display report dialog:
+					char * pszTitle = new_sprintf("%s - %s", g_pszTitle,
+						FetchString(IDC_MESSAGE_PREREQUISITES));
+					char * pszIntro = new_sprintf(FetchString(IDC_MESSAGE_PREREQUISITE_INTRO),
+						g_pszTitle, g_pszTitle);
+					char * pszContinue = new_sprintf(FetchString(IDC_MESSAGE_CONTINUE));
+					m_ppmProductManager->ShowReport(pszTitle, pszIntro, pszContinue, true, true,
+						IProductManager::rptPrerequisitesShort, true, &m_rgiChosenMainProducts);
+					delete[] pszTitle;
+					delete[] pszIntro;
+					delete[] pszContinue;
+				} // End if any pre-requisite products are needed.
+				else
+					g_Log.Write("No prerequisites are needed.");
+			}
 		}
 		else if (m_nPhase == phaseMain) // We were running previously
 		{
@@ -271,7 +276,8 @@ void MasterInstaller_t::Run()
 				// Get index of next chosen product to be installed:
 				int iCurrentProduct = m_rgiChosenMainProducts[0];
 
-				if (!InstallPrerequisites(iCurrentProduct))
+				// Install prerequisite software, unless in manual mode:
+				if (!InstallPrerequisites(iCurrentProduct) && !g_fManualInstall)
 				{
 					// Could not install all prerequisites, so there's no point in continuing
 					// with this product:
@@ -310,7 +316,8 @@ void MasterInstaller_t::Run()
 
 		CheckIfStopRequested();
 
-		if (m_nPhase == phaseDependencies && m_fInstallRequiredProducts)
+		// Install dependent software, unless in manual mode:
+		if (m_nPhase == phaseDependencies && m_fInstallRequiredProducts && !g_fManualInstall)
 		{
 			g_Log.Write("Starting dependent software phase.");
 

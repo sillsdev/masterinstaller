@@ -284,8 +284,15 @@ function Go()
 	// Create resulting HTML document:
 	var shellObj = new ActiveXObject("WScript.Shell");
 	var Cmd = 'msxsl.exe "' + Selection.Xml + '" "' + Selection.Xsl + '" -o "' + TempFile + '"';
-	shellObj.Run(Cmd, 0, true);
-	
+	try
+	{
+		shellObj.Run(Cmd, 0, true);
+	}
+	catch (err)
+	{
+		alert("The attempt to run msxsl.exe has failed. No data can be output. Check that you have installed msxsl.exe and that your PATH environment variable includes its location.");
+	}
+
 	var ResultFrame = document.getElementById("ResultFrame");
 	ResultFrame.innerHTML = '<iframe width="800" height="800" src="' + TempFile + '"/>';
 	

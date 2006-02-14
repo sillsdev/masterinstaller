@@ -1,0 +1,321 @@
+<html xmlns:html="http://www.w3.org/1999/xhtml" xmlns:dt="urn:schemas-microsoft-com:datatypes">
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-16">
+
+<title>Installer Monitor Tool</title>
+
+<script type="text/javascript">
+
+var XmlFileList;
+var XslFileList;
+
+// Called upon completion of page loading.
+function Initialize()
+{
+	showPage("BlockedContentWarning", false);
+	showPage("MainPage", true);
+	XmlFileList = FindXmlFiles();
+	var XmlTitles = GetXmlTitles(XmlFileList);
+	XslFileList = FindXslFiles();
+	var XslTitles = GetXslTitles(XslFileList);
+	MakeChoiceTable("FileTable", XmlTitles);
+	MakeChoiceTable("StyleTable", XslTitles);
+}
+
+// Shows or hides a specified page or subpage of configuration settings.
+function showPage(sPage, bShow)
+{
+	var Element = document.getElementById(sPage);
+	Element.style.visibility = bShow ? 'visible' : 'hidden';
+	Element.style.position = bShow ? 'static' : 'absolute';
+}
+
+// Returns the folder containing the source document.
+function GetDocumentFolder()
+{
+	var iLastBackslash = document.URLUnencoded.lastIndexOf("\\");
+	var iEndOfProtocol = 0;
+	if (document.URLUnencoded.slice(0, 7) == "file://")
+		iEndOfProtocol = 7;
+	return document.URLUnencoded.substr(iEndOfProtocol, iLastBackslash - iEndOfProtocol);
+}
+
+// Generates a list of files using the given DOS file specification, which may include
+// wildcards. Returns an array of strings listing full path to each file.
+// Works by using the DOS dir command, redirecting output to a temp file, then
+// reading in the file.
+function GetFileList(FileSpec, RecurseSubfolders)
+{
+	var Attributes = '-D';
+
+	// Get the root folder at the base of the search:
+	var RootFolder;
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+	if (fso.FolderExists(FileSpec))
+		RootFolder = FileSpec;
+	else
+	{
+		var iLastBackslash = FileSpec.lastIndexOf("\\");
+		RootFolder = FileSpec.substr(0, iLastBackslash);
+		if (!fso.FolderExists(RootFolder))
+		{
+			Exception = new Object();
+			Exception.description = "Source specification '" + FileSpec + "' does not refer to a valid, accessible folder.";
+			throw(Exception);
+		}
+	}
+	// Build DOS dir command:
+	Cmd = 'cmd /Q /D /C dir "' + FileSpec + '" /B';
+	if (RecurseSubfolders)
+		Cmd += ' /S';
+	if (Attributes)
+		Cmd += ' /A:' + Attributes;
+
+	// Get path to temp file:
+	var TempFolderName = fso.GetSpecialFolder(2);
+	var TempFileName = fso.GetTempName();
+	var TempFilePath = fso.BuildPath(TempFolderName, TempFileName);
+
+	// Specify redirection to temp file in the DOS command:	
+	Cmd += ' >"' + TempFilePath + '"';
+
+	// Run DOS command:
+	var shellObj = new ActiveXObject("WScript.Shell");
+	shellObj.Run(Cmd, 0, true);
+
+	// Read resulting file:
+	var File = fso.OpenTextFile(TempFilePath, 1);
+	var FileList = new Array();
+	var Index = 0;
+	while (!File.AtEndOfStream)
+	{
+		var CurrentFile;
+		// If we were recursing folders, the full path will be given already:
+		if (RecurseSubfolders)
+			CurrentFile = File.ReadLine();
+		else // we have to add the root folder to the file name
+			CurrentFile = fso.BuildPath(RootFolder, File.ReadLine());
+
+		FileList[Index] = CurrentFile;
+		Index++;
+	}
+	File.Close();
+	fso.DeleteFile(TempFilePath);
+
+	return FileList;
+}
+
+// Locates XML installer files. Starts in the current folder of this source document.
+// Recursively searches subfolders.
+// If there is a parallel folder called "CDs", it searches that, too.
+function FindXmlFiles()
+{
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+	var SearchStart = GetDocumentFolder();
+	var FileList = GetFileList(fso.BuildPath(SearchStart, "*.xml"), true);
+
+	// Check for parallel CDs folder:
+	var iLastBackslash = SearchStart.lastIndexOf("\\");
+	if (iLastBackslash > 0)
+	{
+		var RootFolder = SearchStart.substr(0, iLastBackslash);
+		SearchStart = fso.BuildPath(RootFolder, "CDs");
+		if (fso.FolderExists(SearchStart))
+			FileList = FileList.concat(GetFileList(fso.BuildPath(SearchStart, "*.xml"), true));
+	}
+	
+	// Filter out files that don't have a MasterInstaller element:
+	var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
+	xmlDoc.async = false;
+	
+	for (i = 0; i < FileList.length; i++)
+	{
+		xmlDoc.load(FileList[i]);
+		var MasterInstallerElement = xmlDoc.selectSingleNode('/MasterInstaller');
+		if (!MasterInstallerElement)
+		{
+			// Remove current element:
+			FileList.splice(i, 1);
+			// Adjust index for next iteration:
+			i--;
+		}
+	}
+	return FileList;
+}
+
+// Locates XSL stylesheet files. Starts in the current folder of this source document.
+// Recursively searches subfolders.
+function FindXslFiles()
+{
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+	var SearchStart = GetDocumentFolder();
+	var FileList = GetFileList(fso.BuildPath(SearchStart, "*.xsl"), true);
+
+	// Filter out files that don't have a /xsl:stylesheet/*/html structure, and
+	// filter out the master installer config tool:
+	var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
+	xmlDoc.async = false;
+	
+	for (i = 0; i < FileList.length; i++)
+	{
+		xmlDoc.load(FileList[i]);
+		var Condemned = false;
+		var HtmlElement = xmlDoc.selectSingleNode('/xsl:stylesheet/*/html');
+		if (!HtmlElement)
+			Condemned = true;
+		else
+		{
+			var TitleElement = xmlDoc.selectSingleNode('/xsl:stylesheet/*/html/head/title');
+			if (TitleElement)
+				if (TitleElement.text == "Master Installer Configuration Tool")
+					Condemned = true;
+		}			
+		if (Condemned)
+		{
+			// Remove current element:
+			FileList.splice(i, 1);
+			// Adjust index for next iteration:
+			i--;
+		}
+	}
+
+	return FileList;
+}
+
+// Get titles of Xml files in given list
+function GetXmlTitles(XmlFileList)
+{
+	var Titles = new Array();
+
+	var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
+	xmlDoc.async = false;
+	
+	for (i = 0; i < XmlFileList.length; i++)
+	{
+		xmlDoc.load(XmlFileList[i]);
+		var TitleElement = xmlDoc.selectSingleNode('/MasterInstaller/General/Title');
+		var TitleHtml = XmlFileList[i];
+		if (TitleElement)
+		{
+		if (TitleElement.text)
+			TitleHtml = "<big>" + TitleElement.text + "</big> <small>[" + XmlFileList[i] + "]</small>";
+		else
+			TitleHtml = "<b>" + XmlFileList[i] + "</b>";
+		}
+		Titles.push(TitleHtml);
+	}
+	return Titles;
+}
+
+// Get titles of Xsl files in given list
+function GetXslTitles(XslFileList)
+{
+	var Titles = new Array();
+
+	var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
+	xmlDoc.async = false;
+	
+	for (i = 0; i < XslFileList.length; i++)
+	{
+		xmlDoc.load(XslFileList[i]);
+		Title = xmlDoc.selectSingleNode('/xsl:stylesheet/*/html/head/title');
+		if (Title)
+			Titles.push(Title.text);
+		else
+			Titles.push(XslFileList[i]);
+	}
+	return Titles;
+}
+
+// Fills in the specified object with data from the given Array.
+function MakeChoiceTable(TableName, List)
+{
+	var Table = document.getElementById(TableName);
+	for (i = 0; i < List.length; i++)
+	{
+		var Row = Table.insertRow(Table.rows.length);
+		var Cell = Row.insertCell(Row.cells.length);
+
+		var CellDef = '<input type="radio" name="' + TableName + 'Set" id="' + TableName + 'Choice' + i + '"';
+		if (i == 0)
+			CellDef += ' checked="checked"';
+		CellDef += '>' + List[i];
+		Cell.innerHTML = CellDef;
+	}
+}
+
+// Returns the selected XML and XSL files.
+function GetSelections()
+{
+	var Selection = new Object();
+	
+	// Get XML selection:
+	for (i = 0; i < XmlFileList.length; i++)
+	{
+		var RadioButton = document.getElementById('FileTableChoice' + i);
+		if (RadioButton.checked)
+		{
+			Selection.Xml = XmlFileList[i];
+			break;
+		}
+	}
+	
+	// Get XSL selection:
+	for (i = 0; i < XslFileList.length; i++)
+	{
+		var RadioButton = document.getElementById('StyleTableChoice' + i);
+		if (RadioButton.checked)
+		{
+			Selection.Xsl = XslFileList[i];
+			break;
+		}
+	}
+	
+	return Selection;
+}
+
+// Get user's selections and display resulting HTML.
+function Go()
+{
+	var Selection = GetSelections();
+	var TempFile = "C:\\temp.htm";
+	
+	// Create resulting HTML document:
+	var shellObj = new ActiveXObject("WScript.Shell");
+	var Cmd = 'msxsl.exe "' + Selection.Xml + '" "' + Selection.Xsl + '" -o "' + TempFile + '"';
+	shellObj.Run(Cmd, 0, true);
+	
+	var ResultFrame = document.getElementById("ResultFrame");
+	ResultFrame.innerHTML = '<iframe width="800" height="800" src="' + TempFile + '"/>';
+	
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+}
+
+</script>
+</head>
+
+<body onload="Initialize();" bgcolor="#F8F8C8">
+<span style="font-size:250%"><b>Installer Monitor </b></span><span style="font-size:80%">by <a href="mailto:alistair_imrie@sil.org?subject=Master Installer Auto-configuration Tool">Alistair Imrie</a></span>
+<br>
+&#169; 2006 <a href="http://www.sil.org">SIL International</a>
+<br><br>
+<div id="BlockedContentWarning" style="position:static; visibility:visible">
+	<h2>Please make sure that blocked content <u>and</u> active scripts are enabled in your browser.</h2>
+</div>
+<div id="MainPage" style="position:absolute; visibility:hidden">
+	<table border="1">
+		<tr>
+		<th>Select Master Installer script below</th>
+		<th>Select desired data below</th>
+		</tr>
+		<tr>
+			<td align="right" width="50%"><table id="FileTable"></table></td>
+			<td align="left" width="50%"><table id="StyleTable"></table></td>
+		</tr>
+		<tr><td colspan="2" align="center" ><button id="GoButton" onclick='Go();' style="font-size:130%">Get output</button></td></tr>
+		<tr><td colspan="2" id="ResultFrame"></td></tr>
+	</table>
+</div>
+</body>
+</html>

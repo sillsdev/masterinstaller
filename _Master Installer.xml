@@ -1040,7 +1040,7 @@
 			<CriticalFile>Utilities\MSInstall\instmsiw.exe</CriticalFile>
 			<Install>$CriticalFile$ /c:"msiinst.exe /delayrebootq"</Install>
 			<TestPresence Version="2.0">TestWinInstallerPresence</TestPresence>
-			<DownloadURL>http://msdn.microsoft.com/library/en-us/msi/setup/windows_installer_redistributables.asp</DownloadURL>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=4b6140f9-2d36-4977-8fa1-6f8a0f5dca8f&amp;DisplayLang=en</DownloadURL>
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 		</Product>
@@ -1060,7 +1060,7 @@
 			</CriticalFile>
 			<Install>$CriticalFile$ /c:"msiinst.exe /delayrebootq"</Install>
 			<TestPresence Version="2.0">TestWinInstallerPresence</TestPresence>
-			<DownloadURL>http://msdn.microsoft.com/library/en-us/msi/setup/windows_installer_redistributables.asp</DownloadURL>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=4b6140f9-2d36-4977-8fa1-6f8a0f5dca8f&amp;DisplayLang=en</DownloadURL>
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 		</Product>

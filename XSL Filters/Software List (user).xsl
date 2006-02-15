@@ -21,9 +21,9 @@
 </xsl:template>
 
 
-<!-- =============================================== -->
-<!-- Project Configuration Template                  -->
-<!-- =============================================== -->
+<!-- ================================= -->
+<!-- Product Template                  -->
+<!-- ================================= -->
 <xsl:template match="/MasterInstaller/Products/Product">
 	<xsl:value-of select="Title"/>
 	<br/>

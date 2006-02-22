@@ -156,7 +156,26 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 					FetchString(IDC_MESSAGE_GENERIC_INSTALLER));
 			}
 			if (fWaitTillExit)
-				WaitForSingleObject(process_info.hProcess, INFINITE);
+			{
+				// New code based on Microsoft support article 841061:
+				// http://support.microsoft.com/default.aspx?scid=kb;en-us;841061
+				MSG msg;
+				while (1)
+				{
+					while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+					{
+						TranslateMessage(&msg);
+						DispatchMessage (&msg);
+					}
+					// Wait for any message that is sent to or is posted to this queue
+					// or for the process handle to be signaled.
+					if (MsgWaitForMultipleObjects(1, &process_info.hProcess,
+						false, 1000, QS_ALLINPUT) == WAIT_OBJECT_0)
+					{
+						break;
+					}
+				}
+			}
 
 			g_rgchActiveProcessDescription[0] = 0;
 			if (hMonitorThread)

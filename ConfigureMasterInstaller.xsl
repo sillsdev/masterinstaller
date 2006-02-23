@@ -475,11 +475,11 @@ function Initialize()
 		
 		var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
 		NumProducts = ProductNodeList.length;
+		GenerateSourceFileLists(); // Must come after assigning NumProducts and before calling FindDuplicateSets().
 		FindDuplicateSets();
 		NeededProducts = new Array();
 		CdDetails = new Array();
 		MaxNumCds = NumProducts; // Allow max of one CD per product
-		GenerateSourceFileLists();
 		GetAllProductSizes();
 		WriteTotalSourceSizes();
 
@@ -492,8 +492,8 @@ function Initialize()
 		Initializing = false;
 		if (UserPressedNextWhileInitializing)
 		{
-			showPage("Stage1StillInitializing", false);
 			NextStage();
+			showPage("Stage1StillInitializing", false);
 			UserPressedNextWhileInitializing = false;
 			NextButton.disabled = false;
 		}
@@ -740,7 +740,7 @@ function GetStageNo()
 		if (StageDiv.style.visibility == 'visible')
 			return i;
 	}
-	return 0;
+	return 1; // Assume we're on a page related to the first page.
 }
 
 // Shows a specified page of configuration settings.
@@ -788,6 +788,21 @@ function setPageNo(Stage)
 	// Perform certain housekeeping tasks, depending on which stage we're about to enter:
 	switch (Stage)
 	{
+		case 3:
+			// If we're about to enter the Product Selection page, check if any products
+			// are unavailable because their files were inaccessible:
+			for (i = 0; i < NumProducts; i++)
+			{
+				var ProductElement = document.getElementById('ProductTitle' + i);
+				ProductElement.disabled = false;
+				ProductElement.title = "";
+				if (!SourceFileLists[i].AllFilesFound)
+				{
+					ProductElement.disabled = true;
+					ProductElement.title = "This product is unavailable because its source path is inaccessible.";
+				}
+			}
+			break;
 		case 4:
 			// If we're about to enter the Select Single Instances page, check that there is
 			// anything to show:
@@ -999,11 +1014,16 @@ function FillDuplicateSetTable()
 					if (DuplicateSets[i] == iSet)
 					{
 						var innerHTMLSegment = '<input type="radio" name="Set' + iSet + '" id="DuplicateProduct' + i + '"';
-						if (FirstOption)
+						var Disabled = (!SourceFileLists[i].AllFilesFound);
+						if (FirstOption && !Disabled)
+						{
 							innerHTMLSegment += ' checked="checked"';
+							FirstOption = false;
+						}
+						if (Disabled)
+							innerHTMLSegment += ' disabled="true" title="This product is unavailable because its source path is inaccessible."';
 						innerHTMLSegment += '>' + ProductList[i].selectSingleNode('AutoConfigure/Title').text + '<br/>';
 						TableData.innerHTML += innerHTMLSegment;
-						FirstOption = false;
 					}
 				}
 				
@@ -1551,38 +1571,49 @@ function GenerateSourceFileLists()
 	for (iProduct = 0; iProduct < NumProducts; iProduct++)
 	{
 		var FileListData = new Array();
-		var ProductNode = ProductNodeList[iProduct];
-		var ProductSourceList = ProductNode.selectNodes('AutoConfigure/Source');
-		for (iSource = 0; iSource < ProductSourceList.length; iSource++)
+		var AllOk = true;
+		try
 		{
-			var ProductSource = ProductSourceList[iSource];
-			var NameWhenLocked = ProductSource.getAttribute("NameWhenLocked");
-			var Attributes = ProductSource.getAttribute("Attributes");
+			var ProductNode = ProductNodeList[iProduct];
+			var ProductSourceList = ProductNode.selectNodes('AutoConfigure/Source');
+			for (iSource = 0; iSource < ProductSourceList.length; iSource++)
+			{
+				var ProductSource = ProductSourceList[iSource];
+				var NameWhenLocked = ProductSource.getAttribute("NameWhenLocked");
+				var Attributes = ProductSource.getAttribute("Attributes");
 
-			// Check if source path is relative:
-			var SourcePath = CheckProductRelativePath(ProductSource.text, RelativePathPrepend);
+				// Check if source path is relative:
+				var SourcePath = CheckProductRelativePath(ProductSource.text, RelativePathPrepend);
 
-			// Whether or not we recurse depends on the following rules, in order
-			// of decreasing priority:
-			// 1) If there is a Recurse attribute defined, we use its value
-			// 2) Otherwise, if the source text is an existing folder, we recurse
-			// 3) Otherwise, we do not recurse.
-			var Recurse = false; // Value if all other tests fail
-			var RecurseAttribute = ProductSource.getAttribute("Recurse");
-			if (RecurseAttribute)
-				Recurse = (RecurseAttribute == "true");
-			else if (fso.FolderExists(SourcePath))
-				Recurse = true;
+				// Whether or not we recurse depends on the following rules, in order
+				// of decreasing priority:
+				// 1) If there is a Recurse attribute defined, we use its value
+				// 2) Otherwise, if the source text is an existing folder, we recurse
+				// 3) Otherwise, we do not recurse.
+				var Recurse = false; // Value if all other tests fail
+				var RecurseAttribute = ProductSource.getAttribute("Recurse");
+				if (RecurseAttribute)
+					Recurse = (RecurseAttribute == "true");
+				else if (fso.FolderExists(SourcePath))
+					Recurse = true;
 
-			var NewListData = GetFileList(SourcePath, Recurse, Attributes);
-			if (NameWhenLocked && NewListData.FileList.length > 1)
-				alert("Error - Product " + ProductNode.selectSingleNode('Title').text + " contains an AutoConfigure Source node with a NameWhenLocked attribute (" + NameWhenLocked + ") but multiple files matching.");
-			if (NameWhenLocked)
-				NewListData.NameWhenLocked = NameWhenLocked;
+				var NewListData = GetFileList(SourcePath, Recurse, Attributes);
+				if (NameWhenLocked && NewListData.FileList.length > 1)
+					alert("Error - Product " + ProductNode.selectSingleNode('Title').text + " contains an AutoConfigure Source node with a NameWhenLocked attribute (" + NameWhenLocked + ") but multiple files matching.");
+				if (NameWhenLocked)
+					NewListData.NameWhenLocked = NameWhenLocked;
 
-			FileListData[iSource] = NewListData;
+				FileListData[iSource] = NewListData;
+			}
 		}
-		SourceFileLists[iProduct] = FileListData;
+		catch (err)
+		{
+			AllOk = false;
+			alert("Error while initializing: " + err.description);
+		}
+		SourceFileLists[iProduct] = new Object();
+		SourceFileLists[iProduct].ListData = FileListData;
+		SourceFileLists[iProduct].AllFilesFound = AllOk;
 	} // Next Product
 }
 
@@ -1635,7 +1666,7 @@ function GetAllProductSizes()
 
 	for (iProduct = 0; iProduct < NumProducts; iProduct++)
 	{
-		var FileListData = SourceFileLists[iProduct];
+		var FileListData = SourceFileLists[iProduct].ListData;
 		var Total = 0;
 		for (iData = 0; iData < FileListData.length; iData++)
 		{
@@ -2816,7 +2847,7 @@ function GatherFiles(CdImagePath)
 						var ProductTitle = ProductNode.selectSingleNode("Title").text;
 						AddCommentary(1, "[" + Math.round((100 * TotalDone / TotalBytesToCopy)) + "%] Copying " + ProductTitle + " files", false);
 						var Destination = CdFolder + ProductNode.selectSingleNode('AutoConfigure/Destination').text;
-						var FileListData = SourceFileLists[iProduct];
+						var FileListData = SourceFileLists[iProduct].ListData;
 						for (iData = 0; iData < FileListData.length; iData++)
 						{
 							var FileList = FileListData[iData].FileList;

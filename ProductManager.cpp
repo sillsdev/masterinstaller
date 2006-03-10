@@ -533,6 +533,76 @@ bool SoftwareProduct::Install()
 		m_InstallStatus = InstallFailedNeededAdmin;
 		return false;
 	}
+	if (m_fMustKillHangingWindows)
+	{
+		bool fTestHanging = true;
+		while (fTestHanging)
+		{
+			g_Log.Write("Testing for hanging windows (for %s)", m_kpszNiceName);
+			ShowStatusDialog();
+			const char * pszMsg = DisplayStatusText(0, FetchString(IDC_MESSAGE_TEST_HANGING));
+			char * pszHangingReport = GenerateHangingWindowsReport();
+			if (pszHangingReport != NULL)
+			{
+				HideStatusDialog();
+
+				char * pszIntro1 = new_sprintf(FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_1),
+					m_kpszNiceName);
+				char * pszIntro2 = new_sprintf(FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_2),
+					m_kpszNiceName);
+				char * pszAlert = new_sprintf("%s\n%s\n\n%s", pszIntro1, pszHangingReport,
+					pszIntro2);
+
+				delete[] pszIntro1;
+				pszIntro1 = NULL;
+				delete[] pszHangingReport;
+				pszHangingReport = NULL;
+				delete[] pszIntro2;
+				pszIntro2 = NULL;
+
+				g_Log.Write(pszAlert);
+
+				int idResult;
+				do
+				{
+					idResult = MessageBox(NULL, pszAlert, g_pszTitle,
+						MB_ICONSTOP | MB_ABORTRETRYIGNORE | MB_DEFBUTTON2);
+
+					if (idResult == IDABORT)
+					{
+						// Confirm quit:
+						if (MessageBox(NULL, FetchString(IDC_MESSAGE_CONFIRM_QUIT_GENERAL), g_pszTitle,
+							MB_YESNO) == IDYES)
+						{
+							g_Log.Write("User opted to quit.");
+							delete[] pszAlert;
+							pszAlert = NULL;
+							throw UserQuitException;
+						}
+					}
+				} while (idResult == IDABORT);
+
+				delete[] pszAlert;
+				pszAlert = NULL;
+
+				switch (idResult)
+				{
+				case IDRETRY:
+					g_Log.Write("User pressed Retry.");
+					break;
+				case IDIGNORE:
+					g_Log.Write("User pressed Ignore.");
+					fTestHanging = false;
+					break;
+				}
+			} // End if hanging windows report contained anything.
+			else
+			{
+				fTestHanging = false;
+				g_Log.Write("No hanging windows.");
+			}
+		} // End while(fTestHanging)
+	}// End if (m_fMustKillHangingWindows)
 
 	bool fCalledPreInstallFunction = false;
 

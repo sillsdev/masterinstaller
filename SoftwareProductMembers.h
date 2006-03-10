@@ -23,6 +23,8 @@
 	bool m_fRebootTestRegPending;
 	bool m_fRebootWininit;
 
+	bool m_fMustKillHangingWindows;
+
 	pfnPreInstallation m_pfnPreInstallation;
 	const char * m_kpszPreInstallation;
 	bool m_fIngnorePreInstallationErrors;

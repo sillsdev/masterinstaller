@@ -157,24 +157,11 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 			}
 			if (fWaitTillExit)
 			{
-				// New code based on Microsoft support article 841061:
-				// http://support.microsoft.com/default.aspx?scid=kb;en-us;841061
-				MSG msg;
-				while (1)
-				{
-					while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-					{
-						TranslateMessage(&msg);
-						DispatchMessage (&msg);
-					}
-					// Wait for any message that is sent to or is posted to this queue
-					// or for the process handle to be signaled.
-					if (MsgWaitForMultipleObjects(1, &process_info.hProcess,
-						false, 1000, QS_ALLINPUT) == WAIT_OBJECT_0)
-					{
-						break;
-					}
-				}
+				// New code based on Microsoft support article 824042:
+				// http://support.microsoft.com/kb/824042
+				WaitForInputIdle(process_info.hProcess, INFINITE);
+
+				WaitForSingleObject(process_info.hProcess, INFINITE);
 			}
 
 			g_rgchActiveProcessDescription[0] = 0;
@@ -208,7 +195,7 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 
 // Callback function used by StatusDlgMonitorThreadEntry() to see if any windows belong to a
 // specified process.
-int CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
+int CALLBACK StatusEnumWindowsProc(HWND hwnd, LPARAM lParam)
 {
 	// Process the lParam argument:
 	if (!lParam)
@@ -245,7 +232,7 @@ DWORD WINAPI StatusDlgMonitorThreadEntry(LPVOID pData)
 
 	while(!(*pfTerminate)) // Loop until flag is set by thread owner.
 	{
-		if (EnumWindows(EnumWindowsProc, (LPARAM)(&dwRequiredProcessId)) != 0)
+		if (EnumWindows(StatusEnumWindowsProc, (LPARAM)(&dwRequiredProcessId)) != 0)
 		{
 			// We didn't find a window beloning to the given process, so we'll make sure the
 			// status window is visible:
@@ -558,3 +545,211 @@ bool WriteClipboardText(const char * pszText)
 
 	return true;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+/*
+The following section checks the system for top level windows that are not responding to
+Windows messages.
+*/
+
+#include <shellapi.h>
+#include <tlhelp32.h>
+
+
+// Structure to hold data on each hanging top level window and its thread:
+struct WindowInfo_t
+{
+	HWND hwnd;
+	HANDLE hCallbackThread;
+	DWORD dwProcessId;
+};
+
+// Class to handle array of hanging window data:
+class WindowsInfo_t
+{
+public:
+	WindowsInfo_t();
+	~WindowsInfo_t();
+
+	bool AlreadyLoggedProcess(DWORD dwProcessId);
+	void Add(HWND hwnd, HANDLE hThread, DWORD dwProcessId);
+	int GetNumEntries(void) { return cwin; }
+	const WindowInfo_t * operator [] (int index);
+
+protected:
+	WindowInfo_t ** WindowsInfo;
+	int cwin;
+};
+
+// Constructor.
+WindowsInfo_t::WindowsInfo_t()
+{
+	WindowsInfo = NULL;
+	cwin = 0;
+}
+
+// Destructor.
+WindowsInfo_t::~WindowsInfo_t()
+{
+	// Delete dynamic array:
+	for (int i = 0; i < cwin; i++)
+		delete WindowsInfo[i];
+	delete[] WindowsInfo;
+}
+
+// See if we've recorded a given process as hanging.
+bool WindowsInfo_t::AlreadyLoggedProcess(DWORD dwProcessId)
+{
+	for (int i = 0; i < cwin; i++)
+		if (WindowsInfo[i]->dwProcessId == dwProcessId)
+			return true;
+
+	return false;
+}
+
+// Add new hanging window data to array.
+void WindowsInfo_t::Add(HWND hwnd, HANDLE hThread, DWORD dwProcessId)
+{
+	// First check that we haven't logged the given process before:
+	if (AlreadyLoggedProcess(dwProcessId))
+		return;
+
+	// Create new data object for array:
+	WindowInfo_t * info = new WindowInfo_t;
+	info->hwnd = hwnd;
+	info->hCallbackThread = hThread;
+	info->dwProcessId = dwProcessId;
+
+	// Add new item to array:
+	WindowInfo_t ** temp = new WindowInfo_t * [1 + cwin];
+	for (int i = 0; i < cwin; i++)
+		temp[i] = WindowsInfo[i];
+	delete[] WindowsInfo;
+	WindowsInfo = temp;
+	WindowsInfo[cwin++] = info;
+}
+
+// Get data for given array index.
+const WindowInfo_t * WindowsInfo_t::operator [] (int index)
+{
+	if (index < 0 || index >= cwin)
+		throw; // TODO
+	
+	return WindowsInfo[index];
+}
+
+// Thread entry function, to deal with each top level window:
+DWORD WINAPI TestHangingThreadEntry(LPVOID Data)
+{
+	// Convert generic parameter:
+	HWND hwnd = (HWND)Data;
+
+	// Send a harmless message to the window:
+	SendMessage(hwnd, WM_GETTEXTLENGTH, 0, 0);
+
+	// Now (assuming we got this far) quit this thread:
+	return 0;
+}
+
+
+// Callback function, which will be called for each top-level window.
+BOOL CALLBACK HangingWindowsEnumWindowsProc(HWND hwnd, LPARAM lParam)
+{
+	// Convert generic parameter:
+	WindowsInfo_t * WindowsInfo = (WindowsInfo_t *)lParam;
+
+	// Get process ID of given window:
+	DWORD dwWinProc;
+	GetWindowThreadProcessId(hwnd, &dwWinProc);
+
+	// Check if we've already found a window that hangs in the same process:
+	if (WindowsInfo->AlreadyLoggedProcess(dwWinProc))
+		return true; // Don't bother testing this window.
+
+	// Create a new thread to handle each window asynchronously:
+	DWORD nThreadId; // MSDN says you can pass NULL instead of this, but you can't on Win98.
+	HANDLE hThread = CreateThread(NULL, 0, TestHangingThreadEntry, (LPVOID)hwnd, 0, &nThreadId);
+
+	// See if the new thread hangs:
+	if (WaitForSingleObject(hThread, 5000) == WAIT_TIMEOUT)
+	{
+		// Record the details of this window, its process and the new thread:
+		WindowsInfo->Add(hwnd, hThread, dwWinProc);
+	}
+	else
+		CloseHandle(hThread);
+
+	return true;
+}
+
+// Returns a string containing details of windows that do not respond to Windows messages.
+char * GenerateHangingWindowsReport()
+{
+	char * pszReport = NULL;
+	WindowsInfo_t HangingWindowsInfo;
+
+	// Call our EnumWindowsProc for each top level window:
+	BOOL fEnumResult = EnumWindows(HangingWindowsEnumWindowsProc, LPARAM(&HangingWindowsInfo));
+
+	// Compile report on all the hanging windows:
+	int cwin = HangingWindowsInfo.GetNumEntries();
+	for (int i = 0; i < cwin; i++)
+	{
+		// Get current data:
+		const WindowInfo_t * WindowInfo = HangingWindowsInfo[i];
+		HANDLE hThread = WindowInfo->hCallbackThread;
+
+		// Check if current thread has returned:
+		DWORD dwExitCode;
+		GetExitCodeThread(hThread, &dwExitCode);
+		if (dwExitCode == STILL_ACTIVE)
+		{
+			const char * pszNoWindowName = "[Unnamed Window]";
+			int cchWndText = GetWindowTextLength(WindowInfo->hwnd);
+			char * pszWndText;
+			if (cchWndText)
+			{
+				pszWndText = new char [1 + cchWndText];
+				GetWindowText(WindowInfo->hwnd, pszWndText, 1 + cchWndText);
+			}
+			else
+				pszWndText = strdup(pszNoWindowName);
+
+			new_sprintf_concat(pszReport, 1, "%d) %s", i + 1, pszWndText);
+
+			delete[] pszWndText;
+			pszWndText = NULL;
+
+			HANDLE hModuleSnap = INVALID_HANDLE_VALUE;
+			MODULEENTRY32 me32;
+
+			// Take a snapshot of all modules in the specified process.
+			hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, WindowInfo->dwProcessId);
+			if (hModuleSnap != INVALID_HANDLE_VALUE)
+			{
+				// Set the size of the structure before using it.
+				me32.dwSize = sizeof( MODULEENTRY32 );
+
+				// Retrieve information about the first module:
+				if (Module32First(hModuleSnap, &me32))
+				{
+					new_sprintf_concat(pszReport, 0, " [%s]", me32.szModule);
+					new_sprintf_concat(pszReport, 1, "   %s", me32.szExePath);
+				}
+				// Don't forget to clean up the snapshot object.
+				CloseHandle(hModuleSnap);
+
+				// Kill hanging thread:
+				TerminateThread(hThread, 0);
+				CloseHandle(hThread);
+			}
+		}
+	}
+	return pszReport;
+}
+
+/*
+End of section dealing with hanging windows
+*/
+///////////////////////////////////////////////////////////////////////////////////////////////

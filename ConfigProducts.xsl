@@ -172,6 +172,13 @@ project to make an executable master installer.
 		</xsl:call-template>
 		<xsl:text>, // Flag to say if product needs to detect the presence of file wininit.ini when testing for a pending reboot&#13;</xsl:text>
 
+		<!-- Flag to say if hanging windows must be killed before the product is installed. -->
+		<xsl:text>&#09;&#09;</xsl:text>
+		<xsl:call-template name="StrOrFalseIfEmpty">
+			<xsl:with-param name="str" select="KillHangingWindows"/>
+		</xsl:call-template>
+		<xsl:text>, // Flag to say if hanging windows must be killed before the product is installed.&#13;</xsl:text>
+
 		<!-- Preinstallation function -->
 		<xsl:text>&#09;&#09;</xsl:text>
 		<xsl:if test="Preinstall/@Type='External'">

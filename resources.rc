@@ -295,6 +295,7 @@ BEGIN
     IDC_MESSAGE_NOTHING_SELECTED 
                             "You have not chosen any products to install. This installation will end."
     IDC_MESSAGE_INITIALIZING "Initializing..."
+	IDC_MESSAGE_TEST_HANGING "Checking system for non-responding windows..."
     IDC_MESSAGE_INSTALLING  "Installing %s."
     IDC_MESSAGE_EVALUATING  "Evaluating last installation"
     IDC_MESSAGE_DEPENDENCIES "Evaluating product dependencies"
@@ -311,6 +312,10 @@ BEGIN
     IDC_MESSAGE_PREREQUISITES "Prerequisites"
     IDC_MESSAGE_PREREQUISITE_INTRO 
                             "The software you have selected requires certain other third party software to be installed first. These will be installed automatically for you. Below is a list of all the required software. Simply press Continue. Some installations may ask to reboot your computer. You should allow these, but don't cancel %s, or remove the CD. %s will then continue where it left off."
+	IDC_MESSAGE_HANGING_WINDOWS_INTRO_1
+							"%s cannot be installed until the following applications are terminated:"
+	IDC_MESSAGE_HANGING_WINDOWS_INTRO_2
+							"The above applications have created windows that do not respond to messages. Terminate them, then press Retry. To attempt to install %s without terminating the applications, press Ignore. To quit installation, press Abort."
     IDC_MESSAGE_REQUIREMENTS "Additional Requirements"
     IDC_MESSAGE_REQUIREMENT_INTRO 
                             "The SIL Software on this machine requires certain other third party software. This will be installed automatically for you. Below is a list of all the required software. Simply press Continue. Some installations may ask to reboot your computer. You should allow these, but don't cancel %s, or remove the CD. %s will then continue where it left off."

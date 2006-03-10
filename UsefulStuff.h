@@ -22,12 +22,12 @@ extern void new_sprintf_concat(char *& rpszMain, int ctInsertNewline,
 extern void new_vsprintf_concat(char *& rpszMain, int ctInsertNewline,
 								const char * pszAddendumFmt, const va_list arglist);
 extern char * GetInstallerLocation();
-__int64 GetHugeVersion(const char * pszVersion);
-char * GenVersionText(__int64 nHugeVersion);
-bool VersionInRange(__int64 nVersion, const char * pszMinVersion, const char * pszMaxVersion);
-bool VersionInRange(const char * pszVersion, const char * pszMinVersion, const char * pszMaxVersion);
+extern __int64 GetHugeVersion(const char * pszVersion);
+extern char * GenVersionText(__int64 nHugeVersion);
+extern bool VersionInRange(__int64 nVersion, const char * pszMinVersion, const char * pszMaxVersion);
+extern bool VersionInRange(const char * pszVersion, const char * pszMinVersion, const char * pszMaxVersion);
 extern bool WriteClipboardText(const char * pszText);
-
+extern char * GenerateHangingWindowsReport();
 
 
 extern char g_rgchActiveProcessDescription[];

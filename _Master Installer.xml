@@ -995,6 +995,7 @@
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\MSDE\setup.exe</CriticalFile>
+			<KillHangingWindows>true</KillHangingWindows>
 			<Preinstall>RemoveAnyPreviousMSDE</Preinstall>
 <!--			<Install Flag="g_fExistingMsdeNeedsUpgrade">
 				<True>Utilities\MSDE\setup.exe /upgradesp sqlrun DISABLENETWORKPROTOCOLS=0 INSTANCENAME=SILFW /L*v C:\MSDELog.log</True>

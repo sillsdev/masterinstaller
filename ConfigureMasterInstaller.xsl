@@ -178,6 +178,8 @@
 					<option value="Yellow">Yellow (Redistributable - caution Bible Translation Edition)</option>
 					<option value="Red">Red (Not Redistributable – encumbered)</option>
 					<option value="Blue">Blue (Not Redistributable – commercial)</option>
+					<option value="Black">Black</option>
+					<option value="White">White</option>
 				</select>
 			</td>
 		</tr>
@@ -2439,6 +2441,16 @@ function ApplyUserSettings(xmlDoc)
 			rgbRed = 0;
 			rgbGreen = 103;
 			rgbBlue = 166;
+			break;
+		case "Black":
+			rgbRed = 0;
+			rgbGreen = 0;
+			rgbBlue = 1; // zero used as "no background", so use kludge
+			break;
+		case "White":
+			rgbRed = 255;
+			rgbGreen = 255;
+			rgbBlue = 255;
 			break;
 	}
 	var BackgroundNode = xmlDoc.selectSingleNode("/MasterInstaller/General/ListBackground");

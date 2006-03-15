@@ -129,7 +129,7 @@ else
 }
 
 // Run the temporary batch file we have been building:
-Cmd = 'cmd /D /C "' + BatchFile + '"';
+Cmd = 'cmd /D /C ""' + BatchFile + '""';
 shellObj.Run(Cmd, 1, true);
 // Delete the batch file:
 fso.DeleteFile(BatchFile);

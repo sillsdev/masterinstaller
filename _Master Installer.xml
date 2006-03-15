@@ -49,7 +49,7 @@
 					</Substitutions>
 				</WhenLocked>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 3.0</Title>
+			<Title>SIL FieldWorks 3.1 BTE</Title>
 			<Tag>FW_T</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -158,7 +158,7 @@
 					</Substitutions>
 				</WhenLocked>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 3.1</Title>
+			<Title>SIL FieldWorks 3.1 BTE</Title>
 			<Tag>FW_B31</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -265,7 +265,7 @@
 					</Substitutions>
 				</WhenLocked>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 3.0</Title>
+			<Title>SIL FieldWorks 3.0 BTE</Title>
 			<Tag>FW</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -901,6 +901,7 @@
 				<Title>Keyman 6.2 (build 174) Standard (not free)</Title>
 				<Source>3rd Party\Keyman 6.2.174 Standard</Source>
 				<Destination>Utilities\Keyman62</Destination>
+				<SetupHelp>Documents\Keyman\Standard_Edition.rtf</SetupHelp>
 			</AutoConfigure>
 			<Title>Keyman 6.2 (Requires licensing via Internet)</Title>
 			<Tag>KeymanS</Tag>
@@ -917,6 +918,7 @@
 			<AutoConfigure>
 				<Title>Keyman 6.2 (build 174) Home (free)</Title>
 				<Source>3rd Party\Keyman 6.2.174 Home</Source>
+				<SetupHelp>Documents\Keyman\Home_Use_Edition.rtf</SetupHelp>
 				<Destination>Utilities\Keyman62</Destination>
 			</AutoConfigure>
 			<Title>Keyman 6.2 (Free - Home Use)</Title>

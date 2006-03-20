@@ -705,21 +705,7 @@ char * GenerateHangingWindowsReport()
 		GetExitCodeThread(hThread, &dwExitCode);
 		if (dwExitCode == STILL_ACTIVE)
 		{
-			const char * pszNoWindowName = "[Unnamed Window]";
-			int cchWndText = GetWindowTextLength(WindowInfo->hwnd);
-			char * pszWndText;
-			if (cchWndText)
-			{
-				pszWndText = new char [1 + cchWndText];
-				GetWindowText(WindowInfo->hwnd, pszWndText, 1 + cchWndText);
-			}
-			else
-				pszWndText = strdup(pszNoWindowName);
-
-			new_sprintf_concat(pszReport, 1, "%d) %s", i + 1, pszWndText);
-
-			delete[] pszWndText;
-			pszWndText = NULL;
+			new_sprintf_concat(pszReport, 1, "%d) ", i + 1);
 
 			HANDLE hModuleSnap = INVALID_HANDLE_VALUE;
 			MODULEENTRY32 me32;
@@ -734,8 +720,93 @@ char * GenerateHangingWindowsReport()
 				// Retrieve information about the first module:
 				if (Module32First(hModuleSnap, &me32))
 				{
-					new_sprintf_concat(pszReport, 0, " [%s]", me32.szModule);
-					new_sprintf_concat(pszReport, 1, "   %s", me32.szExePath);
+					// Get "official" name of product:
+					char * pszProductName = NULL;
+					char * pszCompanyName = NULL;
+					DWORD dwDummy;
+					DWORD dwLen = GetFileVersionInfoSize(me32.szExePath, &dwDummy);
+					if (0 != dwLen)
+					{
+						BYTE * Block = new BYTE [dwLen];
+						if (0 != GetFileVersionInfo(me32.szExePath, NULL, dwLen, Block))
+						{
+							// Get ProductName and CompanyName in first available language:
+							struct LANGANDCODEPAGE
+							{
+								WORD wLanguage;
+								WORD wCodePage;
+							} *lpTranslate;
+							UINT cbTranslate;
+
+							// Read the list of languages and code pages:
+							VerQueryValue(Block, TEXT("\\VarFileInfo\\Translation"),
+								(LPVOID*)&lpTranslate, &cbTranslate);
+
+							// Read the file description for first language and code page.
+							for (unsigned int i = 0; 
+								i < min(1, (cbTranslate/sizeof(struct LANGANDCODEPAGE))); i++)
+							{
+								char * pszSubBlock = new_sprintf(
+									"\\StringFileInfo\\%04x%04x\\ProductName",
+									lpTranslate[i].wLanguage, lpTranslate[i].wCodePage);
+								char * pszOutput;
+								UINT uDummy;
+
+								// Retrieve file description for language and code page "i". 
+								if (0 != VerQueryValue(Block, pszSubBlock, (void ** )&pszOutput,
+									&uDummy))
+								{
+									pszProductName = strdup(pszOutput);
+								}
+								delete[] pszSubBlock;
+
+								pszSubBlock = new_sprintf(
+									"\\StringFileInfo\\%04x%04x\\CompanyName",
+									lpTranslate[i].wLanguage, lpTranslate[i].wCodePage);
+
+								// Retrieve file description for language and code page "i". 
+								if (0 != VerQueryValue(Block, pszSubBlock, (void ** )&pszOutput,
+									&uDummy))
+								{
+									pszCompanyName = strdup(pszOutput);
+								}
+								delete[] pszSubBlock;
+							} // Next Language Code-page
+						} // End if GetFileVersionInfo() succeeded
+						
+						delete[] Block;
+
+					} // End if GetFileVersionInfoSize() succeeded.
+
+					if (pszProductName)
+					{
+						new_sprintf_concat(pszReport, 0, " %s", pszProductName);
+						if (pszCompanyName)
+							new_sprintf_concat(pszReport, 0, " by %s", pszCompanyName);
+					}
+					else
+						new_sprintf_concat(pszReport, 0, " %s", me32.szModule);
+
+					const char * pszNoWindowName = "[Unnamed Window]";
+					int cchWndText = GetWindowTextLength(WindowInfo->hwnd);
+					char * pszWndText;
+					if (cchWndText)
+					{
+						pszWndText = new char [1 + cchWndText];
+						GetWindowText(WindowInfo->hwnd, pszWndText, 1 + cchWndText);
+					}
+					else
+						pszWndText = strdup(pszNoWindowName);
+
+					new_sprintf_concat(pszReport, 1, "        Window title: %s", pszWndText);
+
+					delete[] pszWndText;
+					pszWndText = NULL;
+
+					new_sprintf_concat(pszReport, 1, "        File path: %s", me32.szExePath);
+
+					delete[] pszProductName;
+					delete[] pszCompanyName;
 				}
 				// Don't forget to clean up the snapshot object.
 				CloseHandle(hModuleSnap);

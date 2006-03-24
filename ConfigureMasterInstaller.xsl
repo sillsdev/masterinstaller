@@ -2046,7 +2046,7 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fCreateI
 			if (fDisplayCommentary)
 				AddCommentary(0, "Preparing file for linker settings...", true);
 			var ObjRspFilePath = NewCompilationFolder + "\\" + ProjectName + "Obj.rsp";
-			SetupExePath = NewCompilationFolder + "\\setup.exe";
+			SetupExePath = fso.BuildPath(NewCompilationFolder, "setup.exe");
 			PrepareObjRspFile(ObjRspFilePath, NewCompilationFolder);
 			if (fDisplayCommentary)
 				AddCommentary(1, "Done.", false);
@@ -2058,7 +2058,7 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fCreateI
 			shellObj.Run(LinkStr, 7, true);
 
 			// Test that setup.exe exists:
-			if (!fso.FileExists(fso.BuildPath(NewCompilationFolder, "setup.exe")))
+			if (!fso.FileExists(SetupExePath))
 			{
 				Exception = new Object();
 				Exception.description = "Master installer [setup.exe] failed to compile and link.";
@@ -2164,10 +2164,6 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fCreateI
 	if (fDisplayCommentary)
 	{
 		AddCommentary(0, "<h2>" + FinalComment + "</h2>", true, true);
-//		var Table = document.getElementById("CommentaryTable");
-//		var Row = Table.insertRow();
-//		var Cell = Row.insertCell();
-//		Cell.innerHTML = "<h2>" + FinalComment + "</h2>";
 		var PanicStopButton = document.getElementById("PanicStopButton");
 		PanicStopButton.disabled = true;
 		PrevButton.disabled = false;

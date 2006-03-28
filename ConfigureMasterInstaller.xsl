@@ -199,14 +199,14 @@
 			<script type="text/javascript">RefreshBitmapList();</script>
 		</tr>
 		<tr>
-			<td align="right">X-offest:</td>
+			<td align="right">X-offset:</td>
 			<td>
 				<input id="OffsetX" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset background bitmap of product selection dialog box"/>
 				<script type="text/javascript">document.getElementById("OffsetX").value="<xsl:value-of select="ListBackground/@OffsetX"/>"</script>
 			</td>
 		</tr>
 		<tr>
-			<td align="right">Y-offest:</td>
+			<td align="right">Y-offset:</td>
 			<td>
 			<input id="OffsetY" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of vertical pixels (positive = down) to offset background bitmap of product selection dialog box"/>
 			<script type="text/javascript">document.getElementById("OffsetY").value="<xsl:value-of select="ListBackground/@OffsetY"/>"</script>
@@ -1980,7 +1980,7 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fCreateI
 				AddCommentary(0, "Writing out new XML file...", true);
 			// Write out a copy of our new XML document. Note: the save() method does not work from a web browser.
 			MakeSureFolderExists(NewCompilationFolder);
-			var tso = fso.OpenTextFile(fso.BuildPath(NewCompilationFolder, XmlFileName), 2, true);
+			var tso = fso.OpenTextFile(fso.BuildPath(NewCompilationFolder, XmlFileName), 2, true, -1);
 			tso.Write(xmlDoc.xml);
 			tso.Close();
 			
@@ -2401,7 +2401,7 @@ function ApplyUserSettings(xmlDoc)
 	// Settings from General:
 	ApplyEditBoxSetting(xmlDoc, "OverallTitle", "/MasterInstaller/General/Title")
 	ApplyEditBoxSetting(xmlDoc, "ListSubtitle", "/MasterInstaller/General/ListSubtitle")
-	
+
 	// For the product selection dialog background, put the bitmap file path as the main value,
 	// and translate the color selection into our RGB values as atrributes:
 	var BmpList = document.getElementById("ListBackgroundBmp");

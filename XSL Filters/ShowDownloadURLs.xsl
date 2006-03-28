@@ -41,6 +41,7 @@
 						<td align="center">
 							<a>
 								<xsl:attribute name="href"><xsl:value-of select="DownloadURL"/></xsl:attribute>
+								<xsl:attribute name="target">_blank</xsl:attribute>
 								<xsl:value-of select="DownloadURL"/>
 							</a>
 						</td>

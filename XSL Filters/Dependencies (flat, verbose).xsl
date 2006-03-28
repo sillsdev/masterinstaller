@@ -207,6 +207,7 @@
 						Available from:
 						<a>
 							<xsl:attribute name="href"><xsl:value-of select="URL"/></xsl:attribute>
+							<xsl:attribute name="target">_blank</xsl:attribute>
 							<xsl:value-of select="URL"/>
 						</a>
 					</xsl:if>

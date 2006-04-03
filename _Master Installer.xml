@@ -327,7 +327,7 @@
 				<MsiFeature>TEd</MsiFeature>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks WorldPad 2.1.1</Title>
+				<Title>FieldWorks WorldPad 2.2</Title>
 				<Tag>WP_31</Tag>
 				<MsiFeature>WPr</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
@@ -335,7 +335,7 @@
 			</Feature>
 <!-- Repeat for Debug build version -->
 			<Feature>
-				<Title>FieldWorks WorldPad 2.1.1 (Debug)</Title>
+				<Title>FieldWorks WorldPad 2.2 (Debug)</Title>
 				<Tag>WP_31</Tag>
 				<MsiFeature>WPd</MsiFeature>
 			</Feature>
@@ -419,7 +419,7 @@
 				<MsiFeature>TLEd</MsiFeature>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks WorldPad 2.1.1</Title>
+				<Title>FieldWorks WorldPad 2.2</Title>
 				<Tag>WP_31S</Tag>
 				<MsiFeature>WPr</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
@@ -427,7 +427,7 @@
 			</Feature>
 <!-- Repeat for Debug build version -->
 			<Feature>
-				<Title>FieldWorks WorldPad 2.1.1 (Debug)</Title>
+				<Title>FieldWorks WorldPad 2.2 (Debug)</Title>
 				<Tag>WP_31S</Tag>
 				<MsiFeature>WPd</MsiFeature>
 			</Feature>

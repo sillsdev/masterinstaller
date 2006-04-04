@@ -39,7 +39,7 @@ int RemovePreviousFWs(const char * /*pszCriticalFile*/)
 	// List of all previous FW product codes:
 	const char * pszProductCode[] = 
 	{
-		"{E161291A-BD0C-46F6-9F39-6B165BDD4CCC}", // FW 1.3 and 1.4 (Disks 3 and 4)
+		"{E161291A-BD0C-46F6-9F39-6B165BDD4CCC}", // FW 0.8.0, 1.3 and 1.4 ("Aussie", Disks 3 and 4)
 		"{2D424459-8B40-41F3-94F7-4D02BFAC39E7}", // FW 2.0 (Disk 5)
 		"{D8D2DBAB-7487-4A6E-B369-7F1932B3BDFE}", // old WW installer for Harvwest alpha
 		"{59EDA034-26E5-4B7A-9924-335BA200B461}", // FW 3.0

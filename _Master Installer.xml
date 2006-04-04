@@ -60,7 +60,7 @@
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 			<Prerequisite Tag="EncCvtrs" MinVersion="1.1"/>
-			<Preinstall>RemoveFirstLexTextAlpha</Preinstall>
+			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.1</Title>
 				<Tag>DN_T</Tag>
@@ -169,7 +169,7 @@
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 			<Prerequisite Tag="EncCvtrs" MinVersion="1.1"/>
-			<Preinstall>RemoveFirstLexTextAlpha</Preinstall>
+			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.1</Title>
 				<Tag>DN_T</Tag>
@@ -262,7 +262,7 @@
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 			<Prerequisite Tag="EncCvtrs" MinVersion="1.1"/>
-			<Preinstall>RemoveFirstLexTextAlpha</Preinstall>
+			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.2</Title>
 				<Tag>DN_31</Tag>
@@ -370,7 +370,7 @@
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 			<Prerequisite Tag="EncCvtrs" MinVersion="1.1"/>
-			<Preinstall>RemoveFirstLexTextAlpha</Preinstall>
+			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.2</Title>
 				<Tag>DN_31S</Tag>
@@ -461,7 +461,7 @@
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 			<Prerequisite Tag="EncCvtrs" MinVersion="1.0.2"/>
-			<Preinstall>RemoveFirstLexTextAlpha</Preinstall>
+			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.1</Title>
 				<Tag>DN</Tag>
@@ -567,7 +567,7 @@
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 			<Prerequisite Tag="EncCvtrs" MinVersion="1.0.2"/>
-			<Preinstall>RemoveFirstLexTextAlpha</Preinstall>
+			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.1</Title>
 				<Tag>DN</Tag>

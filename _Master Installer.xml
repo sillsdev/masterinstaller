@@ -1209,18 +1209,18 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>MSXML4</Title>
+				<Title>MSXML4 SP2</Title>
 				<Source>3rd Party\MSXML4</Source>
 				<Destination>Utilities\MSXML</Destination>
 			</AutoConfigure>
-			<Title>Microsoft XML Core Services 4</Title>
+			<Title>Microsoft XML Core Services 4 Service Pack 2</Title>
 			<Tag>MSXML4</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Utilities\MSXML\msxml4.msi</CriticalFile>
+			<CriticalFile>Utilities\MSXML\msxml.msi</CriticalFile>
 			<Install>MsiExec.exe /i $CriticalFile$ /qb</Install>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=3144b72b-b4f2-46da-b4b6-c5d7485f2b42&amp;DisplayLang=en</DownloadURL>
 			<StatusWindow>Show</StatusWindow>
-			<TestPresence>TestXml4Presence</TestPresence>
+			<ProductCode>{716E0306-8318-4364-8B8F-0CC4E9376BAC}</ProductCode>
 		</Product>
 		<Product>
 			<AutoConfigure>

@@ -2,11 +2,12 @@
 // This does not seem to have any version number records.
 bool TestXml4Presence(const char * /*pszMinVersion*/, const char * /*pszMaxVersion*/, const char * /*pszCriticalFile*/)
 {
+/*
 	// We test for presence of MSXML4 by seeing if its CLSID is registered:
 	LONG lResult;
 	HKEY hKey = NULL;
 
-	lResult = RegOpenKeyEx(HKEY_CLASSES_ROOT, "Msxml2\\CLSID", NULL, KEY_READ, &hKey);
+	lResult = RegOpenKeyEx(HKEY_CLASSES_ROOT, "Msxml2.DOMDocument.4.0\\CLSID", NULL, KEY_READ, &hKey);
 
 	if (ERROR_SUCCESS == lResult)
 	{
@@ -23,10 +24,10 @@ bool TestXml4Presence(const char * /*pszMinVersion*/, const char * /*pszMaxVersi
 				return true;
 		}
 	}
-
+*/
 	// That test didn't work, so we'll try a simple call to Windows Installer, to test presence
 	// of the MSXML2 product code:
-	const char * pszProductCode = "{7CFAEC66-BA0E-4076-AAA5-2BE29153E6DF}";
+	const char * pszProductCode = "{716E0306-8318-4364-8B8F-0CC4E9376BAC}";
 	INSTALLSTATE state = WindowsInstaller.MsiQueryProductState(pszProductCode);
 	switch (state)
 	{

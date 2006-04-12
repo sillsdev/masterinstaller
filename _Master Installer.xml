@@ -1256,6 +1256,7 @@
 			<StatusWindow>Show</StatusWindow>
 			<FlushReboot>true</FlushReboot>
 			<Prerequisite Tag="IE" MinVersion="5.01"/>
+			<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="Your software may work, but you may be vulnerable to the JPEG processing (GDI+) security issue."/>
 		</Product>
 		<Product>
 			<AutoConfigure>

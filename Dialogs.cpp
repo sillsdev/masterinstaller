@@ -515,8 +515,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 					fOnlyVisible = true;
 				}
 
-				char szCheckBox[300];
-				strcpy(szCheckBox, pProductManager->GetName(iProduct));
+				char * pszCheckBox = my_strdup(pProductManager->GetName(iProduct));
 
 				if (pProductManager->IsInstallable(iProduct))
 				{
@@ -528,23 +527,23 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 							pszVersion);
 						if (fInstalled && !fOnlyVisible)
 						{
-							strcat(szCheckBox, " ");
-							strcat(szCheckBox, FetchString(IDC_MESSAGE_ALREADY_INSTALLED));
+							new_sprintf_concat(pszCheckBox, 0, " %s",
+								FetchString(IDC_MESSAGE_ALREADY_INSTALLED));
 							fFoundInstalledProduct = true;
 						}
 					}
 					// See if product should be disabled because user needs Windows 2000 or better:
 					if (g_fLessThanWin2k && pProductManager->GetMustHaveWin2kOrBetterFlag(iProduct))
 					{
-						strcat(szCheckBox, " ");
-						strcat(szCheckBox, FetchString(IDC_MESSAGE_NEED_WIN2K));
+						new_sprintf_concat(pszCheckBox, 0, " %s",
+							FetchString(IDC_MESSAGE_NEED_WIN2K));
 						fOnlyVisible = true;
 					}
 					// See if product should be disabled because user needs Admin Privileges:
 					else if (!g_fAdministrator && pProductManager->GetMustBeAdminFlag(iProduct))
 					{
-						strcat(szCheckBox, " ");
-						strcat(szCheckBox, FetchString(IDC_MESSAGE_NEED_ADMIN_PRIV));
+						new_sprintf_concat(pszCheckBox, 0, " %s",
+							FetchString(IDC_MESSAGE_NEED_ADMIN_PRIV));
 						fOnlyVisible = true;
 					}
 
@@ -553,16 +552,18 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 					if (fOnlyVisible)
 						wsStyle |= WS_DISABLED;
 
-					CreateWindow("BUTTON", szCheckBox, wsStyle, nXcoord + 30, nYcoord, 520, 20,
+					CreateWindow("BUTTON", pszCheckBox, wsStyle, nXcoord + 30, nYcoord, 520, 20,
 						hwnd, reinterpret_cast<HMENU>(__int64(knCheckboxInitialId + i)), NULL,
 						NULL);
 				}
 				else // Product is not installable
 				{
-					CreateWindow("STATIC", szCheckBox, WS_CHILD | WS_VISIBLE, nXcoord + 30,
+					CreateWindow("STATIC", pszCheckBox, WS_CHILD | WS_VISIBLE, nXcoord + 30,
 						nYcoord + 2, 520, 20, hwnd,
 						reinterpret_cast<HMENU>(__int64(-1)), NULL, NULL);
 				}
+				delete[] pszCheckBox;
+				pszCheckBox = NULL;
 
 				if (pProductManager->GetHelpTag(iProduct))
 				{
@@ -748,9 +749,9 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 					ch = szPath;
 				*ch = 0;
 				if (LOWORD(wParam) == IDC_BUTTON_MAIN_HELP)
-					strcat(szPath, g_pszExternalHelpFile);
+					strcat_s(szPath, MAX_PATH, g_pszExternalHelpFile);
 				else
-					strcat(szPath, g_pszTermsOfUseFile);
+					strcat_s(szPath, MAX_PATH, g_pszTermsOfUseFile);
 				ShellExecute(hwnd, "open", szPath, NULL, ".", SW_SHOW);
 				break;
 			}

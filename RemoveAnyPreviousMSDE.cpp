@@ -27,11 +27,11 @@ int RemoveAnyPreviousMSDE(const char * /*pszCriticalFile*/)
 
 	if (ERROR_SUCCESS == lResult)
 	{
-		char szCommand[100];
-		sprintf(szCommand, "MsiExec.exe /X%s /qb-", szProductCode);
-		g_Log.Write("Uninstalling MSDE with '%s'.", szCommand);
+		char * pszCommand = new_sprintf("MsiExec.exe /X%s /qb-", szProductCode);
+		g_Log.Write("Uninstalling MSDE with '%s'.", pszCommand);
 		DisplayStatusText(0, "Uninstalling obsolete version of MSDE (SILFW)");
-		DWORD dwExitCode = ExecCmd(szCommand, false, true);
+		DWORD dwExitCode = ExecCmd(pszCommand, false, true);
+		delete[] pszCommand;
 		if (dwExitCode != 0)
 			return dwExitCode;
 	}

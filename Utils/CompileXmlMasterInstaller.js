@@ -1,13 +1,47 @@
 // This script takes an XML file, and compiles/links it into a setup.exe Master Installer file.
+
+var fso = new ActiveXObject("Scripting.FileSystemObject");	
+var shellObj = new ActiveXObject("WScript.Shell");
+
 if (WScript.Arguments.Length < 1)
 {
-	WScript.Echo("ERROR - needs 1 argument: Master Installer XML file.");
+	// Assume user just double-clicked on this script. We will register it for context
+	// submenu use.
+	// Get path of this script:
+	var iLastBackslash = WScript.ScriptFullName.lastIndexOf("\\");
+	var Path = WScript.ScriptFullName.slice(0, iLastBackslash);
+	
+	// Build a version of the Path with doubled up backslashes:
+	var aFolder = Path.split("\\");
+	var bs2Path = "";
+	for (i = 0; i < aFolder.length; i++)
+	{
+		if (i > 0)
+			bs2Path += "\\\\";
+		bs2Path += aFolder[i];
+	}
+	
+	// Write registry settings:
+	var RegFile = fso.BuildPath(Path, "CompileXmlMasterInstaller.reg");
+	var tso = fso.OpenTextFile(RegFile, 2, true);
+	tso.WriteLine('Windows Registry Editor Version 5.00');
+	tso.WriteLine('[HKEY_CLASSES_ROOT\\xmlfile\\shell\\CompileMasterInstaller]');
+	tso.WriteLine('@="Compile Master Installer from this XML file"');
+	tso.WriteLine('[HKEY_CLASSES_ROOT\\xmlfile\\shell\\CompileMasterInstaller\\command]');
+	// OK, deep breath, now:
+	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CompileXmlMasterInstaller.js\\" \\"%1\\"\"');
+	tso.Close();
+	
+	// Run Regedit with the new file:
+	var Cmd = 'Regedit.exe "' + RegFile + '"';
+	shellObj.Run(Cmd, 0, true);
+	
+	// Delete RegFile:
+	fso.DeleteFile(RegFile);
+
 	WScript.Quit();
 }
 
-
-var fso = new ActiveXObject("Scripting.FileSystemObject");
-var shellObj = new ActiveXObject("WScript.Shell");
 var XmlFileName = WScript.Arguments.Item(0);
 var CppFilePath = "E:\\CD Builder\\Master Installer";
 
@@ -36,7 +70,7 @@ if (xmlDoc.selectSingleNode("/MasterInstaller") == null)
 
 iLastBackslash = XmlFileName.lastIndexOf("\\");
 var InputFolder = XmlFileName.substr(0, iLastBackslash);
-var NewCompilationFolder = fso.BuildPath(InputFolder, "___TempCppCompile___");
+var NewCompilationFolder = fso.BuildPath(InputFolder, "setup.exe coming soon");
 MakeSureFolderExists(NewCompilationFolder);
 
 // Write new C++ files to reflect this new configuration:
@@ -47,10 +81,12 @@ var CppRspFilePath = NewCompilationFolder + "\\" + "Cpp.rsp";
 PrepareCppRspFile(CppRspFilePath, CppFilePath, NewCompilationFolder);
 
 // Compile all C++ files:
-shellObj.Run('cl.exe @"' + CppRspFilePath + '" /nologo', 7, true);
+var CompileCmd = 'cl.exe @"' + CppRspFilePath + '" /nologo';
+shellObj.Run(CompileCmd, 7, true);
 
 // Compile resource file:
-shellObj.Run('rc.exe /fo"' + NewCompilationFolder + '/resources.res" "' + CppFilePath + '\\resources.rc"', 7, true);
+var ResourceCmd = 'rc.exe /fo"' + NewCompilationFolder + '/resources.res" "' + CppFilePath + '\\resources.rc"';
+shellObj.Run(ResourceCmd, 7, true);
 
 // Prepare the file containing all the linker settings:
 var ObjRspFilePath = NewCompilationFolder + "\\" + "Obj.rsp";
@@ -58,8 +94,8 @@ var SetupExePath = InputFolder + "\\setup.exe";
 PrepareObjRspFile(ObjRspFilePath, NewCompilationFolder);
 
 // Link the obj files to produce the master installer:
-var LinkStr = 'link.exe @"' + ObjRspFilePath + '"'; 
-shellObj.Run(LinkStr, 7, true);
+var LinkCmd = 'link.exe @"' + ObjRspFilePath + '"'; 
+shellObj.Run(LinkCmd, 7, true);
 
 // Test that setup.exe exists:
 if (!fso.FileExists(SetupExePath))
@@ -155,7 +191,7 @@ function PrepareCppRspFile(RspFilePath, CppFilePath, CompilationFolder)
 {
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/O1 /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /EHsc /ML /Fo"' + CompilationFolder + '/" /Fd"' + CompilationFolder + '/vc70.pdb" /W3 /c /Wp64 /Zi /TP');
+	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Wp64 /Zi /TP');
 	tso.WriteLine('"' + CppFilePath + '\\WIWrapper.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UsefulStuff.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\ThirdPartySoftware.cpp"');
@@ -177,7 +213,7 @@ function PrepareObjRspFile(RspFilePath, CompilationFolder)
 {
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/OUT:"' + SetupExePath + '" /INCREMENTAL:NO /NOLOGO /LIBPATH:"Msi.lib" /SUBSYSTEM:WINDOWS /SWAPRUN:CD /OPT:REF /OPT:ICF /OPT:NOWIN98 /LTCG /MACHINE:X86 version.lib shlwapi.lib Msi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib');
+	tso.WriteLine('/OUT:"' + SetupExePath + '" /INCREMENTAL:NO /NOLOGO /LIBPATH:"Msi.lib" /MANIFEST /MANIFESTFILE:"' + CompilationFolder + '\\setup.exe.intermediate.manifest" /SUBSYSTEM:WINDOWS /SWAPRUN:CD /OPT:REF /OPT:ICF /OPT:NOWIN98 /LTCG /MACHINE:X86 version.lib shlwapi.lib C:\\Work\\MsiIntel.SDK\\Lib\\Msi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib');
 	tso.WriteLine('"' + CompilationFolder + '\\Control.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\Dialogs.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\DiskManager.obj"');

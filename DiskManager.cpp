@@ -24,12 +24,13 @@ DiskManager_t::DiskManager_t()
 
 	// Get current drive root:
 	GetModuleFileName(NULL, szCurrentPath, MAX_PATH);
-	strncpy(m_szCurrentDriveRoot, szCurrentPath, 3);
+	for (int i = 0; i < 3; i++)
+	 m_szCurrentDriveRoot[i] = szCurrentPath[i];
 	m_szCurrentDriveRoot[3] = 0;
 	g_Log.Write("Current drive root: %s", m_szCurrentDriveRoot);
 
 	// Get current path:
-	strcpy(m_szCurrentPath, szCurrentPath);
+	strcpy_s(m_szCurrentPath, MAX_PATH, szCurrentPath);
 	char * ch = strrchr(m_szCurrentPath, '\\');
 	if (ch)
 		*(ch + 1) = 0;
@@ -49,7 +50,7 @@ int DiskManager_t::CurrentCd()
 	g_Log.Write("Volume label for '%s' is '%s'", m_szCurrentDriveRoot, szVolume);
 
 	for (int i = 0; i < kctDiskDetails; i++)
-		if (stricmp(szVolume, DiskDetails[i].m_pszVolumeLabel) == 0)
+		if (_stricmp(szVolume, DiskDetails[i].m_pszVolumeLabel) == 0)
 			return i;
 
 	return -1;
@@ -122,8 +123,8 @@ int DiskManager_t::EnsureCdForFile(const char * pszFile, int iCd, const char * p
 	// See if file can be found from current directory:
 	const int knLen = MAX_PATH;
 	char szPath[knLen];
-	strcpy(szPath, m_szCurrentPath);
-	strcat(szPath, pszFile);
+	strcpy_s(szPath, MAX_PATH, m_szCurrentPath);
+	strcat_s(szPath, MAX_PATH, pszFile);
 	if (GetFileAttributes(szPath) != INVALID_FILE_ATTRIBUTES)
 	{
 		if (iCurrentCd == iCd)

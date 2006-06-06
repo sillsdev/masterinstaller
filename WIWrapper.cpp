@@ -39,13 +39,9 @@ bool WindowsInstallerWrapper::Init()
 		return false; // Windows Installer not present.
 
 	// Form the full path to the DLL we want:
-	const char * pszFile = "msi.dll";
-	char * pszLibraryPath = new char [strlen(pszFile) + strlen(pszInstallerLocation) + 2];
-	strcpy(pszLibraryPath, pszInstallerLocation);
+	char * pszLibraryPath = new_sprintf("%s\\msi.dll", pszInstallerLocation);
 	delete[] pszInstallerLocation;
 	pszInstallerLocation = NULL;
-	strcat(pszLibraryPath, "\\");
-	strcat(pszLibraryPath, pszFile);
 
 	// Try to load the DLL:
 	hmodMsi = LoadLibrary(pszLibraryPath);

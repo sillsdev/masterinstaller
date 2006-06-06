@@ -14,7 +14,8 @@
 #include "resource.h"
 #include "ErrorHandler.h"
 
-char g_rgchActiveProcessDescription[100] = "";
+const int cchActiveProcessDescription = 100;
+char g_rgchActiveProcessDescription[cchActiveProcessDescription] = "";
 
 // Forward declarations:
 DWORD WINAPI StatusDlgMonitorThreadEntry(LPVOID);
@@ -57,7 +58,7 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 	}
 
 	// Make copy of command:
-	char * pszCmdCopy = strdup(pszCmd);
+	char * pszCmdCopy = my_strdup(pszCmd);
 
 	// If command contains "msiexec" then we will prefix this with the path to msiexec.exe:
 	char * pszMsiExec = strstr(pszCmdCopy, "msiexec");
@@ -73,18 +74,21 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 		char * szLoc = GetInstallerLocation();
 		if (szLoc)
 		{
-			char * pszNew = new char [2 + strlen(pszCmdCopy) + strlen(szLoc)];
 			char ch = *pszMsiExec;
 			*pszMsiExec = 0;
-			strcpy(pszNew, pszCmdCopy);
-			strcat(pszNew, szLoc);
+
+			char * pszNew = new_sprintf("%s%s", pszCmdCopy, szLoc);
+
 			__int64 len = strlen(pszNew);
 			if (len > 1)
 				if (pszNew[len - 1] != '\\')
-					strcat(pszNew, "\\");
+					new_sprintf_concat(pszNew, 0, "\\");
+
 			*pszMsiExec = ch;
-			strcat(pszNew, pszMsiExec);
+
+			new_sprintf_concat(pszNew, 0, pszMsiExec);
 			delete[] pszCmdCopy;
+
 			pszCmdCopy = pszNew;
 		}
 		// If installer location cannot be found by this method, we will attempt to run the
@@ -122,17 +126,17 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 		// See if we need to do anything with the status window:
 		if (pszStatusWindowControl)
 		{
-			if (stricmp(pszStatusWindowControl, "show") == 0)
+			if (_stricmp(pszStatusWindowControl, "show") == 0)
 			{
 				// Show the window:
 				ShowStatusDialog();
 			}
-			else if (stricmp(pszStatusWindowControl, "hide") == 0)
+			else if (_stricmp(pszStatusWindowControl, "hide") == 0)
 			{
 				// Hide the window:
 				HideStatusDialog();
 			}
-			if (strnicmp(pszStatusWindowControl, "monitor", 7) == 0)
+			if (_strnicmp(pszStatusWindowControl, "monitor", 7) == 0)
 			{
 				// Start the window monitoring thread:
 				MonitorThreadData.m_dwProcessId = process_info.dwProcessId;
@@ -149,10 +153,13 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 		if (fWaitTillExit)
 		{
 			if (pszDescription)
-				strcpy(g_rgchActiveProcessDescription, pszDescription);
+			{
+				strcpy_s(g_rgchActiveProcessDescription, cchActiveProcessDescription,
+					pszDescription);
+			}
 			else
 			{
-				strcpy(g_rgchActiveProcessDescription,
+				strcpy_s(g_rgchActiveProcessDescription, cchActiveProcessDescription,
 					FetchString(IDC_MESSAGE_GENERIC_INSTALLER));
 			}
 			if (fWaitTillExit)
@@ -324,8 +331,8 @@ char * GetInstallerLocation()
 	if (dwBufLen == 0)
 		return NULL;
 
-	char * szLocation = new char [dwBufLen];
-	lResult = RegQueryValueEx(hKey, "InstallerLocation", NULL, NULL, (LPBYTE)szLocation,
+	char * pszLocation = new char [dwBufLen];
+	lResult = RegQueryValueEx(hKey, "InstallerLocation", NULL, NULL, (LPBYTE)pszLocation,
 			&dwBufLen);
 	RegCloseKey(hKey);
 	hKey = NULL;
@@ -333,11 +340,11 @@ char * GetInstallerLocation()
 	// If we receive an error, quit:
 	if (lResult != ERROR_SUCCESS)
 	{
-		delete[] szLocation;
+		delete[] pszLocation;
 		return NULL;
 	}
 
-	return szLocation;
+	return pszLocation;
 }
 
 // Fetches string resource. Returns string if OK, empty string if error.
@@ -372,7 +379,7 @@ char * new_vsprintf(const char * pszFormat, const va_list arglist)
 	char * szWksp = new char [1 + cchWksp];
 
 	// Format it with variable arguments, repeating until Wksp is big enough:
-	int cch = _vsnprintf(szWksp, cchWksp, pszFormat, arglist);
+	int cch = _vsnprintf_s(szWksp, 1 + cchWksp, cchWksp, pszFormat, arglist);
 	// If the reported number of characters written is the same as the size of our buffer, then
 	// the terminating zero will have been missed off!
 	while (cch == -1 || cch == cchWksp)
@@ -380,7 +387,7 @@ char * new_vsprintf(const char * pszFormat, const va_list arglist)
 		delete[] szWksp;
 		cchWksp *= 2;
 		szWksp = new char [1 + cchWksp];
-		cch = _vsnprintf(szWksp, cchWksp, pszFormat, arglist);
+		cch = _vsnprintf_s(szWksp, 1 + cchWksp, cchWksp, pszFormat, arglist);
 	}
 	return szWksp;
 }
@@ -444,17 +451,18 @@ __int64 GetHugeVersion(const char * pszVersion)
 	if (!pszVersion)
 		return 0;
 
-	char * pszVersionCopy = strdup(pszVersion);
+	char * pszVersionCopy = my_strdup(pszVersion);
 	__int64 nValue = 0;
+	char * pszContext;
 
-	char * pszNextSegment = strtok(pszVersionCopy, ".");
+	char * pszNextSegment = strtok_s(pszVersionCopy, ".", &pszContext);
 	int ctSegments = 1;
 	while (pszNextSegment && ctSegments <= 4)
 	{
 		__int64 nSegment = atoi(pszNextSegment);
 		nValue |= (nSegment << ((4 - ctSegments) * 16));
 		ctSegments++;
-		pszNextSegment = strtok(NULL, ".");
+		pszNextSegment = strtok_s(NULL, ".", &pszContext);
 	}
 	delete[] pszVersionCopy;
 	pszVersionCopy = NULL;
@@ -513,6 +521,7 @@ bool VersionInRange(const char * pszVersion, const char * pszMinVersion,
 	return VersionInRange(nVersion, pszMinVersion, pszMaxVersion);
 }
 
+// Writes the given text to the Clipboard
 bool WriteClipboardText(const char * pszText)
 {
 	int nLen = (int)strlen(pszText);
@@ -546,6 +555,15 @@ bool WriteClipboardText(const char * pszText)
 	return true;
 }
 
+// Replaces the deprecated strdup function.
+// Caller must delete[] the result when finished.
+char * my_strdup(const char * pszOriginal)
+{
+	int cch = (int)strlen(pszOriginal);
+	char * pszResult = new char [1 + cch];
+	strcpy_s(pszResult, 1 + cch, pszOriginal);
+	return pszResult;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /*
@@ -756,7 +774,7 @@ char * GenerateHangingWindowsReport()
 								if (0 != VerQueryValue(Block, pszSubBlock, (void ** )&pszOutput,
 									&uDummy))
 								{
-									pszProductName = strdup(pszOutput);
+									pszProductName = my_strdup(pszOutput);
 								}
 								delete[] pszSubBlock;
 
@@ -768,7 +786,7 @@ char * GenerateHangingWindowsReport()
 								if (0 != VerQueryValue(Block, pszSubBlock, (void ** )&pszOutput,
 									&uDummy))
 								{
-									pszCompanyName = strdup(pszOutput);
+									pszCompanyName = my_strdup(pszOutput);
 								}
 								delete[] pszSubBlock;
 							} // Next Language Code-page
@@ -796,7 +814,7 @@ char * GenerateHangingWindowsReport()
 						GetWindowText(WindowInfo->hwnd, pszWndText, 1 + cchWndText);
 					}
 					else
-						pszWndText = strdup(pszNoWindowName);
+						pszWndText = my_strdup(pszNoWindowName);
 
 					new_sprintf_concat(pszReport, 1, "        Window title: %s", pszWndText);
 

@@ -16,13 +16,8 @@ var shellObj = new ActiveXObject("WScript.Shell");
 // Check we have a valid folder argument:
 if (WScript.Arguments.Length < 1)
 {
-	WScript.Echo("ERROR - needs 1 argument: CD Volume Label.");
-	WScript.Quit();
-}
-
-// Check for the -register parameter:
-if (WScript.Arguments.Item(0) == "-register")
-{
+	// Assume user just double-clicked on this script. We will register it for context
+	// submenu use.
 	// Get path of this script:
 	var iLastBackslash = WScript.ScriptFullName.lastIndexOf("\\");
 	var Path = WScript.ScriptFullName.slice(0, iLastBackslash);

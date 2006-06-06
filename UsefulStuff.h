@@ -29,5 +29,6 @@ extern bool VersionInRange(const char * pszVersion, const char * pszMinVersion, 
 extern bool WriteClipboardText(const char * pszText);
 extern char * GenerateHangingWindowsReport();
 
+extern char * my_strdup(const char * pszOriginal);
 
 extern char g_rgchActiveProcessDescription[];

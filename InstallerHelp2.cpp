@@ -32,7 +32,8 @@ struct HelpThreadData
 DWORD WINAPI HelpThread(LPVOID lpParameter)
 {
 	HelpThreadData * htd = (HelpThreadData *)lpParameter;
-	char * pszStem = strdup(htd->pszStem);
+	char * pszStem = new char [1 + strlen(htd->pszStem)];
+	strcpy_s(pszStem, 1 + strlen(htd->pszStem), htd->pszStem);
 	unsigned char * pbBuffer = NULL;
 	int cbSize = 0;
 	// Look for embedded extension:

@@ -70,7 +70,7 @@ char * SoftwareProduct::new_LanguageDecodedString(const char * pszTemplate)
 		return NULL;
 
 	// Make a working copy that we can manipulate:
-	char * pszTemplateCopy = strdup(pszTemplate);
+	char * pszTemplateCopy = my_strdup(pszTemplate);
 
 	// Search for "$LANG$" string:
 	const char * kpszToken = "$LANG$";
@@ -123,7 +123,7 @@ char * SoftwareProduct::new_LanguageDecodedString(const char * pszTemplate)
 			// Make copy of relevant part of string:
 			if (pszNextToken)
 				*pszNextToken = 0;
-			char * pszResult = strdup(pszToken);		
+			char * pszResult = my_strdup(pszToken);		
 			delete[] pszTemplateCopy;
 			return pszResult;
 		}
@@ -143,7 +143,7 @@ char * SoftwareProduct::new_InterpretString(const char * pszTemplate)
 
 	char * pszResult = NULL;
 	// Make a working copy that we can manipulate:
-	char * pszTemplateCopy = strdup(pszTemplate);
+	char * pszTemplateCopy = my_strdup(pszTemplate);
 
 	// Search for "<CriticalFile>" string:
 	const char * kpszCritFileToken = "$CriticalFile$";
@@ -207,7 +207,7 @@ char * SoftwareProduct::new_InterpretString(const char * pszTemplate)
 			*pszOpenBracket = 0;
 			*pszCloseBracket = 0;
 			char * pszRegKey = pszOpenBracket + 1;
-			char * pszRegKeyCopy = strdup(pszRegKey);
+			char * pszRegKeyCopy = my_strdup(pszRegKey);
 			HKEY hKeyRoot = NULL;
 			char * pszValue = strstr(pszRegKey, "::");
 			if (pszValue)
@@ -814,6 +814,7 @@ static const int s_kMappings[] =
 class ProductManager_t : public IProductManager
 {
 public:
+	~ProductManager_t();
 	bool Init();
 
 	virtual bool GetFlushRebootFlag(int iProduct) const;
@@ -924,6 +925,8 @@ bool ProductManager_t::Init()
 			Products[i].m_InstallStatus = 
 				(SoftwareProduct::v_Installation)g_ProgRecord.ReadInstallStatus(i);
 		}
+
+		Products[i].m_pszCriticalFile = NULL;
 	}
 	s_fSoftwareProductsInitialized = true;
 	m_ctUnlockedProtectedProducts = 0;
@@ -931,6 +934,12 @@ bool ProductManager_t::Init()
 	EstablishOverallDependencies();
 
 	return true;
+}
+
+ProductManager_t::~ProductManager_t()
+{
+	for (int i = 0; i < kctSoftwareProducts; i++)
+		delete[] Products[i].m_pszCriticalFile;
 }
 
 // Internal check to make sure the given Product index is valid.

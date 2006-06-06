@@ -506,8 +506,8 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 				new_sprintf_concat(pszList, 0,
 					m_ppmProductManager->GetDownloadUrl(rgiFailures[i]));
 			}
-			char * pszPart1 = strdup(FetchString(IDC_ERROR_LANGUAGE_INCOMPATIBLE_1));
-			char * pszPart2 = strdup(FetchString(IDC_ERROR_LANGUAGE_INCOMPATIBLE_2));
+			char * pszPart1 = my_strdup(FetchString(IDC_ERROR_LANGUAGE_INCOMPATIBLE_1));
+			char * pszPart2 = my_strdup(FetchString(IDC_ERROR_LANGUAGE_INCOMPATIBLE_2));
 			char * pszError = new_sprintf("%s:\n%s\n%s\n\n%s",
 				m_ppmProductManager->GetName(iCurrentProduct), pszPart1, pszList, pszPart2);
 			delete[] pszPart2;
@@ -945,11 +945,11 @@ void MasterInstaller_t::TestAndPerformPendingReboot(int iProduct)
 					szWininitPath[cch - 1] = 0;
 
 				// Add the file name:
-				strcat(szWininitPath, "\\Wininit.ini");
+				strcat_s(szWininitPath, MAX_PATH, "\\Wininit.ini");
 
 				// See if the file exists:
-				FILE * f = fopen(szWininitPath, "r");
-				if (f)
+				FILE * f;
+				if (fopen_s(&f, szWininitPath, "r") == 0)
 				{
 					fclose(f);
 					fRebootPending = true;

@@ -42,13 +42,13 @@ void LogFile::SetActiveWriting(const char * pszFilePath)
 	if (!pszFilePath)
 		pszFilePath = "C:\\SIL Installer.log";
 	if (pszFilePath[0] != 0)
-		m_pszFilePath = strdup(pszFilePath);
+		m_pszFilePath = my_strdup(pszFilePath);
 
 	// Check that the log file is writable:
 	if (m_pszFilePath)
 	{
-		FILE * file = fopen(m_pszFilePath, "a");
-		if (file)
+		FILE * file;
+		if (fopen_s(&file, m_pszFilePath, "a") == 0)
 			fclose(file);
 		else
 			HandleError(kNonFatal, false, IDC_ERROR_LOG_FILE_INVALID, m_pszFilePath);
@@ -86,8 +86,8 @@ void LogFile::Write(const char * szText, ...)
 
 	if (m_pszFilePath)
 	{
-		FILE * file = fopen(m_pszFilePath, "a");
-		if (file)
+		FILE * file;
+		if (fopen_s(&file, m_pszFilePath, "a") == 0)
 		{
 			if (m_pszPendingMessages)
 			{

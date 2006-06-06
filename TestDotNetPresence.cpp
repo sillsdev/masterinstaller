@@ -14,14 +14,14 @@ bool TestDotNetPresence(const char * pszMinVersion, const char * pszMaxVersion,
 
 	// Check if min and max values were specified:
 	if (pszMinVersion)
-		pszMin = strdup(pszMinVersion);
+		pszMin = my_strdup(pszMinVersion);
 	else
-		pszMin = strdup("0.0");
+		pszMin = my_strdup("0.0");
 
 	if (pszMaxVersion)
-		pszMax = strdup(pszMaxVersion);
+		pszMax = my_strdup(pszMaxVersion);
 	else
-		pszMax = strdup("32767.32767");
+		pszMax = my_strdup("32767.32767");
 
 	// Terminate version strings at second '.' if exists:
 	char * pszDot = strchr(pszMin, '.');
@@ -98,7 +98,7 @@ bool TestDotNetPresence(const char * pszMinVersion, const char * pszMaxVersion,
 	char * pszWksp;
 
 	// Collect the three sections of the version number:
-	char * pszVersion = strdup(pszMinVersion);
+	char * pszVersion = my_strdup(pszMinVersion);
 	char * pszMajor = strtok(pszVersion, ".");
 	char * pszMinor = strtok(NULL, ".");
 	char * pszBuild = strtok(NULL, ".");

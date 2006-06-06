@@ -10,10 +10,7 @@ bool TestWinInstallerPresence(const char * pszMinVersion, const char * /*pszMaxV
 	bool fResult = false;
 
 	// Now add file name to path:
-	const char * szFile = "\\msiexec.exe";
-	char * szLocation = new char [1 + strlen(szLoc) + strlen(szFile)];
-	strcpy(szLocation, szLoc);
-	strcat(szLocation, szFile);
+	char * szLocation = new_sprintf("%s\\msiexec.exe", szLoc);
 	delete[] szLoc;
 	szLoc = NULL;
 

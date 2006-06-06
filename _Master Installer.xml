@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
 <?xml-stylesheet type="text/xsl" href="ConfigureMasterInstaller.xsl" ?>
 <MasterInstaller>
 	<AutoConfigure>
@@ -31,6 +30,112 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
+				<Title>FW (Experimental VS 2005 build from \\ls-fwbuilder)</Title>
+				<Source NameWhenLocked="setup.msi">\\ls-fwbuilder\c\Fw\Installer\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\License.rtf</Source>
+				<Source>Documents\FieldWorks\TechSupport.rtf</Source>
+				<SetupHelp>Documents\FieldWorks\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+				<WhenLocked>
+					<Destination>1</Destination>
+					<Substitutions>
+						<CriticalFile>1\setup.msi</CriticalFile>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>SIL FieldWorks BTE (VS 2005 Build)</Title>
+			<Tag>FW_2005</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{4584D38B-35B9-4FC9-BD11-D543BF60C4CC}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="WI3" MinVersion="2.0"/>
+			<Prerequisite Tag="EncCvtrs.Net2.0" MinVersion="2.2"/>
+			<Prerequisite Tag="VC2005_REDIST"/>
+			<Preinstall>RemovePreviousFWs</Preinstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1</Title>
+				<Tag>DN_T</Tag>
+				<MsiFeature>DNr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1 (Debug)</Title>
+				<Tag>DN_T</Tag>
+				<MsiFeature>DNd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta</Title>
+				<Tag>LT_T</Tag>
+				<MsiFeature>LTr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta (Debug)</Title>
+				<Tag>LT_T</Tag>
+				<MsiFeature>LTd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor</Title>
+				<Tag>TLE_T</Tag>
+				<MsiFeature>TLEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Topics List Editor (Debug)</Title>
+				<Tag>TLE_T</Tag>
+				<MsiFeature>TLEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.0</Title>
+				<Tag>TE_T</Tag>
+				<MsiFeature>TEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.0 (Debug)</Title>
+				<Tag>TE_T</Tag>
+				<MsiFeature>TEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.1</Title>
+				<Tag>WP_T</Tag>
+				<MsiFeature>WPr</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks WorldPad (Debug)</Title>
+				<Tag>WP_T</Tag>
+				<MsiFeature>WPd</MsiFeature>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>FW (Trunk build from \\cana)</Title>
 				<Source NameWhenLocked="setup.msi">\\cana\LSDev\Installers\Release\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\ReadMe.rtf</Source>
@@ -56,10 +161,10 @@
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{F233827A-6D9E-4AE9-96E8-E54A0FAD310D}</ProductCode>
+			<ProductCode>{4584D38B-35B9-4FC9-BD11-D543BF60C4CC}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs" MinVersion="1.1"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="2.2"/>
 			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.1</Title>
@@ -165,10 +270,10 @@
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{F233827A-6D9E-4AE9-96E8-E54A0FAD310D}</ProductCode>
+			<ProductCode>{4584D38B-35B9-4FC9-BD11-D543BF60C4CC}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs" MinVersion="1.1"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="2.2"/>
 			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.1</Title>
@@ -261,7 +366,7 @@
 			<ProductCode>{823B00C2-18DB-451B-93F6-068E96A90BFD}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs" MinVersion="1.1"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="2.2"/>
 			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.2</Title>
@@ -369,7 +474,7 @@
 			<ProductCode>{823B00C2-18DB-451B-93F6-068E96A90BFD}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs" MinVersion="1.1"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="2.2"/>
 			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.2</Title>
@@ -1119,6 +1224,25 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>Encoding Converters (Experimental VS 2005 build from \\ls-fwbuilder)</Title>
+				<Source>\\ls-fwbuilder\c\Fw\Installer\SetupCnvrtrs.msi</Source>
+				<Destination>Utilities\Encoding Converters</Destination>
+			</AutoConfigure>
+			<Title>SIL Converters and Repository (VS 2005)</Title>
+			<Tag>EncCvtrs.Net2.0</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
+			<Install MsiFlags="/qb" MsiVersion="2.2"/>
+			<StatusWindow>Show</StatusWindow>
+			<ProductCode>{25AEB008-3E0B-4057-A66B-2F3C50228E0E}</ProductCode>
+			<Commentary>Please wait while the Converters are installed.</Commentary>
+			<Prerequisite Tag=".NET2.0" Version="2.0"/>
+			<Prerequisite Tag="WI3" MinVersion="2.0"/>
+			<Prerequisite Tag="VC2005_REDIST"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Encoding Converters (Trunk build from \\cana)</Title>
 				<Source>\\cana\LSDev\Installers\Release\SetupCnvrtrs.msi</Source>
 				<Destination>Utilities\Encoding Converters</Destination>
@@ -1128,7 +1252,7 @@
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
-			<Install MsiFlags="/qb" MsiVersion="1.1"/>
+			<Install MsiFlags="/qb" MsiVersion="2.2"/>
 			<StatusWindow>Show</StatusWindow>
 			<ProductCode>{25AEB008-3E0B-4057-A66B-2F3C50228E0E}</ProductCode>
 			<Commentary>Please wait while the Converters are installed.</Commentary>
@@ -1141,12 +1265,12 @@
 				<Source>\\cana\LSDev\Installers\FW3.1\SetupCnvrtrs.msi</Source>
 				<Destination>Utilities\Encoding Converters</Destination>
 			</AutoConfigure>
-			<Title>SIL Converters and Repository 1.1</Title>
+			<Title>SIL Converters and Repository 2.2</Title>
 			<Tag>EncCvtrs</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
-			<Install MsiFlags="/qb" MsiVersion="1.1"/>
+			<Install MsiFlags="/qb" MsiVersion="2.2"/>
 			<StatusWindow>Show</StatusWindow>
 			<ProductCode>{25AEB008-3E0B-4057-A66B-2F3C50228E0E}</ProductCode>
 			<Commentary>Please wait while the Converters are installed.</Commentary>
@@ -1170,6 +1294,22 @@
 			<Commentary>Please wait while the Converters are installed.</Commentary>
 			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Microsoft Visual C++ 2005 Redistributable Package</Title>
+				<Source>3rd Party\MS VC++ 2005 Redist\vcredist_x86.exe</Source>
+				<Destination>Utilities\VC++ 2005 Redist</Destination>
+			</AutoConfigure>
+			<Title>Microsoft Visual C++ 2005 Redistributable Package</Title>
+			<Tag>VC2005_REDIST</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\VC++ 2005 Redist\vcredist_x86.exe</CriticalFile>
+			<Install>$CriticalFile$ /q:a</Install>
+			<StatusWindow>Show</StatusWindow>
+			<ProductCode>{A49F249F-0C91-497F-86DF-B2585E8E76B7}</ProductCode>
+			<Commentary>Please wait while the package is installed.</Commentary>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1278,6 +1418,25 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>.NET Runtime 2.0</Title>
+				<Source>3rd Party\DotNet 2.0</Source>
+				<Destination>Utilities\DotNet 2.0</Destination>
+			</AutoConfigure>
+			<Title>Microsoft .NET Runtime version 2.0</Title>
+			<Tag>.NET2.0</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\DotNet 2.0\dotnetfx.exe</CriticalFile>
+			<Install>$CriticalFile$ /q:a /c:"install /l /q"</Install>
+			<TestPresence Version="2.0">TestDotNetPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=0856EACB-4362-4B0D-8EDD-AAB15C5E04F5&amp;displaylang=en</DownloadURL>
+			<Commentary>This installation may take a few minutes, without visible sign of progress.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<Prerequisite Tag="IE" MinVersion="5.01"/>
+			<Prerequisite Tag="WI3" MinVersion="3.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Internet Explorer 6.0 SP1 (English)</Title>
 				<Source>3rd Party\IE60</Source>
 				<Destination>Utilities\IE60</Destination>
@@ -1377,6 +1536,23 @@
 			<Install>$CriticalFile$ /c:"msiinst.exe /delayrebootq"</Install>
 			<TestPresence Version="2.0">TestWinInstallerPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=4b6140f9-2d36-4977-8fa1-6f8a0f5dca8f&amp;DisplayLang=en</DownloadURL>
+			<Commentary>Please wait a few moments.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows Installer 3.0 (Win 2K and up only)</Title>
+				<Source>3rd Party\Windows Installer 3.0</Source>
+				<Destination>Utilities\MSInstall</Destination>
+			</AutoConfigure>
+			<Title>Windows Installer 3.0</Title>
+			<Tag>WI3</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<CriticalFile>WindowsInstaller-KB884016-v2-x86.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<TestPresence Version="3.0">TestWinInstallerPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=5fbc5470-b259-4733-a914-a956122e08e8&amp;DisplayLang=en</DownloadURL>
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 		</Product>

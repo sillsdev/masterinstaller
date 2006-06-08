@@ -2624,7 +2624,7 @@ function PrepareCppRspFile(RspFilePath, CppFilePath, CompilationFolder)
 {
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/O1 /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /EHsc /ML /Fo"' + CompilationFolder + '/" /Fd"' + CompilationFolder + '/vc70.pdb" /W3 /c /Wp64 /Zi /TP');
+	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Wp64 /Zi /TP');
 	tso.WriteLine('"' + CppFilePath + '\\WIWrapper.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UsefulStuff.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\ThirdPartySoftware.cpp"');
@@ -2646,7 +2646,7 @@ function PrepareObjRspFile(RspFilePath, CompilationFolder)
 {
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/OUT:"' + SetupExePath + '" /INCREMENTAL:NO /NOLOGO /LIBPATH:"Msi.lib" /SUBSYSTEM:WINDOWS /SWAPRUN:CD /OPT:REF /OPT:ICF /OPT:NOWIN98 /LTCG /MACHINE:X86 version.lib shlwapi.lib Msi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib');
+	tso.WriteLine('/OUT:"' + SetupExePath + '" /INCREMENTAL:NO /NOLOGO /LIBPATH:"Msi.lib" /MANIFEST /MANIFESTFILE:"' + CompilationFolder + '\\setup.exe.intermediate.manifest" /SUBSYSTEM:WINDOWS /SWAPRUN:CD /OPT:REF /OPT:ICF /OPT:NOWIN98 /LTCG /MACHINE:X86 version.lib shlwapi.lib C:\\Work\\MsiIntel.SDK\\Lib\\Msi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib');
 	tso.WriteLine('"' + CompilationFolder + '\\Control.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\Dialogs.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\DiskManager.obj"');

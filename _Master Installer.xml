@@ -55,7 +55,7 @@
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{4584D38B-35B9-4FC9-BD11-D543BF60C4CC}</ProductCode>
+			<ProductCode>{DB19E5F7-187F-4E62-8D41-BA67C63BE88E}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="WI3" MinVersion="2.0"/>
 			<Prerequisite Tag="EncCvtrs.Net2.0" MinVersion="2.2"/>

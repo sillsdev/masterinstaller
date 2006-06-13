@@ -43,6 +43,7 @@ int RemovePreviousFWs(const char * /*pszCriticalFile*/)
 		"{2D424459-8B40-41F3-94F7-4D02BFAC39E7}", // FW 2.0 (Disk 5)
 		"{D8D2DBAB-7487-4A6E-B369-7F1932B3BDFE}", // old WW installer for Harvwest alpha
 		"{59EDA034-26E5-4B7A-9924-335BA200B461}", // FW 3.0
+		"{823B00C2-18DB-451B-93F6-068E96A90BFD}", // FW 3.1
 	};
 	for (int i = 0; i < (sizeof(pszProductCode) / sizeof(pszProductCode[0])); i++)
 	{

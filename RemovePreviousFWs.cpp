@@ -44,6 +44,7 @@ int RemovePreviousFWs(const char * /*pszCriticalFile*/)
 		"{D8D2DBAB-7487-4A6E-B369-7F1932B3BDFE}", // old WW installer for Harvwest alpha
 		"{59EDA034-26E5-4B7A-9924-335BA200B461}", // FW 3.0
 		"{823B00C2-18DB-451B-93F6-068E96A90BFD}", // FW 3.1
+		"{DB19E5F7-187F-4E62-8D41-BA67C63BE88E}", // After FW 3.1 but before the switch to VS 2005
 	};
 	for (int i = 0; i < (sizeof(pszProductCode) / sizeof(pszProductCode[0])); i++)
 	{

@@ -1219,12 +1219,12 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Encoding Converters (Experimental VS 2005 build from \\ls-fwbuilder)</Title>
-				<Source>\\ls-fwbuilder\c\Fw\Installer\SetupCnvrtrs.msi</Source>
+				<Title>Encoding Converters (Trunk build from \\ls-fwbuilder)</Title>
+				<Source>\\ls-fwbuilder\c\FwSrc\Installer\SetupCnvrtrs.msi</Source>
 				<Destination>Utilities\Encoding Converters</Destination>
 			</AutoConfigure>
-			<Title>SIL Converters and Repository (VS 2005)</Title>
-			<Tag>EncCvtrs.Net2.0</Tag>
+			<Title>SIL Converters and Repository 2.2</Title>
+			<Tag>EncCvtrs_T</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
@@ -1306,6 +1306,8 @@
 			<ProductCode>{A49F249F-0C91-497F-86DF-B2585E8E76B7}</ProductCode>
 			<Commentary>Please wait while the package is installed.</Commentary>
 			<Prerequisite Tag="WI3" MinVersion="3.0"/>
+			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
+			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=32BC1BEE-A3F9-4C13-9C99-220B62A191EE&amp;displaylang=en</DownloadURL>
 		</Product>
 		<Product>
@@ -1361,6 +1363,23 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>Windows 2000 Service Pack 4</Title>
+				<Source>3rd Party\Win 2000 SP4</Source>
+				<Destination>Utilities\Win 2000 SP4</Destination>
+			</AutoConfigure>
+			<Title>Windows 2000 Service Pack 4</Title>
+			<Tag>Win 2K SP4</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\Win 2000 SP4\W2KSP4_EN.EXE</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<TestPresence Version="4">TestWin2kSpPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/windows2000/downloads/servicepacks/sp4/default.mspx</DownloadURL>
+			<Commentary>Follow instructions in installer wizard.</Commentary>
+			<StatusWindow>Monitor</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Windows XP Service Pack 1</Title>
 				<Source>3rd Party\Win XP SP1</Source>
 				<Destination>Utilities\Win XP SP1</Destination>
@@ -1369,9 +1388,26 @@
 			<Tag>Win XP SP1</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\Win XP SP1\XPSP1.EXE</CriticalFile>
-			<Install>Utilities\Win XP SP1\XPSP1.EXE</Install>
-			<TestPresence>TestWinXpSp1Presence</TestPresence>
+			<Install>$CriticalFile$</Install>
+			<TestPresence Version="1">TestWinXpSpPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/windowsxp/downloads/updates/sp1/default.mspx</DownloadURL>
+			<Commentary>Follow instructions in installer wizard.</Commentary>
+			<StatusWindow>Monitor</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows XP Service Pack 2</Title>
+				<Source>3rd Party\Win XP SP2</Source>
+				<Destination>Utilities\Win XP SP2</Destination>
+			</AutoConfigure>
+			<Title>Windows XP Service Pack 2</Title>
+			<Tag>Win XP SP2</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\Win XP SP2\XPSP2.EXE</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<TestPresence Version="2">TestWinXpSpPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/windowsxp/sp2/default.mspx</DownloadURL>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Monitor</StatusWindow>
 			<FlushReboot>true</FlushReboot>
@@ -1431,6 +1467,8 @@
 			<FlushReboot>true</FlushReboot>
 			<Prerequisite Tag="IE" MinVersion="5.01"/>
 			<Prerequisite Tag="WI3" MinVersion="3.0"/>
+			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
+			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1552,6 +1590,7 @@
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=5fbc5470-b259-4733-a914-a956122e08e8&amp;DisplayLang=en</DownloadURL>
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
+			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
 		</Product>
 	</Products>
 </MasterInstaller>

@@ -36,6 +36,8 @@
 	const char * m_kpszMsiVersion;
 	pfnInstall m_pfnInstall;
 
+	bool m_fMustNotDelayReboot;
+
 	const char * m_kpszDownloadUrl;
 
 	const char * m_kpszCommentary;

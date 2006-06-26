@@ -1370,7 +1370,7 @@
 			<Title>Windows 2000 Service Pack 4</Title>
 			<Tag>Win 2K SP4</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Utilities\Win 2000 SP4\W2KSP4_EN.EXE</CriticalFile>
+			<CriticalFile>$LANG$09$Utilities\Win 2000 SP4\W2KSP4_EN.EXE</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<TestPresence Version="4">TestWin2kSpPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/windows2000/downloads/servicepacks/sp4/default.mspx</DownloadURL>
@@ -1387,7 +1387,7 @@
 			<Title>Windows XP Service Pack 1</Title>
 			<Tag>Win XP SP1</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Utilities\Win XP SP1\XPSP1.EXE</CriticalFile>
+			<CriticalFile>$LANG$09$Utilities\Win XP SP1\XPSP1.EXE</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<TestPresence Version="1">TestWinXpSpPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/windowsxp/downloads/updates/sp1/default.mspx</DownloadURL>
@@ -1404,13 +1404,14 @@
 			<Title>Windows XP Service Pack 2</Title>
 			<Tag>Win XP SP2</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Utilities\Win XP SP2\XPSP2.EXE</CriticalFile>
+			<CriticalFile>$LANG$09$Utilities\Win XP SP2\XPSP2.EXE</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<TestPresence Version="2">TestWinXpSpPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/windowsxp/sp2/default.mspx</DownloadURL>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Monitor</StatusWindow>
 			<FlushReboot>true</FlushReboot>
+			<MustNotDelayReboot>true</MustNotDelayReboot>
 		</Product>
 		<Product>
 			<AutoConfigure>

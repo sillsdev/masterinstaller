@@ -20,7 +20,8 @@ LogFile::LogFile()
 {
 	m_pszFilePath = NULL;
 	m_pszLog = NULL;
-	m_pszPendingMessages = NULL; 
+	m_pszPendingMessages = NULL;
+	m_cIndent = 0;
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -64,6 +65,22 @@ void LogFile::Start()
 }
 
 /*----------------------------------------------------------------------------------------------
+	Adds a new level of indentation.
+----------------------------------------------------------------------------------------------*/
+void LogFile::Indent()
+{
+	m_cIndent += 1;
+}
+
+/*----------------------------------------------------------------------------------------------
+	Removes a level of indentation.
+----------------------------------------------------------------------------------------------*/
+void LogFile::Unindent()
+{
+	m_cIndent -= 1;
+}
+
+/*----------------------------------------------------------------------------------------------
 	Writes given text to log file.
 	@param szText Text to be written
 ----------------------------------------------------------------------------------------------*/
@@ -73,8 +90,15 @@ void LogFile::Write(const char * szText, ...)
 	SYSTEMTIME syst;
 	GetLocalTime(&syst);
 
-	char * pszTotalMsg = new_sprintf("%04d-%02d-%02d %02d:%02d:%02d - ", syst.wYear,
+	char * pszTotalMsg = NULL;
+
+	// Add date/time stamp:
+	new_sprintf_concat(pszTotalMsg, 0, "%04d-%02d-%02d %02d:%02d:%02d - ", syst.wYear,
 		syst.wMonth, syst.wDay, syst.wHour, syst.wMinute, syst.wSecond);
+
+	// Add current level of indentation:
+	for (int i = 0; i < m_cIndent; i++)
+		new_sprintf_concat(pszTotalMsg, 0, "  ");
 
 	// Collect variable arguments:
 	va_list arglist;
@@ -96,6 +120,43 @@ void LogFile::Write(const char * szText, ...)
 				delete[] m_pszPendingMessages;
 				m_pszPendingMessages = NULL;
 			}
+			// Check for newlines in the new message, and insert indentation:
+			int ich = 0;
+			while (ich < (int)strlen(pszTotalMsg))
+			{
+				if (pszTotalMsg[ich] == '\r' || pszTotalMsg[ich] == '\n')
+				{
+					// Find end of sequence of \r and \n characters:
+					do
+					{
+						ich++;
+					} while (pszTotalMsg[ich] == '\r' || pszTotalMsg[ich] == '\n');
+					// Put temporary terminator at current location:
+					char chOrig = pszTotalMsg[ich];
+					if (chOrig != 0)
+					{
+						pszTotalMsg[ich] = 0;
+
+						// Start to build replacement string:
+						char * pszNew = my_strdup(pszTotalMsg);
+						pszTotalMsg[ich] = chOrig;
+
+						// Insert current level of indentation, including indenting past time stamp:
+						int NumSpaces = 22 + 2 * m_cIndent;
+						for (int isp = 0; isp < NumSpaces; isp++)
+							new_sprintf_concat(pszNew, 0, " ");
+
+						// Add in rest of original string:
+						new_sprintf_concat(pszNew, 0, &pszTotalMsg[ich]);
+
+						delete[] pszTotalMsg;
+						pszTotalMsg = pszNew;
+						pszNew = NULL;
+					}
+				}
+				ich++;
+			}
+
 			fputs(pszTotalMsg, file);
 			fclose(file);
 		}

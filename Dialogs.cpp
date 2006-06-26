@@ -86,7 +86,10 @@ INT_PTR CALLBACK DlgProcDisplayReport(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
 					if (pszReport)
 					{
 						SetDlgItemText(hwnd, IDC_EDIT_REPORT, pszReport);
-						g_Log.Write("Report contents: %s", pszReport);
+						g_Log.Write("Report contents:");
+						g_Log.Indent();
+						g_Log.Write("%s", pszReport);
+						g_Log.Unindent();
 					}
 					delete[] pszReport;
 					pszReport = NULL;
@@ -155,7 +158,10 @@ INT_PTR CALLBACK DlgProcDisplayReport(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
 					if (pszReport)
 					{
 						SetDlgItemText(hwnd, IDC_EDIT_REPORT, pszReport);
-						g_Log.Write("Report contents: %s", pszReport);
+						g_Log.Write("Report contents:");
+						g_Log.Indent();
+						g_Log.Write("%s", pszReport);
+						g_Log.Unindent();
 					}
 					delete[] pszReport;
 					pszReport = NULL;
@@ -692,6 +698,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 			{
 				IndexList_t rgiChosen;
 				g_Log.Write("User chose following products:");
+				g_Log.Indent();
 				for (int i = 0; i < rgiAvailableProducts.GetCount(); i++)
 				{
 					if (SendDlgItemMessage(hwnd, knCheckboxInitialId + i, BM_GETCHECK, 0, 0) ==
@@ -704,6 +711,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 							pProductManager->GetName(rgiAvailableProducts[i]) : "Unknown");
 					}
 				}
+				g_Log.Unindent();
 				bool fInstallRequiredSoftware = true;
 				// See if we offered the user a choice of installing 3rd party software:
 				if (GetDlgItem(hwnd, knCheckboxInitialId + rgiAvailableProducts.GetCount()))

@@ -686,6 +686,13 @@ bool SoftwareProduct::Install()
 				// Product installed and requested a reboot:
 				g_Log.Write("%s installed and requested a reboot.", m_kpszNiceName);
 				g_fRebootPending = true;
+
+				// If the MustNotDelayReboot flag is set, do the reboot now:
+				if (m_fMustNotDelayReboot)
+				{
+					g_Log.Write("Reboot must not be delayed.");
+					FriendlyReboot();
+				}
 			}
 			else if (dwResult != ERROR_SUCCESS && dwResult != ERROR_INSTALL_USEREXIT &&
 				dwResult != ERROR_CANCELLED)
@@ -1269,11 +1276,13 @@ bool ProductManager_t::PrerequisitesNeeded(const IndexList_t & rgiProducts) cons
 bool ProductManager_t::RequirementsNeeded() const
 {
 	g_Log.Write("Generating list of active requirements...");
+	g_Log.Indent();
 
 	// Create a list of needed prerequisites:
 	IndexList_t rgiNeeded;
 	GetActiveRequirements(rgiNeeded);
 
+	g_Log.Unindent();
 	g_Log.Write("...Done. Number of active requirements = %d", rgiNeeded.GetCount());
 
 	// See if any are needed:
@@ -1409,6 +1418,8 @@ bool ProductManager_t::IsInstallable(int iProduct) const
 	return Products[iProduct].IsInstallable();
 }
 
+// Installs specified product.
+// Assumes that all prerequisite products have been installed.
 bool ProductManager_t::InstallProduct(int iProduct)
 {
 	CheckProductIndex(iProduct);
@@ -1829,7 +1840,9 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 		{
 			IndexList_t rgiTempList;
 			g_Log.Write("Testing for prerequisites for basic report...");
+			g_Log.Indent();
 			GetActivePrerequisites(*prgiProducts, rgiTempList, true);
+			g_Log.Unindent();
 			g_Log.Write("...Done (prerequisites)");
 			for (int i = 0; i < rgiTempList.GetCount(); i++)
 				new_sprintf_concat(pszReport, int(i > 0), GetName(rgiTempList[i]));
@@ -1839,7 +1852,9 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 		if (prgiProducts)
 		{
 			g_Log.Write("Testing for prerequisites for full report...");
+			g_Log.Indent();
 			pszTemp = GenFullPrerequisiteReport(*prgiProducts);
+			g_Log.Unindent();
 			g_Log.Write("...Done (prerequisites)");
 			new_sprintf_concat(pszReport, 0, pszTemp);
 			delete[] pszTemp;
@@ -1850,7 +1865,9 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 		{
 			IndexList_t rgiTempList;
 			g_Log.Write("Testing for requirements for basic report...");
+			g_Log.Indent();
 			GetActiveRequirements(rgiTempList);
+			g_Log.Unindent();
 			g_Log.Write("...Done (requirements)");
 			for (int i = 0; i < rgiTempList.GetCount(); i++)
 				new_sprintf_concat(pszReport, int(i > 0), GetName(rgiTempList[i]));
@@ -1858,6 +1875,7 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 		break;
 	case rptRequirementsFull:
 		g_Log.Write("Testing for requirements for full report...");
+		g_Log.Indent();
 		if (prgiProducts)
 		{			
 			pszTemp = GenFullRequirementReport(*prgiProducts);			
@@ -1880,10 +1898,12 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 			delete[] pszTemp;
 			pszTemp = NULL;
 		}
+		g_Log.Unindent();
 		g_Log.Write("...Done (requirements)");
 		break;
 	case rptFinal:
 		g_Log.Write("Testing for final report...");
+		g_Log.Indent();
 		if (prgiProducts)
 		{
 			pszTemp = GenInstallFailureReport(*prgiProducts);
@@ -1892,6 +1912,7 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 			pszTemp = NULL;
 		}
 		pszTemp = GenMissingRequirementReport();
+		g_Log.Unindent();
 		g_Log.Write("...Done (final report)");
 		new_sprintf_concat(pszReport, 1, pszTemp);
 		delete[] pszTemp;

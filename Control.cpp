@@ -225,8 +225,11 @@ void MasterInstaller_t::Run()
 			{
 				// Display Prerequisites, if any:
 				g_Log.Write("Testing for prerequisites of chosen products:");
+				g_Log.Indent();
 				if (m_ppmProductManager->PrerequisitesNeeded(m_rgiChosenMainProducts))
 				{
+					g_Log.Unindent();
+
 					// There are some prerequisites:
 					g_Log.Write("Prerequisites are needed.");
 
@@ -243,7 +246,10 @@ void MasterInstaller_t::Run()
 					delete[] pszContinue;
 				} // End if any pre-requisite products are needed.
 				else
+				{
+					g_Log.Unindent();
 					g_Log.Write("No prerequisites are needed.");
+				}
 			}
 		}
 		else if (m_nPhase == phaseMain) // We were running previously
@@ -331,7 +337,9 @@ void MasterInstaller_t::Run()
 			DisplayStatusText(1, "");
 
 			g_Log.Write("Testing for initial active requirements...");
+			g_Log.Indent();
 			m_ppmProductManager->GetActiveRequirements(rgiRequiredProducts);
+			g_Log.Unindent();
 			g_Log.Write("... Done (initial active requirements)");
 
 			// See if there are any dependencies we need to show:
@@ -369,7 +377,9 @@ void MasterInstaller_t::Run()
 				IndexList_t rgiTempCurrentNeeds;
 				g_Log.Write("Testing active requirements to see if %s is still needed...",
 					m_ppmProductManager->GetName(iCurrentProduct));
+				g_Log.Indent();
 				m_ppmProductManager->GetActiveRequirements(rgiTempCurrentNeeds);
+				g_Log.Unindent();
 				g_Log.Write("...Done (requirements)");
 
 				if (!rgiTempCurrentNeeds.Contains(iCurrentProduct))
@@ -462,6 +472,7 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 
 	g_Log.Write("Testing for prerequisites and requirements having language compatibility issues.");
 	g_Log.Write("Windows language is %d", g_langidWindowsLanguage);
+	g_Log.Indent();
 	for (int iList = 0; iList < rgiProducts.GetCount(); iList++)
 	{
 		// Get index of next product:
@@ -469,6 +480,7 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 
 		g_Log.Write("Checking prerequisites and requirements for %s.",
 			m_ppmProductManager->GetName(iCurrentProduct));
+		g_Log.Indent();
 
 		// Get full list of active prerequisites and requirements:
 		IndexList_t rgiNeededProducts;
@@ -476,10 +488,21 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 			rgiNeededProducts.Add(iCurrentProduct);
 		IndexList_t rgiThisProductOnly;
 		rgiThisProductOnly.Add(iCurrentProduct);
+
+		g_Log.Write("Prerequisites...");
+		g_Log.Indent();
 		m_ppmProductManager->GetActivePrerequisites(rgiThisProductOnly, rgiNeededProducts,
 			true);
+		g_Log.Unindent();
+		g_Log.Write("...Done.");
+		g_Log.Write("Requirements...");
+		g_Log.Indent();
+
 		m_ppmProductManager->GetActiveRequirements(rgiThisProductOnly, rgiNeededProducts, true,
 			true);
+
+		g_Log.Unindent();
+		g_Log.Write("...Done.");
 
 		// See if any have a language restriction we can't honor:
 		IndexList_t rgiFailures;
@@ -526,7 +549,10 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 			rgiProducts.RemoveNthItem(iList);
 			iList--;
 		} // End if there were any conflicts
+		g_Log.Unindent();
 	} // Next item in given list
+	g_Log.Unindent();
+	g_Log.Write("End of testing for language compatibility issues.");
 
 	return fAnyConflicts;
 }
@@ -967,21 +993,6 @@ void MasterInstaller_t::TestAndPerformPendingReboot(int iProduct)
 	}
 }
 
-// Reboot, allowing the user time to react.
-void MasterInstaller_t::FriendlyReboot()
-{
-	HideStatusDialog();
-
-	if (DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_REBOOT_COUNTDOWN), NULL,
-		DlgProcRebootCountdown) == 0)
-	{
-		g_Log.Write("User chose to quit rather than reboot.");
-		throw UserQuitException;
-	}
-	g_Log.Write("Rebooting.");
-	Reboot();
-}
-
 // Installs the prerequisites for the given product.
 bool MasterInstaller_t::InstallPrerequisites(int iProduct)
 {
@@ -989,17 +1000,21 @@ bool MasterInstaller_t::InstallPrerequisites(int iProduct)
 	IndexList_t rgiSingleProduct;
 	rgiSingleProduct.Add(iProduct);
 	g_Log.Write("Testing for prerequisites for %s...", m_ppmProductManager->GetName(iProduct));
+	g_Log.Indent();
 
 	// Produce a flat list of all prerequisites:
 	m_ppmProductManager->GetActivePrerequisites(rgiSingleProduct, rgiPrerequisites, true);
 
+	g_Log.Unindent();
 	g_Log.Write("...Done (prerequisites)");
 
 	if (rgiPrerequisites.GetCount() > 0)
 	{
 		g_Log.Write("Prerequisites for %s:", m_ppmProductManager->GetName(iProduct));
+		g_Log.Indent();
 		for (int i = 0; i < rgiPrerequisites.GetCount(); i++)
 			g_Log.Write("%d: %s", i, m_ppmProductManager->GetName(rgiPrerequisites[i]));
+		g_Log.Unindent();
 	}
 	else
 	{
@@ -1035,8 +1050,10 @@ bool MasterInstaller_t::InstallPrerequisites(int iProduct)
 			rgiSinglePrerequisite.Add(rgiPrerequisites[i]);
 			g_Log.Write("Testing for unfulfilled prerequisites of prerequisite %s...",
 				m_ppmProductManager->GetName(rgiPrerequisites[i]));
+			g_Log.Indent();
 			if (!m_ppmProductManager->PrerequisitesNeeded(rgiSinglePrerequisite))
 			{
+				g_Log.Unindent();
 				g_Log.Write("...Done - %s has no unfulfilled prerequisites of its own",
 					m_ppmProductManager->GetName(rgiPrerequisites[i]));
 
@@ -1048,8 +1065,10 @@ bool MasterInstaller_t::InstallPrerequisites(int iProduct)
 
 				g_Log.Write("Testing for prerequisites, to see if %s is still needed...",
 					m_ppmProductManager->GetName(iPrerequisite));
+				g_Log.Indent();
 				m_ppmProductManager->GetActivePrerequisites(rgiSingleProduct,
 					rgiTempCurrentPrereqs, true);
+				g_Log.Unindent();
 				g_Log.Write("...Done (prerequisites)");
 
 				if (!rgiTempCurrentPrereqs.Contains(iPrerequisite))
@@ -1073,6 +1092,7 @@ bool MasterInstaller_t::InstallPrerequisites(int iProduct)
 			} // End if no second-order prerequisites were found for current prerequisite.
 			else
 			{
+				g_Log.Unindent();
 				g_Log.Write("...Done - %s still has outstanding prerequisites.",
 					m_ppmProductManager->GetName(rgiPrerequisites[i]));
 			}

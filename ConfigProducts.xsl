@@ -255,6 +255,13 @@ project to make an executable master installer.
 			<xsl:text>&#09;&#09;NULL, // No internal Install function&#13;</xsl:text>
 		</xsl:if>
 
+		<!-- Flag to say if pending reboot must be executed right after installation -->
+		<xsl:text>&#09;&#09;</xsl:text>
+		<xsl:call-template name="StrOrFalseIfEmpty">
+			<xsl:with-param name="str" select="MustNotDelayReboot"/>
+		</xsl:call-template>
+		<xsl:text>, // Flag to say if pending reboot must be executed right after installation&#13;</xsl:text>
+
 		<!-- Download Web Site -->
 		<xsl:text>&#09;&#09;</xsl:text>
 		<xsl:call-template name="QuotedStrOrNullIfEmpty">

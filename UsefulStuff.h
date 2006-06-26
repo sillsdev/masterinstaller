@@ -12,6 +12,7 @@ extern DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit = t
 					 const char * pszDescription = NULL,
 					 const char * pszStatusWindowControl = NULL);
 extern bool Reboot();
+extern void FriendlyReboot();
 extern HRESULT GetFileVersion (LPTSTR filename, VS_FIXEDFILEINFO *pvsf);
 extern char * new_sprintf(const char * pszFormat, ...);
 extern char * new_vsprintf(const char * pszFormat, const va_list arglist);

@@ -68,7 +68,6 @@ protected:
 	void SelectMainProducts();
 	void GetProductKey(char szKey[100]);
 	void TestAndPerformPendingReboot(int iProduct);
-	void FriendlyReboot();
 	bool InstallPrerequisites(int iProduct);
 	bool TestAndReportLanguageConflicts(IndexList_t & rgiProducts,
 		bool fIncludeGivenProducts = false);

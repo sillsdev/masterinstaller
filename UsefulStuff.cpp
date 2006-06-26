@@ -197,6 +197,9 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 
 	delete[] pszCmdCopy;
 	pszCmdCopy = NULL;
+
+	g_Log.Write("Exit code = %d", dwExitCode);
+
 	return dwExitCode;
 }
 
@@ -306,6 +309,21 @@ bool Reboot()
 	PauseForReboot();
 	// Should never get here:
 	return false;
+}
+
+// Reboot, allowing the user time to react.
+void FriendlyReboot()
+{
+	HideStatusDialog();
+
+	if (DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_REBOOT_COUNTDOWN), NULL,
+		DlgProcRebootCountdown) == 0)
+	{
+		g_Log.Write("User chose to quit rather than reboot.");
+		throw UserQuitException;
+	}
+	g_Log.Write("Rebooting.");
+	Reboot();
 }
 
 

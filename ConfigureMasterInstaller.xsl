@@ -1231,6 +1231,7 @@ function CdDetails_t()
 	this.NeedsInstallerHelpDll = false;
 	this.NeedsInstallerHelp2Dll = false;
 	this.NeedsSetupExe = false;
+	this.NeedsAutorunInf = false;
 	this.DisplayNotes = "";
 	this.CdInUse = IsCdNeeded;
 }
@@ -1297,56 +1298,67 @@ function UpdateCdTotals()
 	
 	for (iCd = 0; iCd < MaxNumCds; iCd++)
 	{
-		// See if the current CD is a start-up CD:
-		if (iCd == 0 || (StartFromAnyCD && CdDetails[iCd].CdInUse()))
+		if (CdDetails[iCd].CdInUse())
 		{
-			// Each start-up CD must have setup.exe and Autorun.inf:
+			// Each CD must have setup.exe. This is a change from earlier versions, since it was discovered
+			// possible to have an installer on a different CD reboot, leaving a non-startup CD in the drive:
 			CdDetails[iCd].NeedsSetupExe = true;
-			CdDetails[iCd].TotalSize += RoundedSetupExeSize + RoundedAutorunInfSize;
+			CdDetails[iCd].TotalSize += RoundedSetupExeSize;
 			if (CompiledFilesSizesKnown)
-				CdDetails[iCd].DisplayNotes += "Includes actual sizes of setup.exe and Autorun.inf\n";
+				CdDetails[iCd].DisplayNotes += "Includes actual size of setup.exe\n";
 			else
-				CdDetails[iCd].DisplayNotes += "Includes estimated sizes of setup.exe and Autorun.inf\n";
+				CdDetails[iCd].DisplayNotes += "Includes estimated size of setup.exe\n";
 			
-			// We must include InstallerHelp.dll and InstallerHelp2.dll if any product is locked:
-			if (IsAnyProductLocked())
+			// See if the current CD is a start-up CD:
+			if (iCd == 0 || StartFromAnyCD)
 			{
-				var RoundedInstallerHelp2DllSize = RoundCdFileSize(1600000); // preliminary estimate
+				CdDetails[iCd].NeedsAutorunInf = true;
+				CdDetails[iCd].TotalSize += RoundedAutorunInfSize;
 				if (CompiledFilesSizesKnown)
-				{
-					RoundedInstallerHelp2DllSize = GetRoundedFileSize(InstallerHelp2DllPath);
-					CdDetails[iCd].DisplayNotes += "Includes actual sizes of InstallerHelp.dll and InstallerHelp2.dll\n";
-				}
+					CdDetails[iCd].DisplayNotes += "Includes actual size of Autorun.inf\n";
 				else
-					CdDetails[iCd].DisplayNotes += "Includes estimated sizes of InstallerHelp.dll and InstallerHelp2.dll\n";
-				CdDetails[iCd].NeedsInstallerHelpDll = true;
-				CdDetails[iCd].NeedsInstallerHelp2Dll = true;
-				CdDetails[iCd].TotalSize += RoundedInstallerHelpDllSize;
-				CdDetails[iCd].TotalSize += RoundedInstallerHelp2DllSize;
-			}
+					CdDetails[iCd].DisplayNotes += "Includes estimated size of Autorun.inf\n";
+				
+				// We must include InstallerHelp.dll and InstallerHelp2.dll if any product is locked:
+				if (IsAnyProductLocked())
+				{
+					var RoundedInstallerHelp2DllSize = RoundCdFileSize(1600000); // preliminary estimate
+					if (CompiledFilesSizesKnown)
+					{
+						RoundedInstallerHelp2DllSize = GetRoundedFileSize(InstallerHelp2DllPath);
+						CdDetails[iCd].DisplayNotes += "Includes actual sizes of InstallerHelp.dll and InstallerHelp2.dll\n";
+					}
+					else
+						CdDetails[iCd].DisplayNotes += "Includes estimated sizes of InstallerHelp.dll and InstallerHelp2.dll\n";
+					CdDetails[iCd].NeedsInstallerHelpDll = true;
+					CdDetails[iCd].NeedsInstallerHelp2Dll = true;
+					CdDetails[iCd].TotalSize += RoundedInstallerHelpDllSize;
+					CdDetails[iCd].TotalSize += RoundedInstallerHelp2DllSize;
+				}
 			
-			// We must also include External Help file(s) and Terms of Use file(s), if needed:
-			if (TermsOfUseNeeded)
-			{
-				if (TermsOfUseFileData)
+				// We must also include External Help file(s) and Terms of Use file(s), if needed:
+				if (TermsOfUseNeeded)
 				{
-					CdDetails[iCd].TotalSize += TermsOfUseFileData.TermsOfUseSize;
-					CdDetails[iCd].DisplayNotes += "Includes actual size of Terms of Use file(s)\n";
+					if (TermsOfUseFileData)
+					{
+						CdDetails[iCd].TotalSize += TermsOfUseFileData.TermsOfUseSize;
+						CdDetails[iCd].DisplayNotes += "Includes actual size of Terms of Use file(s)\n";
+					}
+					else
+						alert("Error - TermsOfUseFileData does not exist, but TermsOfUseSize is needed.");
 				}
-				else
-					alert("Error - TermsOfUseFileData does not exist, but TermsOfUseSize is needed.");
-			}
-			if (ExternalHelpNeeded)
-			{
-				if (ExternalHelpFileData)
+				if (ExternalHelpNeeded)
 				{
-					CdDetails[iCd].TotalSize += ExternalHelpFileData.ExternalHelpSize;
-					CdDetails[iCd].DisplayNotes += "Includes actual size of External Help file(s)\n";
+					if (ExternalHelpFileData)
+					{
+						CdDetails[iCd].TotalSize += ExternalHelpFileData.ExternalHelpSize;
+						CdDetails[iCd].DisplayNotes += "Includes actual size of External Help file(s)\n";
+					}
+					else
+						alert("Error - ExternalHelpFileData does not exist, but ExternalHelpSize is needed.");
 				}
-				else
-					alert("Error - ExternalHelpFileData does not exist, but ExternalHelpSize is needed.");
-			}
-		} // End if this is a start-up CD
+			} // End if this is a start-up CD
+		}  // End if this CD is in use
 		CdDetails[iCd].DisplayNotes += "Does not include general overhead space requirements.\n";
 	}
 	showCdRows();
@@ -2755,7 +2767,9 @@ function GatherFiles(CdImagePath)
 					fso.CopyFile(SetupExePath, CdFolder, true);
 				else
 					AddCommentary(0, "Error - path of setup.exe not defined", true);
-
+			}
+			if (CdDetails[iCd].NeedsAutorunInf)
+			{
 				AddCommentary(1, "Copying Autorun.inf", false);
 				if (AutorunInfPath != null)
 					fso.CopyFile(AutorunInfPath, CdFolder, true);

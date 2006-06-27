@@ -509,6 +509,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 			const int kdy = 30 + g_nListSpacingAdjust; // Allows for checkbox height etc.
 			pProductManager->GenAvailableMainProductList(rgiAvailableProducts, true);
 			bool fFoundInstalledProduct = false;
+			g_Log.Indent();
 			for (int i = 0; i < rgiAvailableProducts.GetCount(); i++)
 			{
 				int iProduct = rgiAvailableProducts[i];
@@ -586,6 +587,8 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 				}
 				nYcoord += kdy;
 			}
+			g_Log.Unindent();
+
 			// See if any installed main products have any uninstalled dependencies:
 			if (fFoundInstalledProduct && pProductManager->RequirementsNeeded())
 			{

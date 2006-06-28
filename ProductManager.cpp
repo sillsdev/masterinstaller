@@ -444,7 +444,7 @@ DWORD SoftwareProduct::RunInstaller()
 		{
 			// We'll be using Windows Installer.
 			g_Log.Write("Windows installer will be used.");
-			char * pszInstallFlags = "/i";
+			const char * kpszInstallFlags = "/i";
 
 			// See if we need to test for a minor upgrade:
 			if (m_kpszMsiVersion)
@@ -465,12 +465,14 @@ DWORD SoftwareProduct::RunInstaller()
 					if (nOurVersion > nIntalledVersion)
 					{
 						g_Log.Write("Minor upgrade will be performed.");
-						pszInstallFlags = "/fvomus";
+						kpszInstallFlags = "/fvomus";
+						if (m_kpszMsiUpgrade)
+							kpszInstallFlags = m_kpszMsiUpgrade;
 					}
 				}
 			}
 			// Run msiexec:
-			char * pszMsiExec = new_sprintf("MsiExec.exe %s \"%s\" %s", pszInstallFlags,
+			char * pszMsiExec = new_sprintf("MsiExec.exe %s \"%s\" %s", kpszInstallFlags,
 				GetCriticalFile(), m_kpszMsiFlags? m_kpszMsiFlags : "");
 
 			g_Log.Write("About to run \"%s\"", pszMsiExec);

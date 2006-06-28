@@ -34,6 +34,7 @@
 	const char * m_kpszInstallerFlagFalse;
 	const char * m_kpszMsiFlags;
 	const char * m_kpszMsiVersion;
+	const char * m_kpszMsiUpgrade;
 	pfnInstall m_pfnInstall;
 
 	bool m_fMustNotDelayReboot;

@@ -211,6 +211,7 @@ project to make an executable master installer.
 			<xsl:text>&#09;&#09;NULL, // No Install Cmd for false condition&#13;</xsl:text>
 			<xsl:text>&#09;&#09;NULL, // No MsiFlags&#13;</xsl:text>
 			<xsl:text>&#09;&#09;NULL, // No MsiVersion&#13;</xsl:text>
+			<xsl:text>&#09;&#09;NULL, // No MsiUpgrade&#13;</xsl:text>
 			<xsl:text>&#09;&#09;</xsl:text>
 			<xsl:call-template name="StrOrNullIfEmpty">
 				<xsl:with-param name="str" select="Install"/>
@@ -252,6 +253,11 @@ project to make an executable master installer.
 				<xsl:with-param name="str" select="Install/@MsiVersion"/>
 			</xsl:call-template>
 			<xsl:text>, // MsiVersion&#13;</xsl:text>
+			<xsl:text>&#09;&#09;</xsl:text>
+			<xsl:call-template name="QuotedStrOrNullIfEmpty">
+				<xsl:with-param name="str" select="Install/@MsiUpgrade"/>
+			</xsl:call-template>
+			<xsl:text>, // MsiUpgrade&#13;</xsl:text>
 			<xsl:text>&#09;&#09;NULL, // No internal Install function&#13;</xsl:text>
 		</xsl:if>
 

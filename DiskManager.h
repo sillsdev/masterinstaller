@@ -17,6 +17,7 @@ public:
 		knCorrectCdFinally,
 		knFileNotFoundCorrectCd,
 		knFileFoundWrongCd,
+		knFileOmitted,
 	};
 	int CheckCdPresent(int iCd, bool fAllowNoCd = false, const char * pszSkipMsgProduct = NULL);
 	int EnsureCdForFile(const char * pszFile, int iCd, const char * pszSkipMsgProduct);

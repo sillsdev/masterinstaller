@@ -518,93 +518,99 @@ DWORD SoftwareProduct::RunInstaller()
 // Assumes that all prerequisite products have been installed.
 bool SoftwareProduct::Install()
 {
-	// Check if we have already tried unsuccessfully to install this product:
-	if (m_InstallStatus >= InstallFailed)
-		return false;
+	// If the product was expressly omitted from the CD set then don't bother with the tests
+	// for admin rights, correct OS, etc:
+	if (m_iCd >= 0)
+	{
+		// Check if we have already tried unsuccessfully to install this product:
+		if (m_InstallStatus >= InstallFailed)
+			return false;
 
-	// Check if the circumstances are OK for installing this product:
-	if (m_fMustHaveWin2kOrBetter && g_fLessThanWin2k)
-	{
-		HandleError(kNonFatal, false, IDC_ERROR_NEED_WIN2K_OR_BETTER, m_kpszNiceName);
-		m_InstallStatus = InstallFailedNeededWin2KOrMore;
-		return false;
-	}
-	if (m_fMustBeAdmin && !g_fAdministrator)
-	{
-		HandleError(kNonFatal, false, IDC_ERROR_NEED_ADMIN_ACCESS, m_kpszNiceName);
-		m_InstallStatus = InstallFailedNeededAdmin;
-		return false;
-	}
-	if (m_fMustKillHangingWindows)
-	{
-		bool fTestHanging = true;
-		while (fTestHanging)
+		// Check if the circumstances are OK for installing this product:
+		if (m_fMustHaveWin2kOrBetter && g_fLessThanWin2k)
 		{
-			g_Log.Write("Testing for hanging windows (for %s)", m_kpszNiceName);
-			ShowStatusDialog();
-			const char * pszMsg = DisplayStatusText(0, FetchString(IDC_MESSAGE_TEST_HANGING));
-			char * pszHangingReport = GenerateHangingWindowsReport();
-			if (pszHangingReport != NULL)
+			HandleError(kNonFatal, false, IDC_ERROR_NEED_WIN2K_OR_BETTER, m_kpszNiceName);
+			m_InstallStatus = InstallFailedNeededWin2KOrMore;
+			return false;
+		}
+		if (m_fMustBeAdmin && !g_fAdministrator)
+		{
+			HandleError(kNonFatal, false, IDC_ERROR_NEED_ADMIN_ACCESS, m_kpszNiceName);
+			m_InstallStatus = InstallFailedNeededAdmin;
+			return false;
+		}
+		if (m_fMustKillHangingWindows)
+		{
+			bool fTestHanging = true;
+			while (fTestHanging)
 			{
-				HideStatusDialog();
-
-				char * pszIntro1 = new_sprintf(FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_1),
-					m_kpszNiceName);
-				char * pszIntro2 = new_sprintf(FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_2),
-					m_kpszNiceName);
-				char * pszAlert = new_sprintf("%s\n%s\n\n%s", pszIntro1, pszHangingReport,
-					pszIntro2);
-
-				delete[] pszIntro1;
-				pszIntro1 = NULL;
-				delete[] pszHangingReport;
-				pszHangingReport = NULL;
-				delete[] pszIntro2;
-				pszIntro2 = NULL;
-
-				g_Log.Write(pszAlert);
-
-				int idResult;
-				do
+				g_Log.Write("Testing for hanging windows (for %s)", m_kpszNiceName);
+				ShowStatusDialog();
+				const char * pszMsg = DisplayStatusText(0,
+					FetchString(IDC_MESSAGE_TEST_HANGING));
+				char * pszHangingReport = GenerateHangingWindowsReport();
+				if (pszHangingReport != NULL)
 				{
-					idResult = MessageBox(NULL, pszAlert, g_pszTitle,
-						MB_ICONSTOP | MB_ABORTRETRYIGNORE | MB_DEFBUTTON2);
+					HideStatusDialog();
 
-					if (idResult == IDABORT)
+					char * pszIntro1 = new_sprintf(
+						FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_1), m_kpszNiceName);
+					char * pszIntro2 = new_sprintf(
+						FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_2), m_kpszNiceName);
+					char * pszAlert = new_sprintf("%s\n%s\n\n%s", pszIntro1, pszHangingReport,
+						pszIntro2);
+
+					delete[] pszIntro1;
+					pszIntro1 = NULL;
+					delete[] pszHangingReport;
+					pszHangingReport = NULL;
+					delete[] pszIntro2;
+					pszIntro2 = NULL;
+
+					g_Log.Write(pszAlert);
+
+					int idResult;
+					do
 					{
-						// Confirm quit:
-						if (MessageBox(NULL, FetchString(IDC_MESSAGE_CONFIRM_QUIT_GENERAL), g_pszTitle,
-							MB_YESNO) == IDYES)
+						idResult = MessageBox(NULL, pszAlert, g_pszTitle,
+							MB_ICONSTOP | MB_ABORTRETRYIGNORE | MB_DEFBUTTON2);
+
+						if (idResult == IDABORT)
 						{
-							g_Log.Write("User opted to quit.");
-							delete[] pszAlert;
-							pszAlert = NULL;
-							throw UserQuitException;
+							// Confirm quit:
+							if (MessageBox(NULL, FetchString(IDC_MESSAGE_CONFIRM_QUIT_GENERAL),
+								g_pszTitle, MB_YESNO) == IDYES)
+							{
+								g_Log.Write("User opted to quit.");
+								delete[] pszAlert;
+								pszAlert = NULL;
+								throw UserQuitException;
+							}
 						}
+					} while (idResult == IDABORT);
+
+					delete[] pszAlert;
+					pszAlert = NULL;
+
+					switch (idResult)
+					{
+					case IDRETRY:
+						g_Log.Write("User pressed Retry.");
+						break;
+					case IDIGNORE:
+						g_Log.Write("User pressed Ignore.");
+						fTestHanging = false;
+						break;
 					}
-				} while (idResult == IDABORT);
-
-				delete[] pszAlert;
-				pszAlert = NULL;
-
-				switch (idResult)
+				} // End if hanging windows report contained anything.
+				else
 				{
-				case IDRETRY:
-					g_Log.Write("User pressed Retry.");
-					break;
-				case IDIGNORE:
-					g_Log.Write("User pressed Ignore.");
 					fTestHanging = false;
-					break;
+					g_Log.Write("No hanging windows.");
 				}
-			} // End if hanging windows report contained anything.
-			else
-			{
-				fTestHanging = false;
-				g_Log.Write("No hanging windows.");
-			}
-		} // End while(fTestHanging)
-	}// End if (m_fMustKillHangingWindows)
+			} // End while(fTestHanging)
+		}// End if (m_fMustKillHangingWindows)
+	} // End if product included in CD set.
 
 	bool fCalledPreInstallFunction = false;
 
@@ -614,10 +620,13 @@ bool SoftwareProduct::Install()
 		fRepeat = false;
 
 		// Make sure correct disk is inserted:
-		int nFileResult = g_DiskManager.EnsureCdForFile(GetCriticalFile(), m_iCd,
-			m_kpszNiceName);
-
-		ShowStatusDialog();
+		int nFileResult = DiskManager_t::knFileOmitted;
+		if (m_iCd >= 0)
+		{
+			nFileResult = g_DiskManager.EnsureCdForFile(GetCriticalFile(), m_iCd, 
+				m_kpszNiceName);
+			ShowStatusDialog();
+		}
 
 		if (nFileResult == DiskManager_t::knCorrectCdAlready ||
 			nFileResult == DiskManager_t::knCorrectCdFinally ||
@@ -762,7 +771,8 @@ bool SoftwareProduct::Install()
 			m_InstallStatus = InstallFailedUserAbandoned;
 			return false;
 		}
-		else if (nFileResult == DiskManager_t::knFileNotFoundCorrectCd)
+		else if (nFileResult == DiskManager_t::knFileNotFoundCorrectCd 
+			|| nFileResult == DiskManager_t::knFileOmitted)
 		{
 			// The software is not on the CD, so assume it is a "Lite" CD, where
 			// user has to do some work himself:

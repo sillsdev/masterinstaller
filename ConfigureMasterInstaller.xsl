@@ -348,12 +348,14 @@
 		<tr>
 			<th>Product</th>
 			<th>Size of files</th>
+			<th>Include</th>
 			<th>CD number</th>
 		</tr>
 		<xsl:for-each select="/MasterInstaller/Products/Product">
 			<tr id="ProductCdTr{count(preceding-sibling::Product)}" style="display:none">
 				<td align="center"><xsl:value-of select="AutoConfigure/Title"/></td>
 				<td align="center" id="FileSize{count(preceding-sibling::Product)}"></td>
+				<td align="center"><input id="Included{count(preceding-sibling::Product)}" type="checkbox" checked="true" title="Select to include, clear to omit this product from the CD." onclick="EnableCdIndex({count(preceding-sibling::Product)}, this.checked); UpdateCdTotals();"/></td>
 				<td align="center"><input id="ProductCD{count(preceding-sibling::Product)}" value="0" onkeyup="UpdateCdTotals();" type="text" size="2" title="Index of CD to place this product on. Zero-based." onfocus="this.select();">
 				<xsl:if test="CD"><xsl:attribute name="value"><xsl:value-of select="CD"/></xsl:attribute></xsl:if>
 				</input></td>
@@ -818,6 +820,7 @@ function setPageNo(Stage)
 			// If we're about to enter the CD Allocation page, Recalc CD Totals:
 			for (i = 0; i < NumProducts; i++)
 			{
+				EnableCdIndex(i, document.getElementById('Included' + i).checked);
 				var ProductSelected = document.getElementById('ProductTitle' + i).checked;
 				var Title = ProductSelected ? "" : "This product is needed, even though you did not select it.";
 				showRow('ProductCdTr' + i, IsProductNeeded(i), ProductSelected, Title);
@@ -1224,6 +1227,12 @@ function showCdRows()
 	}
 }
 
+// If flag is true, enables the CD index table data. Otherwise, disables it.
+function EnableCdIndex(i, flag)
+{
+	document.getElementById('ProductCD' + i).disabled = !flag;
+}
+
 // Initialize object containing details about a CD.
 function CdDetails_t()
 {
@@ -1249,12 +1258,16 @@ function RoundCdFileSize(ActualSize)
 	return (Math.ceil(ActualSize / MinFileSize) * MinFileSize);
 }
 
-// Returns the index of the CD that will contain the specified product.
+// Returns the index of the CD that will contain the specified product,
+// or -1 if product was expressly omitted.
 function GetCdIndexOfProduct(iProduct)
 {
 	var Element = document.getElementById('ProductCD' + iProduct);
 	if (Element)
 	{
+		if (!document.getElementById('Included' + iProduct).checked)
+			return -1;
+
 		var Value = document.getElementById('ProductCD' + iProduct).value;
 		if (Value == "")
 			return 0;
@@ -1280,7 +1293,8 @@ function UpdateCdTotals()
 		if (IsProductNeeded(i))
 		{
 			var iCd = GetCdIndexOfProduct(i);
-			CdDetails[iCd].TotalSize += ProductSizes[i];
+			if (iCd >= 0)
+				CdDetails[iCd].TotalSize += ProductSizes[i];
 		}
 	}
 	// Deal with special cases: the need for setup.exe, InstallerHelp.dll, etc
@@ -1595,6 +1609,7 @@ function GenerateSourceFileLists()
 				var ProductSource = ProductSourceList[iSource];
 				var NameWhenLocked = ProductSource.getAttribute("NameWhenLocked");
 				var Attributes = ProductSource.getAttribute("Attributes");
+				var DestPath = ProductSource.getAttribute("DestPath");
 
 				// Check if source path is relative:
 				var SourcePath = CheckProductRelativePath(ProductSource.text, RelativePathPrepend);
@@ -1616,6 +1631,7 @@ function GenerateSourceFileLists()
 					alert("Error - Product " + ProductNode.selectSingleNode('Title').text + " contains an AutoConfigure Source node with a NameWhenLocked attribute (" + NameWhenLocked + ") but multiple files matching.");
 				if (NameWhenLocked)
 					NewListData.NameWhenLocked = NameWhenLocked;
+				NewListData.DestPath = DestPath;
 
 				FileListData[iSource] = NewListData;
 			}
@@ -2525,7 +2541,7 @@ function ApplyUserSettings(xmlDoc)
 		if (IsProductNeeded(iProduct))
 		{
 			var ProductNode = ProductNodeList[iProduct];
-			var CdIndex = GetCdIndexOfProduct(iProduct);
+			var CdIndex = GetCdIndexOfProduct(iProduct); // This could be -1 if product omitted.
 			var CdNode = xmlDoc.createElement("CD");
 			CdNode.text = CdIndex;
 			ProductNode.appendChild(CdNode);
@@ -2875,10 +2891,14 @@ function GatherFiles(CdImagePath)
 							var FileList = FileListData[iData].FileList;
 							var RootFolder = FileListData[iData].RootFolder;
 							var Substitution = FileListData[iData].NameWhenLocked;
+							var DestPath = FileListData[iData].DestPath;
+							
 							for (i = 0; i < FileList.length; i++)
 							{
 								var SourcePath = FileList[i];
 								var TargetFullPath = GetDestinationFolder(SourcePath, RootFolder, Destination);
+								if (DestPath)
+									TargetFullPath = fso.BuildPath(TargetFullPath, DestPath);
 								MakeSureFolderExists(TargetFullPath);
 
 								var UsingSub = false;

@@ -14,8 +14,8 @@ extern UserQuitException_t UserQuitException;
 extern void * hStopRequestInProgress; // Event to pause main thread while user confirms stop.
 extern void CheckIfStopRequested();
 
-extern const char * g_pszTitle;
-extern const char * g_pszListSubtitle;
+extern const _TCHAR * g_pszTitle;
+extern const _TCHAR * g_pszListSubtitle;
 extern const int g_nListBackgroundR;
 extern const int g_nListBackgroundG;
 extern const int g_nListBackgroundB;
@@ -30,11 +30,11 @@ extern const int g_nListSpacingAdjust;
 extern const int g_nInfoButtonAdjust;
 extern const bool g_fStartFromAnyCd;
 extern const bool g_fKeyPromptNeedsShiftCtrl;
-extern const char * g_pszGetKeyTitle;
-extern const char * g_pszExternalHelpFile;
-extern const char * g_pszHelpButtonText;
-extern const char * g_pszTermsOfUseFile;
-extern const char * g_pszTermsButtonText;
+extern const _TCHAR * g_pszGetKeyTitle;
+extern const _TCHAR * g_pszExternalHelpFile;
+extern const _TCHAR * g_pszHelpButtonText;
+extern const _TCHAR * g_pszTermsOfUseFile;
+extern const _TCHAR * g_pszTermsButtonText;
 
 // Used to signify products which are visible but not installable:
 extern const int knVisibleOnlyOffset;

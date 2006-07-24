@@ -24,28 +24,28 @@ project to make an executable master installer.
 		<xsl:if test="not(@Type='External')">
 			<xsl:text>extern bool </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(const char * pszMinVersion, const char * pszMaxVersion, const char * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion, const TCHAR * pszCriticalFile);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:for-each select="MasterInstaller/Products/Product/Preinstall">
 		<xsl:if test="not(@Type='External') and not(@IgnoreError='true')">
 			<xsl:text>extern int </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(const char * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(const TCHAR * pszCriticalFile);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:for-each select="MasterInstaller/Products/Product/Install">
 		<xsl:if test="@Type='Internal'">
 			<xsl:text>extern DWORD </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(bool fFlag, const char * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(bool fFlag, const TCHAR * pszCriticalFile);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:for-each select="MasterInstaller/Products/Product/PostInstall">
 		<xsl:if test="not(@Type='External')">
 			<xsl:text>extern int </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(const char * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(const TCHAR * pszCriticalFile);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:text>&#13;</xsl:text>
@@ -68,9 +68,9 @@ project to make an executable master installer.
 		<xsl:text>, // Name used in dependency lists&#13;</xsl:text>
 
 		<!-- Nice name of product, displayed to user -->
-		<xsl:text>&#09;&#09;"</xsl:text>
+		<xsl:text>&#09;&#09;_T("</xsl:text>
 		<xsl:value-of select="Title"/>
-		<xsl:text>", // Title&#13;</xsl:text>
+		<xsl:text>"), // Title&#13;</xsl:text>
 
 		<!-- MSI Product Code -->
 		<xsl:text>&#09;&#09;</xsl:text>
@@ -110,24 +110,24 @@ project to make an executable master installer.
 			<xsl:text>&amp;</xsl:text>
 			<xsl:value-of select="CriticalFile/@Flag"/>
 			<xsl:text>, // Critical file condition flag&#13;</xsl:text>
-			<xsl:text>&#09;&#09;"</xsl:text>
+			<xsl:text>&#09;&#09;_T("</xsl:text>
 			<xsl:call-template name="BackslashDoubler">
 				<xsl:with-param name="str" select="CriticalFile/True"/>
 			</xsl:call-template>
-			<xsl:text>", // Critical file condition true&#13;</xsl:text>
-			<xsl:text>&#09;&#09;"</xsl:text>
+			<xsl:text>"), // Critical file condition true&#13;</xsl:text>
+			<xsl:text>&#09;&#09;_T("</xsl:text>
 			<xsl:call-template name="BackslashDoubler">
 				<xsl:with-param name="str" select="CriticalFile/False"/>
 			</xsl:call-template>
-			<xsl:text>"</xsl:text>
+			<xsl:text>")</xsl:text>
 		</xsl:if>
 		<xsl:if test="string-length(CriticalFile/@Flag)=0">
 			<xsl:text>NULL, // Critical file condition flag&#13;</xsl:text>
-			<xsl:text>&#09;&#09;"</xsl:text>
+			<xsl:text>&#09;&#09;_T("</xsl:text>
 			<xsl:call-template name="BackslashDoubler">
 				<xsl:with-param name="str" select="CriticalFile"/>
 			</xsl:call-template>
-			<xsl:text>", // Critical file condition true&#13;</xsl:text>
+			<xsl:text>"), // Critical file condition true&#13;</xsl:text>
 			<xsl:text>&#09;&#09;NULL</xsl:text>
 		</xsl:if>
 		<xsl:text>, // Critical file condition false&#13;</xsl:text>
@@ -368,9 +368,9 @@ project to make an executable master installer.
 			<xsl:text>, // Name used in dependency lists&#13;</xsl:text>
 
 			<!-- Nice name of product, displayed to user -->
-			<xsl:text>&#09;&#09;"</xsl:text>
+			<xsl:text>&#09;&#09;_T("</xsl:text>
 			<xsl:value-of select="Title"/>
-			<xsl:text>", // Title&#13;</xsl:text>
+			<xsl:text>"), // Title&#13;</xsl:text>
 
 			<!-- MSI Product Code -->
 			<xsl:text>&#09;&#09;</xsl:text>
@@ -410,11 +410,11 @@ project to make an executable master installer.
 			<xsl:for-each select="MasterInstaller/Products/Product">
 				<xsl:variable name="Tag" select="Tag"/>
 				<xsl:for-each select="Prerequisite">
-					<xsl:text>&#09;{ "</xsl:text>
+					<xsl:text>&#09;{ _T("</xsl:text>
 					<xsl:value-of select="$Tag"/>
-					<xsl:text>", "</xsl:text>
+					<xsl:text>"), _T("</xsl:text>
 					<xsl:value-of select="@Tag"/>
-					<xsl:text>", </xsl:text>
+					<xsl:text>"), </xsl:text>
 					
 					<!-- See if a Version is given -->
 					<xsl:if test="not(string-length(@Version)=0)">
@@ -466,11 +466,11 @@ project to make an executable master installer.
 			<xsl:for-each select="MasterInstaller/Products/Product">
 				<xsl:variable name="Tag" select="Tag"/>
 				<xsl:for-each select="Requires">
-					<xsl:text>&#09;{ "</xsl:text>
+					<xsl:text>&#09;{ _T("</xsl:text>
 					<xsl:value-of select="$Tag"/>
-					<xsl:text>", "</xsl:text>
+					<xsl:text>"), _T("</xsl:text>
 					<xsl:value-of select="@Tag"/>
-					<xsl:text>", </xsl:text>
+					<xsl:text>"), </xsl:text>
 					
 					<!-- See if a Version is given -->
 					<xsl:if test="not(string-length(@Version)=0)">
@@ -494,9 +494,9 @@ project to make an executable master installer.
 							<xsl:with-param name="str" select="@MaxVersion"/>
 						</xsl:call-template>
 					</xsl:if>
-					<xsl:text>, "</xsl:text>
+					<xsl:text>, _T("</xsl:text>
 					<xsl:value-of select="@FailMsg"/>
-					<xsl:text>"</xsl:text>
+					<xsl:text>")</xsl:text>
 
 					<xsl:text> },&#13;</xsl:text>
 				</xsl:for-each>
@@ -504,11 +504,11 @@ project to make an executable master installer.
 				<xsl:for-each select="Feature">
 					<xsl:variable name="FTag" select="Tag"/>
 					<xsl:for-each select="Requires">
-						<xsl:text>&#09;{ "</xsl:text>
+						<xsl:text>&#09;{ _T("</xsl:text>
 						<xsl:value-of select="$FTag"/>
-						<xsl:text>", "</xsl:text>
+						<xsl:text>"), _T("</xsl:text>
 						<xsl:value-of select="@Tag"/>
-						<xsl:text>", </xsl:text>
+						<xsl:text>"), </xsl:text>
 
 						<!-- See if a Version is given -->
 						<xsl:if test="not(string-length(@Version)=0)">
@@ -532,9 +532,9 @@ project to make an executable master installer.
 								<xsl:with-param name="str" select="@MaxVersion"/>
 							</xsl:call-template>
 						</xsl:if>
-						<xsl:text>, "</xsl:text>
+						<xsl:text>, _T("</xsl:text>
 						<xsl:value-of select="@FailMsg"/>
-						<xsl:text>"</xsl:text>
+						<xsl:text>")</xsl:text>
 
 						<xsl:text> },&#13;</xsl:text>
 					</xsl:for-each>	
@@ -588,11 +588,11 @@ If str is empty, writes NULL, else doubles-up '\' and puts '\' before '"'
 <xsl:template name="QuotedCppPathStringOrNullIfEmpty">
 	<xsl:param name="str"/>
 	<xsl:if test="not(string-length($str)=0)">
-		<xsl:text>"</xsl:text>
+		<xsl:text>_T("</xsl:text>
 		<xsl:call-template name="CppPathString">
 			<xsl:with-param name="str" select="$str"/>
 		</xsl:call-template>
-		<xsl:text>"</xsl:text>
+		<xsl:text>")</xsl:text>
 	</xsl:if>
 	<xsl:if test="string-length($str)=0">
 		<xsl:text>NULL</xsl:text>
@@ -683,9 +683,9 @@ quotes around it.
 <xsl:template name="QuotedStrOrNullIfEmpty">
 	<xsl:param name="str"/>
 	<xsl:if test="not(string-length($str)=0)">
-		<xsl:text>"</xsl:text>
+		<xsl:text>_T("</xsl:text>
 		<xsl:value-of select="$str"/>
-		<xsl:text>"</xsl:text>
+		<xsl:text>")</xsl:text>
 	</xsl:if>
 	<xsl:if test="string-length($str)=0">
 		<xsl:text>NULL</xsl:text>

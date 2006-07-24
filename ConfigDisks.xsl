@@ -24,12 +24,12 @@ project to make an executable master installer.
 	<xsl:text>{&#13;</xsl:text>
 	<xsl:for-each select="MasterInstaller/CDs/CD">
 		<xsl:text>&#09;{&#13;</xsl:text>
-		<xsl:text>&#09;&#09;"</xsl:text>
+		<xsl:text>&#09;&#09;_T("</xsl:text>
 		<xsl:value-of select="Title"/>
-		<xsl:text>",&#13;</xsl:text>
-		<xsl:text>&#09;&#09;"</xsl:text>
+		<xsl:text>"),&#13;</xsl:text>
+		<xsl:text>&#09;&#09;_T("</xsl:text>
 		<xsl:value-of select="VolumeLabel"/>
-		<xsl:text>",&#13;</xsl:text>
+		<xsl:text>"),&#13;</xsl:text>
 		<xsl:text>&#09;},&#13;</xsl:text>
 	</xsl:for-each>
 	<xsl:text>};&#13;</xsl:text>

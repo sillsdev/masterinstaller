@@ -1,3 +1,5 @@
+#pragma once
+
 // Tests for presence of Adobe Acrobat Reader.
 // The odd thing about this program is that it is easy to end up with the .pdf file extension
 // "unplugged": if you install version 5, then version 6, then uninstall version 6, there is no

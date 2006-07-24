@@ -5,16 +5,16 @@
 	processed XML file. They are separated out into this file so that if edited, the Report
 	system will be kept up to date.
 */
-	const char * m_kpszInternalName;
-	const char * m_kpszNiceName;
-	const char * m_kpszMsiProductCode;
-	const char * m_kpszMsiFeature;
-	const char * m_kpszVersionInKey;
+	const _TCHAR * m_kpszInternalName;
+	const _TCHAR * m_kpszNiceName;
+	const _TCHAR * m_kpszMsiProductCode;
+	const _TCHAR * m_kpszMsiFeature;
+	const _TCHAR * m_kpszVersionInKey;
 	int m_nKeyId;
 	bool m_kfOneOfOurs;
 	bool * m_fCriticalFileFlag;
-	const char * m_pszCriticalFileFlagTrue;
-	const char * m_pszCriticalFileFlagFalse;
+	const _TCHAR * m_pszCriticalFileFlagTrue;
+	const _TCHAR * m_pszCriticalFileFlagFalse;
 	int m_iCd;
 	bool m_fMustHaveWin2kOrBetter;
 	bool m_fMustBeAdmin;
@@ -26,31 +26,31 @@
 	bool m_fMustKillHangingWindows;
 
 	pfnPreInstallation m_pfnPreInstallation;
-	const char * m_kpszPreInstallation;
+	const _TCHAR * m_kpszPreInstallation;
 	bool m_fIngnorePreInstallationErrors;
 
 	bool * m_pfInstallerFlag;
-	const char * m_kpszInstallerFlagTrue;
-	const char * m_kpszInstallerFlagFalse;
-	const char * m_kpszMsiFlags;
-	const char * m_kpszMsiVersion;
-	const char * m_kpszMsiUpgrade;
+	const _TCHAR * m_kpszInstallerFlagTrue;
+	const _TCHAR * m_kpszInstallerFlagFalse;
+	const _TCHAR * m_kpszMsiFlags;
+	const _TCHAR * m_kpszMsiVersion;
+	const _TCHAR * m_kpszMsiUpgrade;
 	pfnInstall m_pfnInstall;
 
 	bool m_fMustNotDelayReboot;
 
-	const char * m_kpszDownloadUrl;
+	const _TCHAR * m_kpszDownloadUrl;
 
-	const char * m_kpszCommentary;
-	const char * m_kpszStatusWindowControl;
+	const _TCHAR * m_kpszCommentary;
+	const _TCHAR * m_kpszStatusWindowControl;
 	bool m_fStatusPauseWin98;
 
 	pfnAuxTestPresence m_pfnAuxTestPresence;
-	const char * m_kpszAuxTestPresence;
-	const char * m_kpszTestPresenceVersion;
+	const _TCHAR * m_kpszAuxTestPresence;
+	const _TCHAR * m_kpszTestPresenceVersion;
 
 	pfnPostInstallation m_pfnPostInstallation;
-	const char * m_kpszPostInstallation;
+	const _TCHAR * m_kpszPostInstallation;
 
-	const char * m_kpszHelpTag;
+	const _TCHAR * m_kpszHelpTag;
 	bool m_fInternalHelpFile;

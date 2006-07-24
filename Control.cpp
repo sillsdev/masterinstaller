@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <tchar.h>
 
 #include "Control.h"
 #include "ErrorHandler.h"
@@ -10,8 +11,8 @@
 #include "DiskManager.h"
 #include "PersistantProgress.h"
 
-const char * MasterInstaller_t::m_kszMutexName = "SIL Installation Bootstrapper";
-const char * MasterInstaller_t::m_kszRegProductKeys = "Software\\SIL\\Installer\\ProductKeys";
+const _TCHAR * MasterInstaller_t::m_kszMutexName = _T("SIL Installation Bootstrapper");
+const _TCHAR * MasterInstaller_t::m_kszRegProductKeys = _T("Software\\SIL\\Installer\\ProductKeys");
 
 MasterInstaller_t::MasterInstaller_t()
 {
@@ -53,7 +54,7 @@ MasterInstaller_t::~MasterInstaller_t()
 	m_hMutex = NULL;
 }
 
-void MasterInstaller_t::LaunchHelp(const char * pszHelpTag)
+void MasterInstaller_t::LaunchHelp(const _TCHAR * pszHelpTag)
 {
 	if (pszHelpTag && Help)
 	{
@@ -86,17 +87,17 @@ void MasterInstaller_t::Run()
 			// on Windows 98 or lower, we must not assume it is present. Instead,
 			// we must interrogate the Kernel32.dll:
 			const int kcchSystemFolder = 1024;
-			char pszSystemFolder[kcchSystemFolder];
+			_TCHAR pszSystemFolder[kcchSystemFolder];
 			// Get Windows system folder path:
 			if (GetSystemDirectory(pszSystemFolder, kcchSystemFolder) <= kcchSystemFolder)
 			{
 				// Remove any terminating backslash:
-				int cch = (int)strlen(pszSystemFolder);
+				int cch = (int)_tcslen(pszSystemFolder);
 				if (cch > 1)
-					if (pszSystemFolder[cch - 1] == '\\')
+					if (pszSystemFolder[cch - 1] == _TCHAR('\\'))
 						pszSystemFolder[cch - 1] = 0;
 				// Generate full path of Kernel32.dll:
-				char * pszKernel32Dll = new_sprintf("%s\\Kernel32.dll", pszSystemFolder);
+				_TCHAR * pszKernel32Dll = new_sprintf(_T("%s\\Kernel32.dll"), pszSystemFolder);
 				// Get a handle to the DLL:
 				HMODULE hmodKernel32 = LoadLibrary(pszKernel32Dll);
 				delete[] pszKernel32Dll;
@@ -121,16 +122,16 @@ void MasterInstaller_t::Run()
 				}
 			}
 		}
-		g_Log.Write("Windows 2000 or better: %s.", (g_fLessThanWin2k ? "false" : "true"));
+		g_Log.Write(_T("Windows 2000 or better: %s."), (g_fLessThanWin2k ? _T("false") : _T("true")));
 
 		g_fAdministrator = IsCurrentUserLocalAdministrator();
-		g_Log.Write("Admin privileges: %s.", (g_fAdministrator? "true" : "false"));
+		g_Log.Write(_T("Admin privileges: %s."), (g_fAdministrator? _T("true") : _T("false")));
 
 		m_ppmProductManager = CreateProductManager();
 		if (!m_ppmProductManager)
 		{
 			HandleError(kFatal, false, IDC_ERROR_INTERNAL,
-				"cannot instantiate Product Manager");
+				_T("cannot instantiate Product Manager"));
 		}
 
 		// See if we were interrupted last time around:
@@ -138,7 +139,7 @@ void MasterInstaller_t::Run()
 		{
 			// We were previously terminated in the middle of something, so let's see where:
 			m_nPhase = g_ProgRecord.ReadPhase();
-			g_Log.Write("Discovered previous progress record: Phase=%d.", m_nPhase);
+			g_Log.Write(_T("Discovered previous progress record: Phase=%d."), m_nPhase);
 
 			// Check validity of saved record:
 			if (m_nPhase < 0 || m_nPhase >= phaseMaxPhases)
@@ -155,7 +156,7 @@ void MasterInstaller_t::Run()
 
 		if (m_nPhase == -1)
 		{
-			g_Log.Write("Clean start established.");
+			g_Log.Write(_T("Clean start established."));
 
 			// This is a clean start. Check if user must start from first CD in set:
 			if (!g_fStartFromAnyCd)
@@ -172,24 +173,24 @@ void MasterInstaller_t::Run()
 		// Create event so that later we can signal to our sub-threads that we're shutting down:
 		m_hShutDown = CreateEvent(NULL, true, false, NULL);
 		if (!m_hShutDown)
-			g_Log.Write("Failed to create ShutDown event.");
+			g_Log.Write(_T("Failed to create ShutDown event."));
 
 		// Get a pointer to the Help function in the InstallerHelp2.dll:
-		g_Log.Write("Attempting to load InstallerHelp2.dll.");
-		m_hmodInstallerHelp2 = LoadLibrary("InstallerHelp2.dll");
+		g_Log.Write(_T("Attempting to load InstallerHelp2.dll."));
+		m_hmodInstallerHelp2 = LoadLibrary(_T("InstallerHelp2.dll"));
 		if (m_hmodInstallerHelp2)
 		{
-			g_Log.Write("Loaded InstallerHelp2.dll.");
+			g_Log.Write(_T("Loaded InstallerHelp2.dll."));
 			Help = (HelpFn)GetProcAddress(m_hmodInstallerHelp2, "Help");
 			if (!Help)
 			{
 				FreeLibrary(m_hmodInstallerHelp2);
 				m_hmodInstallerHelp2 = NULL;
-				g_Log.Write("Failed to get pointer to Help function.");
+				g_Log.Write(_T("Failed to get pointer to Help function."));
 			}
 		}
 		else
-			g_Log.Write("InstallerHelp2.dll not present.");
+			g_Log.Write(_T("InstallerHelp2.dll not present."));
 
 		// Flag to indicate third-party stuff is to be included. User may get a chance to reset
 		// this later:
@@ -199,14 +200,14 @@ void MasterInstaller_t::Run()
 		if (m_nPhase == phaseChoices)
 		{
 			g_ProgRecord.WritePhase(m_nPhase);
-			g_Log.Write("Starting user choices phase.");
+			g_Log.Write(_T("Starting user choices phase."));
 
 			SelectMainProducts();
 
 			if (m_rgiChosenMainProducts.GetCount() == 0 && !m_fInstallRequiredProducts)
 			{
 				// User didn't select anything, so quit:
-				g_Log.Write("User didn't select anything.");
+				g_Log.Write(_T("User didn't select anything."));
 				MessageBox(NULL, FetchString(IDC_MESSAGE_NOTHING_SELECTED), g_pszTitle, MB_OK);
 				throw UserQuitException;
 			}
@@ -220,25 +221,25 @@ void MasterInstaller_t::Run()
 			fShowDependencies = true;
 
 			if (g_fManualInstall)
-				g_Log.Write("Manual mode: not testing for prerequisites of chosen products.");
+				g_Log.Write(_T("Manual mode: not testing for prerequisites of chosen products."));
 			else
 			{
 				// Display Prerequisites, if any:
-				g_Log.Write("Testing for prerequisites of chosen products:");
+				g_Log.Write(_T("Testing for prerequisites of chosen products:"));
 				g_Log.Indent();
 				if (m_ppmProductManager->PrerequisitesNeeded(m_rgiChosenMainProducts))
 				{
 					g_Log.Unindent();
 
 					// There are some prerequisites:
-					g_Log.Write("Prerequisites are needed.");
+					g_Log.Write(_T("Prerequisites are needed."));
 
 					// Display report dialog:
-					char * pszTitle = new_sprintf("%s - %s", g_pszTitle,
+					_TCHAR * pszTitle = new_sprintf(_T("%s - %s"), g_pszTitle,
 						FetchString(IDC_MESSAGE_PREREQUISITES));
-					char * pszIntro = new_sprintf(FetchString(IDC_MESSAGE_PREREQUISITE_INTRO),
+					_TCHAR * pszIntro = new_sprintf(FetchString(IDC_MESSAGE_PREREQUISITE_INTRO),
 						g_pszTitle, g_pszTitle);
-					char * pszContinue = new_sprintf(FetchString(IDC_MESSAGE_CONTINUE));
+					_TCHAR * pszContinue = new_sprintf(FetchString(IDC_MESSAGE_CONTINUE));
 					m_ppmProductManager->ShowReport(pszTitle, pszIntro, pszContinue, true, true,
 						IProductManager::rptPrerequisitesShort, true, &m_rgiChosenMainProducts);
 					delete[] pszTitle;
@@ -248,7 +249,7 @@ void MasterInstaller_t::Run()
 				else
 				{
 					g_Log.Unindent();
-					g_Log.Write("No prerequisites are needed.");
+					g_Log.Write(_T("No prerequisites are needed."));
 				}
 			}
 		}
@@ -257,10 +258,10 @@ void MasterInstaller_t::Run()
 			// Retrieve remains of user's previous selection(s)
 			g_ProgRecord.ReadMainSelectionList(m_rgiChosenMainProducts);
 
-			g_Log.Write("Remains of user's previous selection(s):");
+			g_Log.Write(_T("Remains of user's previous selection(s):"));
 			for (int i = 0; i < m_rgiChosenMainProducts.GetCount(); i++)
 			{
-				g_Log.Write("%d: %s", i,
+				g_Log.Write(_T("%d: %s"), i,
 					m_ppmProductManager->GetName(m_rgiChosenMainProducts[i]));
 			}
 		}
@@ -268,12 +269,12 @@ void MasterInstaller_t::Run()
 		if (m_nPhase == phaseMain)
 		{
 			// Save status of installing main installers:
-			g_Log.Write("Starting Main phase.");
+			g_Log.Write(_T("Starting Main phase."));
 			g_ProgRecord.WritePhase(m_nPhase);
 
 			ShowStatusDialog();
 			DisplayStatusText(0, FetchString(IDC_MESSAGE_INITIALIZING));
-			DisplayStatusText(1, "");
+			DisplayStatusText(1, _T(""));
 
 			while (m_rgiChosenMainProducts.GetCount() > 0)
 			{
@@ -290,7 +291,7 @@ void MasterInstaller_t::Run()
 					m_rgiChosenMainProducts.RemoveNthItem(0);
 					g_ProgRecord.WriteMainSelectionList(m_rgiChosenMainProducts);
 					g_Log.Write(
-						"Removed %s from chosen main products due to prerequisite failure.",
+						_T("Removed %s from chosen main products due to prerequisite failure."),
 						m_ppmProductManager->GetName(iCurrentProduct));
 
 					continue; // go to next product.
@@ -301,7 +302,7 @@ void MasterInstaller_t::Run()
 				TestAndPerformPendingReboot(iCurrentProduct);
 
 				// Remove current product from selection list:
-				g_Log.Write("Removing %s from chosen main products prior to installation.",
+				g_Log.Write(_T("Removing %s from chosen main products prior to installation."),
 					m_ppmProductManager->GetName(m_rgiChosenMainProducts[0]));
 				m_rgiChosenMainProducts.RemoveNthItem(0);
 
@@ -314,7 +315,7 @@ void MasterInstaller_t::Run()
 				// can just continue.
 			} // End while there are more than 0 chosen products left
 
-			g_Log.Write("Finished installing main products.");
+			g_Log.Write(_T("Finished installing main products."));
 
 			m_nPhase = phaseDependencies;
 			fShowDependencies = true;
@@ -325,7 +326,7 @@ void MasterInstaller_t::Run()
 		// Install dependent software, unless in manual mode:
 		if (m_nPhase == phaseDependencies && m_fInstallRequiredProducts && !g_fManualInstall)
 		{
-			g_Log.Write("Starting dependent software phase.");
+			g_Log.Write(_T("Starting dependent software phase."));
 
 			g_ProgRecord.WritePhase(m_nPhase);
 
@@ -334,25 +335,25 @@ void MasterInstaller_t::Run()
 
 			ShowStatusDialog();
 			DisplayStatusText(0, FetchString(IDC_MESSAGE_DEPENDENCIES));
-			DisplayStatusText(1, "");
+			DisplayStatusText(1, _T(""));
 
-			g_Log.Write("Testing for initial active requirements...");
+			g_Log.Write(_T("Testing for initial active requirements..."));
 			g_Log.Indent();
 			m_ppmProductManager->GetActiveRequirements(rgiRequiredProducts);
 			g_Log.Unindent();
-			g_Log.Write("... Done (initial active requirements)");
+			g_Log.Write(_T("... Done (initial active requirements)"));
 
 			// See if there are any dependencies we need to show:
 			if (fShowDependencies && rgiRequiredProducts.GetCount() > 0)
 			{
-				g_Log.Write("Informing user of needed software.");
+				g_Log.Write(_T("Informing user of needed software."));
 
 				// Display dependency report dialog:
-				char * pszTitle = new_sprintf("%s - %s", g_pszTitle,
+				_TCHAR * pszTitle = new_sprintf(_T("%s - %s"), g_pszTitle,
 					FetchString(IDC_MESSAGE_REQUIREMENTS));
-				char * pszIntro = new_sprintf(FetchString(IDC_MESSAGE_REQUIREMENT_INTRO),
+				_TCHAR * pszIntro = new_sprintf(FetchString(IDC_MESSAGE_REQUIREMENT_INTRO),
 					g_pszTitle, g_pszTitle);
-				char * pszContinue = new_sprintf(FetchString(IDC_MESSAGE_CONTINUE));
+				_TCHAR * pszContinue = new_sprintf(FetchString(IDC_MESSAGE_CONTINUE));
 				m_ppmProductManager->ShowReport(pszTitle, pszIntro, pszContinue, true, true,
 					IProductManager::rptRequirementsShort, true);
 				delete[] pszTitle;
@@ -375,17 +376,17 @@ void MasterInstaller_t::Run()
 				// It is remotely possible that an earlier installation means we no longer need
 				// The current product, so let's just check:
 				IndexList_t rgiTempCurrentNeeds;
-				g_Log.Write("Testing active requirements to see if %s is still needed...",
+				g_Log.Write(_T("Testing active requirements to see if %s is still needed..."),
 					m_ppmProductManager->GetName(iCurrentProduct));
 				g_Log.Indent();
 				m_ppmProductManager->GetActiveRequirements(rgiTempCurrentNeeds);
 				g_Log.Unindent();
-				g_Log.Write("...Done (requirements)");
+				g_Log.Write(_T("...Done (requirements)"));
 
 				if (!rgiTempCurrentNeeds.Contains(iCurrentProduct))
 				{
 					// Product is no longer needed
-					g_Log.Write("Product %s is no longer a requirement.",
+					g_Log.Write(_T("Product %s is no longer a requirement."),
 						m_ppmProductManager->GetName(iCurrentProduct));
 					continue; // Product is already removed from requirements list.
 				}
@@ -403,7 +404,7 @@ void MasterInstaller_t::Run()
 				// See if this product requires a pending reboot to be flushed first:
 				TestAndPerformPendingReboot(iCurrentProduct);
 
-				g_Log.Write("About to install %s.",
+				g_Log.Write(_T("About to install %s."),
 					m_ppmProductManager->GetName(iCurrentProduct));
 
 				m_ppmProductManager->InstallProduct(iCurrentProduct);
@@ -413,7 +414,7 @@ void MasterInstaller_t::Run()
 		}
 		CheckIfStopRequested();
 
-		char * pszWksp = NULL;
+		_TCHAR * pszWksp = NULL;
 		bool fShowFinalMessage = true;
 		if (m_ppmProductManager->ShowFinalReport())
 			fShowFinalMessage = false;
@@ -426,7 +427,7 @@ void MasterInstaller_t::Run()
 		if (g_fRebootPending)
 		{
 			fShowFinalMessage = true;
-			new_sprintf_concat(pszWksp, false, "\n\n%s",
+			new_sprintf_concat(pszWksp, false, _T("\n\n%s"),
 				FetchString(IDC_MESSAGE_PENDING_REBOOT));
 			uType = MB_OKCANCEL;
 		}
@@ -470,15 +471,15 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 {
 	bool fAnyConflicts = false;
 
-	g_Log.Write("Testing for prerequisites and requirements having language compatibility issues.");
-	g_Log.Write("Windows language is %d", g_langidWindowsLanguage);
+	g_Log.Write(_T("Testing for prerequisites and requirements having language compatibility issues."));
+	g_Log.Write(_T("Windows language is %d"), g_langidWindowsLanguage);
 	g_Log.Indent();
 	for (int iList = 0; iList < rgiProducts.GetCount(); iList++)
 	{
 		// Get index of next product:
 		int iCurrentProduct = rgiProducts[iList];
 
-		g_Log.Write("Checking prerequisites and requirements for %s.",
+		g_Log.Write(_T("Checking prerequisites and requirements for %s."),
 			m_ppmProductManager->GetName(iCurrentProduct));
 		g_Log.Indent();
 
@@ -489,20 +490,20 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 		IndexList_t rgiThisProductOnly;
 		rgiThisProductOnly.Add(iCurrentProduct);
 
-		g_Log.Write("Prerequisites...");
+		g_Log.Write(_T("Prerequisites..."));
 		g_Log.Indent();
 		m_ppmProductManager->GetActivePrerequisites(rgiThisProductOnly, rgiNeededProducts,
 			true);
 		g_Log.Unindent();
-		g_Log.Write("...Done.");
-		g_Log.Write("Requirements...");
+		g_Log.Write(_T("...Done."));
+		g_Log.Write(_T("Requirements..."));
 		g_Log.Indent();
 
 		m_ppmProductManager->GetActiveRequirements(rgiThisProductOnly, rgiNeededProducts, true,
 			true);
 
 		g_Log.Unindent();
-		g_Log.Write("...Done.");
+		g_Log.Write(_T("...Done."));
 
 		// See if any have a language restriction we can't honor:
 		IndexList_t rgiFailures;
@@ -512,7 +513,7 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 			if (m_ppmProductManager->CriticalFileLanguageUnavailable(iProd))
 			{
 				rgiFailures.Add(iProd);
-				g_Log.Write("%s uses an incompatible language.",
+				g_Log.Write(_T("%s uses an incompatible language."),
 					m_ppmProductManager->GetName(iProd));
 			}
 		}
@@ -520,7 +521,7 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 		{
 			fAnyConflicts = true;
 
-			char * pszList = NULL;
+			_TCHAR * pszList = NULL;
 			for (int i = 0; i < rgiFailures.GetCount(); i++)
 			{
 				new_sprintf_concat(pszList, 1, m_ppmProductManager->GetName(rgiFailures[i]));
@@ -529,19 +530,19 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 				new_sprintf_concat(pszList, 0,
 					m_ppmProductManager->GetDownloadUrl(rgiFailures[i]));
 			}
-			char * pszPart1 = my_strdup(FetchString(IDC_ERROR_LANGUAGE_INCOMPATIBLE_1));
-			char * pszPart2 = my_strdup(FetchString(IDC_ERROR_LANGUAGE_INCOMPATIBLE_2));
-			char * pszError = new_sprintf("%s:\n%s\n%s\n\n%s",
+			_TCHAR * pszPart1 = my_strdup(FetchString(IDC_ERROR_LANGUAGE_INCOMPATIBLE_1));
+			_TCHAR * pszPart2 = my_strdup(FetchString(IDC_ERROR_LANGUAGE_INCOMPATIBLE_2));
+			_TCHAR * pszError = new_sprintf(_T("%s:\n%s\n%s\n\n%s"),
 				m_ppmProductManager->GetName(iCurrentProduct), pszPart1, pszList, pszPart2);
 			delete[] pszPart2;
 			delete[] pszPart1;
 			// Copy list contents to clipboard:
 			WriteClipboardText(pszList);
 			delete[] pszList;
-			char * pszTitle = new_sprintf("%s - %s", g_pszTitle,
+			_TCHAR * pszTitle = new_sprintf(_T("%s - %s"), g_pszTitle,
 						FetchString(IDC_ERROR_LANGUAGE_INCOMPATIBLE));
 			MessageBox(NULL, pszError, pszTitle, MB_ICONSTOP | MB_OK);
-			g_Log.Write("Language compatibility issue reported to user: '%s' %s", pszTitle,
+			g_Log.Write(_T("Language compatibility issue reported to user: '%s' %s"), pszTitle,
 				pszError);
 			delete[] pszTitle;
 			delete[] pszError;
@@ -552,7 +553,7 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 		g_Log.Unindent();
 	} // Next item in given list
 	g_Log.Unindent();
-	g_Log.Write("End of testing for language compatibility issues.");
+	g_Log.Write(_T("End of testing for language compatibility issues."));
 
 	return fAnyConflicts;
 }
@@ -567,12 +568,12 @@ bool MasterInstaller_t::CreateMutex()
 	{
 		::CloseHandle(m_hMutex);
 		m_hMutex = NULL;
-		g_Log.Write("Discovered another instance already running.");
+		g_Log.Write(_T("Discovered another instance already running."));
 		// We are already running in another instance, so we'll just terminate quietly:
 		return false;
 	}
 	if (!m_hMutex)
-		g_Log.Write("Could not create main Mutex. Continuing anyway.");
+		g_Log.Write(_T("Could not create main Mutex. Continuing anyway."));
 
 	return true;
 }
@@ -749,9 +750,9 @@ void MasterInstaller_t::SelectMainProducts()
 	{
 RestartEnterKey:
 
-		g_Log.Write("Asking user for product key.");
+		g_Log.Write(_T("Asking user for product key."));
 
-		char szKey[100] = { 0 };
+		_TCHAR szKey[100] = { 0 };
 		GetProductKey(szKey);
 
 		int * piAvailableMainProducts = NULL;
@@ -761,20 +762,20 @@ RestartEnterKey:
 
 		if (m_ppmProductManager->KeyUnlockedNothing())
 		{
-			g_Log.Write("Key did not unlock anything.");
+			g_Log.Write(_T("Key did not unlock anything."));
 			// User entered an invalid key, so let them enter another:
 			if (MessageBox(NULL, FetchString(IDC_MESSAGE_NOTHING_UNLOCKED), g_pszTitle,
 				MB_ICONWARNING | MB_YESNO) == IDYES)
 			{
-				g_Log.Write("User chose to re-enter key.");
+				g_Log.Write(_T("User chose to re-enter key."));
 				goto RestartEnterKey;
 			}
-			g_Log.Write("User chose not to re-enter key.");
+			g_Log.Write(_T("User chose not to re-enter key."));
 		}
 	}
 	else // no products require security
 	{
-		g_Log.Write("Not asking user for product key.");
+		g_Log.Write(_T("Not asking user for product key."));
 	}
 
 	// If only one product is permitted, and the configuration requires it to be shown,
@@ -785,7 +786,7 @@ RestartEnterKey:
 	{
 		m_ppmProductManager->AutoSelectAllPermittedMainProducts(m_rgiChosenMainProducts);
 		int iOnlyProduct = m_rgiChosenMainProducts[0];
-		g_Log.Write("Only 1 product available: %s.",
+		g_Log.Write(_T("Only 1 product available: %s."),
 			m_ppmProductManager->GetName(iOnlyProduct));
 		fAutoSelectionDone = true;
 
@@ -793,18 +794,18 @@ RestartEnterKey:
 		if (!m_ppmProductManager->PossibleToTestPresence(iOnlyProduct))
 		{
 			fAutoSelectionDone = false; // Cancel auto selection
-			g_Log.Write("Cannot detect if product is already installed, so user will get selection dialog.");
+			g_Log.Write(_T("Cannot detect if product is already installed, so user will get selection dialog."));
 		}
 		else
 		{
 			// Deal with the case where product is already installed:
-			const char * pszVersion = m_ppmProductManager->GetTestPresenceVersion(iOnlyProduct);
+			const _TCHAR * pszVersion = m_ppmProductManager->GetTestPresenceVersion(iOnlyProduct);
 			bool fInstalled = m_ppmProductManager->TestPresence(iOnlyProduct, pszVersion,
 				pszVersion);
 			if (fInstalled)
 			{
 				fAutoSelectionDone = false; // Cancel auto selection
-				g_Log.Write("Product is already installed, so user will get selection dialog.");
+				g_Log.Write(_T("Product is already installed, so user will get selection dialog."));
 			}
 		}
 
@@ -812,14 +813,14 @@ RestartEnterKey:
 		if (m_ppmProductManager->GetMustHaveWin2kOrBetterFlag(iOnlyProduct) && g_fLessThanWin2k)
 		{
 			fAutoSelectionDone = false; // Cancel auto selection
-			g_Log.Write("Product needs better OS, so user will get selection dialog.");
+			g_Log.Write(_T("Product needs better OS, so user will get selection dialog."));
 		}
 
 		// Deal with the case where the user needs admin privileges but doesn't have them:
 		if (m_ppmProductManager->GetMustBeAdminFlag(iOnlyProduct) && !g_fAdministrator)
 		{
 			fAutoSelectionDone = false; // Cancel auto selection
-			g_Log.Write("Product needs admin privileges, so user will get selection dialog.");
+			g_Log.Write(_T("Product needs admin privileges, so user will get selection dialog."));
 		}
 	}
 	if (!fAutoSelectionDone)
@@ -833,7 +834,7 @@ RestartEnterKey:
 		}
 
 		// Offer permitted products to user:
-		g_Log.Write("Offering list of permitted products.");
+		g_Log.Write(_T("Offering list of permitted products."));
 
 		DlgMainProductParams_t DlgMainProductParams;
 		DlgMainProductParams.pHelpLauncher = this;
@@ -847,13 +848,13 @@ RestartEnterKey:
 
 		if (!MainSelectionReturn)
 		{
-			g_Log.Write("User canceled.");
+			g_Log.Write(_T("User canceled."));
 			throw UserQuitException;
 		}
 		if (MainSelectionReturn->m_fReenterKey)
 		{
 			// User pressed Re-enter Key button:
-			g_Log.Write("User chose to re-enter key.");
+			g_Log.Write(_T("User chose to re-enter key."));
 			goto RestartEnterKey;
 		}
 		m_rgiChosenMainProducts = MainSelectionReturn->m_rgiChosen;
@@ -866,7 +867,7 @@ RestartEnterKey:
 
 // Get a Product Key from the user.
 // If the user opts to quit, an exception is thrown, and this method does not return.
-void MasterInstaller_t::GetProductKey(char szKey[100])
+void MasterInstaller_t::GetProductKey(_TCHAR szKey[100])
 {
 	// Limit the number of attempts the user can have at entering a key:
 	static int ctRetries = 0;
@@ -875,15 +876,15 @@ void MasterInstaller_t::GetProductKey(char szKey[100])
 	if (ctRetries >= kctMaxRetries)
 	{
 		// Report that limit is exceeded:
-		g_Log.Write("User has had %d attempts to enter key - limit reached.", ctRetries);
+		g_Log.Write(_T("User has had %d attempts to enter key - limit reached."), ctRetries);
 		HandleError(kUserAbort, false, IDC_ERROR_TOO_MANY_KEY_GUESSES);
 	}
 
 	ctRetries++;
-	g_Log.Write("Key entry - attempt %d.", ctRetries);
+	g_Log.Write(_T("Key entry - attempt %d."), ctRetries);
 
 	// Load our application's icon to make dialog look nice:
-	HICON hIcon = LoadIcon(GetModuleHandle(NULL), (LPCSTR)IDR_MAIN_ICON);
+	HICON hIcon = LoadIcon(GetModuleHandle(NULL), (LPCTSTR)IDR_MAIN_ICON);
 
 	// Call the GetKey function in the DLL:
 	HideStatusDialog();
@@ -900,7 +901,7 @@ void MasterInstaller_t::GetProductKey(char szKey[100])
 	if (nKeyResult == 2)
 	{
 		// User pressed cancel and meant it:
-		g_Log.Write("User canceled.");
+		g_Log.Write(_T("User canceled."));
 		throw UserQuitException;
 	}
 }
@@ -910,10 +911,10 @@ void MasterInstaller_t::GetProductKey(char szKey[100])
 // This function does not return.
 void MasterInstaller_t::ReRun()
 {
-	g_Log.Write("Restarting master installer.");
+	g_Log.Write(_T("Restarting master installer."));
 
 	const int knLen = MAX_PATH + 20;
-	char szPath[knLen];
+	_TCHAR szPath[knLen];
 	GetModuleFileName(NULL, szPath, knLen);
 
 	// Release mutex:
@@ -942,13 +943,13 @@ void MasterInstaller_t::TestAndPerformPendingReboot(int iProduct)
 		HKEY hKey = NULL;
 
 		lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-			"System\\CurrentControlSet\\Control\\Session Manager", NULL,
+			_T("System\\CurrentControlSet\\Control\\Session Manager"), NULL,
 			KEY_READ, &hKey);
 
 		// We don't proceed unless the call above succeeds:
 		if (ERROR_SUCCESS == lResult)
 		{
-			lResult = RegQueryValueEx(hKey, "PendingFileRenameOperations", NULL, NULL, NULL,
+			lResult = RegQueryValueEx(hKey, _T("PendingFileRenameOperations"), NULL, NULL, NULL,
 				NULL);
 			RegCloseKey(hKey);
 
@@ -959,23 +960,23 @@ void MasterInstaller_t::TestAndPerformPendingReboot(int iProduct)
 	if (!fRebootPending && fTestWininit)
 	{
 		// We need to test if the file Wininit.ini is present:
-		char szWininitPath[MAX_PATH];
+		_TCHAR szWininitPath[MAX_PATH];
 		// Find out where Windows is located:
 		if (GetWindowsDirectory(szWininitPath, MAX_PATH))
 		{
-			int cch = (int)strlen(szWininitPath);
+			int cch = (int)_tcslen(szWininitPath);
 			if (cch > 0)
 			{
 				// Make sure we don't end the path with a backslash:
-				if (szWininitPath[cch - 1] == '\\')
+				if (szWininitPath[cch - 1] == _TCHAR('\\'))
 					szWininitPath[cch - 1] = 0;
 
 				// Add the file name:
-				strcat_s(szWininitPath, MAX_PATH, "\\Wininit.ini");
+				_tcscat_s(szWininitPath, MAX_PATH, _T("\\Wininit.ini"));
 
 				// See if the file exists:
 				FILE * f;
-				if (fopen_s(&f, szWininitPath, "r") == 0)
+				if (_tfopen_s(&f, szWininitPath, _T("r")) == 0)
 				{
 					fclose(f);
 					fRebootPending = true;
@@ -986,7 +987,7 @@ void MasterInstaller_t::TestAndPerformPendingReboot(int iProduct)
 
 	if (fRebootPending &&  m_ppmProductManager->GetFlushRebootFlag(iProduct))
 	{
-		g_Log.Write("A reboot is pending and %s requires it to be flushed.",
+		g_Log.Write(_T("A reboot is pending and %s requires it to be flushed."),
 			m_ppmProductManager->GetName(iProduct));
 		g_ProgRecord.WriteRunOnce();
 		FriendlyReboot(); // Doesn't return
@@ -999,26 +1000,26 @@ bool MasterInstaller_t::InstallPrerequisites(int iProduct)
 	IndexList_t rgiPrerequisites;
 	IndexList_t rgiSingleProduct;
 	rgiSingleProduct.Add(iProduct);
-	g_Log.Write("Testing for prerequisites for %s...", m_ppmProductManager->GetName(iProduct));
+	g_Log.Write(_T("Testing for prerequisites for %s..."), m_ppmProductManager->GetName(iProduct));
 	g_Log.Indent();
 
 	// Produce a flat list of all prerequisites:
 	m_ppmProductManager->GetActivePrerequisites(rgiSingleProduct, rgiPrerequisites, true);
 
 	g_Log.Unindent();
-	g_Log.Write("...Done (prerequisites)");
+	g_Log.Write(_T("...Done (prerequisites)"));
 
 	if (rgiPrerequisites.GetCount() > 0)
 	{
-		g_Log.Write("Prerequisites for %s:", m_ppmProductManager->GetName(iProduct));
+		g_Log.Write(_T("Prerequisites for %s:"), m_ppmProductManager->GetName(iProduct));
 		g_Log.Indent();
 		for (int i = 0; i < rgiPrerequisites.GetCount(); i++)
-			g_Log.Write("%d: %s", i, m_ppmProductManager->GetName(rgiPrerequisites[i]));
+			g_Log.Write(_T("%d: %s"), i, m_ppmProductManager->GetName(rgiPrerequisites[i]));
 		g_Log.Unindent();
 	}
 	else
 	{
-		g_Log.Write("No prerequisites for %s.", m_ppmProductManager->GetName(iProduct));
+		g_Log.Write(_T("No prerequisites for %s."), m_ppmProductManager->GetName(iProduct));
 	}
 
 	// Before attempting to install any of these, see if any are listed as failures. If so,
@@ -1048,13 +1049,13 @@ bool MasterInstaller_t::InstallPrerequisites(int iProduct)
 
 			IndexList_t rgiSinglePrerequisite;
 			rgiSinglePrerequisite.Add(rgiPrerequisites[i]);
-			g_Log.Write("Testing for unfulfilled prerequisites of prerequisite %s...",
+			g_Log.Write(_T("Testing for unfulfilled prerequisites of prerequisite %s..."),
 				m_ppmProductManager->GetName(rgiPrerequisites[i]));
 			g_Log.Indent();
 			if (!m_ppmProductManager->PrerequisitesNeeded(rgiSinglePrerequisite))
 			{
 				g_Log.Unindent();
-				g_Log.Write("...Done - %s has no unfulfilled prerequisites of its own",
+				g_Log.Write(_T("...Done - %s has no unfulfilled prerequisites of its own"),
 					m_ppmProductManager->GetName(rgiPrerequisites[i]));
 
 				int iPrerequisite = rgiPrerequisites.RemoveNthItem(i);
@@ -1063,18 +1064,18 @@ bool MasterInstaller_t::InstallPrerequisites(int iProduct)
 				// The current product, so let's just check:
 				IndexList_t rgiTempCurrentPrereqs;
 
-				g_Log.Write("Testing for prerequisites, to see if %s is still needed...",
+				g_Log.Write(_T("Testing for prerequisites, to see if %s is still needed..."),
 					m_ppmProductManager->GetName(iPrerequisite));
 				g_Log.Indent();
 				m_ppmProductManager->GetActivePrerequisites(rgiSingleProduct,
 					rgiTempCurrentPrereqs, true);
 				g_Log.Unindent();
-				g_Log.Write("...Done (prerequisites)");
+				g_Log.Write(_T("...Done (prerequisites)"));
 
 				if (!rgiTempCurrentPrereqs.Contains(iPrerequisite))
 				{
 					// Product is no longer needed
-					g_Log.Write("Product %s is no longer a prerequisite.",
+					g_Log.Write(_T("Product %s is no longer a prerequisite."),
 						m_ppmProductManager->GetName(iPrerequisite));
 					continue; // Product is already removed from prerequisite list.
 				}
@@ -1093,7 +1094,7 @@ bool MasterInstaller_t::InstallPrerequisites(int iProduct)
 			else
 			{
 				g_Log.Unindent();
-				g_Log.Write("...Done - %s still has outstanding prerequisites.",
+				g_Log.Write(_T("...Done - %s still has outstanding prerequisites."),
 					m_ppmProductManager->GetName(rgiPrerequisites[i]));
 			}
 		} // Next product

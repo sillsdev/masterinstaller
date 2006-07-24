@@ -1,7 +1,11 @@
+#pragma once
+
+#include <tchar.h>
+
 // Tests for presence of given Service Pack on Windows 2000.
 // If current operating system is not even Windows 2000, returns true anyway.
-bool TestWin2kSpPresence(const char * pszMinVersion, const char * pszMaxVersion,
-						 const char * /*pszCriticalFile*/)
+bool TestWin2kSpPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
+						 const TCHAR * /*pszCriticalFile*/)
 {
 	OSVERSIONINFOEX osvi;
 
@@ -14,7 +18,7 @@ bool TestWin2kSpPresence(const char * pszMinVersion, const char * pszMaxVersion,
 		return true;
 	}
 
-	g_Log.Write("Found Windows version %d.%d, Service Pack %d", osvi.dwMajorVersion, 
+	g_Log.Write(_T("Found Windows version %d.%d, Service Pack %d"), osvi.dwMajorVersion, 
 		osvi.dwMinorVersion, (int)(osvi.wServicePackMajor));
 
 	if (osvi.dwMajorVersion == 5)
@@ -23,12 +27,12 @@ bool TestWin2kSpPresence(const char * pszMinVersion, const char * pszMaxVersion,
 		{
 			// We're running on 2000, so check the service pack number:
 			if (!pszMinVersion)
-				pszMinVersion = "0";
+				pszMinVersion = _T("0");
 			if (!pszMaxVersion)
-				pszMaxVersion = "32767";
+				pszMaxVersion = _T("32767");
 
-			if (osvi.wServicePackMajor < atoi(pszMinVersion) || 
-				osvi.wServicePackMajor > atoi(pszMaxVersion))
+			if (osvi.wServicePackMajor < _tstoi(pszMinVersion) || 
+				osvi.wServicePackMajor > _tstoi(pszMaxVersion))
 			{
 				return false;
 			}

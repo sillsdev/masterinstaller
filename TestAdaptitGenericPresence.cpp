@@ -1,37 +1,40 @@
 #pragma once
 
+#include <tchar.h>
+
 // Generic test of Adapt It installation, for all localizations.
 // We read the location of the uninstall file, and use its path to see if the relevant .exe
 // is present.
-bool TestAdaptitGenericPresence(const char * pszRegKey, const char * pszExeFileName)
+bool TestAdaptitGenericPresence(const TCHAR * pszRegKey, const TCHAR * pszExeFileName)
 {
 	bool fResult = false;
 	LONG lResult;
 	HKEY hKey = NULL;
-	char szKeyPath[255];
-	strcpy(szKeyPath, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\");
-	strcat(szKeyPath, pszRegKey);
+	const int kcch = 255;
+	TCHAR szKeyPath[kcch];
+	_tcscpy_s(szKeyPath, kcch, _TEXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"));
+	_tcscpy_s(szKeyPath, kcch, pszRegKey);
 
 	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, szKeyPath, NULL, KEY_READ, &hKey);
 
 	if (lResult == ERROR_SUCCESS)
 	{
-		const int knPathSize = 512;
-		char szPath[knPathSize];
-		DWORD cbData = knPathSize;
+		const int kcchPathSize = 512;
+		TCHAR szPath[kcchPathSize];
+		DWORD cbData = kcchPathSize;
 
-		lResult = RegQueryValueEx(hKey, "UninstallString", NULL, NULL, (LPBYTE)szPath, &cbData);
+		lResult = RegQueryValueEx(hKey, _TEXT("UninstallString"), NULL, NULL, (LPBYTE)szPath, &cbData);
 		RegCloseKey(hKey);
 
 		if (ERROR_SUCCESS == lResult)
 		{
-			char * ch = strrchr(szPath, '\\');
+			TCHAR * ch = _tcsrchr(szPath, (_TCHAR)('\\'));
 			if (ch)
 			{
 				ch++;
 				*ch = 0;
 				// Form the full path to the .exe for this flavor of Adapt It:
-				strcat(szPath, pszExeFileName);
+				_tcscat_s(szPath, kcchPathSize, pszExeFileName);
 				// See if the files exists:
 				HANDLE hFile = CreateFile(szPath, FILE_EXECUTE, FILE_SHARE_READ, NULL,
 					OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);

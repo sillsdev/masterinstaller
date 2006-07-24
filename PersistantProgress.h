@@ -16,7 +16,7 @@ public:
 	~PersistantProgress();
 
 	bool RecordExists();
-	void SetCmdLine(const char * pszCmdLine);
+	void SetCmdLine(const _TCHAR * pszCmdLine);
 	void WriteRunOnce();
 	int ReadPhase();
 	void WritePhase(int nPhase);
@@ -32,20 +32,20 @@ protected:
 	void Close();
 
 	HKEY m_hKey;
-	const char * m_pszCmdLine;
+	const _TCHAR * m_pszCmdLine;
 
-	bool ReadList(const char * pszRegListName, const char * pszRegCountName, IndexList_t & rgi);
-	void WriteList(const char * pszRegListName, const char * pszRegCountName,
+	bool ReadList(const _TCHAR * pszRegListName, const _TCHAR * pszRegCountName, IndexList_t & rgi);
+	void WriteList(const _TCHAR * pszRegListName, const _TCHAR * pszRegCountName,
 		IndexList_t & rgi);
 
-	static const char * m_kpszRegKey;
-	static const char * m_kpszRegValueActivity;
-	static const char * m_kpszRegValuePhase;
-	static const char * m_kpszRegValueStep;
-	static const char * m_kpszRegValueMainList;
-	static const char * m_kpszRegValueMainListCount;
-	static const char * m_kpszRegValueProduct;
-	static const char * m_kpszRegValueRunOnce;
+	static const _TCHAR * m_kpszRegKey;
+	static const _TCHAR * m_kpszRegValueActivity;
+	static const _TCHAR * m_kpszRegValuePhase;
+	static const _TCHAR * m_kpszRegValueStep;
+	static const _TCHAR * m_kpszRegValueMainList;
+	static const _TCHAR * m_kpszRegValueMainListCount;
+	static const _TCHAR * m_kpszRegValueProduct;
+	static const _TCHAR * m_kpszRegValueRunOnce;
 };
 
 // Global declaration:

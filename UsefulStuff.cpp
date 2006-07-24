@@ -6,6 +6,7 @@
 
 #include <Windows.h>
 #include <stdio.h>
+#include <tchar.h>
 
 #include "UsefulStuff.h"
 #include "Globals.h"
@@ -15,7 +16,7 @@
 #include "ErrorHandler.h"
 
 const int cchActiveProcessDescription = 100;
-char g_rgchActiveProcessDescription[cchActiveProcessDescription] = "";
+_TCHAR g_rgchActiveProcessDescription[cchActiveProcessDescription] = _T("");
 
 // Forward declarations:
 DWORD WINAPI StatusDlgMonitorThreadEntry(LPVOID);
@@ -36,19 +37,19 @@ struct MonitorThreadData_t
 // If pszStatusWindowControl is set, it contains a string describing what should happen to the
 // status window: show it, hide it or remove it if the new process has any windows visible.
 DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
-			  const char * pszDescription, const char * pszStatusWindowControl)
+			  const _TCHAR * pszDescription, const _TCHAR * pszStatusWindowControl)
 {
 	// Preserve current directory:
 	const int knLen = MAX_PATH;
-	char szOldPath[knLen];
+	_TCHAR szOldPath[knLen];
 	::GetCurrentDirectory(knLen, szOldPath);
 
 	if (fUseCurrentDir)
 	{
 		// Set current directory to the path where current process was launched from:
-		char szPath[knLen];
+		_TCHAR szPath[knLen];
 		GetModuleFileName(NULL, szPath, knLen);
-		char * ch = strrchr(szPath, '\\');
+		_TCHAR * ch = _tcsrchr(szPath, _TCHAR('\\'));
 		if (ch)
 			ch++;
 		else
@@ -58,31 +59,31 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 	}
 
 	// Make copy of command:
-	char * pszCmdCopy = my_strdup(pszCmd);
+	_TCHAR * pszCmdCopy = my_strdup(pszCmd);
 
 	// If command contains "msiexec" then we will prefix this with the path to msiexec.exe:
-	char * pszMsiExec = strstr(pszCmdCopy, "msiexec");
+	_TCHAR * pszMsiExec = _tcsstr(pszCmdCopy, _T("msiexec"));
 	if (!pszMsiExec)
-		pszMsiExec = strstr(pszCmdCopy, "MSIEXEC");
+		pszMsiExec = _tcsstr(pszCmdCopy, _T("MSIEXEC"));
 	if (!pszMsiExec)
-		pszMsiExec = strstr(pszCmdCopy, "MsiExec");
+		pszMsiExec = _tcsstr(pszCmdCopy, _T("MsiExec"));
 	if (!pszMsiExec)
-		pszMsiExec = strstr(pszCmdCopy, "MSIExec");
+		pszMsiExec = _tcsstr(pszCmdCopy, _T("MSIExec"));
 	if (pszMsiExec)
 	{
 		// Find location of installer from registry:
-		char * szLoc = GetInstallerLocation();
+		_TCHAR * szLoc = GetInstallerLocation();
 		if (szLoc)
 		{
-			char ch = *pszMsiExec;
+			_TCHAR ch = *pszMsiExec;
 			*pszMsiExec = 0;
 
-			char * pszNew = new_sprintf("%s%s", pszCmdCopy, szLoc);
+			_TCHAR * pszNew = new_sprintf(_T("%s%s"), pszCmdCopy, szLoc);
 
-			__int64 len = strlen(pszNew);
+			__int64 len = _tcslen(pszNew);
 			if (len > 1)
-				if (pszNew[len - 1] != '\\')
-					new_sprintf_concat(pszNew, 0, "\\");
+				if (pszNew[len - 1] != _TCHAR('\\'))
+					new_sprintf_concat(pszNew, 0, _T("\\"));
 
 			*pszMsiExec = ch;
 
@@ -104,7 +105,7 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 	ZeroMemory(&si, sizeof(si));
 	si.cb = sizeof(si);
 
-	g_Log.Write("Adjusted cmd to \"%s\"", pszCmdCopy);
+	g_Log.Write(_T("Adjusted cmd to \"%s\""), pszCmdCopy);
 
 	// Launch new process. The CREATE_SEPARATE_WOW_VDM should be ignored for 32-bit programs,
 	// and also when running on Windows 98, but it is essential for 16-bit programs running on
@@ -126,22 +127,22 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 		// See if we need to do anything with the status window:
 		if (pszStatusWindowControl)
 		{
-			if (_stricmp(pszStatusWindowControl, "show") == 0)
+			if (_tcsicmp(pszStatusWindowControl, _T("show")) == 0)
 			{
 				// Show the window:
 				ShowStatusDialog();
 			}
-			else if (_stricmp(pszStatusWindowControl, "hide") == 0)
+			else if (_tcsicmp(pszStatusWindowControl, _T("hide")) == 0)
 			{
 				// Hide the window:
 				HideStatusDialog();
 			}
-			if (_strnicmp(pszStatusWindowControl, "monitor", 7) == 0)
+			if (_tcsnicmp(pszStatusWindowControl, _T("monitor"), 7) == 0)
 			{
 				// Start the window monitoring thread:
 				MonitorThreadData.m_dwProcessId = process_info.dwProcessId;
 				MonitorThreadData.m_pfTerminationFlag = &fTerminateMonitor;
-				MonitorThreadData.nInitialDelayMs = atoi(&pszStatusWindowControl[7]);
+				MonitorThreadData.nInitialDelayMs = _tstoi(&pszStatusWindowControl[7]);
 				
 				// MSDN says you can pass NULL instead of this, but you can't on Win98:
 				DWORD nThreadId;
@@ -154,12 +155,12 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 		{
 			if (pszDescription)
 			{
-				strcpy_s(g_rgchActiveProcessDescription, cchActiveProcessDescription,
+				_tcscpy_s(g_rgchActiveProcessDescription, cchActiveProcessDescription,
 					pszDescription);
 			}
 			else
 			{
-				strcpy_s(g_rgchActiveProcessDescription, cchActiveProcessDescription,
+				_tcscpy_s(g_rgchActiveProcessDescription, cchActiveProcessDescription,
 					FetchString(IDC_MESSAGE_GENERIC_INSTALLER));
 			}
 			if (fWaitTillExit)
@@ -198,7 +199,7 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 	delete[] pszCmdCopy;
 	pszCmdCopy = NULL;
 
-	g_Log.Write("Exit code = %d", dwExitCode);
+	g_Log.Write(_T("Exit code = %d"), dwExitCode);
 
 	return dwExitCode;
 }
@@ -267,7 +268,7 @@ bool Reboot()
 	HANDLE hToken;              // handle to process token
 	TOKEN_PRIVILEGES tkp;       // pointer to token structure
 
-	g_Log.Write("Reboot initiated.");
+	g_Log.Write(_T("Reboot initiated."));
 
 	try
 	{
@@ -277,7 +278,7 @@ bool Reboot()
 			if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY,
 				&hToken))
 			{
-				throw "";
+				throw _T("");
 			}
 
 			// Get the LUID for shutdown privilege.
@@ -292,13 +293,13 @@ bool Reboot()
 			// Cannot test the return value of AdjustTokenPrivileges.
 			if (GetLastError() != ERROR_SUCCESS)
 			{
-				throw "";
+				throw _T("");
 			}
 		}
 		if (!ExitWindowsEx(EWX_REBOOT, 0))
 		{
-			g_Log.Write("Automatic reboot failed - asking user for manual reboot.");
-			throw "";
+			g_Log.Write(_T("Automatic reboot failed - asking user for manual reboot."));
+			throw _T("");
 		}
 	}
 	catch (...)
@@ -319,10 +320,10 @@ void FriendlyReboot()
 	if (DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_REBOOT_COUNTDOWN), NULL,
 		DlgProcRebootCountdown) == 0)
 	{
-		g_Log.Write("User chose to quit rather than reboot.");
+		g_Log.Write(_T("User chose to quit rather than reboot."));
 		throw UserQuitException;
 	}
-	g_Log.Write("Rebooting.");
+	g_Log.Write(_T("Rebooting."));
 	Reboot();
 }
 
@@ -331,13 +332,13 @@ void FriendlyReboot()
 // Installer .exe file is located.
 // Returns NULL is there is an error (such as Windows Installer not installed).
 // Caller must delete[] the returned string.
-char * GetInstallerLocation()
+_TCHAR * GetInstallerLocation()
 {
 	LONG lResult;
 	HKEY hKey = NULL;
 
 	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer", NULL, KEY_READ, &hKey);
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"), NULL, KEY_READ, &hKey);
 
 	// we don't proceed unless the call above succeeds
 	if (lResult != ERROR_SUCCESS)
@@ -345,12 +346,12 @@ char * GetInstallerLocation()
 
 	// Get length of required buffer:
 	DWORD dwBufLen = 0;
-	lResult = RegQueryValueEx(hKey, "InstallerLocation", NULL, NULL, NULL, &dwBufLen);
+	lResult = RegQueryValueEx(hKey, _T("InstallerLocation"), NULL, NULL, NULL, &dwBufLen);
 	if (dwBufLen == 0)
 		return NULL;
 
-	char * pszLocation = new char [dwBufLen];
-	lResult = RegQueryValueEx(hKey, "InstallerLocation", NULL, NULL, (LPBYTE)pszLocation,
+	_TCHAR * pszLocation = new _TCHAR [dwBufLen];
+	lResult = RegQueryValueEx(hKey, _T("InstallerLocation"), NULL, NULL, (LPBYTE)pszLocation,
 			&dwBufLen);
 	RegCloseKey(hKey);
 	hKey = NULL;
@@ -366,46 +367,46 @@ char * GetInstallerLocation()
 }
 
 // Fetches string resource. Returns string if OK, empty string if error.
-char * FetchString(int stid)
+_TCHAR * FetchString(int stid)
 {
 	const int kcchBuffer = 2000;
-	static char sz[kcchBuffer];
+	static _TCHAR sz[kcchBuffer];
 	if (!LoadString(GetModuleHandle(NULL), stid, sz, kcchBuffer))
-		return "";
+		return _T("");
 	return sz;
 }
 
 // Acts the same way as sprintf(), but creates a buffer to hold the text that is at least
 // as big as the minimum needed.
 // Caller must delete[] the return value.
-char * new_sprintf(const char * pszFormat, ...)
+_TCHAR * new_sprintf(const _TCHAR * pszFormat, ...)
 {
 	// We will be passing on the variable arguments to the new_vsprintf() function:
 	va_list arglist;
 	va_start(arglist, pszFormat);
 
-	char * pszResult = new_vsprintf(pszFormat, arglist);
+	_TCHAR * pszResult = new_vsprintf(pszFormat, arglist);
 	return pszResult;
 }
 
 // Acts the same way as new_sprintf() above, except the variable arguments have already been
 // collected.
 // Caller must delete[] the return value.
-char * new_vsprintf(const char * pszFormat, const va_list arglist)
+_TCHAR * new_vsprintf(const _TCHAR * pszFormat, const va_list arglist)
 {
 	int cchWksp = 100; // First guess at size needed.
-	char * szWksp = new char [1 + cchWksp];
+	_TCHAR * szWksp = new _TCHAR [1 + cchWksp];
 
 	// Format it with variable arguments, repeating until Wksp is big enough:
-	int cch = _vsnprintf_s(szWksp, 1 + cchWksp, cchWksp, pszFormat, arglist);
-	// If the reported number of characters written is the same as the size of our buffer, then
+	int cch = _vsntprintf_s(szWksp, 1 + cchWksp, cchWksp, pszFormat, arglist);
+	// If the reported number of _TCHARacters written is the same as the size of our buffer, then
 	// the terminating zero will have been missed off!
 	while (cch == -1 || cch == cchWksp)
 	{
 		delete[] szWksp;
 		cchWksp *= 2;
-		szWksp = new char [1 + cchWksp];
-		cch = _vsnprintf_s(szWksp, 1 + cchWksp, cchWksp, pszFormat, arglist);
+		szWksp = new _TCHAR [1 + cchWksp];
+		cch = _vsntprintf_s(szWksp, 1 + cchWksp, cchWksp, pszFormat, arglist);
 	}
 	return szWksp;
 }
@@ -413,12 +414,12 @@ char * new_vsprintf(const char * pszFormat, const va_list arglist)
 // Write nIndent spaces at the start of the returned string, then treat the rest of the
 // arguments as in a new_sprintf() call.
 // Caller must delete[] the return value;
-char * new_ind_sprintf(int nIndent, const char * pszFormat, ...)
+_TCHAR * new_ind_sprintf(int nIndent, const _TCHAR * pszFormat, ...)
 {
-	char * pszWksp = NULL;
+	_TCHAR * pszWksp = NULL;
 
 	for (int n = 0; n < nIndent; n++)
-		new_sprintf_concat(pszWksp, 0, " ");
+		new_sprintf_concat(pszWksp, 0, _T(" "));
 
 	// We will be passing on the variable arguments to the new_vsprintf_concat() function:
 	va_list arglist;
@@ -431,7 +432,7 @@ char * new_ind_sprintf(int nIndent, const char * pszFormat, ...)
 
 // Acts the same as new_sprintf() above, only it appends the formatted string to rpszMain,
 // having inserted ctInsertNewline newlines.
-void new_sprintf_concat(char *& rpszMain, int ctInsertNewline, const char * pszAddendumFmt, ...)
+void new_sprintf_concat(_TCHAR *& rpszMain, int ctInsertNewline, const _TCHAR * pszAddendumFmt, ...)
 {
 	// We will be passing on the variable arguments to the new_vsprintf_concat() function:
 	va_list arglist;
@@ -442,19 +443,19 @@ void new_sprintf_concat(char *& rpszMain, int ctInsertNewline, const char * pszA
 
 // Acts the same as new_vsprintf() above, only it appends the formatted string to rpszMain,
 // having inserted ctInsertNewline newlines.
-void new_vsprintf_concat(char *& rpszMain, int ctInsertNewline, const char * pszAddendumFmt,
+void new_vsprintf_concat(_TCHAR *& rpszMain, int ctInsertNewline, const _TCHAR * pszAddendumFmt,
 						 const va_list arglist)
 {
-	char * pszWksp;
+	_TCHAR * pszWksp;
 
 	for (int n = 0; n < ctInsertNewline; n++)
 	{
-		pszWksp = new_sprintf("%s\r\n", rpszMain ? rpszMain : "");
+		pszWksp = new_sprintf(_T("%s\r\n"), rpszMain ? rpszMain : _T(""));
 		delete[] rpszMain;
 		rpszMain = pszWksp;
 	}
 	pszWksp = new_vsprintf(pszAddendumFmt, arglist);
-	char * pszWksp2 = new_sprintf("%s%s", rpszMain ? rpszMain : "", pszWksp);
+	_TCHAR * pszWksp2 = new_sprintf(_T("%s%s"), rpszMain ? rpszMain : _T(""), pszWksp);
 	delete[] pszWksp;
 	pszWksp = NULL;
 
@@ -464,23 +465,23 @@ void new_vsprintf_concat(char *& rpszMain, int ctInsertNewline, const char * psz
 
 // Parses a (potentially) 4-part version number string (e.g. 2.0.2600.1106) and returns a 64-bit
 // integer comprising all 4 parts, so a simple comparison can be made (e.g. 0x000200000A280452).
-__int64 GetHugeVersion(const char * pszVersion)
+__int64 GetHugeVersion(const _TCHAR * pszVersion)
 {
 	if (!pszVersion)
 		return 0;
 
-	char * pszVersionCopy = my_strdup(pszVersion);
+	_TCHAR * pszVersionCopy = my_strdup(pszVersion);
 	__int64 nValue = 0;
-	char * pszContext;
+	_TCHAR * pszContext;
 
-	char * pszNextSegment = strtok_s(pszVersionCopy, ".", &pszContext);
+	_TCHAR * pszNextSegment = _tcstok_s(pszVersionCopy, _T("."), &pszContext);
 	int ctSegments = 1;
 	while (pszNextSegment && ctSegments <= 4)
 	{
-		__int64 nSegment = atoi(pszNextSegment);
+		__int64 nSegment = _tstoi(pszNextSegment);
 		nValue |= (nSegment << ((4 - ctSegments) * 16));
 		ctSegments++;
-		pszNextSegment = strtok_s(NULL, ".", &pszContext);
+		pszNextSegment = _tcstok_s(NULL, _T("."), &pszContext);
 	}
 	delete[] pszVersionCopy;
 	pszVersionCopy = NULL;
@@ -490,9 +491,9 @@ __int64 GetHugeVersion(const char * pszVersion)
 
 // Splits a 64-bit version number into the 4 constituent parts as a text string.
 // Caller must delete[] the return value.
-char * GenVersionText(__int64 nHugeVersion)
+_TCHAR * GenVersionText(__int64 nHugeVersion)
 {
-	return new_sprintf("%d.%d.%d.%d", int(nHugeVersion >> 48), 
+	return new_sprintf(_T("%d.%d.%d.%d"), int(nHugeVersion >> 48), 
 		int((nHugeVersion >> 32) & 0xFFFF), int((nHugeVersion >> 16) & 0xFFFF),
 		int(nHugeVersion & 0xFFFF));
 }
@@ -502,8 +503,8 @@ char * GenVersionText(__int64 nHugeVersion)
 // If pszMinVersion is NULL, any range up to (and including) pszMaxVersion will do.
 // If pszMaxVersion is NULL, any range above (and including) pszMinVersion will do.
 // If pszMinVersion is NULL and pszMaxVersion is NULL, any version will do.
-bool VersionInRange(__int64 nVersion, const char * pszMinVersion, 
-					const char * pszMaxVersion)
+bool VersionInRange(__int64 nVersion, const _TCHAR * pszMinVersion, 
+					const _TCHAR * pszMaxVersion)
 {
 	// Create 64-bit numbers from the min and max arguments:
 	__int64 nMinVersion;
@@ -527,8 +528,8 @@ bool VersionInRange(__int64 nVersion, const char * pszMinVersion,
 // If pszMinVersion is NULL, any range up to (and including) pszMaxVersion will do.
 // If pszMaxVersion is NULL, any range above (and including) pszMinVersion will do.
 // If pszMinVersion is NULL and pszMaxVersion is NULL, any version will do.
-bool VersionInRange(const char * pszVersion, const char * pszMinVersion, 
-					const char * pszMaxVersion)
+bool VersionInRange(const _TCHAR * pszVersion, const _TCHAR * pszMinVersion, 
+					const _TCHAR * pszMaxVersion)
 {
 	if (!pszVersion)
 		return false;
@@ -540,9 +541,9 @@ bool VersionInRange(const char * pszVersion, const char * pszMinVersion,
 }
 
 // Writes the given text to the Clipboard
-bool WriteClipboardText(const char * pszText)
+bool WriteClipboardText(const _TCHAR * pszText)
 {
-	int nLen = (int)strlen(pszText);
+	int nLen = (int)_tcslen(pszText);
 	int nRet;
 
 	// Open clipboard for our use:
@@ -575,11 +576,11 @@ bool WriteClipboardText(const char * pszText)
 
 // Replaces the deprecated strdup function.
 // Caller must delete[] the result when finished.
-char * my_strdup(const char * pszOriginal)
+_TCHAR * my_strdup(const _TCHAR * pszOriginal)
 {
-	int cch = (int)strlen(pszOriginal);
-	char * pszResult = new char [1 + cch];
-	strcpy_s(pszResult, 1 + cch, pszOriginal);
+	int cch = (int)_tcslen(pszOriginal);
+	_TCHAR * pszResult = new _TCHAR [1 + cch];
+	_tcscpy_s(pszResult, 1 + cch, pszOriginal);
 	return pszResult;
 }
 
@@ -720,9 +721,9 @@ BOOL CALLBACK HangingWindowsEnumWindowsProc(HWND hwnd, LPARAM lParam)
 }
 
 // Returns a string containing details of windows that do not respond to Windows messages.
-char * GenerateHangingWindowsReport()
+_TCHAR * GenerateHangingWindowsReport()
 {
-	char * pszReport = NULL;
+	_TCHAR * pszReport = NULL;
 	WindowsInfo_t HangingWindowsInfo;
 
 	// Call our EnumWindowsProc for each top level window:
@@ -741,7 +742,7 @@ char * GenerateHangingWindowsReport()
 		GetExitCodeThread(hThread, &dwExitCode);
 		if (dwExitCode == STILL_ACTIVE)
 		{
-			new_sprintf_concat(pszReport, 1, "%d) ", i + 1);
+			new_sprintf_concat(pszReport, 1, _T("%d) "), i + 1);
 
 			HANDLE hModuleSnap = INVALID_HANDLE_VALUE;
 			MODULEENTRY32 me32;
@@ -757,8 +758,8 @@ char * GenerateHangingWindowsReport()
 				if (Module32First(hModuleSnap, &me32))
 				{
 					// Get "official" name of product:
-					char * pszProductName = NULL;
-					char * pszCompanyName = NULL;
+					_TCHAR * pszProductName = NULL;
+					_TCHAR * pszCompanyName = NULL;
 					DWORD dwDummy;
 					DWORD dwLen = GetFileVersionInfoSize(me32.szExePath, &dwDummy);
 					if (0 != dwLen)
@@ -775,17 +776,17 @@ char * GenerateHangingWindowsReport()
 							UINT cbTranslate;
 
 							// Read the list of languages and code pages:
-							VerQueryValue(Block, TEXT("\\VarFileInfo\\Translation"),
+							VerQueryValue(Block, _T("\\VarFileInfo\\Translation"),
 								(LPVOID*)&lpTranslate, &cbTranslate);
 
 							// Read the file description for first language and code page.
 							for (unsigned int i = 0; 
 								i < min(1, (cbTranslate/sizeof(struct LANGANDCODEPAGE))); i++)
 							{
-								char * pszSubBlock = new_sprintf(
-									"\\StringFileInfo\\%04x%04x\\ProductName",
+								_TCHAR * pszSubBlock = new_sprintf(
+									_T("\\StringFileInfo\\%04x%04x\\ProductName"),
 									lpTranslate[i].wLanguage, lpTranslate[i].wCodePage);
-								char * pszOutput;
+								_TCHAR * pszOutput;
 								UINT uDummy;
 
 								// Retrieve file description for language and code page "i". 
@@ -797,7 +798,7 @@ char * GenerateHangingWindowsReport()
 								delete[] pszSubBlock;
 
 								pszSubBlock = new_sprintf(
-									"\\StringFileInfo\\%04x%04x\\CompanyName",
+									_T("\\StringFileInfo\\%04x%04x\\CompanyName"),
 									lpTranslate[i].wLanguage, lpTranslate[i].wCodePage);
 
 								// Retrieve file description for language and code page "i". 
@@ -816,30 +817,30 @@ char * GenerateHangingWindowsReport()
 
 					if (pszProductName)
 					{
-						new_sprintf_concat(pszReport, 0, " %s", pszProductName);
+						new_sprintf_concat(pszReport, 0, _T(" %s"), pszProductName);
 						if (pszCompanyName)
-							new_sprintf_concat(pszReport, 0, " by %s", pszCompanyName);
+							new_sprintf_concat(pszReport, 0, _T(" by %s"), pszCompanyName);
 					}
 					else
-						new_sprintf_concat(pszReport, 0, " %s", me32.szModule);
+						new_sprintf_concat(pszReport, 0, _T(" %s"), me32.szModule);
 
-					const char * pszNoWindowName = "[Unnamed Window]";
+					const _TCHAR * pszNoWindowName = _T("[Unnamed Window]");
 					int cchWndText = GetWindowTextLength(WindowInfo->hwnd);
-					char * pszWndText;
+					_TCHAR * pszWndText;
 					if (cchWndText)
 					{
-						pszWndText = new char [1 + cchWndText];
+						pszWndText = new _TCHAR [1 + cchWndText];
 						GetWindowText(WindowInfo->hwnd, pszWndText, 1 + cchWndText);
 					}
 					else
 						pszWndText = my_strdup(pszNoWindowName);
 
-					new_sprintf_concat(pszReport, 1, "        Window title: %s", pszWndText);
+					new_sprintf_concat(pszReport, 1, _T("        Window title: %s"), pszWndText);
 
 					delete[] pszWndText;
 					pszWndText = NULL;
 
-					new_sprintf_concat(pszReport, 1, "        File path: %s", me32.szExePath);
+					new_sprintf_concat(pszReport, 1, _T("        File path: %s"), me32.szExePath);
 
 					delete[] pszProductName;
 					delete[] pszCompanyName;

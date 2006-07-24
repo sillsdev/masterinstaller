@@ -1,3 +1,5 @@
+#include <tchar.h>
+
 #include "ProductKeys.h"
 #include "ErrorHandler.h"
 #include "LogFile.h"
@@ -20,7 +22,7 @@ ProductKeyHandler_t::~ProductKeyHandler_t()
 void ProductKeyHandler_t::Init()
 {
 	// Load up the DLL that handles security:
-	m_hmodSecurityDll = LoadLibrary("InstallerHelp.dll");
+	m_hmodSecurityDll = LoadLibrary(_T("InstallerHelp.dll"));
 	if (m_hmodSecurityDll)
 	{
 		m_pfGetKeyAltTitle = (GetKeyAltTitleFn)GetProcAddress(m_hmodSecurityDll,
@@ -33,24 +35,24 @@ void ProductKeyHandler_t::Init()
 		{
 			FreeLibrary(m_hmodSecurityDll);
 			m_hmodSecurityDll = NULL;
-			g_Log.Write("Could not find one of the InstallerHelp.dll functions.");
+			g_Log.Write(_T("Could not find one of the InstallerHelp.dll functions."));
 		}
 		else
-			g_Log.Write("Could not load InstallerHelp.dll.");
+			g_Log.Write(_T("Could not load InstallerHelp.dll."));
 		HandleError(kFatal, false, IDC_ERROR_KEY_DLL);
 	}
 }
 
-int ProductKeyHandler_t::TestKey(const char * pszKey, DWORD * pfUnlocked, DWORD nProdId,
-								 const char * pszVersion)
+int ProductKeyHandler_t::TestKey(const _TCHAR * pszKey, DWORD * pfUnlocked, DWORD nProdId,
+								 const _TCHAR * pszVersion)
 {
 	if (!m_pfTestKey)
 		Init();
 	return m_pfTestKey(pszKey, pfUnlocked, nProdId, pszVersion);
 }
 
-int ProductKeyHandler_t::GetKeyAltTitle(char * pszKey, bool fAlwaysAsk,
-										const char * pszTitleMain, const char * pszTitleDlg,
+int ProductKeyHandler_t::GetKeyAltTitle(_TCHAR * pszKey, bool fAlwaysAsk,
+										const _TCHAR * pszTitleMain, const _TCHAR * pszTitleDlg,
 										HICON hIcon)
 {
 	if (!m_pfGetKeyAltTitle)

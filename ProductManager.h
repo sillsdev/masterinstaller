@@ -37,23 +37,23 @@ public:
 	virtual bool GetRebootTestRegPendingFlag(int iProduct) const = 0;
 	virtual bool GetRebootWininitFlag(int iProduct) const = 0;
 	virtual bool PossibleToTestPresence(int iProduct) const = 0;
-	virtual bool TestPresence(int iProduct, const char * pszMinVersion = NULL,
-		const char * pszMaxVersion = NULL) = 0;
-	virtual const char * GetName(int iProduct) const = 0;
-	virtual const char * GetCommentary(int iProduct) const = 0;
-	virtual const char * GetStatusWindowControl(int iProduct) const = 0;
-	virtual const char * GetCriticalFile(int iProduct) const = 0;
+	virtual bool TestPresence(int iProduct, const _TCHAR * pszMinVersion = NULL,
+		const _TCHAR * pszMaxVersion = NULL) = 0;
+	virtual const _TCHAR * GetName(int iProduct) const = 0;
+	virtual const _TCHAR * GetCommentary(int iProduct) const = 0;
+	virtual const _TCHAR * GetStatusWindowControl(int iProduct) const = 0;
+	virtual const _TCHAR * GetCriticalFile(int iProduct) const = 0;
 	virtual bool CriticalFileLanguageUnavailable(int iProduct) const = 0;
-	virtual const char * GetDownloadUrl(int iProduct) const = 0;
+	virtual const _TCHAR * GetDownloadUrl(int iProduct) const = 0;
 	virtual int GetCdIndex(int iProduct) const = 0;
-	virtual const char * GetHelpTag(int iProduct) const = 0;
+	virtual const _TCHAR * GetHelpTag(int iProduct) const = 0;
 	virtual bool GetHelpTagInternalFlag(int iProduct) const = 0;
-	virtual const char * GetTestPresenceVersion(int iProduct) const = 0;
+	virtual const _TCHAR * GetTestPresenceVersion(int iProduct) const = 0;
 	virtual bool GetMustHaveWin2kOrBetterFlag(int iProduct) const = 0;
 	virtual bool GetMustBeAdminFlag(int iProduct) const = 0;
 	virtual int GetNumProtectedMainProducts() const = 0;
 	virtual void DetermineAvailableMainProducts(ProductKeyHandler_t & ProductKeyHandler,
-		const char * pszKey) = 0;
+		const _TCHAR * pszKey) = 0;
 	virtual void GenAvailableMainProductList(IndexList_t & rgiProducts,
 		bool fIncludeVisibles) const = 0;
 	virtual int GetNumPermittedMainProducts() const = 0;
@@ -70,11 +70,11 @@ public:
 	virtual bool PriorInstallationFailed(int iProduct) const = 0;
 	virtual bool IsInstallable(int iProduct) const = 0;
 	virtual bool InstallProduct(int iProduct) = 0;
-	virtual char * GenReport(int iReportType, IndexList_t * prgiProducts = NULL) const = 0;
+	virtual _TCHAR * GenReport(int iReportType, IndexList_t * prgiProducts = NULL) const = 0;
 	virtual bool GetDependencyMinMaxVersions(int iDependType, int iProduct1, int iProduct2,
-		const char *& pszMinVersion, const char *& pszMaxVersion) const = 0;
-	virtual void ShowReport(const char * pszTitle, const char * pszIntro,
-		const char * pszOkButtonText, bool fConfirmQuit, bool fQuitIsError, int nType,
+		const _TCHAR *& pszMinVersion, const _TCHAR *& pszMaxVersion) const = 0;
+	virtual void ShowReport(const _TCHAR * pszTitle, const _TCHAR * pszIntro,
+		const _TCHAR * pszOkButtonText, bool fConfirmQuit, bool fQuitIsError, int nType,
 		bool fCanToggleType, IndexList_t * rgiProducts = NULL) const = 0;
 	virtual bool ShowFinalReport() const = 0;
 

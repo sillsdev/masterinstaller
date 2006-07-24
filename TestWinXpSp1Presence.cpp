@@ -1,6 +1,11 @@
+#pragma once
+
+#include <tchar.h>
+
 // Tests for presence of Windows XP Service Pack 1.
 // If current operating system is not even Windows XP, returns true anyway.
-bool TestWinXpSp1Presence(const char * pszMinVersion, const char * pszMaxVersion, const char * /*pszCriticalFile*/)
+bool TestWinXpSp1Presence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
+						  const TCHAR * /*pszCriticalFile*/)
 {
 	OSVERSIONINFOEX osvi;
 
@@ -13,7 +18,7 @@ bool TestWinXpSp1Presence(const char * pszMinVersion, const char * pszMaxVersion
 		return true;
 	}
 
-	g_Log.Write("Found Windows version %d.%d", osvi.dwMajorVersion, osvi.dwMinorVersion);
+	g_Log.Write(_T("Found Windows version %d.%d"), osvi.dwMajorVersion, osvi.dwMinorVersion);
 
 	if (osvi.dwMajorVersion == 5)
 	{

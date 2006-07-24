@@ -7,6 +7,8 @@
 	master installer without having Windows Installer present.
 */
 #include <windows.h>
+#include <tchar.h>
+
 #include "WIWrapper.h"
 #include "UsefulStuff.h"
 #include "Globals.h"
@@ -34,12 +36,12 @@ bool WindowsInstallerWrapper::Init()
 	if (hmodMsi)
 		return true;
 
-	char * pszInstallerLocation = GetInstallerLocation();
+	_TCHAR * pszInstallerLocation = GetInstallerLocation();
 	if (!pszInstallerLocation)
 		return false; // Windows Installer not present.
 
 	// Form the full path to the DLL we want:
-	char * pszLibraryPath = new_sprintf("%s\\msi.dll", pszInstallerLocation);
+	_TCHAR * pszLibraryPath = new_sprintf(_T("%s\\msi.dll"), pszInstallerLocation);
 	delete[] pszInstallerLocation;
 	pszInstallerLocation = NULL;
 
@@ -53,25 +55,34 @@ bool WindowsInstallerWrapper::Init()
 		return false;
 
 	// Now get pointers to the functions we want to use:
+#ifdef UNICODE
+	_MsiQueryProductState = (MsiQueryProductStateFn)GetProcAddress(hmodMsi,
+		"MsiQueryProductStateW");
+	_MsiQueryFeatureState = (MsiQueryFeatureStateFn)GetProcAddress(hmodMsi,
+		"MsiQueryFeatureStateW");
+	_MsiGetProductInfo = (MsiGetProductInfoFn)GetProcAddress(hmodMsi,
+		"MsiGetProductInfoW");
+#else
 	_MsiQueryProductState = (MsiQueryProductStateFn)GetProcAddress(hmodMsi,
 		"MsiQueryProductStateA");
 	_MsiQueryFeatureState = (MsiQueryFeatureStateFn)GetProcAddress(hmodMsi,
 		"MsiQueryFeatureStateA");
 	_MsiGetProductInfo = (MsiGetProductInfoFn)GetProcAddress(hmodMsi,
 		"MsiGetProductInfoA");
+#endif
 
 	if (!_MsiQueryProductState || !_MsiQueryFeatureState || !_MsiGetProductInfo)
 	{
 		// Now we're in trouble! The required functions aren't in the DLL.
 		MessageBox(NULL,
-			"Error - Windows Installer module does not contain required functions.", g_pszTitle,
+			_T("Error - Windows Installer module does not contain required functions."), g_pszTitle,
 			MB_ICONSTOP | MB_OK);
 		return false;
 	}
 	return true;
 }
 
-INSTALLSTATE WindowsInstallerWrapper::MsiQueryProductState(LPCSTR pszProduct)
+INSTALLSTATE WindowsInstallerWrapper::MsiQueryProductState(LPCTSTR pszProduct)
 // Use our internal pointer to the msi.dll version of this function.
 {
 	if (!hmodMsi)
@@ -83,7 +94,8 @@ INSTALLSTATE WindowsInstallerWrapper::MsiQueryProductState(LPCSTR pszProduct)
 	return _MsiQueryProductState(pszProduct);
 }
 
-INSTALLSTATE WindowsInstallerWrapper::MsiQueryFeatureState(LPCSTR pszProduct, LPCSTR pszFeature)
+INSTALLSTATE WindowsInstallerWrapper::MsiQueryFeatureState(LPCTSTR pszProduct,
+														   LPCTSTR pszFeature)
 // Use our internal pointer to the msi.dll version of this function.
 {
 	if (!hmodMsi)

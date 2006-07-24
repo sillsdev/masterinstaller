@@ -21,9 +21,9 @@ struct DlgMainProductParams_t
 // Structure for passing to the report dialog:
 struct ReportPackage_t
 {
-	const char * pszTitle;
-	const char * pszIntro;
-	const char * pszOkButtonText;
+	const _TCHAR * pszTitle;
+	const _TCHAR * pszIntro;
+	const _TCHAR * pszOkButtonText;
 	bool fConfirmCancel;
 	const IProductManager * pProductManager;
 	int nRptType;
@@ -48,7 +48,7 @@ INT_PTR CALLBACK DlgProcRebootCountdown(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 INT_PTR CALLBACK DlgProcProductKey(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 extern void ShowStatusDialog();
-extern const char * DisplayStatusText(int iPosition, const char * pszText, ...);
+extern const _TCHAR * DisplayStatusText(int iPosition, const _TCHAR * pszText, ...);
 extern void PauseOnStatusDialog(int ridStatusText);
 extern void HideStatusDialog();
 extern void PauseForReboot();

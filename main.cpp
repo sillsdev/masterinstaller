@@ -4,27 +4,42 @@
 	Master installer main file.
 */
 
+#include <tchar.h>
+
 #include "Control.h"
 #include "PersistantProgress.h"
 #include "Globals.h"
+#include "UsefulStuff.h"
 
 // Application entry point
-int APIENTRY WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, LPSTR lpCmdLine,
-					 int /*nCmdShow*/)
+int APIENTRY WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, 
+					 LPSTR lpCmdLine, int /*nCmdShow*/)
 {
+	_TCHAR * pszCmdLine;
+#ifdef UNICODE
+	int cch = 1 + (int)strlen(lpCmdLine);
+	pszCmdLine = new _TCHAR [cch];
+	pszCmdLine[0] = 0;
+	MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, lpCmdLine, -1, pszCmdLine, cch);
+#else
+	pszCmdLine = my_strdup(lpCmdLine);
+#endif
+
 	// See if user is requesting a log file be produced:
-	char * pszLog = strstr(lpCmdLine, "-log:");
+	_TCHAR * pszLog = _tcsstr(pszCmdLine, _T("-log:"));
 	if (pszLog)
 		g_Log.SetActiveWriting(&(pszLog[5]));
 
 	// See if user is requesting access to all third-party software:
-	if (strstr(lpCmdLine, "-manual") != NULL)
+	if (_tcsstr(pszCmdLine, _T("-manual")) != NULL)
 		g_fManualInstall = true;
 
-	g_ProgRecord.SetCmdLine(lpCmdLine);
+	g_ProgRecord.SetCmdLine(pszCmdLine);
 
 	MasterInstaller_t MasterInstaller;
 	MasterInstaller.Run();
+
+	delete[] pszCmdLine;
 }
 
 // Global instantiation of log file mechanism:

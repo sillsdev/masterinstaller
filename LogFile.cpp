@@ -6,6 +6,8 @@
 
 #include <windows.h>
 #include <stdio.h>
+#include <tchar.h>
+
 #include "LogFile.h"
 #include "UsefulStuff.h"
 #include "dialogs.h"
@@ -38,10 +40,10 @@ LogFile::~LogFile()
 /*----------------------------------------------------------------------------------------------
 	Signals that all log messages must be flushed to a file as soon as they are sent.
 ----------------------------------------------------------------------------------------------*/
-void LogFile::SetActiveWriting(const char * pszFilePath)
+void LogFile::SetActiveWriting(const _TCHAR * pszFilePath)
 {
 	if (!pszFilePath)
-		pszFilePath = "C:\\SIL Installer.log";
+		pszFilePath = _T("C:\\SIL Installer.log");
 	if (pszFilePath[0] != 0)
 		m_pszFilePath = my_strdup(pszFilePath);
 
@@ -49,7 +51,7 @@ void LogFile::SetActiveWriting(const char * pszFilePath)
 	if (m_pszFilePath)
 	{
 		FILE * file;
-		if (fopen_s(&file, m_pszFilePath, "a") == 0)
+		if (_tfopen_s(&file, m_pszFilePath, _T("a")) == 0)
 			fclose(file);
 		else
 			HandleError(kNonFatal, false, IDC_ERROR_LOG_FILE_INVALID, m_pszFilePath);
@@ -61,7 +63,7 @@ void LogFile::SetActiveWriting(const char * pszFilePath)
 ----------------------------------------------------------------------------------------------*/
 void LogFile::Start()
 {
-	Write("Installation started.");
+	Write(_T("Installation started."));
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -84,21 +86,21 @@ void LogFile::Unindent()
 	Writes given text to log file.
 	@param szText Text to be written
 ----------------------------------------------------------------------------------------------*/
-void LogFile::Write(const char * szText, ...)
+void LogFile::Write(const _TCHAR * szText, ...)
 {
 	// Always start with a time-stamp:
 	SYSTEMTIME syst;
 	GetLocalTime(&syst);
 
-	char * pszTotalMsg = NULL;
+	_TCHAR * pszTotalMsg = NULL;
 
 	// Add date/time stamp:
-	new_sprintf_concat(pszTotalMsg, 0, "%04d-%02d-%02d %02d:%02d:%02d - ", syst.wYear,
+	new_sprintf_concat(pszTotalMsg, 0, _T("%04d-%02d-%02d %02d:%02d:%02d - "), syst.wYear,
 		syst.wMonth, syst.wDay, syst.wHour, syst.wMinute, syst.wSecond);
 
 	// Add current level of indentation:
 	for (int i = 0; i < m_cIndent; i++)
-		new_sprintf_concat(pszTotalMsg, 0, "  ");
+		new_sprintf_concat(pszTotalMsg, 0, _T("  "));
 
 	// Collect variable arguments:
 	va_list arglist;
@@ -106,45 +108,45 @@ void LogFile::Write(const char * szText, ...)
 
 	// Format text with variable arguments:
 	new_vsprintf_concat(pszTotalMsg, 0, szText, arglist);
-	new_sprintf_concat(pszTotalMsg, 1, ""); // Stick a newline on the end.
+	new_sprintf_concat(pszTotalMsg, 1, _T("")); // Stick a newline on the end.
 
 	if (m_pszFilePath)
 	{
 		FILE * file;
-		if (fopen_s(&file, m_pszFilePath, "a") == 0)
+		if (_tfopen_s(&file, m_pszFilePath, _T("a")) == 0)
 		{
 			if (m_pszPendingMessages)
 			{
 				// We collected some messages before the message file was open:
-				fputs(m_pszPendingMessages, file);
+				_fputts(m_pszPendingMessages, file);
 				delete[] m_pszPendingMessages;
 				m_pszPendingMessages = NULL;
 			}
 			// Check for newlines in the new message, and insert indentation:
 			int ich = 0;
-			while (ich < (int)strlen(pszTotalMsg))
+			while (ich < (int)_tcslen(pszTotalMsg))
 			{
 				if (pszTotalMsg[ich] == '\r' || pszTotalMsg[ich] == '\n')
 				{
-					// Find end of sequence of \r and \n characters:
+					// Find end of sequence of \r and \n _TCHARacters:
 					do
 					{
 						ich++;
 					} while (pszTotalMsg[ich] == '\r' || pszTotalMsg[ich] == '\n');
 					// Put temporary terminator at current location:
-					char chOrig = pszTotalMsg[ich];
+					_TCHAR chOrig = pszTotalMsg[ich];
 					if (chOrig != 0)
 					{
 						pszTotalMsg[ich] = 0;
 
 						// Start to build replacement string:
-						char * pszNew = my_strdup(pszTotalMsg);
+						_TCHAR * pszNew = my_strdup(pszTotalMsg);
 						pszTotalMsg[ich] = chOrig;
 
 						// Insert current level of indentation, including indenting past time stamp:
 						int NumSpaces = 22 + 2 * m_cIndent;
 						for (int isp = 0; isp < NumSpaces; isp++)
-							new_sprintf_concat(pszNew, 0, " ");
+							new_sprintf_concat(pszNew, 0, _T(" "));
 
 						// Add in rest of original string:
 						new_sprintf_concat(pszNew, 0, &pszTotalMsg[ich]);
@@ -157,7 +159,7 @@ void LogFile::Write(const char * szText, ...)
 				ich++;
 			}
 
-			fputs(pszTotalMsg, file);
+			_fputts(pszTotalMsg, file);
 			fclose(file);
 		}
 	}
@@ -186,7 +188,7 @@ bool LogFile::WriteClipboard()
 ----------------------------------------------------------------------------------------------*/
 void LogFile::Terminate()
 {
-	Write("Installation ended.\n");
+	Write(_T("Installation ended.\n"));
 	delete[] m_pszFilePath;
 	m_pszFilePath = NULL;
 }

@@ -12,18 +12,18 @@ public:
 	LogFile();
 	~LogFile();
 
-	void SetActiveWriting(const char * pszFilePath);
+	void SetActiveWriting(const _TCHAR * pszFilePath);
 	void Start();
 	void Indent();
 	void Unindent();
-	void Write(const char * szText, ...);
+	void Write(const _TCHAR * szText, ...);
 	void Terminate();
 	bool WriteClipboard();
 
 protected:
-	char * m_pszFilePath;
-	char * m_pszLog;
-	char * m_pszPendingMessages;
+	_TCHAR * m_pszFilePath;
+	_TCHAR * m_pszLog;
+	_TCHAR * m_pszPendingMessages;
 	int m_cIndent;
 };
 

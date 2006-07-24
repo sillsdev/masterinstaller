@@ -1,3 +1,5 @@
+#pragma once
+
 #include "TestKeymanPresence.cpp"
 
 // Tests for the presence of Tavultesoft's Keyman Free Home Use flavor.

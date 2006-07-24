@@ -8,16 +8,16 @@ public:
 	ProductKeyHandler_t();
 	~ProductKeyHandler_t();
 
-	int TestKey(const char * pszKey, DWORD * pfUnlocked, DWORD nProdId, const char * pszVersion);
-	int GetKeyAltTitle(char * pszKey, bool fAlwaysAsk, const char * pszTitleMain,
-		const char * pszTitleDlg, HICON hIcon);
+	int TestKey(const _TCHAR * pszKey, DWORD * pfUnlocked, DWORD nProdId, const _TCHAR * pszVersion);
+	int GetKeyAltTitle(_TCHAR * pszKey, bool fAlwaysAsk, const _TCHAR * pszTitleMain,
+		const _TCHAR * pszTitleDlg, HICON hIcon);
 
 protected:
 	// DLL functions types:
-	typedef int (* TestKeyFn)(const char * pszKey, DWORD * pfUnlocked, DWORD nProdId,
-		const char * pszVersion);
-	typedef int (* GetKeyAltTitleFn)(char * pszKey, bool fAlwaysAsk, const char * pszTitleMain,
-		const char * pszTitleDlg, HICON hIcon);
+	typedef int (* TestKeyFn)(const _TCHAR * pszKey, DWORD * pfUnlocked, DWORD nProdId,
+		const _TCHAR * pszVersion);
+	typedef int (* GetKeyAltTitleFn)(_TCHAR * pszKey, bool fAlwaysAsk, const _TCHAR * pszTitleMain,
+		const _TCHAR * pszTitleDlg, HICON hIcon);
 	GetKeyAltTitleFn m_pfGetKeyAltTitle;
 	TestKeyFn m_pfTestKey;
 

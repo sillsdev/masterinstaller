@@ -1,3 +1,5 @@
+#pragma once
+
 // Tests for presence of Service Packs for Microsoft .NET 1.1
 bool TestDotNet1point1SPPresence(const char * pszMinVersion, const char * pszMaxVersion, const char * /*pszCriticalFile*/)
 {

@@ -1,7 +1,9 @@
+#pragma once
+
 #include "TestAdaptitGenericPresence.cpp"
 
-bool TestAdaptitUMPresence(const char * /*pszMinVersion*/, const char * /*pszMaxVersion*/,
-						   const char * /*pszCriticalFile*/)
+bool TestAdaptitUMPresence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMaxVersion*/,
+						   const TCHAR * /*pszCriticalFile*/)
 {
-	return TestAdaptitGenericPresence("Adapt It Unicode", "Mandarin_AdaptItU.exe");
+	return TestAdaptitGenericPresence(_TEXT("Adapt It Unicode"), _TEXT("Mandarin_AdaptItU.exe"));
 }

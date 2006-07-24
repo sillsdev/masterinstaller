@@ -7,7 +7,7 @@
 #include "ProductManager.h"
 #include "HelpLauncher.h"
 
-typedef HANDLE (* HelpFn)(const char * pszStem, HANDLE hShutdownEvent);
+typedef HANDLE (* HelpFn)(const _TCHAR * pszStem, HANDLE hShutdownEvent);
 
 
 class MasterInstaller_t : public IHelpLauncher
@@ -19,11 +19,11 @@ public:
 	void Run();
 
 	// IHelpLauncher implementation:
-	virtual void LaunchHelp(const char * pszHelpTag);
+	virtual void LaunchHelp(const _TCHAR * pszHelpTag);
 
 protected:
 	// Mutex used to make sure we're only running one instance:
-	static const char * m_kszMutexName;
+	static const _TCHAR * m_kszMutexName;
 	HANDLE m_hMutex;
 	// Flag set to true if OS is less than Windows 2000:
 	bool m_fLessThanWin2k;
@@ -31,7 +31,7 @@ protected:
 	bool m_fAdministrator;
 
 	// Registry sub-key name for product key storage:
-	static const char * m_kszRegProductKeys;
+	static const _TCHAR * m_kszRegProductKeys;
 
 	// Handle to an event where we can signal that we're shutting down:
 	HANDLE m_hShutDown;
@@ -66,7 +66,7 @@ protected:
 	bool IsWindows2000OrBetter();
 	bool IsCurrentUserLocalAdministrator();
 	void SelectMainProducts();
-	void GetProductKey(char szKey[100]);
+	void GetProductKey(_TCHAR szKey[100]);
 	void TestAndPerformPendingReboot(int iProduct);
 	bool InstallPrerequisites(int iProduct);
 	bool TestAndReportLanguageConflicts(IndexList_t & rgiProducts,

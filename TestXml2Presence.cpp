@@ -1,3 +1,5 @@
+#pragma once
+
 // Tests for presence of Microsoft XML parser 2.
 // This does not seem to have any version number records.
 bool TestXml2Presence(const char * /*pszMinVersion*/, const char * /*pszMaxVersion*/, const char * /*pszCriticalFile*/)

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <tchar.h>
 
 #include "DiskManager.h"
 #include "Resource.h"
@@ -8,8 +9,8 @@
 
 struct DiskDetail
 {
-	const char * m_kpszNiceName;
-	const char * m_pszVolumeLabel;
+	const _TCHAR * m_kpszNiceName;
+	const _TCHAR * m_pszVolumeLabel;
 };
 
 
@@ -20,21 +21,21 @@ static const int kctDiskDetails = sizeof(DiskDetails) / sizeof(DiskDetails[0]);
 
 DiskManager_t::DiskManager_t()
 {
-	char szCurrentPath[MAX_PATH];
+	_TCHAR szCurrentPath[MAX_PATH];
 
 	// Get current drive root:
 	GetModuleFileName(NULL, szCurrentPath, MAX_PATH);
 	for (int i = 0; i < 3; i++)
 	 m_szCurrentDriveRoot[i] = szCurrentPath[i];
 	m_szCurrentDriveRoot[3] = 0;
-	g_Log.Write("Current drive root: %s", m_szCurrentDriveRoot);
+	g_Log.Write(_T("Current drive root: %s"), m_szCurrentDriveRoot);
 
 	// Get current path:
-	strcpy_s(m_szCurrentPath, MAX_PATH, szCurrentPath);
-	char * ch = strrchr(m_szCurrentPath, '\\');
+	_tcscpy_s(m_szCurrentPath, MAX_PATH, szCurrentPath);
+	_TCHAR * ch = _tcsrchr(m_szCurrentPath, _TCHAR('\\'));
 	if (ch)
 		*(ch + 1) = 0;
-	g_Log.Write("Current path: %s", m_szCurrentPath);
+	g_Log.Write(_T("Current path: %s"), m_szCurrentPath);
 }
 
 DiskManager_t::~DiskManager_t()
@@ -44,13 +45,13 @@ DiskManager_t::~DiskManager_t()
 int DiskManager_t::CurrentCd()
 {
 	const int kctchVolume = 128;
-	char szVolume[kctchVolume];
+	_TCHAR szVolume[kctchVolume];
 	GetVolumeInformation(m_szCurrentDriveRoot, szVolume, kctchVolume, NULL, NULL, NULL, NULL, 0);
 
-	g_Log.Write("Volume label for '%s' is '%s'", m_szCurrentDriveRoot, szVolume);
+	g_Log.Write(_T("Volume label for '%s' is '%s'"), m_szCurrentDriveRoot, szVolume);
 
 	for (int i = 0; i < kctDiskDetails; i++)
-		if (_stricmp(szVolume, DiskDetails[i].m_pszVolumeLabel) == 0)
+		if (_tcsicmp(szVolume, DiskDetails[i].m_pszVolumeLabel) == 0)
 			return i;
 
 	return -1;
@@ -61,7 +62,7 @@ int DiskManager_t::CurrentCd()
 // do.
 // If pszSkipMsgProduct is not NULL, then an incorrect disk message will include an option to
 // skip the specified product.
-int DiskManager_t::CheckCdPresent(int iCd, bool fAllowNoCd, const char * pszSkipMsgProduct)
+int DiskManager_t::CheckCdPresent(int iCd, bool fAllowNoCd, const _TCHAR * pszSkipMsgProduct)
 {
 	int iCurrentCd = CurrentCd();
 	if (iCurrentCd == iCd)
@@ -73,9 +74,9 @@ int DiskManager_t::CheckCdPresent(int iCd, bool fAllowNoCd, const char * pszSkip
 	while (iCurrentCd != iCd)
 	{
 		// We don't have the correct CD:
-		g_Log.Write("Disk %d is inserted - asking for disk %d.\n", iCurrentCd, iCd);
+		g_Log.Write(_T("Disk %d is inserted - asking for disk %d.\n"), iCurrentCd, iCd);
 
-		char * pszMsg = new_sprintf(FetchString(IDC_MESSAGE_INSERT), DiskDetails[iCd].m_kpszNiceName);
+		_TCHAR * pszMsg = new_sprintf(FetchString(IDC_MESSAGE_INSERT), DiskDetails[iCd].m_kpszNiceName);
 		if (pszSkipMsgProduct)
 			new_sprintf_concat(pszMsg, 2, FetchString(IDC_MESSAGE_SKIPORCANCEL), pszSkipMsgProduct);
 
@@ -92,7 +93,7 @@ int DiskManager_t::CheckCdPresent(int iCd, bool fAllowNoCd, const char * pszSkip
 			if (MessageBox(NULL, FetchString(IDC_MESSAGE_CONFIRM_QUIT_GENERAL), g_pszTitle,
 				MB_YESNO) == IDYES)
 			{
-				g_Log.Write("User opted to quit.");
+				g_Log.Write(_T("User opted to quit."));
 				return knUserQuit;
 			}
 			break;
@@ -105,7 +106,7 @@ int DiskManager_t::CheckCdPresent(int iCd, bool fAllowNoCd, const char * pszSkip
 			if (MessageBox(NULL, FetchString(IDC_MESSAGE_CONFIRM_SKIP), g_pszTitle,
 				MB_YESNO) == IDYES)
 			{
-				g_Log.Write("User opted to skip product.");
+				g_Log.Write(_T("User opted to skip product."));
 				return knUserSkip;
 			}
 			break;
@@ -116,15 +117,15 @@ int DiskManager_t::CheckCdPresent(int iCd, bool fAllowNoCd, const char * pszSkip
 	return knCorrectCdFinally;
 }
 
-int DiskManager_t::EnsureCdForFile(const char * pszFile, int iCd, const char * pszSkipMsgProduct)
+int DiskManager_t::EnsureCdForFile(const _TCHAR * pszFile, int iCd, const _TCHAR * pszSkipMsgProduct)
 {
 	int iCurrentCd = CurrentCd();
 
 	// See if file can be found from current directory:
 	const int knLen = MAX_PATH;
-	char szPath[knLen];
-	strcpy_s(szPath, MAX_PATH, m_szCurrentPath);
-	strcat_s(szPath, MAX_PATH, pszFile);
+	_TCHAR szPath[knLen];
+	_tcscpy_s(szPath, MAX_PATH, m_szCurrentPath);
+	_tcscat_s(szPath, MAX_PATH, pszFile);
 	if (GetFileAttributes(szPath) != INVALID_FILE_ATTRIBUTES)
 	{
 		if (iCurrentCd == iCd)
@@ -140,7 +141,7 @@ int DiskManager_t::EnsureCdForFile(const char * pszFile, int iCd, const char * p
 }
 
 // Make a new string containing a concatenation of the current path and the given path.
-char * DiskManager_t::NewFullPath(const char * pszRelativePath)
+_TCHAR * DiskManager_t::NewFullPath(const _TCHAR * pszRelativePath)
 {
-	return new_sprintf("%s%s", m_szCurrentPath, pszRelativePath);
+	return new_sprintf(_T("%s%s"), m_szCurrentPath, pszRelativePath);
 }

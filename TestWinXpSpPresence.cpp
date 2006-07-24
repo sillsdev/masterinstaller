@@ -1,6 +1,11 @@
+#pragma once
+
+#include <tchar.h>
+
 // Tests for presence of given Service Pack on Windows XP.
 // If current operating system is not even Windows XP, returns true anyway.
-bool TestWinXpSpPresence(const char * pszMinVersion, const char * pszMaxVersion, const char * /*pszCriticalFile*/)
+bool TestWinXpSpPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
+						 const TCHAR * /*pszCriticalFile*/)
 {
 	OSVERSIONINFOEX osvi;
 
@@ -13,7 +18,7 @@ bool TestWinXpSpPresence(const char * pszMinVersion, const char * pszMaxVersion,
 		return true;
 	}
 
-	g_Log.Write("Found Windows version %d.%d, Service Pack %d", osvi.dwMajorVersion, osvi.dwMinorVersion, (int)(osvi.wServicePackMajor));
+	g_Log.Write(_T("Found Windows version %d.%d, Service Pack %d"), osvi.dwMajorVersion, osvi.dwMinorVersion, (int)(osvi.wServicePackMajor));
 
 	if (osvi.dwMajorVersion == 5)
 	{
@@ -21,12 +26,12 @@ bool TestWinXpSpPresence(const char * pszMinVersion, const char * pszMaxVersion,
 		{
 			// We're running on XP, so check the service pack number:
 			if (!pszMinVersion)
-				pszMinVersion = "0";
+				pszMinVersion = _T("0");
 			if (!pszMaxVersion)
-				pszMaxVersion = "32767";
+				pszMaxVersion = _T("32767");
 
-			if (osvi.wServicePackMajor < atoi(pszMinVersion) || 
-				osvi.wServicePackMajor > atoi(pszMaxVersion))
+			if (osvi.wServicePackMajor < _tstoi(pszMinVersion) || 
+				osvi.wServicePackMajor > _tstoi(pszMaxVersion))
 			{
 				return false;
 			}

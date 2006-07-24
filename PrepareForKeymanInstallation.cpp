@@ -1,9 +1,13 @@
+#pragma once
+
+#include <tchar.h>
+
 // To prepare for Keyman installation, we have to close down any instance that is already
 // running.
-int PrepareForKeymanInstallation(const char * /*pszCriticalFile*/)
+int PrepareForKeymanInstallation(const TCHAR * /*pszCriticalFile*/)
 {
 	// Close down any instance that is already running:
-	HWND hwnd = FindWindow("Keyman50", "Keyman50");
+	HWND hwnd = FindWindow(_T("Keyman50"), _T("Keyman50"));
 	if(hwnd)
 	{
 		// Keyman is still active

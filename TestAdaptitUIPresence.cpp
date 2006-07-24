@@ -1,7 +1,9 @@
+#pragma once
+
 #include "TestAdaptitGenericPresence.cpp"
 
-bool TestAdaptitUIPresence(const char * /*pszMinVersion*/, const char * /*pszMaxVersion*/,
-						   const char * /*pszCriticalFile*/)
+bool TestAdaptitUIPresence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMaxVersion*/,
+						   const TCHAR * /*pszCriticalFile*/)
 {
-	return TestAdaptitGenericPresence("Adapt It Unicode", "Indonesian_AdaptItU.exe");
+	return TestAdaptitGenericPresence(_TEXT("Adapt It Unicode"), _TEXT("Indonesian_AdaptItU.exe"));
 }

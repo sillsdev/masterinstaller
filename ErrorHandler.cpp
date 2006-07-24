@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <stdio.h>
+#include <tchar.h>
 
 #include "ErrorHandler.h"
 #include "Resource.h"
@@ -18,7 +19,7 @@ void HandleError(vErrorType vType, bool fCheckDependentStatus, int nErrorTextId,
 	va_start(arglist, nErrorTextId);
 
 	// Get main error message and format it with variable arguments:
-	char * pszFormattedMsg = new_vsprintf(FetchString(nErrorTextId), arglist);
+	_TCHAR * pszFormattedMsg = new_vsprintf(FetchString(nErrorTextId), arglist);
 
 	// Initial MessageBox button:
 	UINT uMbType = MB_OK;
@@ -39,12 +40,12 @@ void HandleError(vErrorType vType, bool fCheckDependentStatus, int nErrorTextId,
 		HideStatusDialog();
 
 	// Display the message.
-	char * pszTitle = new_sprintf("%s - %s", g_pszTitle, FetchString(IDC_ERROR));
+	_TCHAR * pszTitle = new_sprintf(_T("%s - %s"), g_pszTitle, FetchString(IDC_ERROR));
 	MessageBox(NULL, pszFormattedMsg, pszTitle, uMbType);
 	delete[] pszTitle;
 	pszTitle = NULL;
 
-	g_Log.Write("Error message displayed:");
+	g_Log.Write(_T("Error message displayed:"));
 	g_Log.Write(pszFormattedMsg);
 
 	delete[] pszFormattedMsg;

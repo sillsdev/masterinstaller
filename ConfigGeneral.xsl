@@ -20,15 +20,15 @@ project to make an executable master installer.
 
 	<!-- General configuration -->
 	<xsl:text>// Main title for master installer:&#13;</xsl:text>
-	<xsl:text>const char * g_pszTitle = "</xsl:text>
+	<xsl:text>const TCHAR * g_pszTitle = _T("</xsl:text>
 	<xsl:value-of select="MasterInstaller/General/Title"/>
-	<xsl:text>";&#13;</xsl:text>
+	<xsl:text>");&#13;</xsl:text>
 	<xsl:text>&#13;</xsl:text>
 
 	<xsl:text>// Subtitle for product list:&#13;</xsl:text>
-	<xsl:text>const char * g_pszListSubtitle = "</xsl:text>
+	<xsl:text>const TCHAR * g_pszListSubtitle = _T("</xsl:text>
 	<xsl:value-of select="MasterInstaller/General/ListSubtitle"/>
-	<xsl:text>";&#13;</xsl:text>
+	<xsl:text>");&#13;</xsl:text>
 	<xsl:text>&#13;</xsl:text>
 
 	<xsl:text>// Background color for product list:&#13;</xsl:text>
@@ -124,14 +124,14 @@ project to make an executable master installer.
 	<xsl:text>&#13;</xsl:text>
 
 	<xsl:text>// Title for Product Key request dialog:&#13;</xsl:text>
-	<xsl:text>const char * g_pszGetKeyTitle = "</xsl:text>
+	<xsl:text>const TCHAR * g_pszGetKeyTitle = _T("</xsl:text>
 	<xsl:value-of select="MasterInstaller/General/GetKeyTitle"/>
-	<xsl:text>";&#13;</xsl:text>
+	<xsl:text>");&#13;</xsl:text>
 	<xsl:text>&#13;</xsl:text>
 
 	<xsl:text>// If you want external help to be available, set values for the file path and button text.&#13;</xsl:text>
 	<xsl:text>// If not, set these both to NULL:&#13;</xsl:text>
-	<xsl:text>const char * g_pszExternalHelpFile = </xsl:text>
+	<xsl:text>const TCHAR * g_pszExternalHelpFile = </xsl:text>
 	<xsl:if test="string-length(MasterInstaller/General/ExternalHelpFile)=0">
 		<xsl:text>NULL</xsl:text>
 	</xsl:if>
@@ -144,7 +144,7 @@ project to make an executable master installer.
 	</xsl:if>
 	<xsl:text>;&#13;</xsl:text>
 	
-	<xsl:text>const char * g_pszHelpButtonText = </xsl:text>
+	<xsl:text>const TCHAR * g_pszHelpButtonText = </xsl:text>
 	<xsl:if test="string-length(MasterInstaller/General/HelpButtonText)=0">
 		<xsl:text>NULL</xsl:text>
 	</xsl:if>
@@ -160,7 +160,7 @@ project to make an executable master installer.
 
 	<xsl:text>// If you want terms of use to be available, set values for the file path and button text.&#13;</xsl:text>
 	<xsl:text>// If not, set these both to NULL:&#13;</xsl:text>
-	<xsl:text>const char * g_pszTermsOfUseFile = </xsl:text>
+	<xsl:text>const TCHAR * g_pszTermsOfUseFile = </xsl:text>
 	<xsl:if test="string-length(MasterInstaller/General/TermsOfUseFile)=0">
 		<xsl:text>NULL</xsl:text>
 	</xsl:if>
@@ -173,7 +173,7 @@ project to make an executable master installer.
 	</xsl:if>
 	<xsl:text>;&#13;</xsl:text>
 	
-	<xsl:text>const char * g_pszTermsButtonText = </xsl:text>
+	<xsl:text>const TCHAR * g_pszTermsButtonText = </xsl:text>
 	<xsl:if test="string-length(MasterInstaller/General/TermsButtonText)=0">
 		<xsl:text>NULL</xsl:text>
 	</xsl:if>

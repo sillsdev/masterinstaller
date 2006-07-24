@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <CommCtrl.h>
+#include <tchar.h>
 
 #include "Dialogs.h"
 #include "resource.h"
@@ -36,7 +37,7 @@ void SetSilIcon(HWND hwnd)
 // Set window's icon to the SIL logo.
 {
 	// Set Icon:
-	HICON hIcon = LoadIcon(GetModuleHandle(NULL), (LPCSTR)IDR_MAIN_ICON);
+	HICON hIcon = LoadIcon(GetModuleHandle(NULL), (LPCTSTR)IDR_MAIN_ICON);
 	if (hIcon)
 	{
 		SendMessage(hwnd, WM_SETICON, 1, (LPARAM)hIcon);
@@ -76,19 +77,19 @@ INT_PTR CALLBACK DlgProcDisplayReport(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
 						(LPARAM)ReportPackage->pszOkButtonText);
 				}
 
-				g_Log.Write("Creating report dialog:");
+				g_Log.Write(_T("Creating report dialog:"));
 				g_Log.Write(ReportPackage->pszTitle);
 				g_Log.Write(ReportPackage->pszIntro);
 				if (ReportPackage->pProductManager)
 				{
-					char * pszReport = ReportPackage->pProductManager->GenReport(
+					_TCHAR * pszReport = ReportPackage->pProductManager->GenReport(
 						ReportPackage->nRptType, ReportPackage->prgiProducts);
 					if (pszReport)
 					{
 						SetDlgItemText(hwnd, IDC_EDIT_REPORT, pszReport);
-						g_Log.Write("Report contents:");
+						g_Log.Write(_T("Report contents:"));
 						g_Log.Indent();
-						g_Log.Write("%s", pszReport);
+						g_Log.Write(_T("%s"), pszReport);
 						g_Log.Unindent();
 					}
 					delete[] pszReport;
@@ -128,7 +129,7 @@ INT_PTR CALLBACK DlgProcDisplayReport(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
 					}
 				}
 			}
-			g_Log.Write("User quit in Report Dialog.");
+			g_Log.Write(_T("User quit in Report Dialog."));
 			EndDialog(hwnd, 0);
 			break;
 
@@ -153,14 +154,14 @@ INT_PTR CALLBACK DlgProcDisplayReport(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
 						ReportPackage->nRptType = IProductManager::rptRequirementsShort;
 						break;
 					}
-					char * pszReport = ReportPackage->pProductManager->GenReport(
+					_TCHAR * pszReport = ReportPackage->pProductManager->GenReport(
 						ReportPackage->nRptType, ReportPackage->prgiProducts);
 					if (pszReport)
 					{
 						SetDlgItemText(hwnd, IDC_EDIT_REPORT, pszReport);
-						g_Log.Write("Report contents:");
+						g_Log.Write(_T("Report contents:"));
 						g_Log.Indent();
-						g_Log.Write("%s", pszReport);
+						g_Log.Write(_T("%s"), pszReport);
 						g_Log.Unindent();
 					}
 					delete[] pszReport;
@@ -225,7 +226,7 @@ INT_PTR CALLBACK DlgProcRebootCountdown(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 			if (MessageBox(hwnd, FetchString(IDC_MESSAGE_CONFIRM_QUIT_REBOOT), g_pszTitle,
 				MB_YESNO | MB_ICONSTOP | MB_DEFBUTTON2) == IDYES)
 			{
-				g_Log.Write("User quit in Reboot Countdown Dialog.");
+				g_Log.Write(_T("User quit in Reboot Countdown Dialog."));
 				EndDialog(hwnd, 0);
 			}
 			break;
@@ -270,7 +271,7 @@ INT_PTR CALLBACK DlgProcRebootCountdown(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 			SystemTimeToFileTime(&systTime, &filtTime);
 			__int64 nCurrentTime = *((__int64 *)(&filtTime));
 			int nDuration = (int)((nCurrentTime - nStartTime) / kn100NanoSeconds);
-			char * pszTime = new_sprintf("%d", nDelay - nDuration);
+			_TCHAR * pszTime = new_sprintf(_T("%d"), nDelay - nDuration);
 			SendDlgItemMessage(hwnd, IDC_STATIC_REBOOT_COUNTDOWN, WM_SETTEXT, 0,
 				(LPARAM)pszTime);
 			delete[] pszTime;
@@ -484,7 +485,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 			// Set Title:
 			if (g_pszTitle && g_pszListSubtitle)
 			{
-				char * pszTitle = new_sprintf("%s %s", g_pszTitle, g_pszListSubtitle);
+				_TCHAR * pszTitle = new_sprintf(_T("%s %s"), g_pszTitle, g_pszListSubtitle);
 				SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)pszTitle);
 				delete[] pszTitle;
 			}
@@ -522,19 +523,19 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 					fOnlyVisible = true;
 				}
 
-				char * pszCheckBox = my_strdup(pProductManager->GetName(iProduct));
+				_TCHAR * pszCheckBox = my_strdup(pProductManager->GetName(iProduct));
 
 				if (pProductManager->IsInstallable(iProduct))
 				{
 					// See if product has been installed before:
 					if (pProductManager->PossibleToTestPresence(iProduct))
 					{
-						const char * pszVersion = pProductManager->GetTestPresenceVersion(iProduct);
+						const _TCHAR * pszVersion = pProductManager->GetTestPresenceVersion(iProduct);
 						bool fInstalled = pProductManager->TestPresence(iProduct, pszVersion,
 							pszVersion);
 						if (fInstalled && !fOnlyVisible)
 						{
-							new_sprintf_concat(pszCheckBox, 0, " %s",
+							new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
 								FetchString(IDC_MESSAGE_ALREADY_INSTALLED));
 							fFoundInstalledProduct = true;
 						}
@@ -542,14 +543,14 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 					// See if product should be disabled because user needs Windows 2000 or better:
 					if (g_fLessThanWin2k && pProductManager->GetMustHaveWin2kOrBetterFlag(iProduct))
 					{
-						new_sprintf_concat(pszCheckBox, 0, " %s",
+						new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
 							FetchString(IDC_MESSAGE_NEED_WIN2K));
 						fOnlyVisible = true;
 					}
 					// See if product should be disabled because user needs Admin Privileges:
 					else if (!g_fAdministrator && pProductManager->GetMustBeAdminFlag(iProduct))
 					{
-						new_sprintf_concat(pszCheckBox, 0, " %s",
+						new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
 							FetchString(IDC_MESSAGE_NEED_ADMIN_PRIV));
 						fOnlyVisible = true;
 					}
@@ -559,13 +560,13 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 					if (fOnlyVisible)
 						wsStyle |= WS_DISABLED;
 
-					CreateWindow("BUTTON", pszCheckBox, wsStyle, nXcoord + 30, nYcoord, 520, 20,
+					CreateWindow(_T("BUTTON"), pszCheckBox, wsStyle, nXcoord + 30, nYcoord, 520, 20,
 						hwnd, reinterpret_cast<HMENU>(__int64(knCheckboxInitialId + i)), NULL,
 						NULL);
 				}
 				else // Product is not installable
 				{
-					CreateWindow("STATIC", pszCheckBox, WS_CHILD | WS_VISIBLE, nXcoord + 30,
+					CreateWindow(_T("STATIC"), pszCheckBox, WS_CHILD | WS_VISIBLE, nXcoord + 30,
 						nYcoord + 2, 520, 20, hwnd,
 						reinterpret_cast<HMENU>(__int64(-1)), NULL, NULL);
 				}
@@ -579,7 +580,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 					int nButtonX = nXcoord - g_nInfoButtonAdjust;
 					int nButtonY = nYcoord + 10 - nButtonHeight / 2;
 					// Create a help (more info) button:
-					CreateWindow("BUTTON", "?",
+					CreateWindow(_T("BUTTON"), _T("?"),
 						BS_PUSHBUTTON | WS_TABSTOP | WS_CHILD |WS_VISIBLE, nButtonX, nButtonY,
 						nButtonWidth, nButtonHeight, hwnd,
 						reinterpret_cast<HMENU>(__int64(knCheckboxInitialId +
@@ -593,7 +594,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 			if (fFoundInstalledProduct && pProductManager->RequirementsNeeded())
 			{
 				// Add option to allow user just to install required supporting software:
-				HWND hwnd3rdParty = CreateWindow("BUTTON",
+				HWND hwnd3rdParty = CreateWindow(_T("BUTTON"),
 					FetchString(IDC_MESSAGE_REQUIRED_SOFTWARE),
 					BS_AUTOCHECKBOX | WS_TABSTOP | WS_CHILD |WS_VISIBLE, 250, nYcoord, 400,
 					20, hwnd,
@@ -700,7 +701,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 		case IDOK:
 			{
 				IndexList_t rgiChosen;
-				g_Log.Write("User chose following products:");
+				g_Log.Write(_T("User chose following products:"));
 				g_Log.Indent();
 				for (int i = 0; i < rgiAvailableProducts.GetCount(); i++)
 				{
@@ -710,8 +711,8 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 						// The current product checkbox was checked, so add product index to
 						// return structure:
 						rgiChosen.Add(rgiAvailableProducts[i]);
-						g_Log.Write("%d: %s", rgiChosen.GetCount(), pProductManager ?
-							pProductManager->GetName(rgiAvailableProducts[i]) : "Unknown");
+						g_Log.Write(_T("%d: %s"), rgiChosen.GetCount(), pProductManager ?
+							pProductManager->GetName(rgiAvailableProducts[i]) : _T("Unknown"));
 					}
 				}
 				g_Log.Unindent();
@@ -723,8 +724,8 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 					fInstallRequiredSoftware = (SendDlgItemMessage(hwnd,
 						knCheckboxInitialId + rgiAvailableProducts.GetCount(), BM_GETCHECK, 0,
 						0) == BST_CHECKED);
-					g_Log.Write("User opted for additional software: %s.",
-						fInstallRequiredSoftware ? "true" : "false");
+					g_Log.Write(_T("User opted for additional software: %s."),
+						fInstallRequiredSoftware ? _T("true") : _T("false"));
 				}
 				// The return value of this dialog will be a pointer to this structure:
 				MainSelectionReturn_t * MainSelectionReturn = new MainSelectionReturn_t;
@@ -741,7 +742,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 			if (MessageBox(hwnd, FetchString(IDC_MESSAGE_CONFIRM_QUIT_MAIN), g_pszTitle,
 				MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) == IDYES)
 			{
-				g_Log.Write("User quit in Main Product Selection Dialog.");
+				g_Log.Write(_T("User quit in Main Product Selection Dialog."));
 				EndDialog(hwnd, 0);
 			}
 			break;
@@ -751,19 +752,19 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 			{
 				// Build path to file:
 				const int knLen = MAX_PATH;
-				char szPath[knLen];
+				_TCHAR szPath[knLen];
 				GetModuleFileName(NULL, szPath, knLen);
-				char * ch = strrchr(szPath, '\\');
+				_TCHAR * ch = _tcsrchr(szPath, '\\');
 				if (ch)
 					ch++;
 				else
 					ch = szPath;
 				*ch = 0;
 				if (LOWORD(wParam) == IDC_BUTTON_MAIN_HELP)
-					strcat_s(szPath, MAX_PATH, g_pszExternalHelpFile);
+					_tcscat_s(szPath, MAX_PATH, g_pszExternalHelpFile);
 				else
-					strcat_s(szPath, MAX_PATH, g_pszTermsOfUseFile);
-				ShellExecute(hwnd, "open", szPath, NULL, ".", SW_SHOW);
+					_tcscat_s(szPath, MAX_PATH, g_pszTermsOfUseFile);
+				ShellExecute(hwnd, _T("open"), szPath, NULL, _T("."), SW_SHOW);
 				break;
 			}
 		case IDC_BUTTON_REENTER_KEY:
@@ -780,7 +781,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 					rgiAvailableProducts.GetCount() - 1;
 				if (nHelpId >= 0 && nHelpId < rgiAvailableProducts.GetCount())
 				{
-					const char * pszHelpTag =
+					const _TCHAR * pszHelpTag =
 						pProductManager->GetHelpTag(rgiAvailableProducts[nHelpId]);
 					if (pszHelpTag)
 					{
@@ -789,9 +790,9 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 							rgiAvailableProducts[nHelpId]))
 						{
 							// Form full path name to file:
-							char * pszFilePath = g_DiskManager.NewFullPath(pszHelpTag);
+							_TCHAR * pszFilePath = g_DiskManager.NewFullPath(pszHelpTag);
 							// Open file:
-							ShellExecute(NULL, NULL, pszFilePath, NULL, ".", SW_SHOW);
+							ShellExecute(NULL, NULL, pszFilePath, NULL, _T("."), SW_SHOW);
 							delete[] pszFilePath;
 						}
 						else // Use InstallerHelp2.dll
@@ -819,9 +820,9 @@ static HWND hwndStatusDialog = NULL; // Handle of Status dialog window
 static bool fContinueWithoutStatusDialog = false; // Flag for when StatusDialog fails
 static HANDLE hCreateStatusDlg = NULL; // Event used to synchronize threads on dialog creation.
 static HANDLE hDestroyStatusDlg = NULL; // Event used to sync threads on dialog destruction.
-static const char * kszStatusDlgMutexName = "SIL Master Installer Status Dialog";
+static const _TCHAR * kszStatusDlgMutexName = _T("SIL Master Installer Status Dialog");
 static const int s_kctStatusText = 3;
-static char * pszStatusTextCopy[s_kctStatusText] = { NULL, NULL, NULL };
+static _TCHAR * pszStatusTextCopy[s_kctStatusText] = { NULL, NULL, NULL };
 static int ridStatusText[s_kctStatusText] =
 	{ IDC_STATIC_STATUS_MAIN, IDC_STATIC_STATUS_SUB, IDC_STATIC_STATUS_3RD };
 static bool fPauseStatusDialog = false;
@@ -874,7 +875,7 @@ INT_PTR CALLBACK DlgProcStatus(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 			{
 				// Start the animation:
 				HWND hwndAvi = GetDlgItem(hwnd, IDC_ANIMATE_STATUS);
-				Animate_Open(hwndAvi, "ANIMATIONFILE");
+				Animate_Open(hwndAvi, _T("ANIMATIONFILE"));
 			}
 
 			// Signal that our window is created:
@@ -896,7 +897,7 @@ INT_PTR CALLBACK DlgProcStatus(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 				MB_YESNO | MB_ICONSTOP | MB_DEFBUTTON2) == IDYES)
 			{
 				g_fStopRequested = true;
-				char * pszMsg;
+				_TCHAR * pszMsg;
 				if (g_rgchActiveProcessDescription[0])
 				{
 					pszMsg = new_sprintf(FetchString(IDC_MESSAGE_QUITTING_P),
@@ -909,9 +910,9 @@ INT_PTR CALLBACK DlgProcStatus(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 				delete[] pszMsg;
 				pszMsg = NULL;
 				SendDlgItemMessage(hwnd, IDC_STATIC_STATUS_SUB, WM_SETTEXT, 0,
-					(LPARAM)"");
+					(LPARAM)_T(""));
 				SendDlgItemMessage(hwnd, IDC_STATIC_STATUS_3RD, WM_SETTEXT, 0,
-					(LPARAM)"");
+					(LPARAM)_T(""));
 				EnableWindow(GetDlgItem(hwnd, IDCANCEL), false);
 				EnableWindow(GetDlgItem(hwnd, IDC_BUTTON_CONTINUE), false);
 			}
@@ -926,14 +927,14 @@ INT_PTR CALLBACK DlgProcStatus(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 			// If we're running in the main thread, this dialog has to commit suicide:
 			if (fPauseStatusDialog)
 			{
-				DisplayStatusText(2, "");
+				DisplayStatusText(2, _T(""));
 				EndDialog(hwnd, 0);
 			}
 
 			break;
 
 			case IDC_BUTTON_CONTINUE: // Main thread, user pressed Continue.
-				DisplayStatusText(2, "");
+				DisplayStatusText(2, _T(""));
 				EndDialog(hwnd, 0);
 				break;
 		}
@@ -1008,7 +1009,7 @@ void ShowStatusDialog()
 		// Mutex does already exist, so we'll stop our creation:
 		::CloseHandle(hMutex);
 		hMutex = NULL;
-		g_Log.Write("ShowStatusDialog: creation/destruction mutex already exists.");
+		g_Log.Write(_T("ShowStatusDialog: creation/destruction mutex already exists."));
 		return;
 	}
 
@@ -1038,23 +1039,23 @@ void ShowStatusDialog()
 
 // Put formatted message into the status dialog at the given position.
 // Caller must NOT delete[] return value.
-const char * DisplayStatusText(int iPosition, const char * pszText, ...)
+const _TCHAR * DisplayStatusText(int iPosition, const _TCHAR * pszText, ...)
 {
 	if (iPosition < 0 || iPosition >= s_kctStatusText)
-		return "";
+		return _T("");
 	if (!pszText)
 	{
 		SendDlgItemMessage(hwndStatusDialog, ridStatusText[iPosition], WM_SETTEXT, 0,
-			(LPARAM)"");
-		return "";
+			(LPARAM)_T(""));
+		return _T("");
 	}
 
 	// Collect variable arguments and format the message:
 	va_list arglist;
 	va_start(arglist, pszText);
-	char * pszStatusText = new_vsprintf(pszText, arglist);
+	_TCHAR * pszStatusText = new_vsprintf(pszText, arglist);
 
-	g_Log.Write("Status text %d: %s", iPosition, pszStatusText);
+	g_Log.Write(_T("Status text %d: %s"), iPosition, pszStatusText);
 
 	// Put the message in the dialog:
 	if (hwndStatusDialog)
@@ -1063,10 +1064,10 @@ const char * DisplayStatusText(int iPosition, const char * pszText, ...)
 			(LPARAM)pszStatusText);
 	}
 	else
-		g_Log.Write("Status Dialog not visible!");
+		g_Log.Write(_T("Status Dialog not visible!"));
 
 	// Save the message in case we need to re-write it:
-	char * pszOld = pszStatusTextCopy[iPosition];
+	_TCHAR * pszOld = pszStatusTextCopy[iPosition];
 	pszStatusTextCopy[iPosition] = pszStatusText;
 	delete[] pszOld;
 
@@ -1107,7 +1108,7 @@ void HideStatusDialog()
 		// Mutex does already exist, so we'll stop our destruction:
 		::CloseHandle(hMutex);
 		hMutex = NULL;
-		g_Log.Write("HideStatusDialog: creation/destruction mutex already exists.");
+		g_Log.Write(_T("HideStatusDialog: creation/destruction mutex already exists."));
 		return;
 	}
 

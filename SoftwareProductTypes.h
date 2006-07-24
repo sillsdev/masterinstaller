@@ -6,7 +6,7 @@
 	to date.
 */
 
-typedef bool (* pfnAuxTestPresence)(const char * pszMinVersion, const char * pszMaxVersion, const char * pszCriticalFile);
-typedef int (* pfnPreInstallation)(const char * pszCriticalFile);
-typedef DWORD (* pfnInstall)(bool fFlag, const char * pszCriticalFile);
-typedef int (* pfnPostInstallation)(const char * pszCriticalFile);
+typedef bool (* pfnAuxTestPresence)(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion, const _TCHAR * pszCriticalFile);
+typedef int (* pfnPreInstallation)(const _TCHAR * pszCriticalFile);
+typedef DWORD (* pfnInstall)(bool fFlag, const _TCHAR * pszCriticalFile);
+typedef int (* pfnPostInstallation)(const _TCHAR * pszCriticalFile);

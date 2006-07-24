@@ -19,13 +19,13 @@ public:
 		knFileFoundWrongCd,
 		knFileOmitted,
 	};
-	int CheckCdPresent(int iCd, bool fAllowNoCd = false, const char * pszSkipMsgProduct = NULL);
-	int EnsureCdForFile(const char * pszFile, int iCd, const char * pszSkipMsgProduct);
-	char * NewFullPath(const char * pszRelativePath);
+	int CheckCdPresent(int iCd, bool fAllowNoCd = false, const _TCHAR * pszSkipMsgProduct = NULL);
+	int EnsureCdForFile(const _TCHAR * pszFile, int iCd, const _TCHAR * pszSkipMsgProduct);
+	_TCHAR * NewFullPath(const _TCHAR * pszRelativePath);
 
 protected:
-	char m_szCurrentDriveRoot[4];
-	char m_szCurrentPath[MAX_PATH];
+	_TCHAR m_szCurrentDriveRoot[4];
+	_TCHAR m_szCurrentPath[MAX_PATH];
 
 	int CurrentCd();
 };

@@ -1,3 +1,5 @@
+#pragma once
+
 // Test for DirectX
 bool TestDirectXPresence(const char * pszMinVersion, const char * pszMaxVersion,
 						 const char * /*pszCriticalFile*/)

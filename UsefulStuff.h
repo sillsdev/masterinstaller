@@ -9,27 +9,27 @@
 #include <windef.h>
 
 extern DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit = true,
-					 const char * pszDescription = NULL,
-					 const char * pszStatusWindowControl = NULL);
+					 const _TCHAR * pszDescription = NULL,
+					 const _TCHAR * pszStatusWindowControl = NULL);
 extern bool Reboot();
 extern void FriendlyReboot();
 extern HRESULT GetFileVersion (LPTSTR filename, VS_FIXEDFILEINFO *pvsf);
-extern char * new_sprintf(const char * pszFormat, ...);
-extern char * new_vsprintf(const char * pszFormat, const va_list arglist);
-extern char * new_ind_sprintf(int nIndent, const char * pszFormat, ...);
-extern char * FetchString(int stid);
-extern void new_sprintf_concat(char *& rpszMain, int ctInsertNewline,
-							   const char * pszAddendumFmt, ...);
-extern void new_vsprintf_concat(char *& rpszMain, int ctInsertNewline,
-								const char * pszAddendumFmt, const va_list arglist);
-extern char * GetInstallerLocation();
-extern __int64 GetHugeVersion(const char * pszVersion);
-extern char * GenVersionText(__int64 nHugeVersion);
-extern bool VersionInRange(__int64 nVersion, const char * pszMinVersion, const char * pszMaxVersion);
-extern bool VersionInRange(const char * pszVersion, const char * pszMinVersion, const char * pszMaxVersion);
-extern bool WriteClipboardText(const char * pszText);
-extern char * GenerateHangingWindowsReport();
+extern _TCHAR * new_sprintf(const _TCHAR * pszFormat, ...);
+extern _TCHAR * new_vsprintf(const _TCHAR * pszFormat, const va_list arglist);
+extern _TCHAR * new_ind_sprintf(int nIndent, const _TCHAR * pszFormat, ...);
+extern _TCHAR * FetchString(int stid);
+extern void new_sprintf_concat(_TCHAR *& rpszMain, int ctInsertNewline,
+							   const _TCHAR * pszAddendumFmt, ...);
+extern void new_vsprintf_concat(_TCHAR *& rpszMain, int ctInsertNewline,
+								const _TCHAR * pszAddendumFmt, const va_list arglist);
+extern _TCHAR * GetInstallerLocation();
+extern __int64 GetHugeVersion(const _TCHAR * pszVersion);
+extern _TCHAR * GenVersionText(__int64 nHugeVersion);
+extern bool VersionInRange(__int64 nVersion, const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion);
+extern bool VersionInRange(const _TCHAR * pszVersion, const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion);
+extern bool WriteClipboardText(const _TCHAR * pszText);
+extern _TCHAR * GenerateHangingWindowsReport();
 
-extern char * my_strdup(const char * pszOriginal);
+extern _TCHAR * my_strdup(const _TCHAR * pszOriginal);
 
-extern char g_rgchActiveProcessDescription[];
+extern _TCHAR g_rgchActiveProcessDescription[];

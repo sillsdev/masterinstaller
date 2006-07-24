@@ -6,6 +6,7 @@
 */
 
 #include <windows.h>
+#include <tchar.h>
 
 #include "PersistantProgress.h"
 #include "resource.h"
@@ -18,17 +19,17 @@
 PersistantProgress g_ProgRecord;
 
 
-const char * PersistantProgress::m_kpszRegKey = "SOFTWARE\\SIL\\Installer\\MasterInstaller";
-const char * PersistantProgress::m_kpszRegValuePhase = "CurrentPhase";
-const char * PersistantProgress::m_kpszRegValueMainList = "MainSelections";
-const char * PersistantProgress::m_kpszRegValueMainListCount = "NumMainSelections";
-const char * PersistantProgress::m_kpszRegValueProduct = "Product_";
-const char * PersistantProgress::m_kpszRegValueRunOnce = "SIL Software Installation";
+const _TCHAR * PersistantProgress::m_kpszRegKey = _T("SOFTWARE\\SIL\\Installer\\MasterInstaller");
+const _TCHAR * PersistantProgress::m_kpszRegValuePhase = _T("CurrentPhase");
+const _TCHAR * PersistantProgress::m_kpszRegValueMainList = _T("MainSelections");
+const _TCHAR * PersistantProgress::m_kpszRegValueMainListCount = _T("NumMainSelections");
+const _TCHAR * PersistantProgress::m_kpszRegValueProduct = _T("Product_");
+const _TCHAR * PersistantProgress::m_kpszRegValueRunOnce = _T("SIL Software Installation");
 
 PersistantProgress::PersistantProgress()
 {
 	m_hKey = NULL;
-	m_pszCmdLine = "";
+	m_pszCmdLine = _T("");
 }
 
 PersistantProgress::~PersistantProgress()
@@ -66,7 +67,7 @@ bool PersistantProgress::RecordExists()
 	return (ERROR_SUCCESS == lResult);
 }
 
-void PersistantProgress::SetCmdLine(const char * pszCmdLine)
+void PersistantProgress::SetCmdLine(const _TCHAR * pszCmdLine)
 {
 	m_pszCmdLine = pszCmdLine;
 }
@@ -75,21 +76,21 @@ void PersistantProgress::WriteRunOnce()
 {
 	HKEY hKey;
 
-	g_Log.Write("Writing RunOnce registry data.");
+	g_Log.Write(_T("Writing RunOnce registry data."));
 
 	LONG lResult = RegCreateKeyEx(HKEY_CURRENT_USER,
-		"Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce", 0, NULL,
+		_T("Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce"), 0, NULL,
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
 	if (ERROR_SUCCESS != lResult)
 		HandleError(kFatal, true, IDC_ERROR_WRITE_REG);
 
 	const int knLen = MAX_PATH + 20;
-	char szPath[knLen];
+	_TCHAR szPath[knLen];
 	GetModuleFileName(NULL, szPath, knLen);
-	char * pszRunOnce = new_sprintf("\"%s\" %s", szPath, m_pszCmdLine);
+	_TCHAR * pszRunOnce = new_sprintf(_T("\"%s\" %s"), szPath, m_pszCmdLine);
 	lResult = RegSetValueEx(hKey, m_kpszRegValueRunOnce, 0, REG_SZ, (LPBYTE)pszRunOnce,
-		(DWORD)strlen(pszRunOnce));
+		(DWORD)_tcslen(pszRunOnce));
 	delete[] pszRunOnce;
 	pszRunOnce = NULL;
 
@@ -129,7 +130,7 @@ void PersistantProgress::WritePhase(int nPhase)
 		HandleError(kFatal, true, IDC_ERROR_WRITE_REG);
 }
 
-bool PersistantProgress::ReadList(const char * pszRegListName, const char * pszRegCountName,
+bool PersistantProgress::ReadList(const _TCHAR * pszRegListName, const _TCHAR * pszRegCountName,
 								  IndexList_t & rgi)
 {
 	rgi.Flush();
@@ -166,7 +167,7 @@ bool PersistantProgress::ReadList(const char * pszRegListName, const char * pszR
 	return true;
 }
 
-void PersistantProgress::WriteList(const char * pszRegListName, const char * pszRegCountName,
+void PersistantProgress::WriteList(const _TCHAR * pszRegListName, const _TCHAR * pszRegCountName,
 								   IndexList_t & rgi)
 {
 	OpenForWrite();
@@ -203,7 +204,7 @@ void PersistantProgress::WriteMainSelectionList(IndexList_t & rgi)
 
 int PersistantProgress::ReadInstallStatus(int iProduct)
 {
-	char * pszRegValue = new_sprintf("%s%d", m_kpszRegValueProduct, iProduct);
+	_TCHAR * pszRegValue = new_sprintf(_T("%s%d"), m_kpszRegValueProduct, iProduct);
 
 	int nStatus = 0;
 	DWORD cbData = sizeof(nStatus);
@@ -221,7 +222,7 @@ int PersistantProgress::ReadInstallStatus(int iProduct)
 
 void PersistantProgress::WriteInstallStatus(int iProduct, int nStatus)
 {
-	char * pszRegValue = new_sprintf("%s%d", m_kpszRegValueProduct, iProduct);
+	_TCHAR * pszRegValue = new_sprintf(_T("%s%d"), m_kpszRegValueProduct, iProduct);
 
 	OpenForWrite();
 	LONG lResult = RegSetValueEx(m_hKey, pszRegValue, 0, REG_DWORD, (LPBYTE)&nStatus,
@@ -246,7 +247,7 @@ void PersistantProgress::RemoveData(bool fReportError)
 
 	HKEY hKey;
 	lResult = RegCreateKeyEx(HKEY_CURRENT_USER,
-		"Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce", 0, NULL,
+		_T("Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce"), 0, NULL,
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
 	if (ERROR_SUCCESS != lResult)

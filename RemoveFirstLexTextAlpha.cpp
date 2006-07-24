@@ -1,11 +1,15 @@
+#pragma once
+
+#include <tTCHAR.h>
+
 // Check if the WW installation of the first alhpa release of LexText is present,
 // and remove it if so.
-int RemoveFirstLexTextAlpha(const char * /*pszCriticalFile*/)
+int RemoveFirstLexTextAlpha(const TTCHAR * /*pszCriticalFile*/)
 {
 	int dwResult = 0;
 
 	// See if the separate WW installation is present:
-	const char * pszProductCodeLT = "{D8D2DBAB-7487-4A6E-B369-7F1932B3BDFE}";
+	const TCHAR * pszProductCodeLT = _T("{D8D2DBAB-7487-4A6E-B369-7F1932B3BDFE}");
 	INSTALLSTATE state = WindowsInstaller.MsiQueryProductState(pszProductCodeLT);
 	bool fInstalled = false;
 	switch (state)
@@ -21,14 +25,14 @@ int RemoveFirstLexTextAlpha(const char * /*pszCriticalFile*/)
 	{
 		// Display status message, and write progress to log file:
 		ShowStatusDialog();
-		g_Log.Write(DisplayStatusText(0, "Removing old LexText Alpha version."));
+		g_Log.Write(DisplayStatusText(0, _T("Removing old LexText Alpha version.")));
 		g_Log.Write(DisplayStatusText(1,
-			"This may take a few minutes."));
-		g_Log.Write(DisplayStatusText(2, ""));
+			_T("This may take a few minutes.")));
+		g_Log.Write(DisplayStatusText(2, _T("")));
 
 		// Remove the WW installation:
-		char * pszCmd = new_sprintf("msiexec /qb /x %s", pszProductCodeLT);
-		dwResult = ExecCmd(pszCmd, false, true, NULL, "Show");
+		TCHAR * pszCmd = new_sprintf(_T("msiexec /qb /x %s"), pszProductCodeLT);
+		dwResult = ExecCmd(pszCmd, false, true, NULL, _T("Show"));
 		delete[] pszCmd;
 	}
 	return int(dwResult != 0);

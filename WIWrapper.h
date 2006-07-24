@@ -11,6 +11,7 @@
 
 #include <windows.h>
 #include <msi.h>
+#include <tchar.h>
 
 class WindowsInstallerWrapper
 {
@@ -19,17 +20,17 @@ public:
 	~WindowsInstallerWrapper();
 	bool Init();
 
-	INSTALLSTATE MsiQueryProductState(LPCSTR pszProduct);
-	INSTALLSTATE MsiQueryFeatureState(LPCSTR pszProduct, LPCSTR pszFeature);
+	INSTALLSTATE MsiQueryProductState(LPCTSTR pszProduct);
+	INSTALLSTATE MsiQueryFeatureState(LPCTSTR pszProduct, LPCTSTR pszFeature);
 	UINT MsiGetProductInfo(LPCTSTR szProduct, LPCTSTR szProperty, LPTSTR lpValueBuf,
 		DWORD * pcchValueBuf);
 
 protected:
 	HMODULE hmodMsi;
-	typedef INSTALLSTATE (WINAPI * MsiQueryProductStateFn)(LPCSTR pszProduct);
+	typedef INSTALLSTATE (WINAPI * MsiQueryProductStateFn)(LPCTSTR pszProduct);
 	MsiQueryProductStateFn _MsiQueryProductState;
-	typedef INSTALLSTATE (WINAPI * MsiQueryFeatureStateFn)(LPCSTR pszProduct,
-		LPCSTR pszFeature);
+	typedef INSTALLSTATE (WINAPI * MsiQueryFeatureStateFn)(LPCTSTR pszProduct,
+		const TCHAR * pszFeature);
 	MsiQueryFeatureStateFn _MsiQueryFeatureState;
 	typedef UINT (WINAPI * MsiGetProductInfoFn)(LPCTSTR szProduct, LPCTSTR szProperty,
 		LPTSTR lpValueBuf, DWORD * pcchValueBuf);

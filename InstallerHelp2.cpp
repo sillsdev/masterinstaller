@@ -8,14 +8,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+#include <tchar.h>
 #include <vector>
 
 #include "FileList.cpp"
 
 HINSTANCE g_hinstDll = NULL;
 
-const char * pszErrorNotAvailable = "Help file not available.";
-const char * pszErrorAccess = "Error accessing help file.";
+const _TCHAR * pszErrorNotAvailable = "Help file not available.";
+const _TCHAR * pszErrorAccess = "Error accessing help file.";
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
@@ -25,19 +26,20 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 
 struct HelpThreadData
 {
-	const char * pszStem;
+	const _TCHAR * pszStem;
 	HANDLE hShutdownEvent;
 };
 
 DWORD WINAPI HelpThread(LPVOID lpParameter)
 {
 	HelpThreadData * htd = (HelpThreadData *)lpParameter;
-	char * pszStem = new char [1 + strlen(htd->pszStem)];
-	strcpy_s(pszStem, 1 + strlen(htd->pszStem), htd->pszStem);
-	unsigned char * pbBuffer = NULL;
+	int cch = 1 + _tcslen(htd->pszStem);
+	_TCHAR * pszStem = new _TCHAR [cch];
+	_tcscpy_s(pszStem, cch, 1 + _tcslen(htd->pszStem), htd->pszStem);
+	unsigned _TCHAR * pbBuffer = NULL;
 	int cbSize = 0;
 	// Look for embedded extension:
-	char * pszExtn = strrchr(pszStem, '.');
+	_TCHAR * pszExtn = _tcsrchr(pszStem, '.');
 	if (pszExtn)
 	{
 		*pszExtn = 0;
@@ -61,10 +63,10 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 	}
 
 	// Get the temp path:
-	const char * pszDefaultPath = "C:\\";
-	char pszTempPath[MAX_PATH];
+	const _TCHAR * pszDefaultPath = "C:\\";
+	_TCHAR pszTempPath[MAX_PATH];
 	if (GetTempPath(MAX_PATH, pszTempPath) == 0)
-		strcpy(pszTempPath, pszDefaultPath); // Use default instead
+		_tcscpy_s(pszTempPath, pszDefaultPath); // Use default instead
 	
 	// See if temp path exists:
 	DWORD dwFileAttrib = GetFileAttributes(pszTempPath);
@@ -73,7 +75,7 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 	if (!fExists && stricmp(pszTempPath, pszDefaultPath) != 0)
 	{
 		// Temp path doesn't exist, but we haven't tried the default path yet:
-		strcpy(pszTempPath, pszDefaultPath); // Use default instead
+		_tcscpy_s(pszTempPath, MAX_PATH, pszDefaultPath); // Use default instead
 		GetFileAttributes(pszTempPath);
 		fExists = (dwFileAttrib != INVALID_FILE_ATTRIBUTES &&
 			(dwFileAttrib & FILE_ATTRIBUTE_DIRECTORY));
@@ -88,8 +90,8 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 	// Add stem file name:
 	strcat(pszTempPath, pszStem);
 	// When we run a hlp file, it will lead to the creation of a GID file:
-	char pszGidPath[MAX_PATH];
-	strcpy(pszGidPath, pszTempPath);
+	_TCHAR pszGidPath[MAX_PATH];
+	_tcscpy_s(pszGidPath, MAX_PATH, pszTempPath);
 	strcat(pszGidPath, ".gid");
 	// Add file extension:
 	strcat(pszTempPath, ".");
@@ -117,19 +119,19 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 	if (stricmp(pszExtn, "hlp") == 0)
 	{
 		// Use the WinHlp32.exe file in the Windows directory:
-		char pszWindowsDirectory[MAX_PATH];
+		_TCHAR pszWindowsDirectory[MAX_PATH];
 		unsigned int nWinDirRet = GetWindowsDirectory(pszWindowsDirectory, MAX_PATH);
 		if (nWinDirRet > 0 && nWinDirRet < MAX_PATH)
 		{
 			// Don't allow the path to end with a backslash:
-			int cchLen = (int)strlen(pszWindowsDirectory);
+			int cchLen = (int)_tcslen(pszWindowsDirectory);
 			if (pszWindowsDirectory[cchLen - 1] == '\\')
 				pszWindowsDirectory[cchLen - 1] = 0;
 
 			// Construct our command string:
-			const char * pszHelpCmd = "WinHlp32.exe";
-			char * pszCmd = new char [strlen(pszWindowsDirectory) + strlen(pszHelpCmd) + 
-				strlen(pszTempPath) + 7];
+			const _TCHAR * pszHelpCmd = "WinHlp32.exe";
+			_TCHAR * pszCmd = new _TCHAR [_tcslen(pszWindowsDirectory) + _tcslen(pszHelpCmd) + 
+				_tcslen(pszTempPath) + 7];
 			sprintf(pszCmd, "\"%s\\%s\" %s", pszWindowsDirectory, pszHelpCmd, pszTempPath);
 
 			// Set up data for creating new process:
@@ -200,7 +202,7 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 	return 0;
 }
 
-HANDLE Help(const char * pszStem, HANDLE hShutdownEvent)
+HANDLE Help(const _TCHAR * pszStem, HANDLE hShutdownEvent)
 {
 	// Carry out our work in a new thread:
 	HelpThreadData * htd = new HelpThreadData; // deleted in thread proc.

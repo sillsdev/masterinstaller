@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <stdio.h>
+#include <tchar.h>
 
 #include "ProductManager.h"
 #include "ErrorHandler.h"
@@ -20,7 +21,7 @@
 class SoftwareProduct
 {
 public:
-#include "SoftwareProductMembers.h"	
+#include "SoftwareProductMembers.h"
 
 	IndexList_t m_rgiPrerequisites;
 	IndexList_t m_rgiRequirements;
@@ -38,17 +39,17 @@ public:
 	};
 	v_Installation m_InstallStatus;
 	bool m_fCriticalFileLanguageUnavailable;
-	char * m_pszCriticalFile;
+	_TCHAR * m_pszCriticalFile;
 
 	bool CriticalFileLanguageUnavailable();
-	const char * GetDownloadUrl() { return m_kpszDownloadUrl; }
-	char * new_LanguageDecodedString(const char * pszTemplate);
-	char * new_InterpretString(const char * pszTemplate);
+	const _TCHAR * GetDownloadUrl() { return m_kpszDownloadUrl; }
+	_TCHAR * new_LanguageDecodedString(const _TCHAR * pszTemplate);
+	_TCHAR * new_InterpretString(const _TCHAR * pszTemplate);
 	bool PossibleToTestPresence() const;
 	bool TestPresence();
-	bool TestPresence(const char * pszVersion);
-	bool TestPresence(const char * pszMinVersion, const char * pszMaxVersion);
-	const char * GetCriticalFile();
+	bool TestPresence(const _TCHAR * pszVersion);
+	bool TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion);
+	const _TCHAR * GetCriticalFile();
 	bool IsInstallable();
 	DWORD RunInstaller();
 	bool Install();
@@ -64,17 +65,17 @@ public:
 // whole string is returned.
 // If there is at least one token present, but no language matches, NULL is returned.
 // Caller must delete[] return value.
-char * SoftwareProduct::new_LanguageDecodedString(const char * pszTemplate)
+_TCHAR * SoftwareProduct::new_LanguageDecodedString(const _TCHAR * pszTemplate)
 {
 	if (!pszTemplate)
 		return NULL;
 
 	// Make a working copy that we can manipulate:
-	char * pszTemplateCopy = my_strdup(pszTemplate);
+	_TCHAR * pszTemplateCopy = my_strdup(pszTemplate);
 
 	// Search for "$LANG$" string:
-	const char * kpszToken = "$LANG$";
-	char * pszNextToken = strstr(pszTemplateCopy, kpszToken);
+	const _TCHAR * kpszToken = _T("$LANG$");
+	_TCHAR * pszNextToken = _tcsstr(pszTemplateCopy, kpszToken);
 	if (!pszNextToken)
 	{
 		// There are no language specifiers in the string:
@@ -82,27 +83,27 @@ char * SoftwareProduct::new_LanguageDecodedString(const char * pszTemplate)
 	}
 	do
 	{
-		char * pszToken = pszNextToken;
+		_TCHAR * pszToken = pszNextToken;
 		bool fSubLang = false;
-		int nTokenLen = (int)strlen(kpszToken);
-		const char * kpszSubToken = "$LANG$SUB$";
+		int nTokenLen = (int)_tcslen(kpszToken);
+		const _TCHAR * kpszSubToken = _T("$LANG$SUB$");
 		// See if Sublanguage is included:
-		if (strncmp(pszToken, kpszSubToken, strlen(kpszSubToken)) == 0)
+		if (_tcsncmp(pszToken, kpszSubToken, _tcslen(kpszSubToken)) == 0)
 		{
 			fSubLang = true;
-			nTokenLen = (int)strlen(kpszSubToken);
+			nTokenLen = (int)_tcslen(kpszSubToken);
 		}
 
 		// Read number part of token:
 		pszToken += nTokenLen;
-		DWORD langid = atoi(pszToken);
+		DWORD langid = _tstoi(pszToken);
 
 		// Jump past end of token:
-		pszToken = strchr(pszToken, '$');
+		pszToken = _tcschr(pszToken, _TCHAR('$'));
 		pszToken++;
 
 		// Find next "$LANG$" token:
-		pszNextToken = strstr(pszToken, kpszToken);
+		pszNextToken = _tcsstr(pszToken, kpszToken);
 
 		// See if the language description matches current Windows language:
 		bool fLanguageMatches = false;
@@ -123,7 +124,7 @@ char * SoftwareProduct::new_LanguageDecodedString(const char * pszTemplate)
 			// Make copy of relevant part of string:
 			if (pszNextToken)
 				*pszNextToken = 0;
-			char * pszResult = my_strdup(pszToken);		
+			_TCHAR * pszResult = my_strdup(pszToken);		
 			delete[] pszTemplateCopy;
 			return pszResult;
 		}
@@ -136,56 +137,56 @@ char * SoftwareProduct::new_LanguageDecodedString(const char * pszTemplate)
 // Parses the given string, replacing special tokens with runtime data. Returns newly created
 // string with interpretted data.
 // Caller must delete[] return value.
-char * SoftwareProduct::new_InterpretString(const char * pszTemplate)
+_TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 {
 	if (!pszTemplate)
 		return NULL;
 
-	char * pszResult = NULL;
+	_TCHAR * pszResult = NULL;
 	// Make a working copy that we can manipulate:
-	char * pszTemplateCopy = my_strdup(pszTemplate);
+	_TCHAR * pszTemplateCopy = my_strdup(pszTemplate);
 
 	// Search for "<CriticalFile>" string:
-	const char * kpszCritFileToken = "$CriticalFile$";
-	char * pszCritFileToken = strstr(pszTemplateCopy, kpszCritFileToken);
+	const _TCHAR * kpszCritFileToken = _T("$CriticalFile$");
+	_TCHAR * pszCritFileToken = _tcsstr(pszTemplateCopy, kpszCritFileToken);
 	if (pszCritFileToken)
 	{
 		// Cut off string at the token:
 		*pszCritFileToken = 0;
 		// Got the token, so perform the substitution:
-		char * pszIntermediate = new_sprintf("%s%s%s", pszTemplateCopy, GetCriticalFile(),
-			(pszCritFileToken + strlen(kpszCritFileToken)));
+		_TCHAR * pszIntermediate = new_sprintf(_T("%s%s%s"), pszTemplateCopy, GetCriticalFile(),
+			(pszCritFileToken + _tcslen(kpszCritFileToken)));
 
 		// Now recurse, to see if any more text needs interpretting:
 		pszResult = new_InterpretString(pszIntermediate);
 		delete[] pszIntermediate;
 	}
 
-	// Search for '%' character (environment variable):
-	char * pszFirstPercent = strchr(pszTemplateCopy, '%');
+	// Search for '%' _TCHARacter (environment variable):
+	_TCHAR * pszFirstPercent = _tcschr(pszTemplateCopy, _TCHAR('%'));
 	if (pszFirstPercent)
 	{
-		// We have a '%' character. See if there is a second:
-		char * pszSecondPercent = strchr(pszFirstPercent + 1, '%');
+		// We have a '%' _TCHARacter. See if there is a second:
+		_TCHAR * pszSecondPercent = _tcschr(pszFirstPercent + 1, _TCHAR('%'));
 		if (pszSecondPercent)
 		{
-			// There are two '%' characters, so we will assume we have to substitute text with
+			// There are two '%' _TCHARacters, so we will assume we have to substitute text with
 			// the value of the given environment variable:
 			*pszFirstPercent = 0;
 			*pszSecondPercent = 0;
-			char * pszEnvVarName = pszFirstPercent + 1;
+			_TCHAR * pszEnvVarName = pszFirstPercent + 1;
 			const int cchEnvValue = 32767;
-			char szEnvValue[cchEnvValue];
+			_TCHAR szEnvValue[cchEnvValue];
 			if (!GetEnvironmentVariable(pszEnvVarName, szEnvValue, cchEnvValue))
 			{
-				char * pszMsg = new_sprintf("A request to evaluate Environment Variable \"%s\""
-					" failed.", pszEnvVarName);
+				_TCHAR * pszMsg = new_sprintf(_T("A request to evaluate Environment Variable \"%s\"")
+					_T(" failed."), pszEnvVarName);
 				HandleError(kNonFatal, false, IDC_ERROR_INTERNAL, pszMsg);
 				delete[] pszMsg;
 				return pszTemplateCopy;
 			}
 			// Got the value, so perform the substitution:
-			char * pszIntermediate = new_sprintf("%s%s%s", pszTemplateCopy, szEnvValue,
+			_TCHAR * pszIntermediate = new_sprintf(_T("%s%s%s"), pszTemplateCopy, szEnvValue,
 				(pszSecondPercent + 1));
 
 			// Now recurse, to see if any more text needs interpretting:
@@ -194,48 +195,48 @@ char * SoftwareProduct::new_InterpretString(const char * pszTemplate)
 		}
 	} // End search for environment variables
 
-	// Search for '[' character (registry data):
-	char * pszOpenBracket = strchr(pszTemplateCopy, '[');
+	// Search for '[' _TCHARacter (registry data):
+	_TCHAR * pszOpenBracket = _tcschr(pszTemplateCopy, _TCHAR('['));
 	if (pszOpenBracket)
 	{
-		// We have a '[' character. See if there is a ']':
-		char * pszCloseBracket = strchr(pszOpenBracket + 1, ']');
+		// We have a '[' _TCHARacter. See if there is a ']':
+		_TCHAR * pszCloseBracket = _tcschr(pszOpenBracket + 1, _TCHAR(']'));
 		if (pszCloseBracket)
 		{
 			// There are matching brackets, so we will assume we have to substitute text with
 			// the value of the given registry data:
 			*pszOpenBracket = 0;
 			*pszCloseBracket = 0;
-			char * pszRegKey = pszOpenBracket + 1;
-			char * pszRegKeyCopy = my_strdup(pszRegKey);
+			_TCHAR * pszRegKey = pszOpenBracket + 1;
+			_TCHAR * pszRegKeyCopy = my_strdup(pszRegKey);
 			HKEY hKeyRoot = NULL;
-			char * pszValue = strstr(pszRegKey, "::");
+			_TCHAR * pszValue = _tcsstr(pszRegKey, _T("::"));
 			if (pszValue)
 			{
 				*pszValue = 0;
 				pszValue += 2;
 			}
-			char * pszRegSubKey = strchr(pszRegKey, '\\');
+			_TCHAR * pszRegSubKey = _tcschr(pszRegKey, _TCHAR('\\'));
 			if (pszRegSubKey)
 			{
 				*pszRegSubKey = 0;
 				pszRegSubKey++;
 			}
-			if (strcmp(pszRegKey, "HKEY_CLASSES_ROOT") == 0 || strcmp(pszRegKey, "HKCR") == 0)
+			if (_tcscmp(pszRegKey, _T("HKEY_CLASSES_ROOT")) == 0 || _tcscmp(pszRegKey, _T("HKCR")) == 0)
 				hKeyRoot = HKEY_CLASSES_ROOT;
-			else if (strcmp(pszRegKey, "HKEY_CURRENT_USER") == 0 || strcmp(pszRegKey, "HKCU") == 0)
+			else if (_tcscmp(pszRegKey, _T("HKEY_CURRENT_USER")) == 0 || _tcscmp(pszRegKey, _T("HKCU")) == 0)
 				hKeyRoot = HKEY_CURRENT_USER;
-			else if (strcmp(pszRegKey, "HKEY_LOCAL_MACHINE") == 0 || strcmp(pszRegKey, "HKLM") == 0)
+			else if (_tcscmp(pszRegKey, _T("HKEY_LOCAL_MACHINE")) == 0 || _tcscmp(pszRegKey, _T("HKLM")) == 0)
 				hKeyRoot = HKEY_LOCAL_MACHINE;
-			else if (strcmp(pszRegKey, "HKEY_USERS") == 0 || strcmp(pszRegKey, "HKU") == 0)
+			else if (_tcscmp(pszRegKey, _T("HKEY_USERS")) == 0 || _tcscmp(pszRegKey, _T("HKU")) == 0)
 				hKeyRoot = HKEY_USERS;
-			else if (strcmp(pszRegKey, "HKEY_DYN_DATA") == 0 || strcmp(pszRegKey, "HKDD") == 0)
+			else if (_tcscmp(pszRegKey, _T("HKEY_DYN_DATA")) == 0 || _tcscmp(pszRegKey, _T("HKDD")) == 0)
 				hKeyRoot = HKEY_DYN_DATA;
 
 			HKEY hKey;
 			LONG lResult = RegOpenKeyEx(hKeyRoot, pszRegSubKey, 0, KEY_READ, &hKey);
 			const int cchKeyData = 32767;
-			char szKeyData[cchKeyData];
+			_TCHAR szKeyData[cchKeyData];
 			if (ERROR_SUCCESS == lResult)
 			{
 				DWORD cbData = sizeof(szKeyData);
@@ -246,8 +247,8 @@ char * SoftwareProduct::new_InterpretString(const char * pszTemplate)
 			}
 			if (ERROR_SUCCESS != lResult)
 			{
-				char * pszMsg = new_sprintf("A request to evaluate Registry Data \"%s\""
-					" failed.", pszRegKeyCopy);
+				_TCHAR * pszMsg = new_sprintf(_T("A request to evaluate Registry Data \"%s\"")
+					_T(" failed."), pszRegKeyCopy);
 				delete[] pszRegKeyCopy;
 				pszRegKeyCopy = NULL;
 				HandleError(kNonFatal, false, IDC_ERROR_INTERNAL, pszMsg);
@@ -258,7 +259,7 @@ char * SoftwareProduct::new_InterpretString(const char * pszTemplate)
 			pszRegKeyCopy = NULL;
 
 			// Got the value, so perform the substitution:
-			char * pszIntermediate = new_sprintf("%s%s%s", pszTemplateCopy, szKeyData,
+			_TCHAR * pszIntermediate = new_sprintf(_T("%s%s%s"), pszTemplateCopy, szKeyData,
 				(pszCloseBracket + 1));
 
 			// Now recurse, to see if any more text needs interpretting:
@@ -294,14 +295,14 @@ bool SoftwareProduct::TestPresence()
 }
 
 // Test for presence of a specific version of a product.
-bool SoftwareProduct::TestPresence(const char * pszVersion)
+bool SoftwareProduct::TestPresence(const _TCHAR * pszVersion)
 {
 	return TestPresence(pszVersion, pszVersion);
 }
 
 // Test for presence of a product within a range of versions. Note that if it is not possible to
 // test for a particluar product, this funtion returns false - as if it is not present.
-bool SoftwareProduct::TestPresence(const char * pszMinVersion, const char * pszMaxVersion)
+bool SoftwareProduct::TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion)
 {
 	bool fPresent = false; // Assume the worst, to start with.
 
@@ -338,13 +339,13 @@ bool SoftwareProduct::TestPresence(const char * pszMinVersion, const char * pszM
 			{
 				fPresent = true;
 
-				g_Log.Write(".msi installation is present.");
+				g_Log.Write(_T(".msi installation is present."));
 
 				// Product is installed, but check if an upgrade is required:
 				if (m_kpszMsiVersion)
 				{
 					const int kcchVersion = 256;
-					char szIntalledVersion[kcchVersion];
+					_TCHAR szIntalledVersion[kcchVersion];
 					DWORD cch = kcchVersion;
 					if (WindowsInstaller.MsiGetProductInfo(m_kpszMsiProductCode,
 						INSTALLPROPERTY_VERSIONSTRING, szIntalledVersion, &cch)
@@ -354,7 +355,7 @@ bool SoftwareProduct::TestPresence(const char * pszMinVersion, const char * pszM
 							pszMaxVersion))
 						{
 							fPresent = false;
-							g_Log.Write("Version %s is installed, but version %s is available.",
+							g_Log.Write(_T("Version %s is installed, but version %s is available."),
 								szIntalledVersion, m_kpszMsiVersion);
 						}
 					}
@@ -364,11 +365,11 @@ bool SoftwareProduct::TestPresence(const char * pszMinVersion, const char * pszM
 	} // End if product code exists
 
 	if (!pszMinVersion)
-		pszMinVersion = "any";
+		pszMinVersion = _T("any");
 	if (!pszMaxVersion)
-		pszMaxVersion = "any";
-	g_Log.Write("%s (version %s through %s): %s", m_kpszNiceName, pszMinVersion, pszMaxVersion,
-		(fPresent ? "present" : "absent"));
+		pszMaxVersion = _T("any");
+	g_Log.Write(_T("%s (version %s through %s): %s"), m_kpszNiceName, pszMinVersion, pszMaxVersion,
+		(fPresent ? _T("present") : _T("absent")));
 
 	return fPresent;
 }
@@ -383,7 +384,7 @@ bool SoftwareProduct::CriticalFileLanguageUnavailable()
 
 // Returns the critical file of the product. Without it, we deduce that the product is not
 // on the current CD.
-const char * SoftwareProduct::GetCriticalFile()
+const _TCHAR * SoftwareProduct::GetCriticalFile()
 {
 	if (m_pszCriticalFile)
 		return m_pszCriticalFile;
@@ -405,7 +406,7 @@ const char * SoftwareProduct::GetCriticalFile()
 	if (!m_pszCriticalFile)
 	{
 		m_fCriticalFileLanguageUnavailable = true;
-		return "";
+		return _T("");
 	}
 
 	return m_pszCriticalFile;
@@ -437,45 +438,45 @@ DWORD SoftwareProduct::RunInstaller()
 	else
 	{
 		// External program:
-		const char * pszCmd = m_kpszInstallerFlagTrue;
+		const _TCHAR * pszCmd = m_kpszInstallerFlagTrue;
 
 		// See if we're to use the standard Windows Installer mechanism:
 		if (!m_kpszInstallerFlagTrue && m_kpszMsiProductCode)
 		{
 			// We'll be using Windows Installer.
-			g_Log.Write("Windows installer will be used.");
-			const char * kpszInstallFlags = "/i";
+			g_Log.Write(_T("Windows installer will be used."));
+			const _TCHAR * kpszInstallFlags = _T("/i");
 
 			// See if we need to test for a minor upgrade:
 			if (m_kpszMsiVersion)
 			{
-				g_Log.Write("MsiVersion %s specified.", m_kpszMsiVersion);
+				g_Log.Write(_T("MsiVersion %s specified."), m_kpszMsiVersion);
 
 				// Get version number of installed instance:
 				const int kcchVersion = 256;
-				char szIntalledVersion[kcchVersion];
+				_TCHAR szIntalledVersion[kcchVersion];
 				DWORD cch = kcchVersion;
 				if (WindowsInstaller.MsiGetProductInfo(m_kpszMsiProductCode,
 					INSTALLPROPERTY_VERSIONSTRING, szIntalledVersion, &cch)	== ERROR_SUCCESS)
 				{
-					g_Log.Write("Version %s already installed.", szIntalledVersion);
+					g_Log.Write(_T("Version %s already installed."), szIntalledVersion);
 					// Another version is installed, so check if its version is less than ours:
 					__int64 nIntalledVersion = GetHugeVersion(szIntalledVersion);
 					__int64 nOurVersion = GetHugeVersion(m_kpszMsiVersion);
 					if (nOurVersion > nIntalledVersion)
 					{
-						g_Log.Write("Minor upgrade will be performed.");
-						kpszInstallFlags = "/fvomus";
+						g_Log.Write(_T("Minor upgrade will be performed."));
+						kpszInstallFlags = _T("/fvomus");
 						if (m_kpszMsiUpgrade)
 							kpszInstallFlags = m_kpszMsiUpgrade;
 					}
 				}
 			}
 			// Run msiexec:
-			char * pszMsiExec = new_sprintf("MsiExec.exe %s \"%s\" %s", kpszInstallFlags,
-				GetCriticalFile(), m_kpszMsiFlags? m_kpszMsiFlags : "");
+			_TCHAR * pszMsiExec = new_sprintf(_T("MsiExec.exe %s \"%s\" %s"), kpszInstallFlags,
+				GetCriticalFile(), m_kpszMsiFlags? m_kpszMsiFlags : _T(""));
 
-			g_Log.Write("About to run \"%s\"", pszMsiExec);
+			g_Log.Write(_T("About to run \"%s\""), pszMsiExec);
 
 			nResult = ExecCmd(pszMsiExec, true, true, m_kpszNiceName,
 				m_kpszStatusWindowControl);
@@ -492,7 +493,7 @@ DWORD SoftwareProduct::RunInstaller()
 			if (pszCmd)
 			{
 				// Parse the given string, replacing special tokens with runtime data:
-				char * pszModCmd = new_InterpretString(pszCmd);
+				_TCHAR * pszModCmd = new_InterpretString(pszCmd);
 				nResult = ExecCmd(pszModCmd, true, true, m_kpszNiceName,
 					m_kpszStatusWindowControl);
 				delete[] pszModCmd;
@@ -508,7 +509,7 @@ DWORD SoftwareProduct::RunInstaller()
 				}
 			}
 			else
-				g_Log.Write("Installer command string is empty!");
+				g_Log.Write(_T("Installer command string is empty!"));
 		}
 	}
 	return nResult;
@@ -544,20 +545,20 @@ bool SoftwareProduct::Install()
 			bool fTestHanging = true;
 			while (fTestHanging)
 			{
-				g_Log.Write("Testing for hanging windows (for %s)", m_kpszNiceName);
+				g_Log.Write(_T("Testing for hanging windows (for %s)"), m_kpszNiceName);
 				ShowStatusDialog();
-				const char * pszMsg = DisplayStatusText(0,
+				const _TCHAR * pszMsg = DisplayStatusText(0,
 					FetchString(IDC_MESSAGE_TEST_HANGING));
-				char * pszHangingReport = GenerateHangingWindowsReport();
+				_TCHAR * pszHangingReport = GenerateHangingWindowsReport();
 				if (pszHangingReport != NULL)
 				{
 					HideStatusDialog();
 
-					char * pszIntro1 = new_sprintf(
+					_TCHAR * pszIntro1 = new_sprintf(
 						FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_1), m_kpszNiceName);
-					char * pszIntro2 = new_sprintf(
+					_TCHAR * pszIntro2 = new_sprintf(
 						FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_2), m_kpszNiceName);
-					char * pszAlert = new_sprintf("%s\n%s\n\n%s", pszIntro1, pszHangingReport,
+					_TCHAR * pszAlert = new_sprintf(_T("%s\n%s\n\n%s"), pszIntro1, pszHangingReport,
 						pszIntro2);
 
 					delete[] pszIntro1;
@@ -581,7 +582,7 @@ bool SoftwareProduct::Install()
 							if (MessageBox(NULL, FetchString(IDC_MESSAGE_CONFIRM_QUIT_GENERAL),
 								g_pszTitle, MB_YESNO) == IDYES)
 							{
-								g_Log.Write("User opted to quit.");
+								g_Log.Write(_T("User opted to quit."));
 								delete[] pszAlert;
 								pszAlert = NULL;
 								throw UserQuitException;
@@ -595,10 +596,10 @@ bool SoftwareProduct::Install()
 					switch (idResult)
 					{
 					case IDRETRY:
-						g_Log.Write("User pressed Retry.");
+						g_Log.Write(_T("User pressed Retry."));
 						break;
 					case IDIGNORE:
-						g_Log.Write("User pressed Ignore.");
+						g_Log.Write(_T("User pressed Ignore."));
 						fTestHanging = false;
 						break;
 					}
@@ -606,7 +607,7 @@ bool SoftwareProduct::Install()
 				else
 				{
 					fTestHanging = false;
-					g_Log.Write("No hanging windows.");
+					g_Log.Write(_T("No hanging windows."));
 				}
 			} // End while(fTestHanging)
 		}// End if (m_fMustKillHangingWindows)
@@ -644,39 +645,39 @@ bool SoftwareProduct::Install()
 				int nReturn = 0;
 				if (m_pfnPreInstallation)
 				{
-					g_Log.Write("Calling pre-installation function...");
+					g_Log.Write(_T("Calling pre-installation function..."));
 					nReturn = m_pfnPreInstallation(GetCriticalFile());
-					g_Log.Write("...Done. Pre-installation function returned %d", nReturn);
+					g_Log.Write(_T("...Done. Pre-installation function returned %d"), nReturn);
 				}
 				if (m_kpszPreInstallation)
 				{
-					g_Log.Write("Executing pre-installation program '%s'...", m_kpszPreInstallation);
+					g_Log.Write(_T("Executing pre-installation program '%s'..."), m_kpszPreInstallation);
 					nReturn = ExecCmd(m_kpszPreInstallation, true, true);
-					g_Log.Write("...Done. Pre-installation program returned %d", nReturn);
+					g_Log.Write(_T("...Done. Pre-installation program returned %d"), nReturn);
 				}
 				if (m_fIngnorePreInstallationErrors)
 				{
 					nReturn = 0;
-					g_Log.Write("Ignoring returned error code.", nReturn);
+					g_Log.Write(_T("Ignoring returned error code."), nReturn);
 				}
 				fCalledPreInstallFunction = true;
 				if (nReturn != 0)
 				{
-					g_Log.Write("Skipping product installation");
+					g_Log.Write(_T("Skipping product installation"));
 					return false;
 				}
 			}
 
 			// Display status message, and write progress to log file:
-			const char * pszMsg = DisplayStatusText(0, FetchString(IDC_MESSAGE_INSTALLING),
+			const _TCHAR * pszMsg = DisplayStatusText(0, FetchString(IDC_MESSAGE_INSTALLING),
 				m_kpszNiceName);
 			g_Log.Write(pszMsg);
 			DisplayStatusText(1, m_kpszCommentary);
 
-			g_Log.Write("Launching installer for %s: %s.", m_kpszNiceName,
-				(nFileResult == DiskManager_t::knCorrectCdAlready ? "correct CD already" :
-				(nFileResult == DiskManager_t::knCorrectCdFinally ? "correct CD finally" :
-				"file found on wrong cd")));
+			g_Log.Write(_T("Launching installer for %s: %s."), m_kpszNiceName,
+				(nFileResult == DiskManager_t::knCorrectCdAlready ? _T("correct CD already") :
+				(nFileResult == DiskManager_t::knCorrectCdFinally ? _T("correct CD finally") :
+				_T("file found on wrong cd"))));
 
 			// Run installer:
 			DWORD dwResult = RunInstaller();
@@ -685,23 +686,23 @@ bool SoftwareProduct::Install()
 
 			// Check to see if the installation worked:
 			DisplayStatusText(0, FetchString(IDC_MESSAGE_EVALUATING));
-			DisplayStatusText(1, "");
+			DisplayStatusText(1, _T(""));
 
 			bool fOfferAbortRetryOrIgnore = false;
 			m_InstallStatus = InstallSucceeded;
-			char * pszRetry = NULL;
+			_TCHAR * pszRetry = NULL;
 
 			if (dwResult == ERROR_SUCCESS_REBOOT_REQUIRED
 				|| dwResult == ERROR_SUCCESS_RESTART_REQUIRED)
 			{
 				// Product installed and requested a reboot:
-				g_Log.Write("%s installed and requested a reboot.", m_kpszNiceName);
+				g_Log.Write(_T("%s installed and requested a reboot."), m_kpszNiceName);
 				g_fRebootPending = true;
 
 				// If the MustNotDelayReboot flag is set, do the reboot now:
 				if (m_fMustNotDelayReboot)
 				{
-					g_Log.Write("Reboot must not be delayed.");
+					g_Log.Write(_T("Reboot must not be delayed."));
 					FriendlyReboot();
 				}
 			}
@@ -717,7 +718,7 @@ bool SoftwareProduct::Install()
 			{
 				// User quit installer:
 				m_InstallStatus = InstallFailedUserAbandoned;
-				g_Log.Write("User quit installing %s.", m_kpszNiceName);
+				g_Log.Write(_T("User quit installing %s."), m_kpszNiceName);
 				pszRetry = new_sprintf(FetchString(IDC_ERROR_USER_QUIT_INSTALLER),
 					m_kpszNiceName);
 				fOfferAbortRetryOrIgnore = true;
@@ -728,7 +729,7 @@ bool SoftwareProduct::Install()
 				if (PossibleToTestPresence() && !TestPresence())
 				{
 					m_InstallStatus = InstallFailed;
-					g_Log.Write("%s is still not there!", m_kpszNiceName);
+					g_Log.Write(_T("%s is still not there!"), m_kpszNiceName);
 					pszRetry = new_sprintf(FetchString(IDC_ERROR_INSTALLATION), m_kpszNiceName);
 					fOfferAbortRetryOrIgnore = true;
 				}
@@ -747,27 +748,27 @@ bool SoftwareProduct::Install()
 				switch(nResult)
 				{
 				case IDABORT:
-					g_Log.Write("User opted to abort.");
+					g_Log.Write(_T("User opted to abort."));
 					throw UserQuitException;
 					break;
 				case IDRETRY:
 					fRepeat = true;
-					g_Log.Write("User opted to retry.");
+					g_Log.Write(_T("User opted to retry."));
 					break;
 				default: // IDIGNORE
-					g_Log.Write("User opted to ignore.");
+					g_Log.Write(_T("User opted to ignore."));
 					return false;
 				}
 			}
 		} // End if file found
 		else if (nFileResult == DiskManager_t::knUserQuit)
 		{
-			g_Log.Write("User quit during checking disk for %s.", m_kpszNiceName);
+			g_Log.Write(_T("User quit during checking disk for %s."), m_kpszNiceName);
 			throw UserQuitException;
 		}
 		else if (nFileResult == DiskManager_t::knUserSkip)
 		{
-			g_Log.Write("User chose to skip %s.", m_kpszNiceName);
+			g_Log.Write(_T("User chose to skip %s."), m_kpszNiceName);
 			m_InstallStatus = InstallFailedUserAbandoned;
 			return false;
 		}
@@ -776,7 +777,7 @@ bool SoftwareProduct::Install()
 		{
 			// The software is not on the CD, so assume it is a "Lite" CD, where
 			// user has to do some work himself:
-			const char * pszUrl = GetDownloadUrl();
+			const _TCHAR * pszUrl = GetDownloadUrl();
 			if (pszUrl)
 				HandleError(kNonFatal, false, IDC_ERROR_FILE_MISSING_URL, m_kpszNiceName, pszUrl);
 			else
@@ -788,15 +789,15 @@ bool SoftwareProduct::Install()
 
 	if (m_pfnPostInstallation)
 	{
-		g_Log.Write("Calling post-installation function...");
+		g_Log.Write(_T("Calling post-installation function..."));
 		int nReturn = m_pfnPostInstallation(GetCriticalFile());
-		g_Log.Write("...Done. Post-installation function returned %d", nReturn);
+		g_Log.Write(_T("...Done. Post-installation function returned %d"), nReturn);
 	}
 	if (m_kpszPostInstallation)
 	{
-		g_Log.Write("Executing post-installation program '%s'...", m_kpszPostInstallation);
+		g_Log.Write(_T("Executing post-installation program '%s'..."), m_kpszPostInstallation);
 		int nReturn = ExecCmd(m_kpszPostInstallation, true, true);
-		g_Log.Write("...Done. Post-installation program returned %d", nReturn);
+		g_Log.Write(_T("...Done. Post-installation program returned %d"), nReturn);
 	}
 
 	return true;
@@ -840,23 +841,23 @@ public:
 	virtual bool GetRebootTestRegPendingFlag(int iProduct) const;
 	virtual bool GetRebootWininitFlag(int iProduct) const;
 	virtual bool PossibleToTestPresence(int iProduct) const;
-	virtual bool TestPresence(int iProduct, const char * pszMinVersion = NULL,
-		const char * pszMaxVersion = NULL);
-	virtual const char * GetName(int iProduct) const;
-	virtual const char * GetCommentary(int iProduct) const;
-	virtual const char * GetStatusWindowControl(int iProduct) const;
-	virtual const char * GetCriticalFile(int iProduct) const;
+	virtual bool TestPresence(int iProduct, const _TCHAR * pszMinVersion = NULL,
+		const _TCHAR * pszMaxVersion = NULL);
+	virtual const _TCHAR * GetName(int iProduct) const;
+	virtual const _TCHAR * GetCommentary(int iProduct) const;
+	virtual const _TCHAR * GetStatusWindowControl(int iProduct) const;
+	virtual const _TCHAR * GetCriticalFile(int iProduct) const;
 	virtual bool CriticalFileLanguageUnavailable(int iProduct) const;
-	virtual const char * GetDownloadUrl(int iProduct) const;
+	virtual const _TCHAR * GetDownloadUrl(int iProduct) const;
 	virtual int GetCdIndex(int iProduct) const;
-	virtual const char * GetHelpTag(int iProduct) const;
+	virtual const _TCHAR * GetHelpTag(int iProduct) const;
 	virtual bool GetHelpTagInternalFlag(int iProduct) const;
-	virtual const char * GetTestPresenceVersion(int iProduct) const;
+	virtual const _TCHAR * GetTestPresenceVersion(int iProduct) const;
 	virtual bool GetMustHaveWin2kOrBetterFlag(int iProduct) const;
 	virtual bool GetMustBeAdminFlag(int iProduct) const;
 	virtual int GetNumProtectedMainProducts() const;
 	virtual void DetermineAvailableMainProducts(ProductKeyHandler_t & ProductKeyHandler,
-		const char * pszKey);
+		const _TCHAR * pszKey);
 	virtual void GenAvailableMainProductList(IndexList_t & rgiProducts,
 		bool fIncludeVisibles) const;
 	virtual int GetNumPermittedMainProducts() const;
@@ -872,11 +873,11 @@ public:
 	virtual bool PriorInstallationFailed(int iProduct) const;
 	virtual bool IsInstallable(int iProduct) const;
 	virtual bool InstallProduct(int iProduct);
-	virtual char * GenReport(int iReportType, IndexList_t * prgiProducts = NULL) const;
+	virtual _TCHAR * GenReport(int iReportType, IndexList_t * prgiProducts = NULL) const;
 	virtual bool GetDependencyMinMaxVersions(int iDependType, int iProduct1, int iProduct2,
-		const char *& pszMinVersion, const char *& pszMaxVersion) const;
-	virtual void ShowReport(const char * pszTitle, const char * pszIntro,
-		const char * pszOkButtonText, bool fConfirmQuit, bool fQuitIsError, int nType,
+		const _TCHAR *& pszMinVersion, const _TCHAR *& pszMaxVersion) const;
+	virtual void ShowReport(const _TCHAR * pszTitle, const _TCHAR * pszIntro,
+		const _TCHAR * pszOkButtonText, bool fConfirmQuit, bool fQuitIsError, int nType,
 		bool fCanToggleType, IndexList_t * rgiProducts = NULL) const;
 	virtual bool ShowFinalReport() const;
 
@@ -884,21 +885,21 @@ protected:
 	void EstablishOverallDependencies();
 	void CheckProductIndex(int iProduct) const;
 	void CheckDependencyType(int iDependType) const;
-	int GetSoftwareProductIndex(const char * pszProduct) const;
+	int GetSoftwareProductIndex(const _TCHAR * pszProduct) const;
 
 	bool m_fPermittedAfterKeyTest[kctSoftwareProducts];
 	bool m_fOnlyVisibleAfterKeyTest[kctSoftwareProducts];
 	int m_ctUnlockedProtectedProducts;
 	int m_ctPermittedAfterKeyTest;
 	int GetMappingIndex(int iDependType, int iProduct1, int iProduct2) const;
-	char * GenFullPrerequisiteReport(const IndexList_t & rgiProducts, int nIndent = 0) const;
-	char * GenFullRequirementReport(const IndexList_t & rgiProducts, int nIndent = 0) const;
-	char * GenInstallFailureReport(int iProduct, int nIndent = 0) const;
-	char * GenPrerequisiteFailureReport(int iProduct, int nIndent = 0) const;
-	char * GenInstallFailureReport(IndexList_t & rgiCandidateProducts, int nIndent = 0) const;
-	char * GenMissingRequirementConsequencesReport(int iProduct, int nIndent = 0) const;
-	char * GenMissingRequirementReport(int iProduct, int nIndent = 0) const;
-	char * GenMissingRequirementReport(int nIndent = 0) const;
+	_TCHAR * GenFullPrerequisiteReport(const IndexList_t & rgiProducts, int nIndent = 0) const;
+	_TCHAR * GenFullRequirementReport(const IndexList_t & rgiProducts, int nIndent = 0) const;
+	_TCHAR * GenInstallFailureReport(int iProduct, int nIndent = 0) const;
+	_TCHAR * GenPrerequisiteFailureReport(int iProduct, int nIndent = 0) const;
+	_TCHAR * GenInstallFailureReport(IndexList_t & rgiCandidateProducts, int nIndent = 0) const;
+	_TCHAR * GenMissingRequirementConsequencesReport(int iProduct, int nIndent = 0) const;
+	_TCHAR * GenMissingRequirementReport(int iProduct, int nIndent = 0) const;
+	_TCHAR * GenMissingRequirementReport(int nIndent = 0) const;
 };
 
 // Creates an instance of a class that implements the IProductManager interface.
@@ -966,7 +967,7 @@ void ProductManager_t::CheckProductIndex(int iProduct) const
 {
 	if (iProduct < 0 || iProduct >= kctSoftwareProducts)
 	{
-		HandleError(kFatal, false, IDC_ERROR_INTERNAL, "invalid product index");
+		HandleError(kFatal, false, IDC_ERROR_INTERNAL, _T("invalid product index"));
 		// Doesn't return
 	}
 }
@@ -976,7 +977,7 @@ void ProductManager_t::CheckDependencyType(int iDependType) const
 {
 	if (iDependType < 0 || iDependType >= depTotal)
 	{
-		HandleError(kFatal, false, IDC_ERROR_INTERNAL, "invalid dependency type");
+		HandleError(kFatal, false, IDC_ERROR_INTERNAL, _T("invalid dependency type"));
 		// Doesn't return
 	}
 }
@@ -1016,9 +1017,9 @@ void ProductManager_t::EstablishOverallDependencies()
 	{
 		for (iMapping = 0; iMapping < s_kMappings[iDependType]; iMapping++)
 		{
-			const char * kpszKeyProduct =
+			const _TCHAR * kpszKeyProduct =
 				s_DependecyMaps[iDependType][iMapping].m_kpszKeyProduct;
-			const char * kpszDependentProduct =
+			const _TCHAR * kpszDependentProduct =
 				s_DependecyMaps[iDependType][iMapping].m_kpszDependentProduct;
 
 			// Find indexes of key and dependent products:
@@ -1043,13 +1044,13 @@ int ProductManager_t::GetMappingIndex(int iDependType, int iProduct1, int iProdu
 	CheckProductIndex(iProduct2);
 	CheckDependencyType(iDependType);
 
-	const char * pszProduct1 = Products[iProduct1].m_kpszInternalName;
-	const char * pszProduct2 = Products[iProduct2].m_kpszInternalName;
+	const _TCHAR * pszProduct1 = Products[iProduct1].m_kpszInternalName;
+	const _TCHAR * pszProduct2 = Products[iProduct2].m_kpszInternalName;
 
 	for (int iMapping = 0; iMapping < s_kMappings[iDependType]; iMapping++)
 	{
-		if (strcmp(s_DependecyMaps[iDependType][iMapping].m_kpszKeyProduct, pszProduct1) == 0 &&
-			strcmp(s_DependecyMaps[iDependType][iMapping].m_kpszDependentProduct, pszProduct2)
+		if (_tcscmp(s_DependecyMaps[iDependType][iMapping].m_kpszKeyProduct, pszProduct1) == 0 &&
+			_tcscmp(s_DependecyMaps[iDependType][iMapping].m_kpszDependentProduct, pszProduct2)
 			== 0)
 		{
 			return iMapping;
@@ -1062,8 +1063,8 @@ int ProductManager_t::GetMappingIndex(int iDependType, int iProduct1, int iProdu
 // the given dependency relationship.
 // Returns true if the versions could be determined.
 bool ProductManager_t::GetDependencyMinMaxVersions(int iDependType, int iProduct1,
-												   int iProduct2, const char *& pszMinVersion,
-												   const char *& pszMaxVersion) const
+												   int iProduct2, const _TCHAR *& pszMinVersion,
+												   const _TCHAR *& pszMaxVersion) const
 {
 	int iMapping = GetMappingIndex(iDependType, iProduct1, iProduct2);
 	if (iMapping == -1)
@@ -1083,29 +1084,29 @@ bool ProductManager_t::PossibleToTestPresence(int iProduct) const
 }
 
 // Returns true if the given product is installed.
-bool ProductManager_t::TestPresence(int iProduct, const char * pszMinVersion,
-									const char * pszMaxVersion)
+bool ProductManager_t::TestPresence(int iProduct, const _TCHAR * pszMinVersion,
+									const _TCHAR * pszMaxVersion)
 {
 	CheckProductIndex(iProduct);
 	return Products[iProduct].TestPresence(pszMinVersion, pszMaxVersion);
 }
 
 // Get the formal name of the given product.
-const char * ProductManager_t::GetName(int iProduct) const
+const _TCHAR * ProductManager_t::GetName(int iProduct) const
 {
 	CheckProductIndex(iProduct);
 	return Products[iProduct].m_kpszNiceName;
 }
 
 // Return the commentary text for installing the given product.
-const char * ProductManager_t::GetCommentary(int iProduct) const
+const _TCHAR * ProductManager_t::GetCommentary(int iProduct) const
 {
 	CheckProductIndex(iProduct);
 	return Products[iProduct].m_kpszCommentary;
 }
 
 // Return the commentary text for installing the given product.
-const char * ProductManager_t::GetStatusWindowControl(int iProduct) const
+const _TCHAR * ProductManager_t::GetStatusWindowControl(int iProduct) const
 {
 	CheckProductIndex(iProduct);
 	return Products[iProduct].m_kpszStatusWindowControl;
@@ -1113,7 +1114,7 @@ const char * ProductManager_t::GetStatusWindowControl(int iProduct) const
 
 // Returns the critical file of the given product. Without it, we deduce that the product is not
 // on the current CD.
-const char * ProductManager_t::GetCriticalFile(int iProduct) const
+const _TCHAR * ProductManager_t::GetCriticalFile(int iProduct) const
 {
 	CheckProductIndex(iProduct);
 
@@ -1127,7 +1128,7 @@ bool ProductManager_t::CriticalFileLanguageUnavailable(int iProduct) const
 	return Products[iProduct].CriticalFileLanguageUnavailable();
 }
 
-const char * ProductManager_t::GetDownloadUrl(int iProduct) const
+const _TCHAR * ProductManager_t::GetDownloadUrl(int iProduct) const
 {
 	CheckProductIndex(iProduct);
 
@@ -1141,7 +1142,7 @@ int ProductManager_t::GetCdIndex(int iProduct) const
 	return Products[iProduct].m_iCd;
 }
 
-const char * ProductManager_t::GetHelpTag(int iProduct) const
+const _TCHAR * ProductManager_t::GetHelpTag(int iProduct) const
 {
 	CheckProductIndex(iProduct);
 	return Products[iProduct].m_kpszHelpTag;
@@ -1153,7 +1154,7 @@ bool ProductManager_t::GetHelpTagInternalFlag(int iProduct) const
 	return Products[iProduct].m_fInternalHelpFile;
 }
 
-const char * ProductManager_t::GetTestPresenceVersion(int iProduct) const
+const _TCHAR * ProductManager_t::GetTestPresenceVersion(int iProduct) const
 {
 	CheckProductIndex(iProduct);
 	return Products[iProduct].m_kpszTestPresenceVersion;
@@ -1186,7 +1187,7 @@ int ProductManager_t::GetNumProtectedMainProducts() const
 // Builds an internal list of products available for selection by user. Products are available
 // if either they are not locked, or the given product key unlocks them.
 void ProductManager_t::DetermineAvailableMainProducts(ProductKeyHandler_t & ProductKeyHandler,
-													  const char * pszKey)
+													  const _TCHAR * pszKey)
 {
 	m_ctUnlockedProtectedProducts = 0;
 	m_ctPermittedAfterKeyTest = 0;
@@ -1287,7 +1288,7 @@ bool ProductManager_t::PrerequisitesNeeded(const IndexList_t & rgiProducts) cons
 // Determine if any required products are still needing to be installed.
 bool ProductManager_t::RequirementsNeeded() const
 {
-	g_Log.Write("Generating list of active requirements...");
+	g_Log.Write(_T("Generating list of active requirements..."));
 	g_Log.Indent();
 
 	// Create a list of needed prerequisites:
@@ -1295,7 +1296,7 @@ bool ProductManager_t::RequirementsNeeded() const
 	GetActiveRequirements(rgiNeeded);
 
 	g_Log.Unindent();
-	g_Log.Write("...Done. Number of active requirements = %d", rgiNeeded.GetCount());
+	g_Log.Write(_T("...Done. Number of active requirements = %d"), rgiNeeded.GetCount());
 
 	// See if any are needed:
 	return (rgiNeeded.GetCount() > 0);
@@ -1325,8 +1326,8 @@ void ProductManager_t::GetActivePrerequisites(const IndexList_t & prgiProducts,
 				continue;
 
 			// See if the required version of the prerequisite is present already:
-			const char * pszMinVersion;
-			const char * pszMaxVersion;
+			const _TCHAR * pszMinVersion;
+			const _TCHAR * pszMaxVersion;
 			if (GetDependencyMinMaxVersions(depPrerequisite, iProduct, iPreReq, pszMinVersion,
 				pszMaxVersion))
 			{
@@ -1372,8 +1373,8 @@ void ProductManager_t::GetActiveRequirements(const IndexList_t & rgiProducts,
 				continue;
 
 			// See if the required version of the required product is present already:
-			const char * pszMinVersion;
-			const char * pszMaxVersion;
+			const _TCHAR * pszMinVersion;
+			const _TCHAR * pszMaxVersion;
 			if (GetDependencyMinMaxVersions(depRequirement, iProduct, iReq, pszMinVersion,
 				pszMaxVersion))
 			{
@@ -1445,14 +1446,14 @@ bool ProductManager_t::InstallProduct(int iProduct)
 // Produce dynamically allocated text describing the full prerequisite list for the given
 // products.
 // Caller must delete[] the returned text.
-char * ProductManager_t::GenFullPrerequisiteReport(const IndexList_t & rgiProducts,
+_TCHAR * ProductManager_t::GenFullPrerequisiteReport(const IndexList_t & rgiProducts,
 												   int nIndent) const
 {
 	if (rgiProducts.GetCount() == 0)
 		return NULL;
 
-	char * pszReport = NULL;
-	char * pszWksp = NULL;
+	_TCHAR * pszReport = NULL;
+	_TCHAR * pszWksp = NULL;
 
 	// Create a 1st-order prerequisite list for each given product:
 	IndexList_t * rgrgiPrerequisites = new IndexList_t [rgiProducts.GetCount()];
@@ -1470,7 +1471,7 @@ char * ProductManager_t::GenFullPrerequisiteReport(const IndexList_t & rgiProduc
 	// Iterate through the complete list, listing each prerequisite product:
 	for (int i = 0; i < rgiPrerequisites.GetCount(); i++)
 	{
-		pszWksp = new_ind_sprintf(nIndent, "%s - %s:", GetName(rgiPrerequisites[i]),
+		pszWksp = new_ind_sprintf(nIndent, _T("%s - %s:"), GetName(rgiPrerequisites[i]),
 			FetchString(IDC_MESSAGE_NEEDED_BY));
 		new_sprintf_concat(pszReport, 1, pszWksp);
 		delete[] pszWksp;
@@ -1496,7 +1497,7 @@ char * ProductManager_t::GenFullPrerequisiteReport(const IndexList_t & rgiProduc
 	rgrgiPrerequisites = NULL;
 
 	// Recurse, to see if any listed prerequisites have prerequistes of their own:
-	char * pszNextLevel = GenFullPrerequisiteReport(rgiPrerequisites, nIndent + 4);
+	_TCHAR * pszNextLevel = GenFullPrerequisiteReport(rgiPrerequisites, nIndent + 4);
 	if (pszNextLevel)
 	{
 		pszWksp = new_ind_sprintf(nIndent, FetchString(IDC_MESSAGE_MORE_PREREQUISITES));
@@ -1515,13 +1516,13 @@ char * ProductManager_t::GenFullPrerequisiteReport(const IndexList_t & rgiProduc
 // Produce dynamically allocated text describing the full requirement list for the given
 // products.
 // Caller must delete[] the returned text.
-char * ProductManager_t::GenFullRequirementReport(const IndexList_t & rgiProducts, int nIndent) const
+_TCHAR * ProductManager_t::GenFullRequirementReport(const IndexList_t & rgiProducts, int nIndent) const
 {
 	if (rgiProducts.GetCount() == 0)
 		return NULL;
 
-	char * pszReport = NULL;
-	char * pszWksp = NULL;
+	_TCHAR * pszReport = NULL;
+	_TCHAR * pszWksp = NULL;
 
 	// Create a 1st-order requirement list for each given product:
 	IndexList_t * rgrgiRequirements = new IndexList_t [rgiProducts.GetCount()];
@@ -1539,7 +1540,7 @@ char * ProductManager_t::GenFullRequirementReport(const IndexList_t & rgiProduct
 	// Iterate through the complete list, listing each required product:
 	for (int i = 0; i < rgiRequirements.GetCount(); i++)
 	{
-		pszWksp = new_ind_sprintf(nIndent, "%s - %s:", GetName(rgiRequirements[i]),
+		pszWksp = new_ind_sprintf(nIndent, _T("%s - %s:"), GetName(rgiRequirements[i]),
 			FetchString(IDC_MESSAGE_NEEDED_BY));
 		new_sprintf_concat(pszReport, 1, pszWksp);
 		delete[] pszWksp;
@@ -1565,7 +1566,7 @@ char * ProductManager_t::GenFullRequirementReport(const IndexList_t & rgiProduct
 	rgrgiRequirements = NULL;
 
 	// See if any listed requirements have any prerequistes:
-	char * pszPrerequisites = GenFullPrerequisiteReport(rgiRequirements, nIndent + 4);
+	_TCHAR * pszPrerequisites = GenFullPrerequisiteReport(rgiRequirements, nIndent + 4);
 	if (pszPrerequisites)
 	{
 		pszWksp = new_ind_sprintf(nIndent, FetchString(IDC_MESSAGE_MORE_PREREQUISITES));
@@ -1585,7 +1586,7 @@ char * ProductManager_t::GenFullRequirementReport(const IndexList_t & rgiProduct
 
 	// Recurse, to see if any listed requirements have requirements of their own:
 	// (This might result in multi-order prerequisites being repeated)
-	char * pszNextLevel = GenFullRequirementReport(rgiRequirements, nIndent + 4);
+	_TCHAR * pszNextLevel = GenFullRequirementReport(rgiRequirements, nIndent + 4);
 	if (pszNextLevel)
 	{
 		pszWksp = new_ind_sprintf(nIndent, FetchString(IDC_MESSAGE_MORE_REQUIREMENTS));
@@ -1604,7 +1605,7 @@ char * ProductManager_t::GenFullRequirementReport(const IndexList_t & rgiProduct
 // Produce dynamically allocated text describing the given product which failed to install
 // and the reasons for the failure.
 // Caller must delete[] the returned text.
-char * ProductManager_t::GenInstallFailureReport(int iProduct, int nIndent) const
+_TCHAR * ProductManager_t::GenInstallFailureReport(int iProduct, int nIndent) const
 {
 	CheckProductIndex(iProduct);
 
@@ -1613,11 +1614,11 @@ char * ProductManager_t::GenInstallFailureReport(int iProduct, int nIndent) cons
 		return NULL; // No, it installed fine.
 
 	// State that the product failed to install:
-	char * pszReport = new_ind_sprintf(nIndent, "%s: ", GetName(iProduct));
+	_TCHAR * pszReport = new_ind_sprintf(nIndent, _T("%s: "), GetName(iProduct));
 
 	// See what the reason for the failure was:
 	int ridReason = 0;
-	char * pszExtraInfo = NULL;
+	_TCHAR * pszExtraInfo = NULL;
 	switch (Products[iProduct].m_InstallStatus)
 	{
 	case SoftwareProduct::InstallNotAttempted:
@@ -1641,7 +1642,7 @@ char * ProductManager_t::GenInstallFailureReport(int iProduct, int nIndent) cons
 	case SoftwareProduct::InstallFailedFileNotFound:
 		ridReason = IDC_ERROR_INSTALL_FILE_NOT_FOUND;
 		if (Products[iProduct].GetDownloadUrl())
-			pszExtraInfo = new_sprintf(" %s %s", FetchString(IDC_ERROR_INSTALL_FILE_NOT_FOUND_EXTRA), Products[iProduct].GetDownloadUrl());
+			pszExtraInfo = new_sprintf(_T(" %s %s"), FetchString(IDC_ERROR_INSTALL_FILE_NOT_FOUND_EXTRA), Products[iProduct].GetDownloadUrl());
 		break;
 	}
 	if (ridReason)
@@ -1655,7 +1656,7 @@ char * ProductManager_t::GenInstallFailureReport(int iProduct, int nIndent) cons
 		}
 
 		// See if any of its prerequisites are missing:
-		char * pszPrereqRpt = GenPrerequisiteFailureReport(iProduct, nIndent);
+		_TCHAR * pszPrereqRpt = GenPrerequisiteFailureReport(iProduct, nIndent);
 		if (pszPrereqRpt)
 		{
 			new_sprintf_concat(pszReport, 1, pszPrereqRpt);
@@ -1670,11 +1671,11 @@ char * ProductManager_t::GenInstallFailureReport(int iProduct, int nIndent) cons
 // Produce dynamically allocated text describing which prerequisites of the given product failed
 // to install.
 // Caller must delete[] the returned text.
-char * ProductManager_t::GenPrerequisiteFailureReport(int iProduct, int nIndent) const
+_TCHAR * ProductManager_t::GenPrerequisiteFailureReport(int iProduct, int nIndent) const
 {
 	CheckProductIndex(iProduct);
 
-	char * pszReport = NULL;
+	_TCHAR * pszReport = NULL;
 
 	IndexList_t rgiPrerequisites;
 	IndexList_t rgiSingleProduct;
@@ -1688,7 +1689,7 @@ char * ProductManager_t::GenPrerequisiteFailureReport(int iProduct, int nIndent)
 		// List each prerequisite:
 		for (int i = 0; i < rgiPrerequisites.GetCount(); i++)
 		{
-			char * pszPrereqRpt = GenInstallFailureReport(rgiPrerequisites[i], nIndent + 4);
+			_TCHAR * pszPrereqRpt = GenInstallFailureReport(rgiPrerequisites[i], nIndent + 4);
 			if (pszPrereqRpt)
 			{
 				new_sprintf_concat(pszReport, 1, pszPrereqRpt);
@@ -1703,16 +1704,16 @@ char * ProductManager_t::GenPrerequisiteFailureReport(int iProduct, int nIndent)
 // Produce dynamically allocated text describing which of the given products failed to install
 // and why.
 // Caller must delete[] the returned text.
-char * ProductManager_t::GenInstallFailureReport(IndexList_t & rgiCandidateProducts,
+_TCHAR * ProductManager_t::GenInstallFailureReport(IndexList_t & rgiCandidateProducts,
 												 int nIndent) const
 {
-	char * pszReport = NULL;
+	_TCHAR * pszReport = NULL;
 
 	// See if any candidate products failed to install:
 	for (int i = 0; i < rgiCandidateProducts.GetCount(); i++)
 	{
 		int iProduct = rgiCandidateProducts[i];
-		char * pszProductRpt = GenInstallFailureReport(iProduct, nIndent);
+		_TCHAR * pszProductRpt = GenInstallFailureReport(iProduct, nIndent);
 		if (pszProductRpt)
 		{
 			new_sprintf_concat(pszReport, 1, pszProductRpt);
@@ -1726,7 +1727,7 @@ char * ProductManager_t::GenInstallFailureReport(IndexList_t & rgiCandidateProdu
 // Produce dynamically allocated text describing which installed products were relying on the
 // given product being installed, and the consequences now that it is missing.
 // Caller must delete[] the returned text.
-char * ProductManager_t::GenMissingRequirementConsequencesReport(int iProduct,
+_TCHAR * ProductManager_t::GenMissingRequirementConsequencesReport(int iProduct,
 																 int nIndent) const
 {
 	CheckProductIndex(iProduct);
@@ -1735,8 +1736,8 @@ char * ProductManager_t::GenMissingRequirementConsequencesReport(int iProduct,
 	if (Products[iProduct].TestPresence())
 		return NULL; // No, it was installed fine.
 
-	char * pszReport = NULL;
-	char * pszWksp;
+	_TCHAR * pszReport = NULL;
+	_TCHAR * pszWksp;
 
 	// Iterate through all products:
 	for (int i = 0; i < kctSoftwareProducts; i++)
@@ -1752,7 +1753,7 @@ char * ProductManager_t::GenMissingRequirementConsequencesReport(int iProduct,
 				if (iMapping >= 0)
 				{
 					// Report the consequences:
-					pszWksp = new_ind_sprintf(nIndent, "%s: %s", GetName(i),
+					pszWksp = new_ind_sprintf(nIndent, _T("%s: %s"), GetName(i),
 						s_DependecyMaps[depRequirement][iMapping].m_kpszFailureMessage);
 					new_sprintf_concat(pszReport, 1, pszWksp);
 					delete[] pszWksp;
@@ -1768,14 +1769,14 @@ char * ProductManager_t::GenMissingRequirementConsequencesReport(int iProduct,
 // product, a list of which products require the given product, and the consequneces for
 // each product in the list.
 // Caller must delete[] the returned text.
-char * ProductManager_t::GenMissingRequirementReport(int iProduct, int nIndent) const
+_TCHAR * ProductManager_t::GenMissingRequirementReport(int iProduct, int nIndent) const
 {
 	CheckProductIndex(iProduct);
 
-	char * pszReport = NULL;
+	_TCHAR * pszReport = NULL;
 
 	// Report why the product failed to install:
-	char * pszProductRpt = GenInstallFailureReport(iProduct, nIndent);
+	_TCHAR * pszProductRpt = GenInstallFailureReport(iProduct, nIndent);
 	if (pszProductRpt)
 	{
 		new_sprintf_concat(pszReport, 1, pszProductRpt);
@@ -1783,10 +1784,10 @@ char * ProductManager_t::GenMissingRequirementReport(int iProduct, int nIndent) 
 		pszProductRpt = NULL;
 
 		// Now report on the consequences:
-		char * pszConsequences = GenMissingRequirementConsequencesReport(iProduct, nIndent + 4);
+		_TCHAR * pszConsequences = GenMissingRequirementConsequencesReport(iProduct, nIndent + 4);
 		if (pszConsequences)
 		{			
-			char * pszWksp = new_ind_sprintf(nIndent, FetchString(IDC_MESSAGE_CONSEQUENCES));
+			_TCHAR * pszWksp = new_ind_sprintf(nIndent, FetchString(IDC_MESSAGE_CONSEQUENCES));
 			new_sprintf_concat(pszReport, 1, pszWksp);
 			delete[] pszWksp;
 			pszWksp = NULL;
@@ -1802,9 +1803,9 @@ char * ProductManager_t::GenMissingRequirementReport(int iProduct, int nIndent) 
 // Produce dynamically allocated text describing which required products are still missing,
 // including the reason for their omission and the consequences.
 // Caller must delete[] the returned text.
-char * ProductManager_t::GenMissingRequirementReport(int nIndent) const
+_TCHAR * ProductManager_t::GenMissingRequirementReport(int nIndent) const
 {
-	char * pszReport = NULL;
+	_TCHAR * pszReport = NULL;
 
 	// List of all missing requirements:
 	IndexList_t rgiMissingList;
@@ -1826,7 +1827,7 @@ char * ProductManager_t::GenMissingRequirementReport(int nIndent) const
 	// consequences:
 	for (int i = 0; i < rgiMissingList.GetCount(); i++)
 	{
-		char * pszDependRpt = GenMissingRequirementReport(rgiMissingList[i], nIndent);
+		_TCHAR * pszDependRpt = GenMissingRequirementReport(rgiMissingList[i], nIndent);
 		if (pszDependRpt)
 		{
 			new_sprintf_concat(pszReport, 1, pszDependRpt);
@@ -1840,10 +1841,10 @@ char * ProductManager_t::GenMissingRequirementReport(int nIndent) const
 // Produce dynamically allocated text describing the dependency relationships as specified by
 // iReportType.
 // Caller must delete[] the returned text.
-char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) const
+_TCHAR * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) const
 {
-	char * pszReport = NULL;
-	char * pszTemp = NULL;
+	_TCHAR * pszReport = NULL;
+	_TCHAR * pszTemp = NULL;
 
 	switch (iReportType)
 	{
@@ -1851,11 +1852,11 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 		if (prgiProducts)
 		{
 			IndexList_t rgiTempList;
-			g_Log.Write("Testing for prerequisites for basic report...");
+			g_Log.Write(_T("Testing for prerequisites for basic report..."));
 			g_Log.Indent();
 			GetActivePrerequisites(*prgiProducts, rgiTempList, true);
 			g_Log.Unindent();
-			g_Log.Write("...Done (prerequisites)");
+			g_Log.Write(_T("...Done (prerequisites)"));
 			for (int i = 0; i < rgiTempList.GetCount(); i++)
 				new_sprintf_concat(pszReport, int(i > 0), GetName(rgiTempList[i]));
 		}
@@ -1863,11 +1864,11 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 	case rptPrerequisitesFull:
 		if (prgiProducts)
 		{
-			g_Log.Write("Testing for prerequisites for full report...");
+			g_Log.Write(_T("Testing for prerequisites for full report..."));
 			g_Log.Indent();
 			pszTemp = GenFullPrerequisiteReport(*prgiProducts);
 			g_Log.Unindent();
-			g_Log.Write("...Done (prerequisites)");
+			g_Log.Write(_T("...Done (prerequisites)"));
 			new_sprintf_concat(pszReport, 0, pszTemp);
 			delete[] pszTemp;
 			pszTemp = NULL;
@@ -1876,17 +1877,17 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 	case rptRequirementsShort:
 		{
 			IndexList_t rgiTempList;
-			g_Log.Write("Testing for requirements for basic report...");
+			g_Log.Write(_T("Testing for requirements for basic report..."));
 			g_Log.Indent();
 			GetActiveRequirements(rgiTempList);
 			g_Log.Unindent();
-			g_Log.Write("...Done (requirements)");
+			g_Log.Write(_T("...Done (requirements)"));
 			for (int i = 0; i < rgiTempList.GetCount(); i++)
 				new_sprintf_concat(pszReport, int(i > 0), GetName(rgiTempList[i]));
 		}
 		break;
 	case rptRequirementsFull:
-		g_Log.Write("Testing for requirements for full report...");
+		g_Log.Write(_T("Testing for requirements for full report..."));
 		g_Log.Indent();
 		if (prgiProducts)
 		{			
@@ -1911,10 +1912,10 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 			pszTemp = NULL;
 		}
 		g_Log.Unindent();
-		g_Log.Write("...Done (requirements)");
+		g_Log.Write(_T("...Done (requirements)"));
 		break;
 	case rptFinal:
-		g_Log.Write("Testing for final report...");
+		g_Log.Write(_T("Testing for final report..."));
 		g_Log.Indent();
 		if (prgiProducts)
 		{
@@ -1925,7 +1926,7 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 		}
 		pszTemp = GenMissingRequirementReport();
 		g_Log.Unindent();
-		g_Log.Write("...Done (final report)");
+		g_Log.Write(_T("...Done (final report)"));
 		new_sprintf_concat(pszReport, 1, pszTemp);
 		delete[] pszTemp;
 		pszTemp = NULL;
@@ -1935,22 +1936,22 @@ char * ProductManager_t::GenReport(int iReportType, IndexList_t * prgiProducts) 
 }
 
 // Returns the product index from its internal (tag) name
-int ProductManager_t::GetSoftwareProductIndex(const char * pszProduct) const
+int ProductManager_t::GetSoftwareProductIndex(const _TCHAR * pszProduct) const
 {
 	if (!pszProduct)
 		return -1;
 
 	for (int i = 0; i < kctSoftwareProducts; i++)
 	{
-		if (strcmp(pszProduct, Products[i].m_kpszInternalName) == 0)
+		if (_tcscmp(pszProduct, Products[i].m_kpszInternalName) == 0)
 			return i;
 	}
 	return -1;
 }
 
 // Launch the dialog that generates and displays reports.
-void ProductManager_t::ShowReport(const char * pszTitle, const char * pszIntro,
-								  const char * pszOkButtonText, bool fConfirmQuit,
+void ProductManager_t::ShowReport(const _TCHAR * pszTitle, const _TCHAR * pszIntro,
+								  const _TCHAR * pszOkButtonText, bool fConfirmQuit,
 								  bool fQuitIsError, int nType, bool fCanToggleType,
 								  IndexList_t * rgiProducts) const
 {
@@ -1983,12 +1984,12 @@ bool ProductManager_t::ShowFinalReport() const
 	if (RequirementsNeeded())
 	{
 		// Set up final report dialog, giving details about errors, etc:
-		char * pszWksp = new_sprintf(FetchString(IDC_MESSAGE_FINISHED), g_pszTitle);
+		_TCHAR * pszWksp = new_sprintf(FetchString(IDC_MESSAGE_FINISHED), g_pszTitle);
 		new_sprintf_concat(pszWksp, 2, FetchString(IDC_ERROR_DEPENDENT_INTRO));
-		new_sprintf_concat(pszWksp, 0, " %s", FetchString(IDC_ERROR_DEPENDENT_INSTRUCTION));
-		new_sprintf_concat(pszWksp, 0, " %s", FetchString(IDC_ERROR_DEPENDENT_WILD_GUESS));
+		new_sprintf_concat(pszWksp, 0, _T(" %s"), FetchString(IDC_ERROR_DEPENDENT_INSTRUCTION));
+		new_sprintf_concat(pszWksp, 0, _T(" %s"), FetchString(IDC_ERROR_DEPENDENT_WILD_GUESS));
 
-		ShowReport(g_pszTitle, pszWksp, "OK", false, false, rptFinal, false);
+		ShowReport(g_pszTitle, pszWksp, _T("OK"), false, false, rptFinal, false);
 
 		delete[] pszWksp;
 		pszWksp = NULL;
@@ -2034,7 +2035,7 @@ int IndexList_t::operator [] (int i) const
 	if (i < 0 || i >= m_ct)
 	{
 		HandleError(kFatal, true, IDC_ERROR_INTERNAL,
-			"Invalid index passed to product index list.");
+			_T("Invalid index passed to product index list."));
 	}
 	return m_pi[i];
 }
@@ -2097,7 +2098,7 @@ int IndexList_t::RemoveNthItem(int n)
 	if (n < 0 || n >= m_ct)
 	{
 		HandleError(kFatal, false, IDC_ERROR_INTERNAL,
-			"attempting to remove invalid-indexed item from list.");
+			_T("attempting to remove invalid-indexed item from list."));
 	}
 	int nResult = m_pi[n];
 
@@ -2114,7 +2115,7 @@ void IndexList_t::ReplaceItem(int i, int nNew)
 	if (i < 0 || i >= m_ct)
 	{
 		HandleError(kFatal, false, IDC_ERROR_INTERNAL,
-			"attempting to alter invalid-indexed item in list.");
+			_T("attempting to alter invalid-indexed item in list."));
 	}
 	m_pi[i] = nNew;
 }

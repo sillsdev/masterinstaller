@@ -1,7 +1,9 @@
+#pragma once
+
 #include "TestAdaptitGenericPresence.cpp"
 
-bool TestAdaptitSPresence(const char * /*pszMinVersion*/, const char * /*pszMaxVersion*/,
-						  const char * /*pszCriticalFile*/)
+bool TestAdaptitSPresence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMaxVersion*/,
+						  const TCHAR * /*pszCriticalFile*/)
 {
-	return TestAdaptitGenericPresence("Adapt It", "Spanish_AdaptIt.exe");
+	return TestAdaptitGenericPresence(_TEXT("Adapt It"), _TEXT("Spanish_AdaptIt.exe"));
 }

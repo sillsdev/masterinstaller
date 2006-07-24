@@ -55,7 +55,7 @@ bool TestKeymanPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion
 				if (ERROR_SUCCESS == lResult)
 				{
 					// Append to root path to get full path of Keyman32.dll:
-					int cch = (int)strlen(szRootPath);
+					int cch = (int)_tcslen(szRootPath);
 					if (cch < 2)
 						break;
 					TCHAR * ch = &szRootPath[cch - 1];
@@ -85,7 +85,7 @@ bool TestKeymanPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion
 									(LPBYTE)szEdition, &cbData);
 
 								if (ERROR_SUCCESS == lResult)
-									if (stricmp(szEdition, pszFlavor) == 0)
+									if (_tcsicmp(szEdition, pszFlavor) == 0)
 										fResult = true;
 							}
 							else // No flavor specified, or version too old for flavors

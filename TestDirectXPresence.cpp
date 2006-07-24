@@ -1,8 +1,10 @@
 #pragma once
 
+#include <tchar.h>
+
 // Test for DirectX
-bool TestDirectXPresence(const char * pszMinVersion, const char * pszMaxVersion,
-						 const char * /*pszCriticalFile*/)
+bool TestDirectXPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
+						 const TCHAR * /*pszCriticalFile*/)
 {
 	bool fResult = false;
 
@@ -10,16 +12,16 @@ bool TestDirectXPresence(const char * pszMinVersion, const char * pszMaxVersion,
 	LONG lResult;
 	HKEY hKey = NULL;
 
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, "Software\\Microsoft\\DirectX", NULL,
+	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\DirectX"), NULL,
 		KEY_READ, &hKey);
 
 	if (ERROR_SUCCESS == lResult)
 	{
 		const int knVerSize = 128;
-		char szVer[knVerSize];
+		TCHAR szVer[knVerSize];
 		DWORD cbData = knVerSize;
 
-		lResult = RegQueryValueEx(hKey, "Version", NULL, NULL, (LPBYTE)szVer, &cbData);
+		lResult = RegQueryValueEx(hKey, _T("Version"), NULL, NULL, (LPBYTE)szVer, &cbData);
 		RegCloseKey(hKey);
 
 		if (ERROR_SUCCESS == lResult)

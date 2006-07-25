@@ -1083,7 +1083,7 @@
 				<Destination>Utilities\Encoding Converters</Destination>
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 2.2</Title>
-			<Tag>EncCvtrs</Tag>
+			<Tag>EncCvtrs_31</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
@@ -1101,7 +1101,7 @@
 				<Destination>Utilities\Encoding Converters</Destination>
 			</AutoConfigure>
 			<Title>SIL Converters and Repository</Title>
-			<Tag>EncCvtrs</Tag>
+			<Tag>EncCvtrs_old</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>

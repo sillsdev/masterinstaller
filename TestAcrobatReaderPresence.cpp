@@ -28,7 +28,9 @@ bool TestAcrobatReaderPresence(const TCHAR * pszMinVersion, const TCHAR * pszMax
 		while (ERROR_SUCCESS == RegEnumKeyEx(hKey, iKey++, szVersion, &cbData, NULL, NULL, NULL,
 			NULL))
 		{
+#if !defined NOLOGGING
 			g_Log.Write(_T("Found Acrobat Reader version %s"), szVersion);
+#endif
 
 			if (VersionInRange(szVersion, pszMinVersion, pszMaxVersion))
 			{

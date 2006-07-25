@@ -22,7 +22,6 @@ extern void new_sprintf_concat(_TCHAR *& rpszMain, int ctInsertNewline,
 							   const _TCHAR * pszAddendumFmt, ...);
 extern void new_vsprintf_concat(_TCHAR *& rpszMain, int ctInsertNewline,
 								const _TCHAR * pszAddendumFmt, const va_list arglist);
-extern _TCHAR * GetInstallerLocation();
 extern __int64 GetHugeVersion(const _TCHAR * pszVersion);
 extern _TCHAR * GenVersionText(__int64 nHugeVersion);
 extern bool VersionInRange(__int64 nVersion, const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion);

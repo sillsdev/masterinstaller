@@ -32,9 +32,9 @@ bool TestMsdeSILFWPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVe
 		RegCloseKey(hKey);
 		return false;
 	}
-
+#if !defined NOLOGGING
 	g_Log.Write(_T("Found MSDE::SILFW version %s"), szCurrentVersion);
-
+#endif
 	// See if Service Pack 4 is installed:
 	g_fExistingMsdeNeedsUpgrade = true; // Assume not, initially
 	DWORD nSpVersion;
@@ -46,7 +46,9 @@ bool TestMsdeSILFWPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVe
 
 	if (ERROR_SUCCESS == lResult)
 	{
+#if !defined NOLOGGING
 		g_Log.Write(_T("MSDE service pack level = %X"), nSpVersion);
+#endif
 		if (nSpVersion < 0x00000400)
 			return false;
 		else

@@ -14,6 +14,7 @@
 #include "Dialogs.h"
 #include "resource.h"
 #include "ErrorHandler.h"
+#include "WIWrapper.h"
 
 const int cchActiveProcessDescription = 100;
 _TCHAR g_rgchActiveProcessDescription[cchActiveProcessDescription] = _T("");
@@ -328,44 +329,6 @@ void FriendlyReboot()
 }
 
 
-// Returns a dynamically allocated string containing the path of the directory where the Windows
-// Installer .exe file is located.
-// Returns NULL is there is an error (such as Windows Installer not installed).
-// Caller must delete[] the returned string.
-_TCHAR * GetInstallerLocation()
-{
-	LONG lResult;
-	HKEY hKey = NULL;
-
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"), NULL, KEY_READ, &hKey);
-
-	// we don't proceed unless the call above succeeds
-	if (lResult != ERROR_SUCCESS)
-		return NULL;
-
-	// Get length of required buffer:
-	DWORD dwBufLen = 0;
-	lResult = RegQueryValueEx(hKey, _T("InstallerLocation"), NULL, NULL, NULL, &dwBufLen);
-	if (dwBufLen == 0)
-		return NULL;
-
-	_TCHAR * pszLocation = new _TCHAR [dwBufLen];
-	lResult = RegQueryValueEx(hKey, _T("InstallerLocation"), NULL, NULL, (LPBYTE)pszLocation,
-			&dwBufLen);
-	RegCloseKey(hKey);
-	hKey = NULL;
-
-	// If we receive an error, quit:
-	if (lResult != ERROR_SUCCESS)
-	{
-		delete[] pszLocation;
-		return NULL;
-	}
-
-	return pszLocation;
-}
-
 // Fetches string resource. Returns string if OK, empty string if error.
 _TCHAR * FetchString(int stid)
 {
@@ -376,169 +339,9 @@ _TCHAR * FetchString(int stid)
 	return sz;
 }
 
-// Acts the same way as sprintf(), but creates a buffer to hold the text that is at least
-// as big as the minimum needed.
-// Caller must delete[] the return value.
-_TCHAR * new_sprintf(const _TCHAR * pszFormat, ...)
-{
-	// We will be passing on the variable arguments to the new_vsprintf() function:
-	va_list arglist;
-	va_start(arglist, pszFormat);
 
-	_TCHAR * pszResult = new_vsprintf(pszFormat, arglist);
-	return pszResult;
-}
-
-// Acts the same way as new_sprintf() above, except the variable arguments have already been
-// collected.
-// Caller must delete[] the return value.
-_TCHAR * new_vsprintf(const _TCHAR * pszFormat, const va_list arglist)
-{
-	int cchWksp = 100; // First guess at size needed.
-	_TCHAR * szWksp = new _TCHAR [1 + cchWksp];
-
-	// Format it with variable arguments, repeating until Wksp is big enough:
-	int cch = _vsntprintf_s(szWksp, 1 + cchWksp, cchWksp, pszFormat, arglist);
-	// If the reported number of _TCHARacters written is the same as the size of our buffer, then
-	// the terminating zero will have been missed off!
-	while (cch == -1 || cch == cchWksp)
-	{
-		delete[] szWksp;
-		cchWksp *= 2;
-		szWksp = new _TCHAR [1 + cchWksp];
-		cch = _vsntprintf_s(szWksp, 1 + cchWksp, cchWksp, pszFormat, arglist);
-	}
-	return szWksp;
-}
-
-// Write nIndent spaces at the start of the returned string, then treat the rest of the
-// arguments as in a new_sprintf() call.
-// Caller must delete[] the return value;
-_TCHAR * new_ind_sprintf(int nIndent, const _TCHAR * pszFormat, ...)
-{
-	_TCHAR * pszWksp = NULL;
-
-	for (int n = 0; n < nIndent; n++)
-		new_sprintf_concat(pszWksp, 0, _T(" "));
-
-	// We will be passing on the variable arguments to the new_vsprintf_concat() function:
-	va_list arglist;
-	va_start(arglist, pszFormat);
-
-	new_vsprintf_concat(pszWksp, 0, pszFormat, arglist);
-
-	return pszWksp;
-}
-
-// Acts the same as new_sprintf() above, only it appends the formatted string to rpszMain,
-// having inserted ctInsertNewline newlines.
-void new_sprintf_concat(_TCHAR *& rpszMain, int ctInsertNewline, const _TCHAR * pszAddendumFmt, ...)
-{
-	// We will be passing on the variable arguments to the new_vsprintf_concat() function:
-	va_list arglist;
-	va_start(arglist, pszAddendumFmt);
-
-	new_vsprintf_concat(rpszMain, ctInsertNewline, pszAddendumFmt, arglist);
-}
-
-// Acts the same as new_vsprintf() above, only it appends the formatted string to rpszMain,
-// having inserted ctInsertNewline newlines.
-void new_vsprintf_concat(_TCHAR *& rpszMain, int ctInsertNewline, const _TCHAR * pszAddendumFmt,
-						 const va_list arglist)
-{
-	_TCHAR * pszWksp;
-
-	for (int n = 0; n < ctInsertNewline; n++)
-	{
-		pszWksp = new_sprintf(_T("%s\r\n"), rpszMain ? rpszMain : _T(""));
-		delete[] rpszMain;
-		rpszMain = pszWksp;
-	}
-	pszWksp = new_vsprintf(pszAddendumFmt, arglist);
-	_TCHAR * pszWksp2 = new_sprintf(_T("%s%s"), rpszMain ? rpszMain : _T(""), pszWksp);
-	delete[] pszWksp;
-	pszWksp = NULL;
-
-	delete[] rpszMain;
-	rpszMain = pszWksp2;
-}
-
-// Parses a (potentially) 4-part version number string (e.g. 2.0.2600.1106) and returns a 64-bit
-// integer comprising all 4 parts, so a simple comparison can be made (e.g. 0x000200000A280452).
-__int64 GetHugeVersion(const _TCHAR * pszVersion)
-{
-	if (!pszVersion)
-		return 0;
-
-	_TCHAR * pszVersionCopy = my_strdup(pszVersion);
-	__int64 nValue = 0;
-	_TCHAR * pszContext;
-
-	_TCHAR * pszNextSegment = _tcstok_s(pszVersionCopy, _T("."), &pszContext);
-	int ctSegments = 1;
-	while (pszNextSegment && ctSegments <= 4)
-	{
-		__int64 nSegment = _tstoi(pszNextSegment);
-		nValue |= (nSegment << ((4 - ctSegments) * 16));
-		ctSegments++;
-		pszNextSegment = _tcstok_s(NULL, _T("."), &pszContext);
-	}
-	delete[] pszVersionCopy;
-	pszVersionCopy = NULL;
-
-	return nValue;
-}
-
-// Splits a 64-bit version number into the 4 constituent parts as a text string.
-// Caller must delete[] the return value.
-_TCHAR * GenVersionText(__int64 nHugeVersion)
-{
-	return new_sprintf(_T("%d.%d.%d.%d"), int(nHugeVersion >> 48), 
-		int((nHugeVersion >> 32) & 0xFFFF), int((nHugeVersion >> 16) & 0xFFFF),
-		int(nHugeVersion & 0xFFFF));
-}
-
-
-// Returns true if the given version number is within the given range.
-// If pszMinVersion is NULL, any range up to (and including) pszMaxVersion will do.
-// If pszMaxVersion is NULL, any range above (and including) pszMinVersion will do.
-// If pszMinVersion is NULL and pszMaxVersion is NULL, any version will do.
-bool VersionInRange(__int64 nVersion, const _TCHAR * pszMinVersion, 
-					const _TCHAR * pszMaxVersion)
-{
-	// Create 64-bit numbers from the min and max arguments:
-	__int64 nMinVersion;
-	__int64 nMaxVersion;
-
-	if (pszMinVersion)
-		nMinVersion = GetHugeVersion(pszMinVersion);
-	else
-		nMinVersion = 0;
-
-	if (pszMaxVersion)
-		nMaxVersion = GetHugeVersion(pszMaxVersion);
-	else
-		nMaxVersion = 0x7FFFFFFFFFFFFFFF;
-
-	// See if the discovered version is within range:
-	return (nVersion >= nMinVersion && nVersion <= nMaxVersion);
-}
-
-// Returns true if the given version number is within the given range.
-// If pszMinVersion is NULL, any range up to (and including) pszMaxVersion will do.
-// If pszMaxVersion is NULL, any range above (and including) pszMinVersion will do.
-// If pszMinVersion is NULL and pszMaxVersion is NULL, any version will do.
-bool VersionInRange(const _TCHAR * pszVersion, const _TCHAR * pszMinVersion, 
-					const _TCHAR * pszMaxVersion)
-{
-	if (!pszVersion)
-		return false;
-
-	// Create 64-bit number from the pszVersion argument:
-	__int64 nVersion = GetHugeVersion(pszVersion);
-
-	return VersionInRange(nVersion, pszMinVersion, pszMaxVersion);
-}
+#include "StringFunctions.cpp"
+#include "VersionFunctions.cpp"
 
 // Writes the given text to the Clipboard
 bool WriteClipboardText(const _TCHAR * pszText)
@@ -574,15 +377,6 @@ bool WriteClipboardText(const _TCHAR * pszText)
 	return true;
 }
 
-// Replaces the deprecated strdup function.
-// Caller must delete[] the result when finished.
-_TCHAR * my_strdup(const _TCHAR * pszOriginal)
-{
-	int cch = (int)_tcslen(pszOriginal);
-	_TCHAR * pszResult = new _TCHAR [1 + cch];
-	_tcscpy_s(pszResult, 1 + cch, pszOriginal);
-	return pszResult;
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /*

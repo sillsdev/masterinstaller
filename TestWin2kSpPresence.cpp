@@ -18,8 +18,10 @@ bool TestWin2kSpPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersio
 		return true;
 	}
 
+#if !defined NOLOGGING
 	g_Log.Write(_T("Found Windows version %d.%d, Service Pack %d"), osvi.dwMajorVersion, 
 		osvi.dwMinorVersion, (int)(osvi.wServicePackMajor));
+#endif
 
 	if (osvi.dwMajorVersion == 5)
 	{

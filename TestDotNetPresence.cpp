@@ -61,7 +61,9 @@ bool TestDotNetPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion
 				{
 					_TCHAR * pszVersionNumber = (szVersion + 1);
 
+#if !defined NOLOGGING
 					g_Log.Write(_T("Found .NET runtime version %s"), pszVersionNumber);
+#endif
 
 					if (VersionInRange(pszVersionNumber, pszMin, pszMax))
 					{

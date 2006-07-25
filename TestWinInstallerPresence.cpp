@@ -22,10 +22,12 @@ bool TestWinInstallerPresence(const TCHAR * pszMinVersion, const TCHAR * /*pszMa
 	__int64 nVersion;
 	if (GetFileVersion(szLocation, nVersion))
 	{
+#if !defined NOLOGGING
 		TCHAR * pszVersion = GenVersionText(nVersion);
 		g_Log.Write(_T("Found msiexec.exe version %s"), pszVersion);
 		delete[] pszVersion;
 		pszVersion = NULL;
+#endif
 
 		fResult = VersionInRange(nVersion, pszMinVersion, NULL);
 	}

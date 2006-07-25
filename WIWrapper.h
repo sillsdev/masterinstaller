@@ -13,6 +13,8 @@
 #include <msi.h>
 #include <tchar.h>
 
+extern _TCHAR * GetInstallerLocation();
+
 class WindowsInstallerWrapper
 {
 public:

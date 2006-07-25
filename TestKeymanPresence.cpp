@@ -67,11 +67,12 @@ bool TestKeymanPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion
 					__int64 nVersion;
 					if (GetFileVersion(szRootPath, nVersion))
 					{
+#if !defined NOLOGGING
 						TCHAR * pszVersion = GenVersionText(nVersion);
 						g_Log.Write(_TEXT("Found Keyman version %s"), pszVersion);
 						delete[] pszVersion;
 						pszVersion = NULL;
-
+#endif
 						if (VersionInRange(nVersion, pszMinVersion, pszMaxVersion))
 						{
 							// See if a flavor was specified:

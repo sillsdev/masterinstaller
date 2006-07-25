@@ -21,7 +21,9 @@ bool TestIePresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
 		lResult = RegQueryValueEx(hKey, _T("Version"), NULL, NULL, (LPBYTE)szVersion, &cbData);
 		RegCloseKey(hKey);
 
+#if !defined NOLOGGING
 		g_Log.Write(_T("Found Internet Explorer version %s"), szVersion);
+#endif
 
 		if (ERROR_SUCCESS == lResult)
 			return VersionInRange(szVersion, pszMinVersion, pszMaxVersion);

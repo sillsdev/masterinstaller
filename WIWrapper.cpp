@@ -6,6 +6,7 @@
 	Using this module allows delayed dynamic linking to msi.dll, so we can at least start up the
 	master installer without having Windows Installer present.
 */
+
 #include <windows.h>
 #include <tchar.h>
 
@@ -15,6 +16,45 @@
 
 // Global instance:
 WindowsInstallerWrapper WindowsInstaller;
+
+
+// Returns a dynamically allocated string containing the path of the directory where the Windows
+// Installer .exe file is located.
+// Returns NULL is there is an error (such as Windows Installer not installed).
+// Caller must delete[] the returned string.
+_TCHAR * GetInstallerLocation()
+{
+	LONG lResult;
+	HKEY hKey = NULL;
+
+	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"), NULL, KEY_READ, &hKey);
+
+	// we don't proceed unless the call above succeeds
+	if (lResult != ERROR_SUCCESS)
+		return NULL;
+
+	// Get length of required buffer:
+	DWORD dwBufLen = 0;
+	lResult = RegQueryValueEx(hKey, _T("InstallerLocation"), NULL, NULL, NULL, &dwBufLen);
+	if (dwBufLen == 0)
+		return NULL;
+
+	_TCHAR * pszLocation = new _TCHAR [dwBufLen];
+	lResult = RegQueryValueEx(hKey, _T("InstallerLocation"), NULL, NULL, (LPBYTE)pszLocation,
+			&dwBufLen);
+	RegCloseKey(hKey);
+	hKey = NULL;
+
+	// If we receive an error, quit:
+	if (lResult != ERROR_SUCCESS)
+	{
+		delete[] pszLocation;
+		return NULL;
+	}
+
+	return pszLocation;
+}
 
 WindowsInstallerWrapper::WindowsInstallerWrapper()
 {

@@ -59,8 +59,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{55590E14-D0D4-4D6F-9C33-884401BD26AE}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="WI3" MinVersion="3.0"/>
-			<Prerequisite Tag="EncCvtrs_T" MinVersion="2.2.2"/>
+			<Prerequisite Tag=".NET2.0" Version="2.0"/>
 			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.3</Title>
@@ -69,7 +68,6 @@
 				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Language Explorer 0.9 Beta</Title>
@@ -77,7 +75,6 @@
 				<MsiFeature>LTr</MsiFeature>
 				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.3</Title>
@@ -86,7 +83,6 @@
 				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Translation Editor 1.2</Title>
@@ -95,14 +91,12 @@
 				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks WorldPad 2.3</Title>
 				<Tag>WP_TC</Tag>
 				<MsiFeature>WPr</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
 			</Feature>
 		</Product>
 		<Product>
@@ -135,8 +129,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{55590E14-D0D4-4D6F-9C33-884401BD26AE}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="WI3" MinVersion="3.0"/>
-			<Prerequisite Tag="EncCvtrs_T" MinVersion="2.2"/>
+			<Prerequisite Tag=".NET2.0" Version="2.0"/>
 			<Preinstall>RemovePreviousFWs</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.3</Title>
@@ -145,7 +138,6 @@
 				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Language Explorer 0.9 Beta</Title>
@@ -153,7 +145,6 @@
 				<MsiFeature>LTr</MsiFeature>
 				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.3</Title>
@@ -162,14 +153,12 @@
 				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks WorldPad 2.3</Title>
 				<Tag>WP_TC</Tag>
 				<MsiFeature>WPr</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag=".NET2.0" Version="2.0" FailMsg="The program will crash on startup."/>
 			</Feature>
 		</Product>
 		<Product>

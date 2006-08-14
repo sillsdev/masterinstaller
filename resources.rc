@@ -250,8 +250,8 @@ BEGIN
     IDC_ERROR_KEY_DLL       "Cannot process product key."
     IDC_ERROR_INSTALLATION  "Installation of %s failed."
     IDC_ERROR_USER_QUIT_INSTALLER "You quit the installation of %s."
-    IDC_ERROR_FILE_MISSING_URL  "%s is not on this CD, and will be skipped for now. You will need to install this software yourself. To obtain it, try following the links at %s."
-    IDC_ERROR_FILE_MISSING  "%s is not on this CD, and will be skipped for now. You will need to install this software yourself. No data is available on where to obtain this software."
+    IDC_ERROR_FILE_MISSING_URL  "%s is not in this package, and will be skipped for now. You will need to install this software yourself. To obtain it, try following the links at %s."
+    IDC_ERROR_FILE_MISSING  "%s is not in this package, and will be skipped for now. You will need to install this software yourself. No data is available on where to obtain this software."
     IDC_ERROR_READ_REG      "Cannot read system Registry."
     IDC_ERROR_WRITE_REG     "Cannot write to system Registry."
     IDC_ERROR_REMOVE_REG    "Cannot remove Registry settings."
@@ -282,7 +282,7 @@ BEGIN
     IDC_ERROR_LANGUAGE_INCOMPATIBLE 
                             "Windows operating system language incompatibility"
     IDC_ERROR_LANGUAGE_INCOMPATIBLE_1 
-                            "This application cannot currently be installed on this machine. It depends on the software listed below, which is not available on this CD in the language of your Windows operating system. You need to download the software from the Internet, install it, then run this setup program again."
+                            "This application cannot currently be installed on this machine. It depends on the software listed below, which is not available in this package in the language of your Windows operating system. You need to download the software from the Internet, install it, then run this setup program again."
     IDC_ERROR_LANGUAGE_INCOMPATIBLE_2 
                             "This software list has been copied to the clipboard. You should paste it somewhere (e.g. Notepad) immediately, if you want to keep a record of it."
     IDC_ERROR_LANGUAGE_INCOMPATIBLE_URL 

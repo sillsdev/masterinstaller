@@ -1709,6 +1709,18 @@ function GetAllProductSizes()
 			}
 		}
 		ProductSizes[iProduct] = Total;
+		
+		// Deselect and disable the "Included" CD checkbox for any product with no files.
+		// This is intended to be for products available on the web.
+		if (Total == 0)
+		{
+			var CdElement = document.getElementById('Included' + iProduct);
+			if (CdElement)
+			{
+				CdElement.checked = false;
+				CdElement.disabled = true;
+			}
+		}
 	}
 	
 	// Do the same for the External Help file(s):

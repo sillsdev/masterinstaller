@@ -53,6 +53,7 @@ public:
 	bool IsInstallable();
 	DWORD RunInstaller();
 	bool Install();
+	void KillHangingWindows();
 };
 
 
@@ -541,76 +542,7 @@ bool SoftwareProduct::Install()
 			return false;
 		}
 		if (m_fMustKillHangingWindows)
-		{
-			bool fTestHanging = true;
-			while (fTestHanging)
-			{
-				g_Log.Write(_T("Testing for hanging windows (for %s)"), m_kpszNiceName);
-				ShowStatusDialog();
-				const _TCHAR * pszMsg = DisplayStatusText(0,
-					FetchString(IDC_MESSAGE_TEST_HANGING));
-				_TCHAR * pszHangingReport = GenerateHangingWindowsReport();
-				if (pszHangingReport != NULL)
-				{
-					HideStatusDialog();
-
-					_TCHAR * pszIntro1 = new_sprintf(
-						FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_1), m_kpszNiceName);
-					_TCHAR * pszIntro2 = new_sprintf(
-						FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_2), m_kpszNiceName);
-					_TCHAR * pszAlert = new_sprintf(_T("%s\n%s\n\n%s"), pszIntro1, pszHangingReport,
-						pszIntro2);
-
-					delete[] pszIntro1;
-					pszIntro1 = NULL;
-					delete[] pszHangingReport;
-					pszHangingReport = NULL;
-					delete[] pszIntro2;
-					pszIntro2 = NULL;
-
-					g_Log.Write(pszAlert);
-
-					int idResult;
-					do
-					{
-						idResult = MessageBox(NULL, pszAlert, g_pszTitle,
-							MB_ICONSTOP | MB_ABORTRETRYIGNORE | MB_DEFBUTTON2);
-
-						if (idResult == IDABORT)
-						{
-							// Confirm quit:
-							if (MessageBox(NULL, FetchString(IDC_MESSAGE_CONFIRM_QUIT_GENERAL),
-								g_pszTitle, MB_YESNO) == IDYES)
-							{
-								g_Log.Write(_T("User opted to quit."));
-								delete[] pszAlert;
-								pszAlert = NULL;
-								throw UserQuitException;
-							}
-						}
-					} while (idResult == IDABORT);
-
-					delete[] pszAlert;
-					pszAlert = NULL;
-
-					switch (idResult)
-					{
-					case IDRETRY:
-						g_Log.Write(_T("User pressed Retry."));
-						break;
-					case IDIGNORE:
-						g_Log.Write(_T("User pressed Ignore."));
-						fTestHanging = false;
-						break;
-					}
-				} // End if hanging windows report contained anything.
-				else
-				{
-					fTestHanging = false;
-					g_Log.Write(_T("No hanging windows."));
-				}
-			} // End while(fTestHanging)
-		}// End if (m_fMustKillHangingWindows)
+			KillHangingWindows();
 	} // End if product included in CD set.
 
 	bool fCalledPreInstallFunction = false;
@@ -620,9 +552,14 @@ bool SoftwareProduct::Install()
 	{
 		fRepeat = false;
 
-		// Make sure correct disk is inserted:
+		// Make sure correct disk is inserted, unless critical file is on the Internet:
 		int nFileResult = DiskManager_t::knFileOmitted;
-		if (m_iCd >= 0)
+		if (_tcsncmp(GetCriticalFile(), _T("http:"), 5) == 0)
+		{
+			nFileResult = DiskManager_t::knFileOnInternet;
+			g_Log.Write(_T("Critical file on Internet: %s"), GetCriticalFile());
+		}
+		else if (m_iCd >= 0)
 		{
 			nFileResult = g_DiskManager.EnsureCdForFile(GetCriticalFile(), m_iCd, 
 				m_kpszNiceName);
@@ -631,7 +568,8 @@ bool SoftwareProduct::Install()
 
 		if (nFileResult == DiskManager_t::knCorrectCdAlready ||
 			nFileResult == DiskManager_t::knCorrectCdFinally ||
-			nFileResult == DiskManager_t::knFileFoundWrongCd)
+			nFileResult == DiskManager_t::knFileFoundWrongCd ||
+			nFileResult == DiskManager_t::knFileOnInternet)
 		{
 			// Anticipate not finishing properly:
 			m_InstallStatus = InstallFailedInterrupted;
@@ -658,7 +596,7 @@ bool SoftwareProduct::Install()
 				if (m_fIngnorePreInstallationErrors)
 				{
 					nReturn = 0;
-					g_Log.Write(_T("Ignoring returned error code."), nReturn);
+					g_Log.Write(_T("Ignoring returned error code."));
 				}
 				fCalledPreInstallFunction = true;
 				if (nReturn != 0)
@@ -803,6 +741,76 @@ bool SoftwareProduct::Install()
 	return true;
 }
 
+void SoftwareProduct::KillHangingWindows()
+{
+	bool fTestHanging = true;
+	while (fTestHanging)
+	{
+		g_Log.Write(_T("Testing for hanging windows (for %s)"), m_kpszNiceName);
+		ShowStatusDialog();
+		const _TCHAR * pszMsg = DisplayStatusText(0, FetchString(IDC_MESSAGE_TEST_HANGING));
+		_TCHAR * pszHangingReport = GenerateHangingWindowsReport();
+		if (pszHangingReport != NULL)
+		{
+			HideStatusDialog();
+
+			_TCHAR * pszIntro1 = new_sprintf(FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_1),
+				m_kpszNiceName);
+			_TCHAR * pszIntro2 = new_sprintf( FetchString(IDC_MESSAGE_HANGING_WINDOWS_INTRO_2),
+				m_kpszNiceName);
+			_TCHAR * pszAlert = new_sprintf(_T("%s\n%s\n\n%s"), pszIntro1, pszHangingReport,
+				pszIntro2);
+
+			delete[] pszIntro1;
+			pszIntro1 = NULL;
+			delete[] pszHangingReport;
+			pszHangingReport = NULL;
+			delete[] pszIntro2;
+			pszIntro2 = NULL;
+
+			g_Log.Write(pszAlert);
+
+			int idResult;
+			do
+			{
+				idResult = MessageBox(NULL, pszAlert, g_pszTitle,
+					MB_ICONSTOP | MB_ABORTRETRYIGNORE | MB_DEFBUTTON2);
+
+				if (idResult == IDABORT)
+				{
+					// Confirm quit:
+					if (MessageBox(NULL, FetchString(IDC_MESSAGE_CONFIRM_QUIT_GENERAL),
+						g_pszTitle, MB_YESNO) == IDYES)
+					{
+						g_Log.Write(_T("User opted to quit."));
+						delete[] pszAlert;
+						pszAlert = NULL;
+						throw UserQuitException;
+					}
+				}
+			} while (idResult == IDABORT);
+
+			delete[] pszAlert;
+			pszAlert = NULL;
+
+			switch (idResult)
+			{
+			case IDRETRY:
+				g_Log.Write(_T("User pressed Retry."));
+				break;
+			case IDIGNORE:
+				g_Log.Write(_T("User pressed Ignore."));
+				fTestHanging = false;
+				break;
+			}
+		} // End if hanging windows report contained anything.
+		else
+		{
+			fTestHanging = false;
+			g_Log.Write(_T("No hanging windows."));
+		}
+	} // End while(fTestHanging)
+}
 
 static bool s_fSoftwareProductsInitialized = false;
 

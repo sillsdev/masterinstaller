@@ -33,6 +33,11 @@ bool Uninstall(const TCHAR * pszProductCode, const TCHAR * pszStatus)
 		dwResult = ExecCmd(pszCmd, false, true, NULL, _T("Show"));
 		delete[] pszCmd;
 	}
+	else
+	{
+		g_Log.Write(_T("Product not installed."));
+	}
+
 	return int(dwResult != 0);
 }
 

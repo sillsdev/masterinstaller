@@ -584,13 +584,17 @@ bool SoftwareProduct::Install()
 				if (m_pfnPreInstallation)
 				{
 					g_Log.Write(_T("Calling pre-installation function..."));
+					g_Log.Indent();
 					nReturn = m_pfnPreInstallation(GetCriticalFile());
+					g_Log.Unindent();
 					g_Log.Write(_T("...Done. Pre-installation function returned %d"), nReturn);
 				}
 				if (m_kpszPreInstallation)
 				{
 					g_Log.Write(_T("Executing pre-installation program '%s'..."), m_kpszPreInstallation);
+					g_Log.Indent();
 					nReturn = ExecCmd(m_kpszPreInstallation, true, true);
+					g_Log.Unindent();
 					g_Log.Write(_T("...Done. Pre-installation program returned %d"), nReturn);
 				}
 				if (m_fIngnorePreInstallationErrors)
@@ -728,13 +732,17 @@ bool SoftwareProduct::Install()
 	if (m_pfnPostInstallation)
 	{
 		g_Log.Write(_T("Calling post-installation function..."));
+		g_Log.Indent();
 		int nReturn = m_pfnPostInstallation(GetCriticalFile());
+		g_Log.Unindent();
 		g_Log.Write(_T("...Done. Post-installation function returned %d"), nReturn);
 	}
 	if (m_kpszPostInstallation)
 	{
 		g_Log.Write(_T("Executing post-installation program '%s'..."), m_kpszPostInstallation);
+		g_Log.Indent();
 		int nReturn = ExecCmd(m_kpszPostInstallation, true, true);
+		g_Log.Unindent();
 		g_Log.Write(_T("...Done. Post-installation program returned %d"), nReturn);
 	}
 

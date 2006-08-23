@@ -60,7 +60,7 @@
 			<ProductCode>{55590E14-D0D4-4D6F-9C33-884401BD26AE}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag=".NET2.0" Version="2.0"/>
-			<Preinstall>RemovePreviousFWs</Preinstall>
+			<Preinstall>CleanStartFw40</Preinstall>
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.3</Title>
 				<Tag>DN_TC</Tag>

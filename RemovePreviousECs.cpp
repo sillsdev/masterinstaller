@@ -117,7 +117,7 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 			// Use the Shell to find out the application path enbedded in the link:
 			const int cchApplication = 1024;
 			TCHAR szApplication[cchApplication] = { 0 };
-			const int cchCmdArguments = 1024;
+			const int cchCmdArguments = INFOTIPSIZE;
 			TCHAR szCmdArguments[cchCmdArguments] = { 0 };
 			const int cchWorkingDirectory = 1024;
 			TCHAR szWorkingDirectory[cchWorkingDirectory] = { 0 };

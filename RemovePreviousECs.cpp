@@ -229,6 +229,7 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 			{
 				g_Log.Write(_T("Uninstall failed with error code %d."), dwResult);
 				nResult = (int)dwResult;
+				return nResult;
 			}
 		}
 	}

@@ -10,6 +10,120 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 {
 	int nResult = 0;
 
+	// Search for Bob Eaton's uninstall batch file:
+	g_Log.Write(_T("Looking in registry for Bob's uninstall batch file path..."));
+	g_Log.Indent();
+	TCHAR * pszUninstallFolder = NULL;
+	HKEY hKey;
+	const TCHAR * pszKeyPath = _T("SOFTWARE\\SIL\\SilEncConverters22\\Installer");
+	const TCHAR * pszKeyValue = _T("InstallerPath");
+	LONG lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, 
+		pszKeyPath, 0, KEY_READ, &hKey);
+	if (ERROR_SUCCESS == lResult)
+	{
+		g_Log.Write(_T("Opened reg key."));
+		DWORD cbData = 0;		
+		lResult = RegQueryValueEx(hKey, pszKeyValue, NULL, NULL, NULL, &cbData);
+		if (ERROR_SUCCESS == lResult)
+		{
+			g_Log.Write(_T("Read required buffer size."));
+			cbData++;
+			pszUninstallFolder = new TCHAR [cbData];
+			lResult = RegQueryValueEx(hKey, pszKeyValue, NULL, NULL, (LPBYTE)pszUninstallFolder,
+				&cbData);
+			if (ERROR_SUCCESS == lResult)
+				g_Log.Write(_T("Got path: '%s'."), pszUninstallFolder);
+			else
+			{
+				g_Log.Write(_T("Could not read path."));
+				delete[] pszUninstallFolder;
+				pszUninstallFolder = NULL;
+			}
+		}
+		RegCloseKey(hKey);
+	}
+
+	// If Bob Eaton's uninstall link exists, run it:
+	if (pszUninstallFolder)
+	{
+		const TCHAR * pszBatchFile = _T("UninstallSC.bat");
+
+		HideStatusDialog();
+		g_Log.Write(_T("Informing user that Bob's older Encoding Converters exist."));
+		MessageBox(NULL,
+			_T("The existing version of SILConverters must be upgraded for this installation. Setup will now uninstall the old version before installing the new version. Shortly into that process, you will see a dialog box that asks whether you want to remove all of your converters. You will want to answer \"No\" to that question."),
+			g_pszTitle,
+			MB_ICONINFORMATION | MB_OK);
+		ShowStatusDialog();
+
+		DisplayStatusText(0, _T("Removing obsolete Encoding Converters programs."));
+		DisplayStatusText(1, _T("To preserve your existing converters, answer \"no\""));
+		DisplayStatusText(2, _T("when asked if you want to remove them."));
+
+		TCHAR * pszApplication = new_sprintf(_T("%s\\%s"), pszUninstallFolder, pszBatchFile);
+		g_Log.Write(_T("Application is '%s'"), pszApplication);
+		g_Log.Write(_T("Working directory is '%s'"), pszUninstallFolder);
+
+		// Set up data for creating new process:
+		BOOL bReturnVal = false;
+		STARTUPINFO si;
+		DWORD dwExitCode =  0;
+		PROCESS_INFORMATION process_info;
+
+		ZeroMemory(&si, sizeof(si));
+		si.cb = sizeof(si);
+		si.dwFlags = STARTF_USESHOWWINDOW;
+		si.wShowWindow = SW_MINIMIZE;
+
+		// Launch new process. The CREATE_SEPARATE_WOW_VDM should be ignored for 32-bit programs,
+		// and also when running on Windows 98, but it is essential for 16-bit programs running on
+		// Windows 2000 or later, else we cannot easily monitor when termination occurs:
+		TCHAR * pszQuotedCommand = new_sprintf(_T("\"%s\""), pszApplication);
+		g_Log.Write(_T("Quoted command is %s"), pszQuotedCommand);
+		bReturnVal = CreateProcess(NULL, (LPTSTR)pszQuotedCommand, NULL, NULL, false,
+			CREATE_SEPARATE_WOW_VDM, NULL, pszUninstallFolder, &si, &process_info);
+		delete[] pszQuotedCommand;
+		pszQuotedCommand = NULL;
+
+		if (bReturnVal)
+		{
+			CloseHandle(process_info.hThread);
+
+			g_Log.Write(_T("Waiting for '%s' to finish."), pszApplication);
+
+			// New code based on Microsoft support article 824042:
+			// http://support.microsoft.com/kb/824042
+			WaitForInputIdle(process_info.hProcess, INFINITE);
+			WaitForSingleObject(process_info.hProcess, INFINITE);
+
+			// Get the exit code:
+			GetExitCodeProcess(process_info.hProcess, &dwExitCode);
+
+			g_Log.Write(_T("'%s' finished with exit code %d."), pszApplication, dwExitCode);
+
+			// If the result of executing the process was that a reboot was triggered, we'll
+			// inform the user and just wait:
+			if (ERROR_SUCCESS_REBOOT_INITIATED == dwExitCode)
+				PauseForReboot();
+
+			CloseHandle(process_info.hProcess);
+		}
+		else
+		{
+			g_Log.Write(_T("Could not create process for '%s'."), pszApplication);
+			delete[] pszApplication;
+			return -2;
+		}
+		delete[] pszUninstallFolder;
+		pszUninstallFolder = NULL;
+	}
+	else
+		g_Log.Write(_T("Did not read uninstall batch file folder."));
+
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done looking for Bob's uninstall batch file path."));
+
+	// Now clear up any other installations that we know about.
 	// List of all previous EC product codes:
 	const TCHAR * pszProductCode[] = 
 	{
@@ -21,178 +135,7 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 		_T("{C4BEF638-52A5-4480-96BB-B54BDDF566D8}"), // EC Version 1.0.2 (with FW 3.0)
 		_T("{1754401C-BEBE-415E-B0DF-9B6E0420E2F8}"), // Clipboard EC shipped with FW 3.0
 	};
-	// Link to Bob Eaton's uninstall batch file:
-	TCHAR * pszUninstallLink = NULL;
 
-	// See if Bob Eaton's uninstall batch file is present:
-	HRESULT hResult;
-	TCHAR szFolder[MAX_PATH];
-	const TCHAR * pszLink = _T("SIL Converters\\Uninstall SILConverters.lnk");
-
-	g_Log.Write(_T("Searching for Bob's uninstall batch file link:"));
-
-	// Look in C:\Documents and Settings\<username>\Start Menu\Programs
-	hResult = SHGetFolderPath(NULL, CSIDL_PROGRAMS, NULL, SHGFP_TYPE_DEFAULT, szFolder);
-	if (hResult == S_OK)
-	{
-		pszUninstallLink = new_sprintf(_T("%s\\%s"), szFolder, pszLink);
-		FILE * f = NULL;
-		if (_tfopen_s(&f, pszUninstallLink, _T("r")) == 0)
-		{
-			g_Log.Write(_T("Found '%s'."), pszUninstallLink);
-			fclose(f);
-		}
-		else
-		{
-			g_Log.Write(_T("Not found '%s'."), pszUninstallLink);
-			delete[] pszUninstallLink;
-			pszUninstallLink = NULL;
-		}
-	}
-	if (!pszUninstallLink)
-	{
-		// Try searching again in All Users profile:
-		hResult = SHGetFolderPath(NULL, CSIDL_COMMON_PROGRAMS, NULL, SHGFP_TYPE_DEFAULT, szFolder);
-		if (hResult == S_OK)
-		{
-			pszUninstallLink = new_sprintf(_T("%s\\%s"), szFolder, pszLink);
-			FILE * f = NULL;
-			if (_tfopen_s(&f, pszUninstallLink, _T("r")) == 0)
-			{
-				g_Log.Write(_T("Found '%s'."), pszUninstallLink);
-				fclose(f);
-			}
-			else
-			{
-				g_Log.Write(_T("Not found '%s'."), pszUninstallLink);
-				delete[] pszUninstallLink;
-				pszUninstallLink = NULL;
-			}
-		}
-	}
-
-	// If Bob Eaton's uninstall link exists, run it:
-	if (pszUninstallLink)
-	{
-		HideStatusDialog();
-		g_Log.Write(_T("Informing user that Bob's older Encoding Converters exist."));
-		MessageBox(NULL,
-			_T("The existing version of SILConverters must be upgraded for this installation. Setup will now uninstall the old version before installing the new version. You will see a dialog box that asks whether you want to remove all of your converters. You will want to answer \"No\" to that question."),
-			g_pszTitle,
-			MB_ICONSTOP | MB_OK);
-		ShowStatusDialog();
-
-		DisplayStatusText(0, _T("Removing obsolete Encoding Converters programs."));
-		DisplayStatusText(1, _T("To preserve your existing converters, Answer \"no\""));
-		DisplayStatusText(2, _T("when asked if you want to remove them."));
-
-		g_Log.Write(_T("Reading '%s'."), pszUninstallLink);
-
-		// Use the Shell to find out the application path enbedded in the link:
-		const int cchApplication = 1024;
-		TCHAR szApplication[cchApplication] = { 0 };
-		const int cchCmdArguments = INFOTIPSIZE;
-		TCHAR szCmdArguments[cchCmdArguments] = { 0 };
-		const int cchWorkingDirectory = 1024;
-		TCHAR szWorkingDirectory[cchWorkingDirectory] = { 0 };
-		IShellLink* psl;
-		HRESULT hr;
-		CoInitialize(NULL);
-
-		// Create the ShellLink object:
-		hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER,
-					IID_IShellLink, (LPVOID*) &psl);
-
-		if (SUCCEEDED(hr))
-		{
-			IPersistFile* ppf;
-			// Bind the ShellLink object to the Persistent File:
-			hr = psl->QueryInterface(IID_IPersistFile, (LPVOID *) &ppf);
-			if (SUCCEEDED(hr))
-			{
-#ifdef UNICODE
-				// Read the link into the persistent file:
-				hr = ppf->Load(pszUninstallLink, 0);
-#else
-				WORD wsz[MAX_PATH];
-				// Get a UNICODE wide string wsz from the Link path
-				MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, pszUninstallLink, -1, (LPWSTR)wsz, MAX_PATH);
-				// Read the link into the persistent file:
-				hr = ppf->Load((LPCOLESTR)wsz, 0);
-#endif
-				if (SUCCEEDED(hr))
-				{
-					// Read the target information from the link object
-					// UNC paths are supported (SLGP_UNCPRIORITY)
-					psl->GetPath(szApplication, cchApplication, NULL, SLGP_UNCPRIORITY);
-					psl->GetArguments(szCmdArguments, cchCmdArguments);
-					psl->GetWorkingDirectory(szWorkingDirectory, cchWorkingDirectory);
-					g_Log.Write(_T("Application is '%s'"), szApplication);
-					g_Log.Write(_T("Command line arguments are '%s'"), szCmdArguments);
-					g_Log.Write(_T("Working directory is '%s'"), szWorkingDirectory);
-				}
-			}
-			psl->Release();
-		}
-
-		if (_tcslen(szApplication) > 0)
-		{
-			// Set up data for creating new process:
-			BOOL bReturnVal = false;
-			STARTUPINFO si;
-			DWORD dwExitCode =  0;
-			PROCESS_INFORMATION process_info;
-
-			ZeroMemory(&si, sizeof(si));
-			si.cb = sizeof(si);
-
-			// Launch new process. The CREATE_SEPARATE_WOW_VDM should be ignored for 32-bit programs,
-			// and also when running on Windows 98, but it is essential for 16-bit programs running on
-			// Windows 2000 or later, else we cannot easily monitor when termination occurs:
-			TCHAR * pszFullCommand = new_sprintf(_T("\"%s\" %s"), szApplication, szCmdArguments);
-			g_Log.Write(_T("Full command is %s"), pszFullCommand);
-			bReturnVal = CreateProcess(NULL, (LPTSTR)pszFullCommand, NULL, NULL, false,
-				CREATE_SEPARATE_WOW_VDM, NULL, szWorkingDirectory, &si, &process_info);
-			delete[] pszFullCommand;
-
-			if (bReturnVal)
-			{
-				CloseHandle(process_info.hThread);
-
-				g_Log.Write(_T("Waiting for '%s' to finish."), szApplication);
-
-				// New code based on Microsoft support article 824042:
-				// http://support.microsoft.com/kb/824042
-				WaitForInputIdle(process_info.hProcess, INFINITE);
-				WaitForSingleObject(process_info.hProcess, INFINITE);
-
-				// Get the exit code:
-				GetExitCodeProcess(process_info.hProcess, &dwExitCode);
-
-				g_Log.Write(_T("'%s' finished with exit code %d."), szApplication, dwExitCode);
-
-				// If the result of executing the process was that a reboot was triggered, we'll
-				// inform the user and just wait:
-				if (ERROR_SUCCESS_REBOOT_INITIATED == dwExitCode)
-					PauseForReboot();
-
-				CloseHandle(process_info.hProcess);
-			}
-			else
-			{
-				g_Log.Write(_T("Could not create process for '%s'."), szApplication);
-				delete[] pszUninstallLink;
-				pszUninstallLink = NULL;
-				return -2;
-			}
-		}
-		else
-			g_Log.Write(_T("Could not read application path from '%s'."), pszUninstallLink);
-		delete[] pszUninstallLink;
-		pszUninstallLink = NULL;
-	} // End if found Bob's uninstaller link
-
-	// Now clear up any other installations that we know about:
 	for (int i = 0; i < (sizeof(pszProductCode) / sizeof(pszProductCode[0])); i++)
 	{
 		g_Log.Write(_T("Uninstalling earlier EC (Product code %s)."), pszProductCode[i]);

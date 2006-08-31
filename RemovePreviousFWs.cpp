@@ -3,6 +3,7 @@
 #include <tchar.h>
 
 #include "Uninstall.cpp"
+#include "SearchOtherUsersInstallations.cpp"
 
 // Remove any existing version of FieldWorks
 int RemovePreviousFWs(const TCHAR * /*pszCriticalFile*/)
@@ -104,6 +105,46 @@ int RemovePreviousFWs(const TCHAR * /*pszCriticalFile*/)
 	pszPath = NULL;
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done with Path variable"));
+
+	// Finally, see if any of the above products were installed under other user's accounts:
+	g_Log.Write(_T("Searching for installations in other user accounts..."));
+	g_Log.Indent();
+	int cIssues = 0; // Number of issues found.
+	TCHAR * pszReport = SearchOtherUsersInstallations(pszProductCode,
+		sizeof(pszProductCode) / sizeof(pszProductCode[0]),
+		_T("Earlier version of SIL FieldWorks"), cIssues);
+	g_Log.Unindent();
+	g_Log.Write(_T("...done."));
+	if (pszReport)
+	{
+		TCHAR * pszMessage = NULL;
+		if (cIssues == 1)
+		{
+			new_sprintf_concat(pszMessage, 0, _T("Unfortunately, there is a program installed on this computer "));
+			new_sprintf_concat(pszMessage, 0, _T("under another user's account which is incompatible with this "));
+			new_sprintf_concat(pszMessage, 0, _T("installation. The details are listed below. You must log on as "));
+			new_sprintf_concat(pszMessage, 0, _T("the specified user, then uninstall the program "));
+			new_sprintf_concat(pszMessage, 0, _T("using the Add or Remove Programs facility in Control Panel."));
+		}
+		else
+		{
+			new_sprintf_concat(pszMessage, 0, _T("Unfortunately, there are programs installed on this computer "));
+			new_sprintf_concat(pszMessage, 0, _T("under other users' accounts which are incompatible with this "));
+			new_sprintf_concat(pszMessage, 0, _T("installation. The details are listed below. You must log on as "));
+			new_sprintf_concat(pszMessage, 0, _T("the specified user in each case, then uninstall the programs "));
+			new_sprintf_concat(pszMessage, 0, _T("using the Add or Remove Programs facility in Control Panel."));
+		}
+		new_sprintf_concat(pszMessage, 0, _T(" If this is not possible, check out alternatives in the Known Issues "));
+		new_sprintf_concat(pszMessage, 0, _T("section of the SetupFW.rtf "));
+		new_sprintf_concat(pszMessage, 0, _T("file in the FieldWorks folder of this CD (or web download)."));
+
+		new_sprintf_concat(pszMessage, 1, _T("%s"), pszReport);
+		delete[] pszReport;
+		new_sprintf_concat(pszMessage, 2, _T("This installation will now terminate."));
+		MessageBox(NULL, pszMessage, g_pszTitle, MB_ICONSTOP | MB_OK);
+		g_Log.Write(_T("Found installations in other user accounts - reported: %s"), pszMessage);
+		nResult = -2;
+	}
 
 	return nResult;
 }

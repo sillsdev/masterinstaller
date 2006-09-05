@@ -31,7 +31,7 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 4.0 Branch (from \\ls-fwbuilde\FW_4.0)</Title>
+				<Title>FW 4.0 Branch (from \\ls-fwbuilder\FW_4.0)</Title>
 				<Source NameWhenLocked="setup.msi">\\ls-fwbuilder\c\FW_4.0\Installer\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>

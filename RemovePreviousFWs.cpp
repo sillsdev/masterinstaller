@@ -134,13 +134,14 @@ int RemovePreviousFWs(const TCHAR * /*pszCriticalFile*/)
 			new_sprintf_concat(pszMessage, 0, _T("the specified user in each case, then uninstall the programs "));
 			new_sprintf_concat(pszMessage, 0, _T("using the Add or Remove Programs facility in Control Panel."));
 		}
-		new_sprintf_concat(pszMessage, 0, _T(" If this is not possible, check out alternatives in the Known Issues "));
-		new_sprintf_concat(pszMessage, 0, _T("section of the SetupFW.rtf "));
+		new_sprintf_concat(pszMessage, 0, _T(" If this is not possible, check out alternatives in the "));
+		new_sprintf_concat(pszMessage, 0, _T("Installation Issues section of the SetupFW.rtf "));
 		new_sprintf_concat(pszMessage, 0, _T("file in the FieldWorks folder of this CD (or web download)."));
 
 		new_sprintf_concat(pszMessage, 1, _T("%s"), pszReport);
 		delete[] pszReport;
 		new_sprintf_concat(pszMessage, 2, _T("This installation will now terminate."));
+		HideStatusDialog();
 		MessageBox(NULL, pszMessage, g_pszTitle, MB_ICONSTOP | MB_OK);
 		g_Log.Write(_T("Found installations in other user accounts - reported: %s"), pszMessage);
 		nResult = -2;

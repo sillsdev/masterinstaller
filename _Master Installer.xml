@@ -31,6 +31,77 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
+				<Title>FW 4.0 Branch (from \\ls-fwbuilde\FW_4.0)</Title>
+				<Source NameWhenLocked="setup.msi">\\ls-fwbuilder\c\FW_4.0\Installer\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks\TechSupport.txt</Source>
+				<Source DestPath="LinguaLinks Export Patches">Documents\FieldWorks\LinguaLinks Export Patches</Source>
+				<Source DestPath="FlexMovies">\\ls-fwbuilder\c\FW_4.0\DistFiles\LexText\Movies</Source>
+				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+				<WhenLocked>
+					<Destination>1</Destination>
+					<Substitutions>
+						<CriticalFile>1\setup.msi</CriticalFile>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 4.0 BTE</Title>
+			<Tag>FW_40</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{6776923F-FF58-49DA-B57D-3A6056951EDD}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET2.0" Version="2.0"/>
+			<Preinstall>CleanStartFw40</Preinstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.4</Title>
+				<Tag>DN_40</Tag>
+				<MsiFeature>DNr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 1.0</Title>
+				<Tag>LT_40</Tag>
+				<MsiFeature>LTr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor 2.4</Title>
+				<Tag>TLE_40</Tag>
+				<MsiFeature>TLEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.3</Title>
+				<Tag>TE_40</Tag>
+				<MsiFeature>TEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.4</Title>
+				<Tag>WP_40</Tag>
+				<MsiFeature>WPr</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>FW (Trunk build from \\cana)</Title>
 				<Source NameWhenLocked="setup.msi">\\cana\LSDev\Installers\Release\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>

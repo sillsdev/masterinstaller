@@ -1,5 +1,6 @@
 #pragma once
-
+// SQL Server 2005 Express has a version number of 9.00.2047.00 in the CurrentVersion reg value below,
+// but no CSDVersionNumber entry.
 #include <tchar.h>
 
 // Global instantiation:

@@ -232,404 +232,6 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>FW (3.1 build with TE from \\cana)</Title>
-				<Source NameWhenLocked="setup.msi">\\cana\LSDev\Installers\FW3.1\SetupFW.msi</Source>
-				<Source>Documents\FieldWorks\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\TEReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\License.rtf</Source>
-				<Source>Documents\FieldWorks\TechSupport.rtf</Source>
-				<SetupHelp>Documents\FieldWorks\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
-				<WhenLocked>
-					<Destination>1</Destination>
-					<Substitutions>
-						<CriticalFile>1\setup.msi</CriticalFile>
-					</Substitutions>
-				</WhenLocked>
-			</AutoConfigure>
-			<Title>SIL FieldWorks 3.1 BTE</Title>
-			<Tag>FW_31</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{823B00C2-18DB-451B-93F6-068E96A90BFD}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs" MinVersion="2.2"/>
-			<Preinstall>RemovePreviousFWs</Preinstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.2</Title>
-				<Tag>DN_31</Tag>
-				<MsiFeature>DNr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.2 (Debug)</Title>
-				<Tag>DN_31</Tag>
-				<MsiFeature>DNd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.8 Beta</Title>
-				<Tag>LT_31</Tag>
-				<MsiFeature>LTr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.8 Beta (Debug)</Title>
-				<Tag>LT_31</Tag>
-				<MsiFeature>LTd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor 2.2</Title>
-				<Tag>TLE_31</Tag>
-				<MsiFeature>TLEr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Topics List Editor 2.2 (Debug)</Title>
-				<Tag>TLE_31</Tag>
-				<MsiFeature>TLEd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Translation Editor 1.1</Title>
-				<Tag>TE_31</Tag>
-				<MsiFeature>TEr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Translation Editor 1.1 (Debug)</Title>
-				<Tag>TE_31</Tag>
-				<MsiFeature>TEd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.2</Title>
-				<Tag>WP_31</Tag>
-				<MsiFeature>WPr</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks WorldPad 2.2 (Debug)</Title>
-				<Tag>WP_31</Tag>
-				<MsiFeature>WPd</MsiFeature>
-			</Feature>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>FW (3.1 build *** No TE *** from \\cana)</Title>
-				<Source NameWhenLocked="setup.msi">\\cana\LSDev\Installers\FW3.1\SetupFW.msi</Source>
-				<Source>Documents\FieldWorks\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\License.rtf</Source>
-				<Source>Documents\FieldWorks\TechSupport.rtf</Source>
-				<SetupHelp>Documents\FieldWorks\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
-				<WhenLocked>
-					<Destination>1</Destination>
-					<Substitutions>
-						<CriticalFile>1\setup.msi</CriticalFile>
-					</Substitutions>
-				</WhenLocked>
-			</AutoConfigure>
-			<Title>SIL FieldWorks 3.1</Title>
-			<Tag>FW_31S</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{823B00C2-18DB-451B-93F6-068E96A90BFD}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs" MinVersion="2.2"/>
-			<Preinstall>RemovePreviousFWs</Preinstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.2</Title>
-				<Tag>DN_31S</Tag>
-				<MsiFeature>DNr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.2 (Debug)</Title>
-				<Tag>DN_31S</Tag>
-				<MsiFeature>DNd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.8 Beta</Title>
-				<Tag>LT_31S</Tag>
-				<MsiFeature>LTr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.8 Beta (Debug)</Title>
-				<Tag>LT_31S</Tag>
-				<MsiFeature>LTd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor 2.2</Title>
-				<Tag>TLE_31S</Tag>
-				<MsiFeature>TLEr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Topics List Editor 2.2 (Debug)</Title>
-				<Tag>TLE_31S</Tag>
-				<MsiFeature>TLEd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.2</Title>
-				<Tag>WP_31S</Tag>
-				<MsiFeature>WPr</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks WorldPad 2.2 (Debug)</Title>
-				<Tag>WP_31S</Tag>
-				<MsiFeature>WPd</MsiFeature>
-			</Feature>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>FW (From source control repository)</Title>
-				<Source NameWhenLocked="setup.msi">Installers\FieldWorks\SetupFW.msi</Source>
-				<Source>Documents\FieldWorks\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\TEReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
-				<SetupHelp>Documents\FieldWorks\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
-				<WhenLocked>
-					<Destination>1</Destination>
-					<Substitutions>
-						<CriticalFile>1\setup.msi</CriticalFile>
-					</Substitutions>
-				</WhenLocked>
-			</AutoConfigure>
-			<Title>SIL FieldWorks 3.0 BTE</Title>
-			<Tag>FW</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{59EDA034-26E5-4B7A-9924-335BA200B461}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs" MinVersion="1.0.2"/>
-			<Preinstall>RemovePreviousFWs</Preinstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.1</Title>
-				<Tag>DN</Tag>
-				<MsiFeature>DNr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.1 (Debug)</Title>
-				<Tag>DN</Tag>
-				<MsiFeature>DNd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.7 Beta</Title>
-				<Tag>LT</Tag>
-				<MsiFeature>LTr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.7 Beta (Debug)</Title>
-				<Tag>LT</Tag>
-				<MsiFeature>LTd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor</Title>
-				<Tag>TLE</Tag>
-				<MsiFeature>TLEr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Topics List Editor (Debug)</Title>
-				<Tag>TLE</Tag>
-				<MsiFeature>TLEd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Translation Editor 1.0</Title>
-				<Tag>TE</Tag>
-				<MsiFeature>TEr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Translation Editor 1.0 (Debug)</Title>
-				<Tag>TE</Tag>
-				<MsiFeature>TEd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.1</Title>
-				<Tag>WP</Tag>
-				<MsiFeature>WPr</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks WorldPad (Debug)</Title>
-				<Tag>WP</Tag>
-				<MsiFeature>WPd</MsiFeature>
-			</Feature>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>FW **without TE** (From source control repository)</Title>
-				<Source NameWhenLocked="setup.msi">Installers\FieldWorks without TE\SetupFW.msi</Source>
-				<Source>Documents\FieldWorks without TE\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
-				<SetupHelp>Documents\FieldWorks without TE\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
-				<WhenLocked>
-					<Destination>1</Destination>
-					<Substitutions>
-						<CriticalFile>1\setup.msi</CriticalFile>
-					</Substitutions>
-				</WhenLocked>
-			</AutoConfigure>
-			<Title>SIL FieldWorks 3.0</Title>
-			<Tag>FW_No_TE</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{59EDA034-26E5-4B7A-9924-335BA200B461}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs" MinVersion="1.0.2"/>
-			<Preinstall>RemovePreviousFWs</Preinstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.1</Title>
-				<Tag>DN</Tag>
-				<MsiFeature>DNr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.1 (Debug)</Title>
-				<Tag>DN</Tag>
-				<MsiFeature>DNd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.7 Beta</Title>
-				<Tag>LT</Tag>
-				<MsiFeature>LTr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.7 Beta (Debug)</Title>
-				<Tag>LT</Tag>
-				<MsiFeature>LTd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor</Title>
-				<Tag>TLE</Tag>
-				<MsiFeature>TLEr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Topics List Editor (Debug)</Title>
-				<Tag>TLE</Tag>
-				<MsiFeature>TLEd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.1</Title>
-				<Tag>WP</Tag>
-				<MsiFeature>WPr</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-			</Feature>
-<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks WorldPad (Debug)</Title>
-				<Tag>WP</Tag>
-				<MsiFeature>WPd</MsiFeature>
-			</Feature>
-		</Product>
 		<Product KeyId="2" Version="4.2">
 			<AutoConfigure>
 				<Title>TW4 (From source control repository)</Title>
@@ -1120,21 +722,19 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Encoding Converters (Trunk build from \\cana)</Title>
-				<Source>\\cana\LSDev\Installers\Release\SetupCnvrtrs.msi</Source>
-				<Destination>Utilities\Encoding Converters</Destination>
+				<Title>Encoding Converters 2.5 Web Installer (On test site)</Title>
 			</AutoConfigure>
-			<Title>SIL Converters and Repository</Title>
-			<Tag>EncCvtrs_T</Tag>
+			<Title>SIL Converters and Repository 2.5</Title>
+			<Tag>EncCvtrs_2_5</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Utilities\Encoding Converters\SetupCnvrtrs.msi</CriticalFile>
-			<Install MsiFlags="/qb"/>
+			<CriticalFile>http://fieldworks.sil.org/objectweb/test/installer/EncodingConvertersWeb.msi</CriticalFile>
+			<Install/>
 			<StatusWindow>Show</StatusWindow>
-			<ProductCode>{21494256-771F-451F-94F9-8A52AC52BFB2}</ProductCode>
-			<Commentary>Please wait while the Converters are installed.</Commentary>
+			<ProductCode>{6242D132-64F4-46E3-9F39-26B02215B896}</ProductCode>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<PostInstall>SetupInstalledConverters</PostInstall>
 			<Prerequisite Tag=".NET2.0" Version="2.0"/>
-			<Prerequisite Tag="WI3" MinVersion="3.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1313,11 +913,11 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>.NET Runtime 1.1</Title>
+				<Title>.NET Framework 1.1</Title>
 				<Source>3rd Party\DotNet 1.1</Source>
 				<Destination>Utilities\DotNet</Destination>
 			</AutoConfigure>
-			<Title>Microsoft .NET Runtime version 1.1</Title>
+			<Title>Microsoft .NET Framework version 1.1</Title>
 			<Tag>.NET</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\DotNet\dotnetfx.exe</CriticalFile>
@@ -1332,11 +932,11 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>.NET Runtime 1.1 SP1</Title>
+				<Title>.NET Framework 1.1 SP1</Title>
 				<Source>3rd Party\DotNet 1.1 SP1</Source>
 				<Destination>Utilities\DotNet</Destination>
 			</AutoConfigure>
-			<Title>Microsoft .NET Runtime 1.1 Service Pack 1</Title>
+			<Title>Microsoft .NET Framework 1.1 Service Pack 1</Title>
 			<Tag>.NET_SP1</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?displaylang=en&amp;FamilyID=A8F5654F-088E-40B2-BBDB-A83353618B38</DownloadURL>
@@ -1350,11 +950,11 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>.NET Runtime 2.0</Title>
+				<Title>.NET Framework 2.0</Title>
 				<Source>3rd Party\DotNet 2.0</Source>
 				<Destination>Utilities\DotNet 2.0</Destination>
 			</AutoConfigure>
-			<Title>Microsoft .NET Runtime version 2.0</Title>
+			<Title>Microsoft .NET Framework version 2.0</Title>
 			<Tag>.NET2.0</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\DotNet 2.0\dotnetfx.exe</CriticalFile>
@@ -1490,6 +1090,404 @@
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>FW (3.1 build with TE from \\cana)</Title>
+				<Source NameWhenLocked="setup.msi">\\cana\LSDev\Installers\FW3.1\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\License.rtf</Source>
+				<Source>Documents\FieldWorks\TechSupport.rtf</Source>
+				<SetupHelp>Documents\FieldWorks\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+				<WhenLocked>
+					<Destination>1</Destination>
+					<Substitutions>
+						<CriticalFile>1\setup.msi</CriticalFile>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 3.1 BTE</Title>
+			<Tag>FW_31</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{823B00C2-18DB-451B-93F6-068E96A90BFD}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="2.2"/>
+			<Preinstall>RemovePreviousFWs</Preinstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.2</Title>
+				<Tag>DN_31</Tag>
+				<MsiFeature>DNr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.2 (Debug)</Title>
+				<Tag>DN_31</Tag>
+				<MsiFeature>DNd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.8 Beta</Title>
+				<Tag>LT_31</Tag>
+				<MsiFeature>LTr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.8 Beta (Debug)</Title>
+				<Tag>LT_31</Tag>
+				<MsiFeature>LTd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor 2.2</Title>
+				<Tag>TLE_31</Tag>
+				<MsiFeature>TLEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Topics List Editor 2.2 (Debug)</Title>
+				<Tag>TLE_31</Tag>
+				<MsiFeature>TLEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.1</Title>
+				<Tag>TE_31</Tag>
+				<MsiFeature>TEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.1 (Debug)</Title>
+				<Tag>TE_31</Tag>
+				<MsiFeature>TEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.2</Title>
+				<Tag>WP_31</Tag>
+				<MsiFeature>WPr</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks WorldPad 2.2 (Debug)</Title>
+				<Tag>WP_31</Tag>
+				<MsiFeature>WPd</MsiFeature>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>FW (3.1 build *** No TE *** from \\cana)</Title>
+				<Source NameWhenLocked="setup.msi">\\cana\LSDev\Installers\FW3.1\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\License.rtf</Source>
+				<Source>Documents\FieldWorks\TechSupport.rtf</Source>
+				<SetupHelp>Documents\FieldWorks\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+				<WhenLocked>
+					<Destination>1</Destination>
+					<Substitutions>
+						<CriticalFile>1\setup.msi</CriticalFile>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 3.1</Title>
+			<Tag>FW_31S</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{823B00C2-18DB-451B-93F6-068E96A90BFD}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="2.2"/>
+			<Preinstall>RemovePreviousFWs</Preinstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.2</Title>
+				<Tag>DN_31S</Tag>
+				<MsiFeature>DNr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.2 (Debug)</Title>
+				<Tag>DN_31S</Tag>
+				<MsiFeature>DNd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.8 Beta</Title>
+				<Tag>LT_31S</Tag>
+				<MsiFeature>LTr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.8 Beta (Debug)</Title>
+				<Tag>LT_31S</Tag>
+				<MsiFeature>LTd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor 2.2</Title>
+				<Tag>TLE_31S</Tag>
+				<MsiFeature>TLEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Topics List Editor 2.2 (Debug)</Title>
+				<Tag>TLE_31S</Tag>
+				<MsiFeature>TLEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.2</Title>
+				<Tag>WP_31S</Tag>
+				<MsiFeature>WPr</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks WorldPad 2.2 (Debug)</Title>
+				<Tag>WP_31S</Tag>
+				<MsiFeature>WPd</MsiFeature>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>FW (From source control repository)</Title>
+				<Source NameWhenLocked="setup.msi">Installers\FieldWorks\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
+				<SetupHelp>Documents\FieldWorks\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+				<WhenLocked>
+					<Destination>1</Destination>
+					<Substitutions>
+						<CriticalFile>1\setup.msi</CriticalFile>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 3.0 BTE</Title>
+			<Tag>FW</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{59EDA034-26E5-4B7A-9924-335BA200B461}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="1.0.2"/>
+			<Preinstall>RemovePreviousFWs</Preinstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1</Title>
+				<Tag>DN</Tag>
+				<MsiFeature>DNr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1 (Debug)</Title>
+				<Tag>DN</Tag>
+				<MsiFeature>DNd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta</Title>
+				<Tag>LT</Tag>
+				<MsiFeature>LTr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta (Debug)</Title>
+				<Tag>LT</Tag>
+				<MsiFeature>LTd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor</Title>
+				<Tag>TLE</Tag>
+				<MsiFeature>TLEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Topics List Editor (Debug)</Title>
+				<Tag>TLE</Tag>
+				<MsiFeature>TLEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.0</Title>
+				<Tag>TE</Tag>
+				<MsiFeature>TEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.0 (Debug)</Title>
+				<Tag>TE</Tag>
+				<MsiFeature>TEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.1</Title>
+				<Tag>WP</Tag>
+				<MsiFeature>WPr</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks WorldPad (Debug)</Title>
+				<Tag>WP</Tag>
+				<MsiFeature>WPd</MsiFeature>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>FW **without TE** (From source control repository)</Title>
+				<Source NameWhenLocked="setup.msi">Installers\FieldWorks without TE\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks without TE\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
+				<SetupHelp>Documents\FieldWorks without TE\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+				<WhenLocked>
+					<Destination>1</Destination>
+					<Substitutions>
+						<CriticalFile>1\setup.msi</CriticalFile>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 3.0</Title>
+			<Tag>FW_No_TE</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{59EDA034-26E5-4B7A-9924-335BA200B461}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="EncCvtrs" MinVersion="1.0.2"/>
+			<Preinstall>RemovePreviousFWs</Preinstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1</Title>
+				<Tag>DN</Tag>
+				<MsiFeature>DNr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.1 (Debug)</Title>
+				<Tag>DN</Tag>
+				<MsiFeature>DNd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta</Title>
+				<Tag>LT</Tag>
+				<MsiFeature>LTr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Language Explorer 0.7 Beta (Debug)</Title>
+				<Tag>LT</Tag>
+				<MsiFeature>LTd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor</Title>
+				<Tag>TLE</Tag>
+				<MsiFeature>TLEr</MsiFeature>
+				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks Topics List Editor (Debug)</Title>
+				<Tag>TLE</Tag>
+				<MsiFeature>TLEd</MsiFeature>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.1</Title>
+				<Tag>WP</Tag>
+				<MsiFeature>WPr</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
+				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+			</Feature>
+			<!-- Repeat for Debug build version -->
+			<Feature>
+				<Title>FieldWorks WorldPad (Debug)</Title>
+				<Tag>WP</Tag>
+				<MsiFeature>WPd</MsiFeature>
+			</Feature>
 		</Product>
 	</Products>
 </MasterInstaller>

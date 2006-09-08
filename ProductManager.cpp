@@ -611,9 +611,7 @@ bool SoftwareProduct::Install()
 			}
 
 			// Display status message, and write progress to log file:
-			const _TCHAR * pszMsg = DisplayStatusText(0, FetchString(IDC_MESSAGE_INSTALLING),
-				m_kpszNiceName);
-			g_Log.Write(pszMsg);
+			DisplayStatusText(0, FetchString(IDC_MESSAGE_INSTALLING), m_kpszNiceName);
 			DisplayStatusText(1, m_kpszCommentary);
 
 			g_Log.Write(_T("Launching installer for %s: %s."), m_kpszNiceName,

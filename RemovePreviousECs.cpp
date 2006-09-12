@@ -47,74 +47,85 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 	// If Bob Eaton's uninstall link exists, run it:
 	if (pszUninstallFolder)
 	{
+		// Form full path to uninstall batch file:
 		const TCHAR * pszBatchFile = _T("UninstallSC.bat");
-
-		HideStatusDialog();
-		g_Log.Write(_T("Informing user that Bob's older Encoding Converters exist."));
-		MessageBox(NULL,
-			_T("The existing version of SILConverters must be upgraded for this installation. Setup will now uninstall the old version before installing the new version. Shortly into that process, you will see a dialog box that asks whether you want to remove all of your converters. You will want to answer \"No\" to that question."),
-			g_pszTitle,
-			MB_ICONINFORMATION | MB_OK);
-		ShowStatusDialog();
-
-		DisplayStatusText(0, _T("Removing obsolete Encoding Converters programs."));
-		DisplayStatusText(1, _T("To preserve your existing converters, answer \"no\""));
-		DisplayStatusText(2, _T("when asked if you want to remove them."));
-
 		TCHAR * pszApplication = new_sprintf(_T("%s\\%s"), pszUninstallFolder, pszBatchFile);
-		g_Log.Write(_T("Application is '%s'"), pszApplication);
-		g_Log.Write(_T("Working directory is '%s'"), pszUninstallFolder);
 
-		// Set up data for creating new process:
-		BOOL bReturnVal = false;
-		STARTUPINFO si;
-		DWORD dwExitCode =  0;
-		PROCESS_INFORMATION process_info;
-
-		ZeroMemory(&si, sizeof(si));
-		si.cb = sizeof(si);
-		si.dwFlags = STARTF_USESHOWWINDOW;
-		si.wShowWindow = SW_MINIMIZE;
-
-		// Launch new process. The CREATE_SEPARATE_WOW_VDM should be ignored for 32-bit programs,
-		// and also when running on Windows 98, but it is essential for 16-bit programs running on
-		// Windows 2000 or later, else we cannot easily monitor when termination occurs:
-		TCHAR * pszQuotedCommand = new_sprintf(_T("\"%s\""), pszApplication);
-		g_Log.Write(_T("Quoted command is %s"), pszQuotedCommand);
-		bReturnVal = CreateProcess(NULL, (LPTSTR)pszQuotedCommand, NULL, NULL, false,
-			CREATE_SEPARATE_WOW_VDM, NULL, pszUninstallFolder, &si, &process_info);
-		delete[] pszQuotedCommand;
-		pszQuotedCommand = NULL;
-
-		if (bReturnVal)
+		// If the batch file is not there, we will assume the EC installation is version 2.5 or later,
+		// so we will only proceed if it is there:
+		FILE * f;
+		if (_tfopen_s(&f, pszApplication, _T("r")) == 0)
 		{
-			CloseHandle(process_info.hThread);
+			fclose(f);
 
-			g_Log.Write(_T("Waiting for '%s' to finish."), pszApplication);
+			HideStatusDialog();
+			g_Log.Write(_T("Informing user that Bob's older Encoding Converters exist."));
+			MessageBox(NULL,
+				_T("The existing version of SILConverters must be upgraded for this installation. Setup will now uninstall the old version before installing the new version. Shortly into that process, you will see a dialog box that asks whether you want to remove all of your converters. You will want to answer \"No\" to that question."),
+				g_pszTitle,
+				MB_ICONINFORMATION | MB_OK);
+			ShowStatusDialog();
 
-			// New code based on Microsoft support article 824042:
-			// http://support.microsoft.com/kb/824042
-			WaitForInputIdle(process_info.hProcess, INFINITE);
-			WaitForSingleObject(process_info.hProcess, INFINITE);
+			DisplayStatusText(0, _T("Removing obsolete Encoding Converters programs."));
+			DisplayStatusText(1, _T("To preserve your existing converters, answer \"no\""));
+			DisplayStatusText(2, _T("when asked if you want to remove them."));
 
-			// Get the exit code:
-			GetExitCodeProcess(process_info.hProcess, &dwExitCode);
+			g_Log.Write(_T("Application is '%s'"), pszApplication);
+			g_Log.Write(_T("Working directory is '%s'"), pszUninstallFolder);
 
-			g_Log.Write(_T("'%s' finished with exit code %d."), pszApplication, dwExitCode);
+			// Set up data for creating new process:
+			BOOL bReturnVal = false;
+			STARTUPINFO si;
+			DWORD dwExitCode =  0;
+			PROCESS_INFORMATION process_info;
 
-			// If the result of executing the process was that a reboot was triggered, we'll
-			// inform the user and just wait:
-			if (ERROR_SUCCESS_REBOOT_INITIATED == dwExitCode)
-				PauseForReboot();
+			ZeroMemory(&si, sizeof(si));
+			si.cb = sizeof(si);
+			si.dwFlags = STARTF_USESHOWWINDOW;
+			si.wShowWindow = SW_MINIMIZE;
 
-			CloseHandle(process_info.hProcess);
+			// Launch new process. The CREATE_SEPARATE_WOW_VDM should be ignored for 32-bit programs,
+			// and also when running on Windows 98, but it is essential for 16-bit programs running on
+			// Windows 2000 or later, else we cannot easily monitor when termination occurs:
+			TCHAR * pszQuotedCommand = new_sprintf(_T("\"%s\""), pszApplication);
+			g_Log.Write(_T("Quoted command is %s"), pszQuotedCommand);
+			bReturnVal = CreateProcess(NULL, (LPTSTR)pszQuotedCommand, NULL, NULL, false,
+				CREATE_SEPARATE_WOW_VDM, NULL, pszUninstallFolder, &si, &process_info);
+			delete[] pszQuotedCommand;
+			pszQuotedCommand = NULL;
+
+			if (bReturnVal)
+			{
+				CloseHandle(process_info.hThread);
+
+				g_Log.Write(_T("Waiting for '%s' to finish."), pszApplication);
+
+				// New code based on Microsoft support article 824042:
+				// http://support.microsoft.com/kb/824042
+				WaitForInputIdle(process_info.hProcess, INFINITE);
+				WaitForSingleObject(process_info.hProcess, INFINITE);
+
+				// Get the exit code:
+				GetExitCodeProcess(process_info.hProcess, &dwExitCode);
+
+				g_Log.Write(_T("'%s' finished with exit code %d."), pszApplication, dwExitCode);
+
+				// If the result of executing the process was that a reboot was triggered, we'll
+				// inform the user and just wait:
+				if (ERROR_SUCCESS_REBOOT_INITIATED == dwExitCode)
+					PauseForReboot();
+
+				CloseHandle(process_info.hProcess);
+			}
+			else
+			{
+				g_Log.Write(_T("Could not create process for '%s'."), pszApplication);
+				delete[] pszApplication;
+				return -2;
+			}
 		}
-		else
-		{
-			g_Log.Write(_T("Could not create process for '%s'."), pszApplication);
-			delete[] pszApplication;
-			return -2;
-		}
+		delete[] pszApplication;
+		pszApplication = NULL;
 		delete[] pszUninstallFolder;
 		pszUninstallFolder = NULL;
 	}

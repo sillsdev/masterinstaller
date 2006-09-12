@@ -136,11 +136,11 @@ project to make an executable master installer.
 		<xsl:text>NULL</xsl:text>
 	</xsl:if>
 	<xsl:if test="not(string-length(MasterInstaller/General/ExternalHelpFile)=0)">
-		<xsl:text>"</xsl:text>
+		<xsl:text>_T("</xsl:text>
 		<xsl:call-template name="BackslashDoubler">
 			<xsl:with-param name="str" select="MasterInstaller/General/ExternalHelpFile"/>
 		</xsl:call-template>
-		<xsl:text>"</xsl:text>
+		<xsl:text>")</xsl:text>
 	</xsl:if>
 	<xsl:text>;&#13;</xsl:text>
 	
@@ -149,11 +149,11 @@ project to make an executable master installer.
 		<xsl:text>NULL</xsl:text>
 	</xsl:if>
 	<xsl:if test="not(string-length(MasterInstaller/General/HelpButtonText)=0)">
-		<xsl:text>"</xsl:text>
+		<xsl:text>_T("</xsl:text>
 		<xsl:call-template name="BackslashDoubler">
 			<xsl:with-param name="str" select="MasterInstaller/General/HelpButtonText"/>
 		</xsl:call-template>
-		<xsl:text>"</xsl:text>
+		<xsl:text>")</xsl:text>
 	</xsl:if>
 	<xsl:text>;&#13;</xsl:text>
 	<xsl:text>&#13;</xsl:text>
@@ -165,11 +165,11 @@ project to make an executable master installer.
 		<xsl:text>NULL</xsl:text>
 	</xsl:if>
 	<xsl:if test="not(string-length(MasterInstaller/General/TermsOfUseFile)=0)">
-		<xsl:text>"</xsl:text>
+		<xsl:text>_T("</xsl:text>
 		<xsl:call-template name="BackslashDoubler">
 			<xsl:with-param name="str" select="MasterInstaller/General/TermsOfUseFile"/>
 		</xsl:call-template>
-		<xsl:text>"</xsl:text>
+		<xsl:text>")</xsl:text>
 	</xsl:if>
 	<xsl:text>;&#13;</xsl:text>
 	
@@ -178,11 +178,11 @@ project to make an executable master installer.
 		<xsl:text>NULL</xsl:text>
 	</xsl:if>
 	<xsl:if test="not(string-length(MasterInstaller/General/TermsButtonText)=0)">
-		<xsl:text>"</xsl:text>
+		<xsl:text>_T("</xsl:text>
 		<xsl:call-template name="BackslashDoubler">
 			<xsl:with-param name="str" select="MasterInstaller/General/TermsButtonText"/>
 		</xsl:call-template>
-		<xsl:text>"</xsl:text>
+		<xsl:text>")</xsl:text>
 	</xsl:if>
 	<xsl:text>;&#13;</xsl:text>
 	<xsl:text>&#13;</xsl:text>

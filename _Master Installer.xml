@@ -728,6 +728,7 @@
 			<Tag>EncCvtrs_2_5</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
+			<Preinstall>RemovePreviousECs</Preinstall>
 			<CriticalFile>http://fieldworks.sil.org/objectweb/test/installer/EncodingConvertersWeb.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Show</StatusWindow>

@@ -89,7 +89,7 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 	{
 		ShowStatusDialog();
 		DisplayStatusText(0, _T("Installing converters to repository"));
-		DisplayStatusText(1, _T("Please follow instrunctions in dialog"));
+		DisplayStatusText(1, _T("Please follow instructions in dialog"));
 
 		dwExitCode = ExecCmd(pszSetupSC, false, true);
 	}

@@ -7,16 +7,16 @@
 // 4) Must have CdImage.js script in the same folder as this file.
 //
 // Call this script with the following parameters:
-// 1) The path where up-to-date SetupFW.msi and SetupCnvrtrs.msi are located
-// 2) The age limit, in hours, for the msi files to be accepted
+// 1) The path where up-to-date SetupFW.msi is located
+// 2) The age limit, in hours, for the msi file to be accepted
 // 3) The path where the ISO and self-extracting archive are to be built
 // 4) The folder in the above path (3) where the CD files and folders are laid out
 // 5) The destination where the self-extracting archive is to be uploaded
 // Note that the paths in (1), (3) and (5) can all be network paths. FTP sites are not allowed.
 //
 // The program works as follows:
-// 1) Check existence of SetupFW.msi and SetupCnvrtrs.msi in path argument (1).
-// 2) If msi files are young enough (argument 2), copy them into CD file structure (arg 3+4)
+// 1) Check existence of SetupFW.msi in path argument (1).
+// 2) If msi file is young enough (argument 2), copy it into CD file structure (arg 3+4)
 // 3) Make ISO file from CD file structure.
 // 4) Compress ISO file into self-extracting archive.
 // 5) Upload archive to destination in argument (5).
@@ -25,7 +25,7 @@
 if (WScript.Arguments.Length != 5)
 {
 	WScript.Echo("Usage: needs 5 arguments:\n" +
-		"1) The path where up-to-date SetupFW.msi and SetupCnvrtrs.msi are located\n" +
+		"1) The path where up-to-date SetupFW.msi is located\n" +
 		"2) The age limit, in hours, for the msi files to be accepted\n" +
 		"3) The path where the ISO and self-extracting archive are to be built\n" +
 		"4) The folder in the above path (3) where the CD files and folders are laid out\n" +
@@ -59,39 +59,41 @@ var ArchiveFile = IsoFile + ".exe";
 var ArchivePath = fso.BuildPath(WorkspacePath, ArchiveFile);
 var CdFullPath = fso.BuildPath(WorkspacePath, CdFolder);
 
-// Check if installers exist on MsiSourcePath:
+// Check if installer exists on MsiSourcePath:
 var SetupFwMsiSource = fso.BuildPath(MsiSourcePath, "SetupFW.msi");
 var SetupFwMsi = fso.GetFile(SetupFwMsiSource);
 if (SetupFwMsi == null)
 	LogFatalError("SetupFW.msi not found in " + MsiSourcePath);
 
-var SetupCnvrtrsMsiSource = fso.BuildPath(MsiSourcePath, "SetupCnvrtrs.msi");
-var SetupCnvrtrsMsi = fso.GetFile(SetupCnvrtrsMsiSource);
-if (SetupCnvrtrsMsi == null)
-	LogFatalError("SetupCnvrtrs.msi not found in " + MsiSourcePath);
+var SetupFw5CabSource = fso.BuildPath(MsiSourcePath, "SetupFW5.cab");
+var SetupFw5Cab = fso.GetFile(SetupFw5CabSource);
+if (SetupFw5Cab == null)
+	LogFatalError("SetupFw5.Cab not found in " + MsiSourcePath);
 
-// Get date of installers:
+var SetupFw6CabSource = fso.BuildPath(MsiSourcePath, "SetupFW6.cab");
+var SetupFw6Cab = fso.GetFile(SetupFw6CabSource);
+if (SetupFw6Cab == null)
+	LogFatalError("SetupFw6.Cab not found in " + MsiSourcePath);
+
+// Get date of installer:
 var SetupFwMsiDateMs = Date.parse(SetupFwMsi.DateLastModified);
-var SetupCnvrtrsMsiDateMs = Date.parse(SetupCnvrtrsMsi.DateLastModified);
 
-// See if installer dates are within AgeLimitHours hours of now:
+// See if installer date is within AgeLimitHours hours of now:
 var Now = new Date();
 var SetupFwMsiAgeMs = Now.getTime() - SetupFwMsiDateMs;
 var SetupFwMsiAgeHours = SetupFwMsiAgeMs / (1000 * 60 * 60);
 if (SetupFwMsiAgeHours > AgeLimitHours)
 	LogFatalError("SetupFW.msi more than " + AgeLimitHours + " hours old (" + SetupFwMsiAgeHours + " hours)");
 
-var SetupCnvrtrsMsiAgeMs = Now.getTime() - SetupCnvrtrsMsiDateMs;
-var SetupCnvrtrsMsiAgeHours = SetupCnvrtrsMsiAgeMs / (1000 * 60 * 60);
-if (SetupCnvrtrsMsiAgeHours > AgeLimitHours)
-	LogFatalError("SetupCnvrtrs.msi more than " + AgeLimitHours + " hours old (" + SetupCnvrtrsMsiAgeHours + " hours)");
-
-// Copy installers from MsiSourcePath to CdFolder:
+// Copy installer from MsiSourcePath to CdFolder:
 var LocalFwPath = fso.BuildPath(CdFullPath, "FieldWorks");
-var LocalEncPath = fso.BuildPath(CdFullPath, "Utilities\\Encoding Converters");
 var Cmd = '"' + BCopy + '" "' + SetupFwMsiSource + '" "' + LocalFwPath + '" /b:500 /r:40 /f';
 shellObj.Run(Cmd, 1, true);
-Cmd = '"' + BCopy + '" "' + SetupCnvrtrsMsiSource + '" "' + LocalEncPath + '" /b:500 /r:40 /f';
+
+Cmd = '"' + BCopy + '" "' + SetupFw5CabSource + '" "' + LocalFwPath + '" /b:500 /r:40 /f';
+shellObj.Run(Cmd, 1, true);
+
+Cmd = '"' + BCopy + '" "' + SetupFw6CabSource + '" "' + LocalFwPath + '" /b:500 /r:40 /f';
 shellObj.Run(Cmd, 1, true);
 
 // Remove existing ISO file:

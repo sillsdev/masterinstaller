@@ -2,6 +2,59 @@
 
 #include <tchar.h>
 
+
+// Detect if there is a registry key signalling we are to run the KB908002 Fix, and
+// run it if so.
+void RunKB908002Fix()
+{
+	g_Log.Write(_T("Checking whether to run KB908002 Fix..."));
+	g_Log.Indent();
+
+	TCHAR * pszCmd = NULL;
+	HKEY hKey;
+	const TCHAR * pszKeyPath = _T("SOFTWARE\\SIL\\Installer\\EC\\MS KB908002 Fix");
+	const TCHAR * pszKeyValue = _T("Run");
+	LONG lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, pszKeyPath, 0, KEY_READ, &hKey);
+	if (ERROR_SUCCESS == lResult)
+	{
+		g_Log.Write(_T("Opened reg key."));
+		DWORD cbData = 0;		
+		lResult = RegQueryValueEx(hKey, pszKeyValue, NULL, NULL, NULL, &cbData);
+		if (ERROR_SUCCESS == lResult)
+		{
+			g_Log.Write(_T("Got required buffer size."));
+			cbData++;
+			pszCmd = new TCHAR [cbData];
+			lResult = RegQueryValueEx(hKey, pszKeyValue, NULL, NULL, (LPBYTE)pszCmd,
+				&cbData);
+			if (ERROR_SUCCESS == lResult)
+				g_Log.Write(_T("Got executable path: '%s'."), pszCmd);
+			else
+			{
+				g_Log.Write(_T("Could not read path."));
+				delete[] pszCmd;
+				pszCmd = NULL;
+			}
+		}
+		RegCloseKey(hKey);
+
+		// Remove the registry setting:
+		RegDeleteKey(HKEY_LOCAL_MACHINE, pszKeyPath);
+	}
+
+	if (pszCmd)
+	{
+		g_Log.Write(_T("About to launch '%s'."), pszCmd);
+		ShowStatusDialog();
+		DisplayStatusText(0, _T("Installing Microsoft KB908002 Fix for Word macros"));
+		DisplayStatusText(1, _T("Please follow instructions in dialog"));
+
+		ExecCmd(pszCmd, false, true);
+	}
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done."));
+}
+
 // Detect if any converters were installed to the machine, and if so,
 // run the installer to put them in the repository.
 int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
@@ -98,4 +151,11 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 	g_Log.Write(_T("...Done."));
 
 	return dwExitCode;
+}
+
+// Call RunKB908002Fix and SetupInstalledConverters
+int EncodingConvertersPostInstall(const TCHAR * pszCriticalFile)
+{
+	RunKB908002Fix();
+	return SetupInstalledConverters(pszCriticalFile);
 }

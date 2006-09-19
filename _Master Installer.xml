@@ -729,9 +729,41 @@
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>http://fieldworks.sil.org/objectweb/test/installer/EncodingConvertersWeb.msi</CriticalFile>
+			<CriticalFile>http://fieldworks.sil.org/objectweb/test/installer/SetupEC.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Show</StatusWindow>
+			<ProductCode>{6242D132-64F4-46E3-9F39-26B02215B896}</ProductCode>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<PostInstall>EncodingConvertersPostInstall</PostInstall>
+			<Prerequisite Tag=".NET2.0" Version="2.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Encoding Converters 2.5 CD Installer (from FW 4.0 branch on \\ls-fwbuilder)</Title>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC.msi</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC1.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC2.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC3.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC4.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC5.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC6.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC7.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC8.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC9.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC10.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC11.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC12.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC13.cab</Source>
+				<Destination>Encoding Converters</Destination>
+			</AutoConfigure>
+			<Title>SIL Converters and Repository 2.5</Title>
+			<Tag>EncCvtrs_2_5</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<Preinstall>RemovePreviousECs</Preinstall>
+			<CriticalFile>SetupEC.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 5000</StatusWindow>
 			<ProductCode>{6242D132-64F4-46E3-9F39-26B02215B896}</ProductCode>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>

@@ -162,6 +162,40 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 		}
 	}
 
+	// The previous uninstaller did not remove a couple of items from the Start menu in folder
+	// C:\Documents and Settings\<user name>\Start Menu\Programs\SIL Converters, so we must remove
+	// them ourselves.
+	// Unfortunately, there is no CSIDL for C:\Documents and Settings\<user name>\Start Menu\Programs,
+	// so we must go one deeper, then chop off back to the backslash:
+	g_Log.Write(_T("Looking for unremoved shortcuts in Start Menu..."));
+	g_Log.Indent();
+	TCHAR szStartMenuProgramsStartupPath[MAX_PATH] = { 0 };
+	HRESULT hr = SHGetFolderPath(NULL, CSIDL_STARTUP, NULL, SHGFP_TYPE_CURRENT,
+		szStartMenuProgramsStartupPath);
+	g_Log.Write(_T("Initial folder is '%s'"), szStartMenuProgramsStartupPath);
+	if (hr == S_OK)
+	{
+		// Chop off the last folder component:
+		TCHAR * ch = _tcsrchr(szStartMenuProgramsStartupPath, '\\');
+		if (ch)
+			*ch = 0;
+		_tcscat_s(szStartMenuProgramsStartupPath, MAX_PATH, _T("\\SIL Converters"));
+		g_Log.Write(_T("Deleting *.* in '%s'"), szStartMenuProgramsStartupPath);
+		_tcscat_s(szStartMenuProgramsStartupPath, MAX_PATH, _T("\\*.*"));
+		// We need to stick an extra zero on the end of the string:
+		ZeroMemory(&szStartMenuProgramsStartupPath[1 + _tcslen(szStartMenuProgramsStartupPath)],
+			sizeof(TCHAR));
+		SHFILEOPSTRUCT sfos;
+		sfos.hwnd = NULL;
+		sfos.wFunc = FO_DELETE;
+		sfos.pFrom = szStartMenuProgramsStartupPath;
+		sfos.pTo = NULL;
+		sfos.fFlags = FOF_FILESONLY | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT;
+		SHFileOperation(&sfos);
+	}
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done"));
+	
 	// Finally, see if any of the above products were installed under other user's accounts:
 	g_Log.Write(_T("Searching for installations in other user accounts..."));
 	g_Log.Indent();

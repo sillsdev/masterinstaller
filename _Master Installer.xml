@@ -33,6 +33,8 @@
 			<AutoConfigure>
 				<Title>FW 4.0 Branch (from \\ls-fwbuilder\FW_4.0)</Title>
 				<Source NameWhenLocked="setup.msi">\\ls-fwbuilder\c\FW_4.0\Installer\SetupFW.msi</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupFW5.cab</Source>
+				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupFW6.cab</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -761,7 +763,7 @@
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>SetupEC.msi</CriticalFile>
+			<CriticalFile>Encoding Converters\SetupEC.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 5000</StatusWindow>
 			<ProductCode>{6242D132-64F4-46E3-9F39-26B02215B896}</ProductCode>

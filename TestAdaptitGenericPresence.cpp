@@ -13,7 +13,7 @@ bool TestAdaptitGenericPresence(const TCHAR * pszRegKey, const TCHAR * pszExeFil
 	const int kcch = 255;
 	TCHAR szKeyPath[kcch];
 	_tcscpy_s(szKeyPath, kcch, _TEXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"));
-	_tcscpy_s(szKeyPath, kcch, pszRegKey);
+	_tcscat_s(szKeyPath, kcch, pszRegKey);
 
 	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, szKeyPath, NULL, KEY_READ, &hKey);
 

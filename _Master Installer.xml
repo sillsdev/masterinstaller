@@ -43,7 +43,6 @@
 				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
 				<Source>Documents\FieldWorks\TechSupport.txt</Source>
 				<Source DestPath="LinguaLinks Export Patches">Documents\FieldWorks\LinguaLinks Export Patches</Source>
-				<Source DestPath="FlexMovies">\\ls-fwbuilder\c\FW_4.0\DistFiles\LexText\Movies</Source>
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 				<WhenLocked>

@@ -43,6 +43,7 @@
 				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
 				<Source>Documents\FieldWorks\TechSupport.txt</Source>
 				<Source DestPath="LinguaLinks Export Patches">Documents\FieldWorks\LinguaLinks Export Patches</Source>
+				<Source DestPath="XML Utils">Documents\FieldWorks\XML Utils</Source>
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 				<WhenLocked>
@@ -113,6 +114,7 @@
 				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
 				<Source>Documents\FieldWorks\TechSupport.txt</Source>
 				<Source DestPath="LinguaLinks Export Patches">Documents\FieldWorks\LinguaLinks Export Patches</Source>
+				<Source DestPath="XML Utils">Documents\FieldWorks\XML Utils</Source>
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 				<WhenLocked>
@@ -178,11 +180,11 @@
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
 				<Source>Documents\FieldWorks\TechSupport.txt</Source>
 				<Source DestPath="LinguaLinks Export Patches">Documents\FieldWorks\LinguaLinks Export Patches</Source>
+				<Source DestPath="XML Utils">Documents\FieldWorks\XML Utils</Source>
 				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 				<WhenLocked>
@@ -285,72 +287,72 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It 2.4.1.i (English)</Title>
-				<Source>Installers\Adapt It\English_setupai.exe</Source>
+				<Title>Adapt It 3.2.3 (English)</Title>
+				<Source>Installers\Adapt It\English_Adapt_It_Regular_323.exe</Source>
 				<Source>Installers\Adapt It\BTPrep.exe</Source>
 				<SetupHelp>Documents\Adapt It\Adapt It.rtf</SetupHelp>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It 2.4.1.i (English)</Title>
+			<Title>Adapt It 3.2.3 (English)</Title>
 			<Tag>Adaptit</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Adapt It\English_setupai.exe</CriticalFile>
+			<CriticalFile>Adapt It\English_Adapt_It_Regular_323.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence>TestAdaptitPresence</TestPresence>
+<!--			<TestPresence>TestAdaptitPresence</TestPresence>-->
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It Unicode 2.4.1.i (English)</Title>
-				<Source>Installers\Adapt It\English_setupai_u.exe</Source>
+				<Title>Adapt It Unicode 3.2.3 (English)</Title>
+				<Source>Installers\Adapt It\English_Adapt_It_Unicode_323.exe</Source>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It Unicode 2.4.1.i (English)</Title>
+			<Title>Adapt It Unicode 3.2.3 (English)</Title>
 			<Tag>AdaptitU</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Adapt It\English_setupai_u.exe</CriticalFile>
+			<CriticalFile>Adapt It\English_Adapt_It_Unicode_323.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence>TestAdaptitUPresence</TestPresence>
+<!--			<TestPresence>TestAdaptitUPresence</TestPresence>-->
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It 2.4.1.i (French)</Title>
-				<Source>Installers\Adapt It\French_setupai.exe</Source>
+				<Title>Adapt It 3.2.3 (French)</Title>
+				<Source>Installers\Adapt It\French_Adapt_It_Regular_323.exe</Source>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It 2.4.1.i (French)</Title>
+			<Title>Adapt It 3.2.3 (French)</Title>
 			<Tag>AdaptitF</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Adapt It\French_setupai.exe</CriticalFile>
+			<CriticalFile>Adapt It\French_Adapt_It_Regular_323.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence>TestAdaptitFPresence</TestPresence>
+<!--			<TestPresence>TestAdaptitFPresence</TestPresence>-->
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It Unicode 2.4.1.i (French)</Title>
-				<Source>Installers\Adapt It\French_setupai_u.exe</Source>
+				<Title>Adapt It Unicode 3.2.3 (French)</Title>
+				<Source>Installers\Adapt It\French_Adapt_It_Unicode_323.exe</Source>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It Unicode 2.4.1.i (French)</Title>
+			<Title>Adapt It Unicode 3.2.3 (French)</Title>
 			<Tag>AdaptitUF</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Adapt It\French_setupai_u.exe</CriticalFile>
+			<CriticalFile>Adapt It\French_Adapt_It_Unicode_323.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence>TestAdaptitUFPresence</TestPresence>
+<!--			<TestPresence>TestAdaptitUFPresence</TestPresence>-->
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -367,7 +369,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence>TestAdaptitIPresence</TestPresence>
+<!--			<TestPresence>TestAdaptitIPresence</TestPresence>-->
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -384,24 +386,24 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence>TestAdaptitUIPresence</TestPresence>
+<!--			<TestPresence>TestAdaptitUIPresence</TestPresence>-->
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It Unicode 2.4.1.i (Mandarin)</Title>
-				<Source>Installers\Adapt It\Mandarin_setupai_u.exe</Source>
+				<Title>Adapt It Unicode 3.2.3 (Mandarin)</Title>
+				<Source>Installers\Adapt It\Mandarin_Adapt_It_Unicode_323.exe</Source>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It Unicode 2.4.1.i (Mandarin)</Title>
+			<Title>Adapt It Unicode 3.2.3 (Mandarin)</Title>
 			<Tag>AdaptitUM</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Adapt It\Mandarin_setupai_u.exe</CriticalFile>
+			<CriticalFile>Adapt It\Mandarin_Adapt_It_Unicode_323.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence>TestAdaptitUMPresence</TestPresence>
+<!--			<TestPresence>TestAdaptitUMPresence</TestPresence>-->
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -418,7 +420,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence>TestAdaptitSPresence</TestPresence>
+<!--			<TestPresence>TestAdaptitSPresence</TestPresence>-->
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -1323,203 +1325,6 @@
 			<Feature>
 				<Title>FieldWorks WorldPad 2.2 (Debug)</Title>
 				<Tag>WP_31S</Tag>
-				<MsiFeature>WPd</MsiFeature>
-			</Feature>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>FW (From source control repository)</Title>
-				<Source NameWhenLocked="setup.msi">Installers\FieldWorks\SetupFW.msi</Source>
-				<Source>Documents\FieldWorks\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\TEReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
-				<SetupHelp>Documents\FieldWorks\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
-				<WhenLocked>
-					<Destination>1</Destination>
-					<Substitutions>
-						<CriticalFile>1\setup.msi</CriticalFile>
-					</Substitutions>
-				</WhenLocked>
-			</AutoConfigure>
-			<Title>SIL FieldWorks 3.0 BTE</Title>
-			<Tag>FW</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{59EDA034-26E5-4B7A-9924-335BA200B461}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs" MinVersion="1.0.2"/>
-			<Preinstall>RemovePreviousFWs</Preinstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.1</Title>
-				<Tag>DN</Tag>
-				<MsiFeature>DNr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-			<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.1 (Debug)</Title>
-				<Tag>DN</Tag>
-				<MsiFeature>DNd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.7 Beta</Title>
-				<Tag>LT</Tag>
-				<MsiFeature>LTr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
-			</Feature>
-			<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.7 Beta (Debug)</Title>
-				<Tag>LT</Tag>
-				<MsiFeature>LTd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor</Title>
-				<Tag>TLE</Tag>
-				<MsiFeature>TLEr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-			<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Topics List Editor (Debug)</Title>
-				<Tag>TLE</Tag>
-				<MsiFeature>TLEd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Translation Editor 1.0</Title>
-				<Tag>TE</Tag>
-				<MsiFeature>TEr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-			<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Translation Editor 1.0 (Debug)</Title>
-				<Tag>TE</Tag>
-				<MsiFeature>TEd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.1</Title>
-				<Tag>WP</Tag>
-				<MsiFeature>WPr</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-			</Feature>
-			<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks WorldPad (Debug)</Title>
-				<Tag>WP</Tag>
-				<MsiFeature>WPd</MsiFeature>
-			</Feature>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>FW **without TE** (From source control repository)</Title>
-				<Source NameWhenLocked="setup.msi">Installers\FieldWorks without TE\SetupFW.msi</Source>
-				<Source>Documents\FieldWorks without TE\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\WPReadMe.rtf</Source>
-				<SetupHelp>Documents\FieldWorks without TE\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
-				<WhenLocked>
-					<Destination>1</Destination>
-					<Substitutions>
-						<CriticalFile>1\setup.msi</CriticalFile>
-					</Substitutions>
-				</WhenLocked>
-			</AutoConfigure>
-			<Title>SIL FieldWorks 3.0</Title>
-			<Tag>FW_No_TE</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{59EDA034-26E5-4B7A-9924-335BA200B461}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Prerequisite Tag="EncCvtrs" MinVersion="1.0.2"/>
-			<Preinstall>RemovePreviousFWs</Preinstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.1</Title>
-				<Tag>DN</Tag>
-				<MsiFeature>DNr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-			<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.1 (Debug)</Title>
-				<Tag>DN</Tag>
-				<MsiFeature>DNd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.7 Beta</Title>
-				<Tag>LT</Tag>
-				<MsiFeature>LTr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="The grammar error analysis system will not function correctly."/>
-			</Feature>
-			<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Language Explorer 0.7 Beta (Debug)</Title>
-				<Tag>LT</Tag>
-				<MsiFeature>LTd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor</Title>
-				<Tag>TLE</Tag>
-				<MsiFeature>TLEr</MsiFeature>
-				<Requires Tag="MSDE" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MSXML2" FailMsg="The program will probably fail on start-up."/>
-			</Feature>
-			<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks Topics List Editor (Debug)</Title>
-				<Tag>TLE</Tag>
-				<MsiFeature>TLEd</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.1</Title>
-				<Tag>WP</Tag>
-				<MsiFeature>WPr</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Not currently a problem, but future versions of FieldWorks will need it."/>
-				<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
-			</Feature>
-			<!-- Repeat for Debug build version -->
-			<Feature>
-				<Title>FieldWorks WorldPad (Debug)</Title>
-				<Tag>WP</Tag>
 				<MsiFeature>WPd</MsiFeature>
 			</Feature>
 		</Product>

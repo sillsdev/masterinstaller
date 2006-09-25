@@ -5,5 +5,5 @@
 bool TestAdaptitUMPresence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMaxVersion*/,
 						   const TCHAR * /*pszCriticalFile*/)
 {
-	return TestAdaptitGenericPresence(_TEXT("Adapt It Unicode"), _TEXT("Mandarin_AdaptItU.exe"));
+	return TestAdaptitGenericPresence(_T("Mandarin_AdaptItU.exe"), true, NULL, NULL);
 }

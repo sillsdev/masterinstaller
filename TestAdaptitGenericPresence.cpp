@@ -37,7 +37,7 @@ TCHAR * MakePathToAdaptIt(bool fUnicode)
 
 		// Get path to uninstall program:
 		TCHAR * pszPath = new TCHAR [cbData];
-		lResult = RegQueryValueEx(hKey, _TEXT("UninstallString"), NULL, NULL, (LPBYTE)szPath,
+		lResult = RegQueryValueEx(hKey, _TEXT("UninstallString"), NULL, NULL, (LPBYTE)pszPath,
 			&cbData);
 		RegCloseKey(hKey);
 
@@ -76,6 +76,4 @@ bool TestAdaptitGenericPresence(const TCHAR * pszExeFileName, bool fUnicode,
 		return false;
 
 	return VersionInRange(nVersion, pszMinVersion, pszMaxVersion);
-
-	return fResult;
 }

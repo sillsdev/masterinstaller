@@ -437,7 +437,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence>TestAdaptitUSPresence</TestPresence>
+<!--			<TestPresence>TestAdaptitUSPresence</TestPresence>-->
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>

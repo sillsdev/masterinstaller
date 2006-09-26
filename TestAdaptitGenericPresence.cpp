@@ -18,12 +18,14 @@ TCHAR * MakePathToAdaptIt(bool fUnicode)
 	if (fUnicode)
 	{
 		// See if Unicode version is present:
-		pszKeyPath = new_sprintf(_T("%s\\Adapt It Unicode"), pszRegRoot);
+		pszKeyPath = new_sprintf(_T("%sAdapt It Unicode"), pszRegRoot);
+		g_Log.Write(_T("Looking for Adapt It Unicode path in HKEY_LOCAL_MACHINE\\%s..."), pszKeyPath);
 	}
 	else
 	{
 		// See if non-Unicode version is present:
-		pszKeyPath = new_sprintf(_T("%s\\Adapt It"), pszRegRoot);
+		pszKeyPath = new_sprintf(_T("%sAdapt It"), pszRegRoot);
+		g_Log.Write(_T("Looking for Adapt It path in HKEY_LOCAL_MACHINE\\%s..."), pszKeyPath);
 	}
 	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, pszKeyPath, NULL, KEY_READ, &hKey);
 	delete[] pszKeyPath;
@@ -33,11 +35,11 @@ TCHAR * MakePathToAdaptIt(bool fUnicode)
 	{
 		// Get size of buffer needed:
 		DWORD cbData = 0;
-		lResult = RegQueryValueEx(hKey, _TEXT("UninstallString"), NULL, NULL, NULL, &cbData);
+		lResult = RegQueryValueEx(hKey, _T("UninstallString"), NULL, NULL, NULL, &cbData);
 
 		// Get path to uninstall program:
 		TCHAR * pszPath = new TCHAR [cbData];
-		lResult = RegQueryValueEx(hKey, _TEXT("UninstallString"), NULL, NULL, (LPBYTE)pszPath,
+		lResult = RegQueryValueEx(hKey, _T("UninstallString"), NULL, NULL, (LPBYTE)pszPath,
 			&cbData);
 		RegCloseKey(hKey);
 
@@ -47,10 +49,12 @@ TCHAR * MakePathToAdaptIt(bool fUnicode)
 			TCHAR * ch = _tcsrchr(pszPath, (_TCHAR)('\\'));
 			if (ch)
 				*ch = 0;
+			g_Log.Write(_T("...Found at %s"), pszPath);
 			return pszPath;
 		}
 		delete[] pszPath;
 	}
+	g_Log.Write(_T("...Not found"));
 	return NULL;
 }
 
@@ -74,6 +78,13 @@ bool TestAdaptitGenericPresence(const TCHAR * pszExeFileName, bool fUnicode,
 
 	if (!fFound)
 		return false;
+
+#if !defined NOLOGGING
+	TCHAR * pszVersion = GenVersionText(nVersion);
+	g_Log.Write(_T("Found Adapt It%sversion %s"), fUnicode? _T(" Unicode ") : _T(" "), pszVersion);
+	delete[] pszVersion;
+	pszVersion = NULL;
+#endif
 
 	return VersionInRange(nVersion, pszMinVersion, pszMaxVersion);
 }

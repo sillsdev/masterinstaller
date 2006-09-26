@@ -11,7 +11,7 @@ bool TestToolbox14Presence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszM
 	HKEY hKey = NULL;
 
 	lResult = RegOpenKeyExW(HKEY_LOCAL_MACHINE,
-		_TEXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Toolbox_is1"),
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Toolbox_is1"),
 		NULL, KEY_READ, &hKey);
 
 	RegCloseKey(hKey);

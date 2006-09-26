@@ -13,15 +13,15 @@ bool TestKeymanPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion
 
 	// If either version number was not given, make up a suitable default:
 	if (!pszMinVersion)
-		pszMinVersion = _TEXT("0.0.0.0");
+		pszMinVersion = _T("0.0.0.0");
 	if (!pszMaxVersion)
-		pszMaxVersion = _TEXT("32767.32767.32767.32767");
+		pszMaxVersion = _T("32767.32767.32767.32767");
 
 	// Test for presence of a version number within range:
 	LONG lResult;
 	HKEY hKeyKeyman = NULL;
 
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _TEXT("SOFTWARE\\Tavultesoft\\Keyman"), NULL,
+	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Tavultesoft\\Keyman"), NULL,
 		KEY_READ, &hKeyKeyman);
 
 	if (ERROR_SUCCESS == lResult)
@@ -38,7 +38,7 @@ bool TestKeymanPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion
 			// Find the root path of the Keyman32.dll file:
 			HKEY hKeyVersion = NULL;
 			TCHAR * pszKeyVersion;
-			pszKeyVersion = new_sprintf(_TEXT("SOFTWARE\\Tavultesoft\\Keyman\\%s"), szVersion);
+			pszKeyVersion = new_sprintf(_T("SOFTWARE\\Tavultesoft\\Keyman\\%s"), szVersion);
 			lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, pszKeyVersion, NULL, KEY_READ,
 				&hKeyVersion);
 			delete[] pszKeyVersion;
@@ -49,7 +49,7 @@ bool TestKeymanPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion
 				TCHAR szRootPath[kcchRootPathLen];
 				DWORD cbData = kcchRootPathLen;
 
-				lResult = RegQueryValueEx(hKeyVersion, _TEXT("root path"), NULL, NULL,
+				lResult = RegQueryValueEx(hKeyVersion, _T("root path"), NULL, NULL,
 					(LPBYTE)szRootPath, &cbData);
 
 				if (ERROR_SUCCESS == lResult)
@@ -61,7 +61,7 @@ bool TestKeymanPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion
 					TCHAR * ch = &szRootPath[cch - 1];
 					if (*ch == '\\')
 						*ch  = 0;
-					_tcscat_s(szRootPath, kcchRootPathLen, _TEXT("\\Keyman32.dll"));
+					_tcscat_s(szRootPath, kcchRootPathLen, _T("\\Keyman32.dll"));
 
 					// Find out file's version number:
 					__int64 nVersion;
@@ -69,20 +69,20 @@ bool TestKeymanPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion
 					{
 #if !defined NOLOGGING
 						TCHAR * pszVersion = GenVersionText(nVersion);
-						g_Log.Write(_TEXT("Found Keyman version %s"), pszVersion);
+						g_Log.Write(_T("Found Keyman version %s"), pszVersion);
 						delete[] pszVersion;
 						pszVersion = NULL;
 #endif
 						if (VersionInRange(nVersion, pszMinVersion, pszMaxVersion))
 						{
 							// See if a flavor was specified:
-							if (pszFlavor && nVersion > GetHugeVersion(_TEXT("6.0")))
+							if (pszFlavor && nVersion > GetHugeVersion(_T("6.0")))
 							{
 								const int kcchEditionLen = 512;
 								TCHAR szEdition[kcchEditionLen];
 								DWORD cbData = kcchEditionLen;
 
-								lResult = RegQueryValueEx(hKeyVersion, _TEXT("edition"), NULL, NULL,
+								lResult = RegQueryValueEx(hKeyVersion, _T("edition"), NULL, NULL,
 									(LPBYTE)szEdition, &cbData);
 
 								if (ERROR_SUCCESS == lResult)

@@ -11,7 +11,7 @@ bool TestCarlaStudioPresence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*ps
 	HKEY hKey = NULL;
 
 	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		_TEXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudio"),
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudio"),
 		NULL, KEY_READ, &hKey);
 
 	RegCloseKey(hKey);

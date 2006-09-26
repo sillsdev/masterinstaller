@@ -427,7 +427,7 @@ void MasterInstaller_t::Run()
 		if (g_fRebootPending)
 		{
 			fShowFinalMessage = true;
-			new_sprintf_concat(pszWksp, false, _T("\n\n%s"),
+			new_sprintf_concat(pszWksp, 0, _T("\n\n%s"),
 				FetchString(IDC_MESSAGE_PENDING_REBOOT));
 			uType = MB_OKCANCEL;
 		}

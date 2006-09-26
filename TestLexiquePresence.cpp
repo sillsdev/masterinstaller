@@ -11,7 +11,7 @@ bool TestLexiquePresence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMax
 	HKEY hKey = NULL;
 
 	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		_TEXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Lexique Pro - Bambara_is1"),
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Lexique Pro - Bambara_is1"),
 		NULL, KEY_READ, &hKey);
 
 	RegCloseKey(hKey);

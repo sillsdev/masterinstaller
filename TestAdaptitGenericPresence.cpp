@@ -66,6 +66,8 @@ bool TestAdaptitGenericPresence(const TCHAR * pszExeFileName, bool fUnicode,
 								const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion)
 {
 	TCHAR * pszAdaptItFolder = MakePathToAdaptIt(fUnicode);
+	if (!pszAdaptItFolder)
+		return false;
 	TCHAR * pszAdaptItExe = new_sprintf(_T("%s\\%s"), pszAdaptItFolder, pszExeFileName);
 	delete[] pszAdaptItFolder;
 	pszAdaptItFolder = NULL;

@@ -302,7 +302,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-<!--			<TestPresence>TestAdaptitPresence</TestPresence>-->
+			<TestPresence Version="3.2.3">TestAdaptitPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -320,7 +320,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-<!--			<TestPresence>TestAdaptitUPresence</TestPresence>-->
+			<TestPresence Version="3.2.3">TestAdaptitUPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -338,7 +338,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-<!--			<TestPresence>TestAdaptitFPresence</TestPresence>-->
+			<TestPresence Version="3.2.3">TestAdaptitFPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -356,7 +356,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-<!--			<TestPresence>TestAdaptitUFPresence</TestPresence>-->
+			<TestPresence Version="3.2.3">TestAdaptitUFPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -374,7 +374,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-<!--			<TestPresence>TestAdaptitIPresence</TestPresence>-->
+			<TestPresence>TestAdaptitIPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -392,7 +392,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-<!--			<TestPresence>TestAdaptitUIPresence</TestPresence>-->
+			<TestPresence>TestAdaptitUIPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -410,7 +410,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-<!--			<TestPresence>TestAdaptitUMPresence</TestPresence>-->
+			<TestPresence Version="3.2.3">TestAdaptitUMPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -428,7 +428,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-<!--			<TestPresence>TestAdaptitSPresence</TestPresence>-->
+			<TestPresence>TestAdaptitSPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -446,7 +446,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-<!--			<TestPresence>TestAdaptitUSPresence</TestPresence>-->
+			<TestPresence>TestAdaptitUSPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>

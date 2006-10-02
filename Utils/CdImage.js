@@ -1,6 +1,7 @@
 // JScript to control creation of a CD image (ISO file).
 // Called with one parameter: The full path to a folder whose name will be used as the
 // Volume Label for the CD, and whose contents will form the CD content.
+// Subversion meta data folders (.svn) are automatically excluded.
 // If the parameter is missing, then this script merely sets up the registry,
 // creating a shell extension, so that a folder can be right-clicked on to create a
 // CD image from that folder's contents.

@@ -1,4 +1,5 @@
-// JScript to automatically upload an up-to-date FieldWorks ISO archive (self extracting exe)
+// JScript to automatically upload an up-to-date FieldWorks and Encoding Converters
+// ISO archive (self extracting exe)
 // Prerequisites:
 // 1) Must have MagicISO Console tool either in C:\Program Files\MagicISO or somewhere in PATH.
 //    (MagicISO can be downloaded from www.magiciso.com, but costs $30 to run properly.)
@@ -27,7 +28,7 @@
 // The program works as follows:
 // 1) Check existence of files in path arguments (1) and (2).
 // 2) If files are young enough (argument 3), copy them into CD file structure (arg 4+5)
-// 3) Make ISO file from CD file structure.
+// 3) Make ISO file from CD file structure. Subversion meta data folders (.svn) are automatically excluded.
 // 4) Compress ISO file into self-extracting archive.
 // 5) Upload archive to destination in arguments (6) and beyond.
 

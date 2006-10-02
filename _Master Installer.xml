@@ -287,76 +287,76 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It 3.2.3 (English)</Title>
-				<Source>Installers\Adapt It\English_Adapt_It_Regular_323.exe</Source>
+				<Title>Adapt It 3.2.4 (English)</Title>
+				<Source>Installers\Adapt It\English_Adapt_It_Regular_324.exe</Source>
 				<Source>Installers\Adapt It\BTPrep.exe</Source>
 				<SetupHelp>Documents\Adapt It\Adapt It.rtf</SetupHelp>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It 3.2.3 (English)</Title>
+			<Title>Adapt It 3.2.4 (English)</Title>
 			<Tag>Adaptit</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Adapt It\English_Adapt_It_Regular_323.exe</CriticalFile>
+			<CriticalFile>Adapt It\English_Adapt_It_Regular_324.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.2.3">TestAdaptitPresence</TestPresence>
+			<TestPresence Version="3.2.4">TestAdaptitPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It Unicode 3.2.3 (English)</Title>
-				<Source>Installers\Adapt It\English_Adapt_It_Unicode_323.exe</Source>
+				<Title>Adapt It Unicode 3.2.4 (English)</Title>
+				<Source>Installers\Adapt It\English_Adapt_It_Unicode_324.exe</Source>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It Unicode 3.2.3 (English)</Title>
+			<Title>Adapt It Unicode 3.2.4 (English)</Title>
 			<Tag>AdaptitU</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Adapt It\English_Adapt_It_Unicode_323.exe</CriticalFile>
+			<CriticalFile>Adapt It\English_Adapt_It_Unicode_324.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.2.3">TestAdaptitUPresence</TestPresence>
+			<TestPresence Version="3.2.4">TestAdaptitUPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It 3.2.3 (French)</Title>
-				<Source>Installers\Adapt It\French_Adapt_It_Regular_323.exe</Source>
+				<Title>Adapt It 3.2.4 (French)</Title>
+				<Source>Installers\Adapt It\French_Adapt_It_Regular_324.exe</Source>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It 3.2.3 (French)</Title>
+			<Title>Adapt It 3.2.4 (French)</Title>
 			<Tag>AdaptitF</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Adapt It\French_Adapt_It_Regular_323.exe</CriticalFile>
+			<CriticalFile>Adapt It\French_Adapt_It_Regular_324.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.2.3">TestAdaptitFPresence</TestPresence>
+			<TestPresence Version="3.2.4">TestAdaptitFPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It Unicode 3.2.3 (French)</Title>
-				<Source>Installers\Adapt It\French_Adapt_It_Unicode_323.exe</Source>
+				<Title>Adapt It Unicode 3.2.4 (French)</Title>
+				<Source>Installers\Adapt It\French_Adapt_It_Unicode_324.exe</Source>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It Unicode 3.2.3 (French)</Title>
+			<Title>Adapt It Unicode 3.2.4 (French)</Title>
 			<Tag>AdaptitUF</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Adapt It\French_Adapt_It_Unicode_323.exe</CriticalFile>
+			<CriticalFile>Adapt It\French_Adapt_It_Unicode_324.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.2.3">TestAdaptitUFPresence</TestPresence>
+			<TestPresence Version="3.2.4">TestAdaptitUFPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -397,20 +397,20 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It Unicode 3.2.3 (Mandarin)</Title>
-				<Source>Installers\Adapt It\Mandarin_Adapt_It_Unicode_323.exe</Source>
+				<Title>Adapt It Unicode 3.2.4 (Mandarin)</Title>
+				<Source>Installers\Adapt It\Mandarin_Adapt_It_Unicode_324.exe</Source>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It Unicode 3.2.3 (Mandarin)</Title>
+			<Title>Adapt It Unicode 3.2.4 (Mandarin)</Title>
 			<Tag>AdaptitUM</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Adapt It\Mandarin_Adapt_It_Unicode_323.exe</CriticalFile>
+			<CriticalFile>Adapt It\Mandarin_Adapt_It_Unicode_324.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.2.3">TestAdaptitUMPresence</TestPresence>
+			<TestPresence Version="3.2.4">TestAdaptitUMPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
@@ -766,12 +766,14 @@
 				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC11.cab</Source>
 				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC12.cab</Source>
 				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC13.cab</Source>
+				<SetupHelp>Documents\Encoding Converters\SetupEC.rtf</SetupHelp>
 				<Destination>Encoding Converters</Destination>
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 2.5</Title>
 			<Tag>EncCvtrs_2_5</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
+			<Help>Encoding Converters\SetupEC.rtf</Help>
 			<Preinstall>RemovePreviousECs</Preinstall>
 			<CriticalFile>Encoding Converters\SetupEC.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>

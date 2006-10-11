@@ -580,9 +580,9 @@ function VerifyPage(CurrentStage)
 					CulpritElement = document.getElementById("CppFilePath");
 				}
 
-				// Check for existence of Help File Cruncher:
+				// Check for existence of the Binary to C++ utility:
 				Path = GetUtilsPath();
-				Path = fso.BuildPath(Path, "CrunchHelpFiles.exe");
+				Path = fso.BuildPath(Path, "Bin2Cpp.exe");
 				if (!fso.FileExists(Path))
 				{
 					Errors += "The expected file '" + Path + "' does not exist.\n";
@@ -2246,7 +2246,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 		AddCommentary(0, "Crunching help files...", true);
 
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	var HelpFileCruncher = fso.BuildPath(GetUtilsPath(), "CrunchHelpFiles.exe");
+	var HelpFileCruncher = fso.BuildPath(GetUtilsPath(), "Bin2Cpp.exe");
 
 	// Check that HelpFileCruncher exists:
 	if (!fso.FileExists(HelpFileCruncher))

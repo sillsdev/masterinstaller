@@ -451,20 +451,20 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>PAWS Starter Kit 0.4.1.17222 Beta</Title>
+				<Title>PAWS Starter Kit 0.5.0 Beta</Title>
 				<Source>Installers\PAWS Starter Kit\PAWSSKInstaller.msi</Source>
 				<SetupHelp>Documents\PAWS Starter Kit\PAWS starter kit.rtf</SetupHelp>
 				<Destination>PAWS Starter Kit</Destination>
 			</AutoConfigure>
-			<Title>PAWS Starter Kit 0.4.1.17222 Beta</Title>
+			<Title>PAWS Starter Kit 0.5.0 Beta</Title>
 			<Tag>PAWS</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
+			<Preinstall>PawsPreinstall</Preinstall>
 			<CriticalFile>PAWS Starter Kit\PAWSSKInstaller.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{C25A0D3E-32D8-4F91-A4DD-7CD5BCE21C3A}</ProductCode>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<ProductCode>{7180C668-46B0-47E7-B4BF-D5A84E540B99}</ProductCode>
 			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
 			<Prerequisite Tag=".NET_SP1" MinVersion="1"/>
 			<Requires Tag="IE" MinVersion="6.0" FailMsg="The program may not run correctly."/>
@@ -974,6 +974,7 @@
 			<Commentary>This installation may take a few minutes, without visible sign of progress.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 			<FlushReboot>true</FlushReboot>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 			<Prerequisite Tag="IE" MinVersion="5.01"/>
 			<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="Your software may work, but you may be vulnerable to the JPEG processing (GDI+) security issue."/>
 		</Product>

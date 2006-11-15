@@ -122,7 +122,8 @@ Cmd = 'cmd /D /C ""' + BatchFile + '""';
 shellObj.Run(Cmd, 1, true);
 // Delete the batch and list files:
 fso.DeleteFile(BatchFile);
-fso.DeleteFile(ListFile);
+if (fso.FileExists(ListFile))
+	fso.DeleteFile(ListFile);
 
 
 // Adds to the batch file a call to the 7za tool with the specified file.

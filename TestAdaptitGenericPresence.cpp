@@ -19,13 +19,17 @@ TCHAR * MakePathToAdaptIt(bool fUnicode)
 	{
 		// See if Unicode version is present:
 		pszKeyPath = new_sprintf(_T("%sAdapt It Unicode"), pszRegRoot);
+#if !defined NOLOGGING
 		g_Log.Write(_T("Looking for Adapt It Unicode path in HKEY_LOCAL_MACHINE\\%s..."), pszKeyPath);
+#endif
 	}
 	else
 	{
 		// See if non-Unicode version is present:
 		pszKeyPath = new_sprintf(_T("%sAdapt It"), pszRegRoot);
+#if !defined NOLOGGING
 		g_Log.Write(_T("Looking for Adapt It path in HKEY_LOCAL_MACHINE\\%s..."), pszKeyPath);
+#endif
 	}
 	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, pszKeyPath, NULL, KEY_READ, &hKey);
 	delete[] pszKeyPath;
@@ -49,12 +53,16 @@ TCHAR * MakePathToAdaptIt(bool fUnicode)
 			TCHAR * ch = _tcsrchr(pszPath, (_TCHAR)('\\'));
 			if (ch)
 				*ch = 0;
+#if !defined NOLOGGING
 			g_Log.Write(_T("...Found at %s"), pszPath);
+#endif
 			return pszPath;
 		}
 		delete[] pszPath;
 	}
+#if !defined NOLOGGING
 	g_Log.Write(_T("...Not found"));
+#endif
 	return NULL;
 }
 

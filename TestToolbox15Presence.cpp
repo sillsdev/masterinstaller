@@ -30,7 +30,7 @@ bool TestToolbox15Presence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszM
 
 			if (ERROR_SUCCESS == lResult)
 			{
-				if (_strnicmp(pszDisplayName, pszTemplateDisplayName, strlen(pszTemplateDisplayName)) == 0)
+				if (_tcsnicmp(pszDisplayName, pszTemplateDisplayName, _tcslen(pszTemplateDisplayName)) == 0)
 					fResult = true;
 			}
 

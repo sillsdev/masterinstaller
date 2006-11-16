@@ -14,14 +14,16 @@
 var fso = new ActiveXObject("Scripting.FileSystemObject");	
 var shellObj = new ActiveXObject("WScript.Shell");
 
+// Get path of this script:
+var iLastBackslash = WScript.ScriptFullName.lastIndexOf("\\");
+var ScriptPath = WScript.ScriptFullName.slice(0, iLastBackslash);
+
 // Check we have a valid folder argument:
 if (WScript.Arguments.Length < 1)
 {
 	// Assume user just double-clicked on this script. We will register it for context
 	// submenu use.
-	// Get path of this script:
-	var iLastBackslash = WScript.ScriptFullName.lastIndexOf("\\");
-	var Path = WScript.ScriptFullName.slice(0, iLastBackslash);
+	var Path = ScriptPath;
 	
 	// Build a version of the Path with doubled up backslashes:
 	var aFolder = Path.split("\\");
@@ -125,6 +127,38 @@ fso.DeleteFile(BatchFile);
 if (fso.FileExists(ListFile))
 	fso.DeleteFile(ListFile);
 
+// If the md5sums utility exists in the same folder as this script, use it to generate an md5 hash
+// of the new archive file:
+var Md5SumsPath = ScriptPath + "\\md5sums.exe";
+if (fso.FileExists(Md5SumsPath))
+{
+	var md5File = LocationFolder + '\\' + RootFolder + '.md5.txt';
+	// Make new batch file:
+	var tso = fso.OpenTextFile(BatchFile, 2, true);
+	tso.WriteLine("@echo off");
+	tso.WriteLine(LocationDrive);
+	tso.WriteLine('cd "' + LocationFolder + '"');
+	tso.WriteLine('"' + Md5SumsPath + '" -u "' + LocationFolder + '\\' + ZipFile + '" >"' + md5File + '"');
+	tso.Close();
+
+	// Run the temporary batch file we have been building:
+	Cmd = 'cmd /D /C ""' + BatchFile + '""';
+	shellObj.Run(Cmd, 1, true);
+	// Delete the batch and list files:
+	fso.DeleteFile(BatchFile);
+	
+	// Get the raw md5 value from among the other junk in the output of md5sums:
+	var tso = fso.OpenTextFile(md5File, 1, true);
+	var Line = tso.ReadLine();
+	tso.Close();
+	var IndexOfSpace = Line.indexOf(' ');
+	var MD5 = Line.slice(0, IndexOfSpace);
+
+	// Write the raw md5 value into the outptut file:
+	var tso = fso.OpenTextFile(md5File, 2, true);
+	tso.WriteLine(MD5);
+	tso.Close();
+}
 
 // Adds to the batch file a call to the 7za tool with the specified file.
 function AddFile(NewFile)

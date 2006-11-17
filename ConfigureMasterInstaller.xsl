@@ -511,11 +511,18 @@ function Initialize()
 // Returns the folder containing the source XML document.
 function GetDocumentFolder()
 {
-	var iLastBackslash = document.URLUnencoded.lastIndexOf("\\");
+	// Get URL of document, making sure we change backslashes, into forward ones, and the 
+	// %20 mark with a proper space. These changes appeared new with IE7:
+	var URL = document.URLUnencoded;
+	URL = URL.replace(/\//g,"\\");
+	URL = URL.replace(/%20/g," ");
+	var iLastBackslash = URL.lastIndexOf("\\");
 	var iEndOfProtocol = 0;
-	if (document.URLUnencoded.slice(0, 7) == "file://")
+	if (URL.slice(0, 7) == "file:\\\\")
 		iEndOfProtocol = 7;
-	return document.URLUnencoded.substr(iEndOfProtocol, iLastBackslash - iEndOfProtocol);
+	if (URL.slice(0, 8) == "file:\\\\\\")
+		iEndOfProtocol = 8;
+	return URL.substr(iEndOfProtocol, iLastBackslash - iEndOfProtocol);
 }
 
 // Analyzes whether the given path is a relative path or a full path specification.

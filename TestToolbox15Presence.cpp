@@ -26,12 +26,15 @@ bool TestToolbox15Presence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszM
 		if (ERROR_SUCCESS == lResult)
 		{
 			pszDisplayName = new TCHAR [cbData];
-			RegQueryValueEx(hKey, _T("DisplayName"), NULL, NULL, (LPBYTE)pszDisplayName, &cbData);
 
-			if (ERROR_SUCCESS == lResult)
+			if (ERROR_SUCCESS == RegQueryValueEx(hKey, _T("DisplayName"), NULL, NULL,
+				(LPBYTE)pszDisplayName, &cbData))
 			{
-				if (_tcsnicmp(pszDisplayName, pszTemplateDisplayName, _tcslen(pszTemplateDisplayName)) == 0)
+				if (_tcsnicmp(pszDisplayName, pszTemplateDisplayName,
+					_tcslen(pszTemplateDisplayName)) == 0)
+				{
 					fResult = true;
+				}
 			}
 
 			delete[] pszDisplayName;

@@ -25,6 +25,9 @@ bool TestLexiquePresence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMax
 
 			if (_tcscmp(pszAppName, pszTemplateDisplayName) == 0)
 				fResult = true;
+
+			delete[] pszAppName;
+			pszAppName = NULL;
 		}
 		RegCloseKey(hKey);
 	}

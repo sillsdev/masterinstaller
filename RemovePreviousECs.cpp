@@ -170,8 +170,37 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 	g_Log.Write(_T("Looking for unremoved shortcuts in Start Menu..."));
 	g_Log.Indent();
 	TCHAR szStartMenuProgramsStartupPath[MAX_PATH] = { 0 };
-	HRESULT hr = SHGetFolderPath(NULL, CSIDL_STARTUP, NULL, SHGFP_TYPE_CURRENT,
-		szStartMenuProgramsStartupPath);
+
+	// Prepare for dynamic loading of Shell32.dll, and use of function which will be missing
+	// on Windows 98:
+	typedef HRESULT (WINAPI * SHGetFolderPathFn)(HWND hwndOwner, int nFolder, HANDLE hToken,
+		DWORD dwFlags, LPTSTR pszPath);
+	SHGetFolderPathFn _SHGetFolderPath;
+
+	HMODULE hmodShell32 = LoadLibrary(_T("SHELL32.DLL"));
+	if (hmodShell32)
+	{
+		// Now get pointers to the functions we want to use:
+#ifdef UNICODE
+		_SHGetFolderPath = (SHGetFolderPathFn)GetProcAddress(hmodShell32, "SHGetFolderPathW");
+#else
+		_SHGetFolderPath = (SHGetFolderPathFn)GetProcAddress(hmodShell32, "SHGetFolderPathA");
+#endif
+	}
+	HRESULT hr = E_NOTIMPL;
+	if (_SHGetFolderPath)
+	{
+		hr = _SHGetFolderPath(NULL, CSIDL_STARTUP, NULL, SHGFP_TYPE_CURRENT,
+			szStartMenuProgramsStartupPath);
+	}
+	else
+		g_Log.Write(_T("SHGetFolderPath function not found"));
+
+	if (hmodShell32)
+		FreeLibrary(hmodShell32);
+	hmodShell32 = NULL;
+	_SHGetFolderPath = NULL;
+
 	g_Log.Write(_T("Initial folder is '%s'"), szStartMenuProgramsStartupPath);
 	if (hr == S_OK)
 	{

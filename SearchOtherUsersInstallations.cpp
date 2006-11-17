@@ -18,6 +18,32 @@ TCHAR * SearchOtherUsersInstallations(const TCHAR ** pszProductCode, int cProduc
 									  const TCHAR * pszDefaultName, int & cIssues)
 {
 	TCHAR * pszReport = NULL;
+	
+	// Prepare for dynamic loading of AdvApi32.dll, and use of functions which will be missing
+	// on Windows 98:
+	typedef BOOL (WINAPI * LookupAccountSidFn)(LPCTSTR lpSystemName, PSID lpSid, LPTSTR lpName,
+		LPDWORD cchName, LPTSTR lpReferencedDomainName, LPDWORD cchReferencedDomainName,
+		PSID_NAME_USE peUse);
+	LookupAccountSidFn _LookupAccountSid;
+	typedef BOOL (WINAPI * ConvertStringSidToSidFn)(LPCTSTR StringSid, PSID* Sid);
+	ConvertStringSidToSidFn _ConvertStringSidToSid;
+
+	HMODULE hmodAdvApi = LoadLibrary(_T("ADVAPI32.DLL"));
+	if (hmodAdvApi)
+	{
+		// Now get pointers to the functions we want to use:
+#ifdef UNICODE
+		_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvApi, "LookupAccountSidW");
+		_ConvertStringSidToSid = (ConvertStringSidToSidFn)GetProcAddress(hmodAdvApi, "ConvertStringSidToSidW");
+#else
+		_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvApi, "LookupAccountSidA");
+		_ConvertStringSidToSid = (ConvertStringSidToSidFn)GetProcAddress(hmodAdvApi, "ConvertStringSidToSidA");
+#endif
+	}
+	if (!_LookupAccountSid)
+		g_Log.Write(_T("LookupAccountSid function not found"));
+	if (!_ConvertStringSidToSid)
+		g_Log.Write(_T("ConvertStringSidToSid function not found"));
 
 	for (int i = 0; i < cProductCode; i++)
 	{
@@ -145,15 +171,18 @@ TCHAR * SearchOtherUsersInstallations(const TCHAR ** pszProductCode, int cProduc
 							SID_NAME_USE snu;
 							try
 							{
-								if (ConvertStringSidToSid(pszUserId, &psid) != 0)
+								if (_ConvertStringSidToSid != NULL && _LookupAccountSid != NULL)
 								{
-									LookupAccountSid(NULL, psid, NULL, &cchLogon, NULL, &cchDomain, &snu);
+									if (_ConvertStringSidToSid(pszUserId, &psid) != 0)
 									{
-										pszLogon = new TCHAR [cchLogon];
-										pszDomain = new TCHAR [cchDomain];
-										LookupAccountSid(NULL, psid, pszLogon, &cchLogon, pszDomain, &cchDomain, &snu);
+										_LookupAccountSid(NULL, psid, NULL, &cchLogon, NULL, &cchDomain, &snu);
+										{
+											pszLogon = new TCHAR [cchLogon];
+											pszDomain = new TCHAR [cchDomain];
+											_LookupAccountSid(NULL, psid, pszLogon, &cchLogon, pszDomain, &cchDomain, &snu);
+										}
+										LocalFree(psid);
 									}
-									LocalFree(psid);
 								}
 							}
 							catch (...)
@@ -215,6 +244,9 @@ TCHAR * SearchOtherUsersInstallations(const TCHAR ** pszProductCode, int cProduc
 
 		} // End if opened HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData
 	} // Next Product Code
+
+	if (hmodAdvApi)
+		FreeLibrary(hmodAdvApi);
 
 	return pszReport;
 }

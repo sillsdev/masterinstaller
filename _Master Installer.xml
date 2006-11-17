@@ -105,7 +105,7 @@
 		<Product>
 			<AutoConfigure>
 				<Title>FW (Trunk build from \\cana)</Title>
-				<Source NameWhenLocked="setup.msi">\\cana\LSDev\Installers\Release\SetupFW.msi</Source>
+				<Source NameWhenLocked="setup.msi">\\cana\LSDev\Installers\Trunk\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -176,7 +176,7 @@
 		<Product>
 			<AutoConfigure>
 				<Title>FW **without TE** (Trunk build from \\cana)</Title>
-				<Source NameWhenLocked="setup.msi">\\cana\LSDev\Installers\Release_no_TE\SetupFW.msi</Source>
+				<Source NameWhenLocked="setup.msi">\\cana\LSDev\Installers\Trunk_no_TE\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>

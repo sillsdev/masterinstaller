@@ -549,6 +549,8 @@ _TCHAR * GenerateHangingWindowsReport()
 				me32.dwSize = sizeof( MODULEENTRY32 );
 
 				// Retrieve information about the first module:
+				// (When compiled in Unicode mode, this function causes the whole program to fail
+				// on Win98, as there is no Module32FirstW in Kernel32.dll on Win98)
 				if (Module32First(hModuleSnap, &me32))
 				{
 					// Get "official" name of product:

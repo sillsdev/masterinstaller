@@ -1808,15 +1808,6 @@ function PanicStop()
 	PanicStopPressed = true;
 }
 
-// Pinched this from the Internet. It allows the message queue to be processed, which allows
-// me to update the commentary table during a build.
-// Not quite sure how it works, but it does.
-function sleep(numberMillis)
-{
-	var dialogScript = "window.setTimeout(" + " function () { window.close(); }, " + numberMillis + ");";
-	var result = window.showModalDialog("javascript:document.writeln(" +" '<script>" + dialogScript + "<" + "/script>')");
-}
-
 // Add some text to the commentary table.
 function AddCommentary(Column, Text, fNewRow, fUseInnerHtml)
 {
@@ -1851,7 +1842,6 @@ function AddCommentary(Column, Text, fNewRow, fUseInnerHtml)
 		Cell.innerHTML = Text
 	else
 		Cell.innerText = Text;
-	sleep(10);
 }
 
 // Compiles the setup.exe, autorun.inf, InstallerHelp.dll and InstallerHelp2.dll files,
@@ -1874,7 +1864,6 @@ function PrelimCompile()
 function detailsEntered()
 {
 	setPageNo(7);
-
 	BuildCd(document.getElementById('WriteXml').checked,
 		document.getElementById('CompileHelps').checked,
 		document.getElementById('Compile').checked,

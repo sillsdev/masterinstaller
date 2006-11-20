@@ -42,8 +42,7 @@
 				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
 				<Source>Documents\FieldWorks\TechSupport.txt</Source>
-				<Source DestPath="LinguaLinks Export Patches">Documents\FieldWorks\LinguaLinks Export Patches</Source>
-				<Source DestPath="XML Utils">Documents\FieldWorks\XML Utils</Source>
+				<Source>Documents\FieldWorks\CopyToCd</Source>
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 				<WhenLocked>
@@ -113,8 +112,7 @@
 				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
 				<Source>Documents\FieldWorks\TechSupport.txt</Source>
-				<Source DestPath="LinguaLinks Export Patches">Documents\FieldWorks\LinguaLinks Export Patches</Source>
-				<Source DestPath="XML Utils">Documents\FieldWorks\XML Utils</Source>
+				<Source>Documents\FieldWorks\CopyToCd</Source>
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 				<WhenLocked>
@@ -183,8 +181,7 @@
 				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
 				<Source>Documents\FieldWorks\TechSupport.txt</Source>
-				<Source DestPath="LinguaLinks Export Patches">Documents\FieldWorks\LinguaLinks Export Patches</Source>
-				<Source DestPath="XML Utils">Documents\FieldWorks\XML Utils</Source>
+				<Source>Documents\FieldWorks\CopyToCd</Source>
 				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 				<WhenLocked>

@@ -2900,7 +2900,7 @@ function GatherFiles(CdImagePath)
 							var RootFolder = FileListData[iData].RootFolder;
 							var Substitution = FileListData[iData].NameWhenLocked;
 							var DestPath = FileListData[iData].DestPath;
-							
+
 							for (i = 0; i < FileList.length; i++)
 							{
 								var SourcePath = FileList[i];

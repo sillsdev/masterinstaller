@@ -15,8 +15,8 @@
 
 HINSTANCE g_hinstDll = NULL;
 
-const _TCHAR * pszErrorNotAvailable = "Help file not available.";
-const _TCHAR * pszErrorAccess = "Error accessing help file.";
+const _TCHAR * pszErrorNotAvailable = _T("Help file not available.");
+const _TCHAR * pszErrorAccess = _T("Error accessing help file.");
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
@@ -33,10 +33,10 @@ struct HelpThreadData
 DWORD WINAPI HelpThread(LPVOID lpParameter)
 {
 	HelpThreadData * htd = (HelpThreadData *)lpParameter;
-	int cch = 1 + _tcslen(htd->pszStem);
+	size_t cch = 1 + _tcslen(htd->pszStem);
 	_TCHAR * pszStem = new _TCHAR [cch];
-	_tcscpy_s(pszStem, cch, 1 + _tcslen(htd->pszStem), htd->pszStem);
-	unsigned _TCHAR * pbBuffer = NULL;
+	_tcscpy_s(pszStem, cch, htd->pszStem);
+	BYTE * pbBuffer = NULL;
 	int cbSize = 0;
 	// Look for embedded extension:
 	_TCHAR * pszExtn = _tcsrchr(pszStem, '.');
@@ -47,7 +47,7 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 	}
 	if (!pszExtn)
 	{
-		MessageBox(NULL, pszErrorNotAvailable, "", MB_OK);
+		MessageBox(NULL, pszErrorNotAvailable, _T(""), MB_OK);
 		delete[] pszStem;
 		return 0;
 	}
@@ -57,13 +57,13 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 
 	if (!pbBuffer)
 	{
-		MessageBox(NULL, pszErrorNotAvailable, "", MB_OK);
+		MessageBox(NULL, pszErrorNotAvailable, _T(""), MB_OK);
 		delete[] pszStem;
 		return 0;
 	}
 
 	// Get the temp path:
-	const _TCHAR * pszDefaultPath = "C:\\";
+	const _TCHAR * pszDefaultPath = _T("C:\\");
 	_TCHAR pszTempPath[MAX_PATH];
 	if (GetTempPath(MAX_PATH, pszTempPath) == 0)
 		_tcscpy_s(pszTempPath, pszDefaultPath); // Use default instead
@@ -72,7 +72,7 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 	DWORD dwFileAttrib = GetFileAttributes(pszTempPath);
 	bool fExists = (dwFileAttrib != INVALID_FILE_ATTRIBUTES &&
 		(dwFileAttrib & FILE_ATTRIBUTE_DIRECTORY));
-	if (!fExists && stricmp(pszTempPath, pszDefaultPath) != 0)
+	if (!fExists && _tcsicmp(pszTempPath, pszDefaultPath) != 0)
 	{
 		// Temp path doesn't exist, but we haven't tried the default path yet:
 		_tcscpy_s(pszTempPath, MAX_PATH, pszDefaultPath); // Use default instead
@@ -81,25 +81,25 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 			(dwFileAttrib & FILE_ATTRIBUTE_DIRECTORY));
 		if (!fExists)
 		{
-			MessageBox(NULL, pszErrorAccess, "", MB_OK);
+			MessageBox(NULL, pszErrorAccess, _T(""), MB_OK);
 			delete[] pszStem;
 			return 0;
 		}
 	}
 
 	// Add stem file name:
-	strcat(pszTempPath, pszStem);
+	_tcscat_s(pszTempPath, MAX_PATH, pszStem);
 	// When we run a hlp file, it will lead to the creation of a GID file:
 	_TCHAR pszGidPath[MAX_PATH];
 	_tcscpy_s(pszGidPath, MAX_PATH, pszTempPath);
-	strcat(pszGidPath, ".gid");
+	_tcscat_s(pszGidPath, MAX_PATH, _T(".gid"));
 	// Add file extension:
-	strcat(pszTempPath, ".");
-	strcat(pszTempPath, pszExtn);
-	FILE * f = fopen(pszTempPath, "wb");
-	if (!f)
+	_tcscat_s(pszTempPath, MAX_PATH, _T("."));
+	_tcscat_s(pszTempPath, MAX_PATH, pszExtn);
+	FILE * f;
+	if (_tfopen_s(&f, pszTempPath, _T("wb")) != 0)
 	{
-		MessageBox(NULL, pszErrorAccess, "", MB_OK);
+		MessageBox(NULL, pszErrorAccess, _T(""), MB_OK);
 		delete[] pszStem;
 		return 0;
 	}
@@ -116,7 +116,7 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 	// System32. If this happens, two processes get created, and the process id returned to
 	// us isn't the one we can use to kill it later!
 	HANDLE hProcess = NULL;
-	if (stricmp(pszExtn, "hlp") == 0)
+	if (_tcsicmp(pszExtn, _T("hlp")) == 0)
 	{
 		// Use the WinHlp32.exe file in the Windows directory:
 		_TCHAR pszWindowsDirectory[MAX_PATH];
@@ -129,10 +129,10 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 				pszWindowsDirectory[cchLen - 1] = 0;
 
 			// Construct our command string:
-			const _TCHAR * pszHelpCmd = "WinHlp32.exe";
-			_TCHAR * pszCmd = new _TCHAR [_tcslen(pszWindowsDirectory) + _tcslen(pszHelpCmd) + 
-				_tcslen(pszTempPath) + 7];
-			sprintf(pszCmd, "\"%s\\%s\" %s", pszWindowsDirectory, pszHelpCmd, pszTempPath);
+			const _TCHAR * pszHelpCmd = _T("WinHlp32.exe");
+			size_t cch = _tcslen(pszWindowsDirectory) + _tcslen(pszHelpCmd) + _tcslen(pszTempPath) + 7;
+			_TCHAR * pszCmd = new _TCHAR [cch];
+			_stprintf_s(pszCmd, cch, _T("\"%s\\%s\" %s"), pszWindowsDirectory, pszHelpCmd, pszTempPath);
 
 			// Set up data for creating new process:
 			BOOL bReturnVal = false;
@@ -156,7 +156,7 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 		}
 		if (!hProcess)
 		{
-			MessageBox(NULL, pszErrorAccess, "", MB_OK);
+			MessageBox(NULL, pszErrorAccess, _T(""), MB_OK);
 			delete[] pszStem;
 			return 0;
 		}

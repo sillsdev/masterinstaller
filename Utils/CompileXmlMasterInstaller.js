@@ -43,9 +43,9 @@ if (WScript.Arguments.Length < 1)
 }
 
 var XmlFileName = WScript.Arguments.Item(0);
-var CppFilePath = "E:\\CD Builder\\Master Installer";
+var CppFilePath = "F:\\CD Builder\\Master Installer";
 
-// Check that the inout file is an XML file:
+// Check that the input file is an XML file:
 if (XmlFileName.slice(-4).toLowerCase() != ".xml")
 {
 	WScript.Echo("ERROR - XML file must be specified.");

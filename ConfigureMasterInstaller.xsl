@@ -2354,7 +2354,8 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 		AddCommentary(0, "Preparing file for compiler settings...", true);
 	var CppRspFilePath = NewCompilationFolder + "\\" + ProjectName + "Cpp.rsp";
 	var tsoCpp = fso.OpenTextFile(CppRspFilePath, 2, true);
-	tsoCpp.WriteLine('/O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "INSTALLERHELP2_EXPORTS" /D "_WINDLL" /D "_MBCS" /FD /EHsc /MT /GS /Fo"' + NewCompilationFolder + '/" /Fd"' + NewCompilationFolder + '/vc70.pdb" /W3 /c /Wp64 /Zi /TP');
+	tsoCpp.WriteLine('/O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "INSTALLERHELP2_EXPORTS" /D "_VC80_UPGRADE=0x0710" /D "_WINDLL" /D "_MBCS" /FD /EHsc /MT /GS /W3 /c /Wp64 /Zi /TP /Fo"' + NewCompilationFolder + '\\InstallerHelp2.obj"');
+
 	tsoCpp.WriteLine('"' + CppPath + '\\InstallerHelp2.cpp"');
 	tsoCpp.Close();
 	if (fDisplayCommentary)
@@ -2374,6 +2375,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 	var ObjRspFilePath = NewCompilationFolder + "\\" + ProjectName + "Obj.rsp";
 	var tsoObj = fso.OpenTextFile(ObjRspFilePath, 2, true);
 	tsoObj.WriteLine('/OUT:"' + InstallerHelp2DllPath + '" /INCREMENTAL:NO /NOLOGO /DLL /DEF:"' + CppPath + '\\InstallerHelp2.def" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /IMPLIB:"' + NewCompilationFolder + '/InstallerHelp2.lib" /MACHINE:X86  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib');
+
 	tsoObj.WriteLine('"' + NewCompilationFolder + '\\InstallerHelp2.obj"');
 	tsoObj.Close();
 	if (fDisplayCommentary)

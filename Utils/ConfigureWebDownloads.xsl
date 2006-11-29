@@ -698,8 +698,8 @@ function Go()
 	{
 	
 		// Everything is surrounded by a try...catch block, so we can trap errors:
-/*poo		try
-		{*/
+		try
+		{
 			ProductsPath = document.getElementById("ProductsPath").value;
 			CppFilePath = document.getElementById("CppPath").value;
 			var OutputPath = document.getElementById('OutputPath').value;
@@ -788,12 +788,12 @@ function Go()
 				// Generate the downloads.xml file for all the flavors:
 				GenerateDownloadsXml(XmlDocs, OutputPath);				
 			}
-/*poo		}
+		}
 		catch(err)
 		{
 			FinalComment = "Error: " + (err.number & 0xFFFF) + "\n" + err.description;
 			ReturnValue = 1;
-		}*/
+		}
 	}
 
 	AddCommentary(0, "<h2>" + FinalComment + "</h2>", true, true);

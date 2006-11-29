@@ -667,20 +667,21 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>WordSurv 5.0 Beta</Title>
+				<Title>WordSurv 6.0</Title>
 				<Source>Installers\WordSurv</Source>
-				<SetupHelp>Documents\WordSurv\SETUPWS.HLP</SetupHelp>
+				<SetupHelp>Documents\WordSurv\SetupWS.rtf</SetupHelp>
 				<Destination>WordSurv</Destination>
 			</AutoConfigure>
-			<Title>WordSurv 5.0 Beta</Title>
+			<Title>WordSurv 6.0</Title>
 			<Tag>WordSurv</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>WordSurv\SetupWS.msi</CriticalFile>
+			<CriticalFile>WordSurv\WordSurv 6.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{4B7F9BA4-F7F4-4607-B2BF-5A3D102B943B}</ProductCode>
-			<Help>WordSurv\SETUPWS.HLP</Help>
+			<ProductCode>{F6F67FCD-7634-4C33-A4B3-D7043581E33E}</ProductCode>
+			<Help>WordSurv\SetupWS.rtf</Help>
+			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
 		</Product>		
 		<Product>
 			<AutoConfigure>
@@ -734,7 +735,7 @@
 				<Title>Encoding Converters 2.5 Web Installer (On test site)</Title>
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 2.5</Title>
-			<Tag>EncCvtrs_2_5</Tag>
+			<Tag>EncCvtrs_2_5_Test</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>

@@ -763,6 +763,7 @@
 				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC11.cab</Source>
 				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC12.cab</Source>
 				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC13.cab</Source>
+				<Source>Documents\Encoding Converters\CopyToCd</Source>
 				<SetupHelp>Documents\Encoding Converters\SetupEC.rtf</SetupHelp>
 				<Destination>Encoding Converters</Destination>
 			</AutoConfigure>

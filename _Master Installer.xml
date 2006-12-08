@@ -284,6 +284,64 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>Phonology Assistant 3.0</Title>
+				<Source>Installers\Phonology Assistant</Source>
+				<SetupHelp>Documents\Phonology Assistant\SetupPA.rtf</SetupHelp>
+				<Destination>Phonology Assistant</Destination>
+			</AutoConfigure>
+			<Title>Phonology Assistant 3.0</Title>
+			<Tag>PA3</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Phonology Assistant\Phonology Assistant.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Help>Phonology Assistant\SetupPA.rtf</Help>
+			<ProductCode>{81584AC8-1718-4B20-8189-8A9F149C5CCD}</ProductCode>
+			<Prerequisite Tag="WI3" MinVersion="3.0"/>
+			<Requires Tag=".NET2.0" Version="2.0.50727" FailMsg="The program will crash on startup."/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Speech Analyzer 3.0</Title>
+				<Source>Installers\Speech Analyzer</Source>
+				<SetupHelp>Documents\Speech Analyzer\SetupSA.rtf</SetupHelp>
+				<Destination>Speech Analyzer</Destination>
+			</AutoConfigure>
+			<Title>Speech Analyzer 3.0</Title>
+			<Tag>SA3</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Speech Analyzer\Speech Analyzer.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Help>Speech Analyzer\SetupSA.rtf</Help>
+			<ProductCode>{A87E80BE-9BB8-481B-AD60-CA8AD8642C3D}</ProductCode>
+			<Prerequisite Tag="WI3" MinVersion="3.0"/>
+			<Requires Tag=".NET2.0" Version="2.0.50727" FailMsg="The program will crash on startup."/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>IPA Help 3.0</Title>
+				<Source>Installers\IPA Help</Source>
+				<SetupHelp>Documents\IPA Help\SetupIPAHelp.rtf</SetupHelp>
+				<Destination>IPA Help</Destination>
+			</AutoConfigure>
+			<Title>IPA Help 3.0</Title>
+			<Tag>IPA3</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>IPA Help\IPA Help.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Help>IPA Help\SetupIPAHelp.rtf</Help>
+			<ProductCode>{D9388CA9-E056-446C-8E13-111DA0F3A704}</ProductCode>
+			<Prerequisite Tag="WI3" MinVersion="3.0"/>
+			<Requires Tag=".NET2.0" Version="2.0.50727" FailMsg="The program will crash on startup."/>
+			<Requires Tag="IE" MinVersion="5.5" FailMsg="The Word Lists feature will not run correctly."/>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Adapt It 3.2.4 (English)</Title>
 				<Source>Installers\Adapt It\English_Adapt_It_Regular_324.exe</Source>
 				<Source>Installers\Adapt It\BTPrep.exe</Source>

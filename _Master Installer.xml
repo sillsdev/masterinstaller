@@ -740,7 +740,7 @@
 			<ProductCode>{F6F67FCD-7634-4C33-A4B3-D7043581E33E}</ProductCode>
 			<Help>WordSurv\SetupWS.rtf</Help>
 			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
-			<Requires Tag="MDAC2.8" MinVersion="2.6" FailMsg="The program will not run correctly."/>
+			<Requires Tag="MDAC2.8" MinVersion="2.60" FailMsg="The program will not run correctly."/>
 		</Product>		
 		<Product>
 			<AutoConfigure>

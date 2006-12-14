@@ -24,8 +24,9 @@ bool TestMDACPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
 
 		if (ERROR_SUCCESS != lResult)
 			return false;
-
+#if !defined NOLOGGING
 		g_Log.Write(_T("Found MDAC version %s"), szVersion);
+#endif
 		return VersionInRange(szVersion, pszMinVersion, pszMaxVersion);
 	}
 	return false;

@@ -26,6 +26,9 @@ bool TestDirectXPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersio
 
 		if (ERROR_SUCCESS == lResult)
 		{
+#if !defined NOLOGGING
+			g_Log.Write(_T("Found DirectX version %s"), szVer);
+#endif
 			if (VersionInRange(szVer, pszMinVersion, pszMaxVersion))
 				fResult = true;
 		}

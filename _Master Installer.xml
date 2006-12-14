@@ -666,7 +666,7 @@
 			<Install/>
 			<Commentary>Follow intructions in installer dialogs.</Commentary>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{6723942B-3948-4CD5-9526-2683DB19A967}</ProductCode>
+			<ProductCode>{BFFA9B53-A95A-4E40-A813-EFAF3B6D23B3}</ProductCode>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 			<Help>Speech Tools\SETUPST.HLP</Help>
 			<Feature>

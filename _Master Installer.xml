@@ -740,6 +740,7 @@
 			<ProductCode>{F6F67FCD-7634-4C33-A4B3-D7043581E33E}</ProductCode>
 			<Help>WordSurv\SetupWS.rtf</Help>
 			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
+			<Requires Tag="MDAC2.8" MinVersion="2.6" FailMsg="The program will not run correctly."/>
 		</Product>		
 		<Product>
 			<AutoConfigure>
@@ -1106,6 +1107,21 @@
 			<TestPresence>TestTsfPresence</TestPresence>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Show</StatusWindow>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Microsoft Data Access Components (MDAC) 2.8</Title>
+				<Source>3rd Party\MDAC 2.8\New</Source>
+				<Destination>Utilities\MDAC 2.8</Destination>
+			</AutoConfigure>
+			<Title>Microsoft Data Access Components 2.8</Title>
+			<Tag>MDAC2.8</Tag>
+			<CriticalFile>Utilities\MDAC 2.8\MDAC_TYP.EXE</CriticalFile>
+			<Install>Utilities\MDAC 2.8\MDAC_TYP.EXE</Install>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=6c050fe3-c795-4b7d-b037-185d0506396c&amp;DisplayLang=en</DownloadURL>
+			<Commentary>Follow instructions in installer wizard.</Commentary>
+			<StatusWindow>Monitor</StatusWindow>
+			<TestPresence Version="2.80.1022.3">TestMDACPresence</TestPresence>
 		</Product>
 		<Product>
 			<AutoConfigure>

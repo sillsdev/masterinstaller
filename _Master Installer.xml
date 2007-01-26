@@ -928,7 +928,6 @@
 			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
 			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
 			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR.EXE</CriticalFile>
-<!--			<KillHangingWindows>true</KillHangingWindows>-->
 			<Preinstall>TestIfSqlServerUpgradeNeeded</Preinstall>
 			<Install Flag="g_fSqlServerUpgradeNeeded">
 				<True>$CriticalFile$ INSTANCENAME=SILFW UPGRADE=SQL_Engine SAPWD=inscrutable SQLACCOUNT="NT AUTHORITY\SYSTEM" /qb</True>

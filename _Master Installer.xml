@@ -935,7 +935,7 @@
 			</Install>
 			<StatusWindow>Monitor 10000</StatusWindow>
 			<Commentary>Please wait while SQL Server installs and then is configured.</Commentary>
-			<TestPresence Version="9.00.2047.00">TestMsdeSILFWPresence</TestPresence>
+			<TestPresence Version="9.00.2047.00">TestSqlSILFWPresence</TestPresence>
 			<PostInstall>SqlServer2005PostInstall</PostInstall>
 			<DownloadURL></DownloadURL>
 		<Product>

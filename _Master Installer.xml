@@ -915,6 +915,32 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>Microsoft SQL Server 2005 Express SP1</Title>
+				<Source>3rd Party\SQL Server 2005 Express</Source>
+				<Destination>Utilities\SQL Server 2005 Express</Destination>
+			</AutoConfigure>
+			<Title>Microsoft SQL Server 2005 Express SP1</Title>
+			<Tag>SQL2005</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<Prerequisite Tag=".NET2.0" Version="2.0"/>
+			<Prerequisite Tag="WI31" MinVersion="3.1"/>
+			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
+			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
+			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR.EXE</CriticalFile>
+<!--			<KillHangingWindows>true</KillHangingWindows>-->
+			<Preinstall>TestIfSqlServerUpgradeNeeded</Preinstall>
+			<Install Flag="g_fSqlServerUpgradeNeeded">
+				<True>$CriticalFile$ INSTANCENAME=SILFW UPGRADE=SQL_Engine SAPWD=inscrutable SQLACCOUNT="NT AUTHORITY\SYSTEM" /qb</True>
+				<False>$CriticalFile$ INSTANCENAME=SILFW ADDLOCAL=All SAPWD=inscrutable SECURITYMODE=SQL SQLACCOUNT="NT AUTHORITY\SYSTEM" DISABLENETWORKPROTOCOLS=0 /qb</False>
+			</Install>
+			<StatusWindow>Monitor 10000</StatusWindow>
+			<Commentary>Please wait while SQL Server installs and then is configured.</Commentary>
+			<TestPresence Version="9.00.2047.00">TestMsdeSILFWPresence</TestPresence>
+			<PostInstall>SqlServer2005PostInstall</PostInstall>
+			<DownloadURL></DownloadURL>
+		<Product>
+			<AutoConfigure>
 				<Title>Microsoft SQL Server Desktop Engine Service Pack 4</Title>
 				<Source>3rd Party\MSDE 2000 SP4</Source>
 				<Destination>Utilities\MSDE</Destination>
@@ -1211,6 +1237,25 @@
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows Installer 3.1 (Win 2K and up only)</Title>
+				<Source>3rd Party\Windows Installer 3.1</Source>
+				<Destination>Utilities\MSInstall</Destination>
+			</AutoConfigure>
+			<Title>Windows Installer 3.1</Title>
+			<Tag>WI31</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<CriticalFile>Utilities\MSInstall\WindowsInstaller-KB893803-v2-x86.exe</CriticalFile>
+			<Install>$CriticalFile$ /quiet /norestart</Install>
+			<TestPresence Version="3.1">TestWinInstallerPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?familyid=889482fc-5f56-4a38-b838-de776fd4138c&amp;displaylang=en</DownloadURL>
+			<Commentary>Please wait a few moments.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
+			<CD>0</CD>
 		</Product>
 		<Product>
 			<AutoConfigure>

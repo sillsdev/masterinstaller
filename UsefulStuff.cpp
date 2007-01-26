@@ -56,6 +56,7 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 		else
 			ch = szPath;
 		*ch = 0;
+		g_Log.Write(_T("Setting current directory to %s"), szPath);
 		::SetCurrentDirectory(szPath);
 	}
 
@@ -115,6 +116,7 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 		CREATE_SEPARATE_WOW_VDM, NULL, NULL, &si, &process_info);
 
 	// Retore original current directory:
+	g_Log.Write(_T("Restoring current directory to %s"), szOldPath);
 	::SetCurrentDirectory(szOldPath);
 
 	if (bReturnVal)

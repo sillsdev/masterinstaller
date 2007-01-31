@@ -938,6 +938,7 @@
 			<TestPresence Version="9.00.2047.00">TestSqlSILFWPresence</TestPresence>
 			<PostInstall>SqlServer2005PostInstall</PostInstall>
 			<DownloadURL></DownloadURL>
+		</Product>
 		<Product>
 			<AutoConfigure>
 				<Title>Microsoft SQL Server Desktop Engine Service Pack 4</Title>

@@ -1378,6 +1378,12 @@ void ProductManager_t::GetActiveRequirements(const IndexList_t & rgiProducts,
 		int iProduct = rgiProducts[i];
 		IndexList_t & rgiRequirements = Products[iProduct].m_rgiRequirements;
 
+		if (fRecursePrerequisites)
+		{
+			// Recursively add the prerequisites of the current required products:
+			GetActivePrerequisites(rgiRequirements, rgiOutputList, true);
+		}
+
 		// Iterate through each required product:
 		for (int i2 = 0; i2 < rgiRequirements.GetCount(); i2++)
 		{
@@ -1397,11 +1403,6 @@ void ProductManager_t::GetActiveRequirements(const IndexList_t & rgiProducts,
 					rgiOutputList.Add(iReq);
 				}
 			}
-		}
-		if (fRecursePrerequisites)
-		{
-			// Recursively add the prerequisites of the current required products:
-			GetActivePrerequisites(rgiRequirements, rgiOutputList, true);
 		}
 		if (fRecurseRequirements)
 		{

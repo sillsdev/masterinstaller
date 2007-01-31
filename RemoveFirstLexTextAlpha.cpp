@@ -1,10 +1,10 @@
 #pragma once
 
-#include <tTCHAR.h>
+#include <TCHAR.h>
 
 // Check if the WW installation of the first alhpa release of LexText is present,
 // and remove it if so.
-int RemoveFirstLexTextAlpha(const TTCHAR * /*pszCriticalFile*/)
+int RemoveFirstLexTextAlpha(const _TCHAR * /*pszCriticalFile*/)
 {
 	int dwResult = 0;
 

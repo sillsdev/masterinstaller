@@ -791,16 +791,16 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Encoding Converters 2.5 Web Installer (On test site)</Title>
+				<Title>Encoding Converters 2.5 Web Installer (On NRSI site)</Title>
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 2.5</Title>
-			<Tag>EncCvtrs_2_5_Test</Tag>
+			<Tag>EncCvtrs_2_5_Web</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>http://fieldworks.sil.org/objectweb/test/installer/SetupEC.msi</CriticalFile>
+			<CriticalFile>http://scripts.sil.org/cms/scripts/render_download.php?site_id=nrsi&amp;format=file&amp;media_id=SILConverters25_SetupMSI&amp;filename=SetupEC.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
-			<StatusWindow>Show</StatusWindow>
+			<StatusWindow>Monitor 8000</StatusWindow>
 			<ProductCode>{6242D132-64F4-46E3-9F39-26B02215B896}</ProductCode>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>

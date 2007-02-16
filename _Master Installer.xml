@@ -55,7 +55,7 @@
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install/>
+			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{6776923F-FF58-49DA-B57D-3A6056951EDD}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
@@ -124,7 +124,7 @@
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install/>
+			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{6776923F-FF58-49DA-B57D-3A6056951EDD}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>

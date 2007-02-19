@@ -4,9 +4,6 @@
 
 #include "services.cpp"
 
-// Forward declarations:
-BOOL StartSampleService(SC_HANDLE schSCManager);
-
 // Import the Surface Area settings
 int SqlServer2005PostInstall(const _TCHAR * pszCriticalFile)
 {

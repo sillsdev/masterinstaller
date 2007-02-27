@@ -162,31 +162,32 @@
 		</Product>
 		<Product KeyId="2" Version="4.2">
 			<AutoConfigure>
-				<Title>TW4 (From source control repository)</Title>
-				<Source NameWhenLocked="setup.msi">Installers\Translator's Workplace 4 Update 2\TW4Update.msi</Source>
-				<SetupHelp>Documents\Translator's Workplace 4 Update 2\SetupTW.rtf</SetupHelp>
+				<Title>TW4 Update 3 (From source control repository)</Title>
+				<Source NameWhenLocked="setup.msi">Installers\Translator's Workplace 4 Update 3\TW4 Update 3.msi</Source>
+				<SetupHelp>Documents\Translator's Workplace 4 Update 3\SetupTW.rtf</SetupHelp>
 				<Destination>TW4</Destination>
 				<WhenLocked>
 					<Destination>2</Destination>
 					<Substitutions>
 						<CriticalFile>2\setup.msi</CriticalFile>
 						<Install>MsiExec.exe /i 2\setup.msi</Install>
+						<Help Internal="true">SetupTW.rtf</Help>
 					</Substitutions>
 				</WhenLocked>
 			</AutoConfigure>
-			<Title>Translator's Workplace 4.0 Update 2</Title>
-			<Tag>TW4</Tag>
+			<Title>Translator's Workplace 4.0 Update 3</Title>
+			<Tag>TW4U3</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>TW4\TW4Update.msi</CriticalFile>
+			<CriticalFile>TW4\TW4 Update 3.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>This installer may take a few minutes to start from the CD.</Commentary>
-			<ProductCode>{D938E793-A00B-4849-BCA8-9C25B4A6C081}</ProductCode>
+			<ProductCode>{838FEC91-1CDB-4F69-9FE1-E194D03FB144}</ProductCode>
 			<Help>TW4\SetupTW.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 		</Product>
-		<Product KeyId="1" Version="5.0">
+		<Product KeyId="1" Version="5.2">
 			<AutoConfigure>
 				<Title>BART 5 (From source control repository)</Title>
 				<Source NameWhenLocked="setup.msi">Installers\BART 5\SetupBart.msi</Source>
@@ -196,6 +197,7 @@
 					<Destination>3</Destination>
 					<Substitutions>
 						<CriticalFile>3\setup.msi</CriticalFile>
+						<Help Internal="true">SetupBART.rtf</Help>
 					</Substitutions>
 				</WhenLocked>
 			</AutoConfigure>
@@ -737,20 +739,20 @@
 		<Product>
 			<AutoConfigure>
 				<Title>Encoding Converters 2.5 CD Installer (from FW 4.0 branch on \\ls-fwbuilder)</Title>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC.msi</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC1.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC2.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC3.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC4.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC5.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC6.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC7.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC8.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC9.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC10.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC11.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC12.cab</Source>
-				<Source>\\ls-fwbuilder\c\FW_4.0\Installer\SetupEC13.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC.msi</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC1.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC2.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC3.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC4.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC5.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC6.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC7.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC8.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC9.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC10.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC11.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC12.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC13.cab</Source>
 				<Source>Documents\Encoding Converters\CopyToCd</Source>
 				<SetupHelp>Documents\Encoding Converters\SetupEC.rtf</SetupHelp>
 				<Destination>Encoding Converters</Destination>
@@ -1385,6 +1387,32 @@
 				<Tag>WP_31S</Tag>
 				<MsiFeature>WPd</MsiFeature>
 			</Feature>
+		</Product>
+		<Product KeyId="2" Version="4.1">
+			<AutoConfigure>
+				<Title>TW4 Update 2(From source control repository)</Title>
+				<Source NameWhenLocked="setup.msi">Installers\Translator's Workplace 4 Update 2\TW4Update.msi</Source>
+				<SetupHelp>Documents\Translator's Workplace 4 Update 2\SetupTW.rtf</SetupHelp>
+				<Destination>TW4</Destination>
+				<WhenLocked>
+					<Destination>2</Destination>
+					<Substitutions>
+						<CriticalFile>2\setup.msi</CriticalFile>
+						<Install>MsiExec.exe /i 2\setup.msi</Install>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>Translator's Workplace 4.0 Update 2</Title>
+			<Tag>TW4</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>TW4\TW4Update.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>This installer may take a few minutes to start from the CD.</Commentary>
+			<ProductCode>{D938E793-A00B-4849-BCA8-9C25B4A6C081}</ProductCode>
+			<Help>TW4\SetupTW.rtf</Help>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 		</Product>
 	</Products>
 </MasterInstaller>

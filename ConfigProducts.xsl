@@ -85,7 +85,7 @@ project to make an executable master installer.
 		<!-- Version number of product, used in Product Key tests -->
 		<xsl:text>&#09;&#09;</xsl:text>
 		<xsl:call-template name="QuotedStrOrNullIfEmpty">
-			<xsl:with-param name="str" select="Version"/>
+			<xsl:with-param name="str" select="@Version"/>
 		</xsl:call-template>
 		<xsl:text>, // Version for Product Key test&#13;</xsl:text>
 

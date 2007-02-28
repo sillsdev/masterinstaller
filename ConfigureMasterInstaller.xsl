@@ -71,7 +71,7 @@
 		</div>
 		<input id="GatherFiles" type="checkbox" title="Gather files needed for your CD image into one folder."/>Gather files for CD image<br/>
 		<script type="text/javascript">document.getElementById("GatherFiles").checked=true;</script>
-		<input id="BuildIso" type="checkbox" title="Create ISO file which can be burned directly to CD. Requires Magic ISO console utility ($30)."/>Build ISO Cd Image<br/>
+		<input id="BuildIso" type="checkbox" title="Create ISO file which can be burned directly to CD. Requires Magic ISO console utility ($30)."/>Build ISO CD Image<br/>
 		<script type="text/javascript">document.getElementById("BuildIso").checked=true;</script>
 		<input id="BuildSfx" type="checkbox" title="Creates .exe file which extracts all files and folders needed on CD. Assumes 7-Zip utility is present."/>Build self-extracting zip of CD contents<br/>
 		<script type="text/javascript">document.getElementById("BuildSfx").checked=false;</script>
@@ -2310,8 +2310,9 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 					
 					if (fDisplayCommentary)
 						AddCommentary(1, HelpFile, false);
-					shellObj.Run('"' + HelpFileCruncher + '" "' + HelpFile + '" "' + OutputPath + '"', true);
-					
+					var CmdCrunch = '"' + HelpFileCruncher + '" "' + HelpFile + '" "' + OutputPath + '"';
+					shellObj.Run(CmdCrunch, 7, true);
+
 					FileListCpp.WriteLine('#include "' + fso.GetFileName(OutputPath) + '"');
 					
 					HelpsCpp.WriteLine('if (strcmp(pszStem, "' + HelpFileTag + '") == 0)');
@@ -2334,7 +2335,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 			}
 		} // End if current product is locked
 	} // Next product
-	
+
 	HelpsCpp.Close();
 	FileListCpp.Close();
 	if (fDisplayCommentary)
@@ -2353,18 +2354,25 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 	if (fDisplayCommentary)
 		AddCommentary(0, "Preparing file for compiler settings...", true);
 	var CppRspFilePath = NewCompilationFolder + "\\" + ProjectName + "Cpp.rsp";
+
 	var tsoCpp = fso.OpenTextFile(CppRspFilePath, 2, true);
 	tsoCpp.WriteLine('/O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "INSTALLERHELP2_EXPORTS" /D "_VC80_UPGRADE=0x0710" /D "_WINDLL" /D "_MBCS" /FD /EHsc /MT /GS /W3 /c /Wp64 /Zi /TP /Fo"' + NewCompilationFolder + '\\InstallerHelp2.obj"');
-
 	tsoCpp.WriteLine('"' + CppPath + '\\InstallerHelp2.cpp"');
 	tsoCpp.Close();
+
 	if (fDisplayCommentary)
 		AddCommentary(1, "Done.", false);
 
 	// Compile InstallerHelp2 C++ files:
 	if (fDisplayCommentary)
 		AddCommentary(0, "Compiling InstallerHelp2 C++ files...", true);
-	shellObj.Run('cl.exe @"' + CppRspFilePath + '" /nologo', 7, true);
+	var CompileStr = 'cl.exe @"' + CppRspFilePath + '" /nologo';
+	if (shellObj.Run(CompileStr, 7, true) != 0)
+	{
+		Exception = new Object();
+		Exception.description = "InstallerHelp2.dll compile command [" + CompileStr + "] failed.";
+		throw(Exception);
+	}
 	if (fDisplayCommentary)
 		AddCommentary(1, "Done.", false);
 
@@ -2385,7 +2393,12 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 	if (fDisplayCommentary)
 		AddCommentary(0, "Linking compiled files...", true);
 	var LinkStr = 'link.exe @"' + ObjRspFilePath + '"'; 
-	shellObj.Run(LinkStr, 7, true);
+	if (shellObj.Run(LinkStr, 7, true) != 0)
+	{
+		Exception = new Object();
+		Exception.description = "InstallerHelp2.dll link command [" + LinkStr + "] failed.";
+		throw(Exception);
+	}
 
 	// Test that InstallerHelp2.dll exists:
 	if (!fso.FileExists(fso.BuildPath(NewCompilationFolder, "InstallerHelp2.dll")))

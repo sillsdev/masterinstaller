@@ -189,7 +189,7 @@
 		</Product>
 		<Product KeyId="1" Version="5.2">
 			<AutoConfigure>
-				<Title>BART 5 (From source control repository)</Title>
+				<Title>BART 5.2 (From source control repository)</Title>
 				<Source NameWhenLocked="setup.msi">Installers\BART 5\SetupBart.msi</Source>
 				<SetupHelp>Documents\BART 5\SetupBART.rtf</SetupHelp>
 				<Destination>BART5</Destination>
@@ -201,7 +201,7 @@
 					</Substitutions>
 				</WhenLocked>
 			</AutoConfigure>
-			<Title>Bart 5 Beta</Title>
+			<Title>BART 5.2</Title>
 			<Tag>BART5</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>

@@ -129,6 +129,44 @@ project to make an executable master installer.
 	<xsl:text>");&#13;</xsl:text>
 	<xsl:text>&#13;</xsl:text>
 
+	<xsl:text>// Initial text message:&#13;</xsl:text>
+	<xsl:text>const TCHAR * g_pszInitialText = </xsl:text>
+	<xsl:call-template name="QuotedStrOrNullIfEmpty">
+		<xsl:with-param name="str" select="MasterInstaller/General/InitialText"/>
+	</xsl:call-template>
+	<xsl:text>;&#13;</xsl:text>
+
+	<xsl:text>// Alignment of initial text:&#13;</xsl:text>
+	<xsl:text>const int g_nInitialTextAlign = </xsl:text>
+	<xsl:if test="MasterInstaller/General/InitialText/@Align='left'">
+		<xsl:text>eTextAlignLeftEdge</xsl:text>
+	</xsl:if>
+	<xsl:if test="MasterInstaller/General/InitialText/@Align='buttons'">
+		<xsl:text>eTextAlignButtons</xsl:text>
+	</xsl:if>
+	<xsl:if test="MasterInstaller/General/InitialText/@Align='checkboxes'">
+		<xsl:text>eTextAlignCheckBoxes</xsl:text>
+	</xsl:if>
+	<xsl:if test="string-length(MasterInstaller/General/InitialText/@Align)=0">
+		<xsl:text>0</xsl:text>
+	</xsl:if>
+	<xsl:text>;&#13;</xsl:text>
+
+	<xsl:text>// Left edge offset of initial text:&#13;</xsl:text>
+	<xsl:text>const int g_nInitialTextLeftEdge = </xsl:text>
+	<xsl:call-template name="StrOrZeroIfEmpty">
+		<xsl:with-param name="str" select="MasterInstaller/General/InitialText/@LeftEdge"/>
+	</xsl:call-template>
+	<xsl:text>;&#13;</xsl:text>
+
+	<xsl:text>// Right edge offset of initial text:&#13;</xsl:text>
+	<xsl:text>const int g_nInitialTextRightEdge = </xsl:text>
+	<xsl:call-template name="StrOrZeroIfEmpty">
+		<xsl:with-param name="str" select="MasterInstaller/General/InitialText/@RightEdge"/>
+	</xsl:call-template>
+	<xsl:text>;&#13;</xsl:text>
+	<xsl:text>&#13;</xsl:text>
+
 	<xsl:text>// If you want external help to be available, set values for the file path and button text.&#13;</xsl:text>
 	<xsl:text>// If not, set these both to NULL:&#13;</xsl:text>
 	<xsl:text>const TCHAR * g_pszExternalHelpFile = </xsl:text>
@@ -243,6 +281,22 @@ This template is used as a function to test a string and output 0 if empty.
 	<xsl:if test="not(string-length($str)=0)"><xsl:value-of select="$str"/></xsl:if>
 	<xsl:if test="string-length($str)=0">
 		<xsl:text>0</xsl:text>
+	</xsl:if>
+</xsl:template>
+
+	<!--
+This template is used as a function to test a string and output "NULL" if empty, else put 
+quotes around it.
+-->
+<xsl:template name="QuotedStrOrNullIfEmpty">
+	<xsl:param name="str"/>
+	<xsl:if test="not(string-length($str)=0)">
+		<xsl:text>_T("</xsl:text>
+		<xsl:value-of select="$str"/>
+		<xsl:text>")</xsl:text>
+	</xsl:if>
+	<xsl:if test="string-length($str)=0">
+		<xsl:text>NULL</xsl:text>
 	</xsl:if>
 </xsl:template>
 

@@ -3,7 +3,7 @@
 #include <tchar.h>
 
 // Uninstall specified product.
-bool Uninstall(const TCHAR * pszProductCode, const TCHAR * pszStatus)
+int Uninstall(const TCHAR * pszProductCode, const TCHAR * pszStatus)
 {
 	int dwResult = 0;
 
@@ -27,6 +27,17 @@ bool Uninstall(const TCHAR * pszProductCode, const TCHAR * pszStatus)
 		g_Log.Write(DisplayStatusText(2, _T("")));
 
 		// Remove the installation:
+		if (pszUninstallWarning)
+		{
+			g_Log.Write(_T("Issuing uninstall warning: %s"), pszUninstallWarning);
+			if (MessageBox(NULL, pszUninstallWarning, g_pszTitle, MB_ICONSTOP | MB_OKCANCEL)
+				!= IDOK)
+			{
+				g_Log.Write(_T("User chose to cancel."));
+				return 3;
+			}
+			g_Log.Write(_T("User chose to continue with uninstall."));
+		}
 		TCHAR * pszCmd = new_sprintf(_T("msiexec /qb /x %s"), pszProductCode);
 		dwResult = ExecCmd(pszCmd, false, true, NULL, _T("Show"));
 		delete[] pszCmd;

@@ -14,6 +14,12 @@ extern UserQuitException_t UserQuitException;
 extern void * hStopRequestInProgress; // Event to pause main thread while user confirms stop.
 extern void CheckIfStopRequested();
 
+enum
+{
+	eTextAlignLeftEdge,
+	eTextAlignButtons,
+	eTextAlignCheckBoxes,
+};
 extern const _TCHAR * g_pszTitle;
 extern const _TCHAR * g_pszListSubtitle;
 extern const int g_nListBackgroundR;
@@ -31,6 +37,10 @@ extern const int g_nInfoButtonAdjust;
 extern const bool g_fStartFromAnyCd;
 extern const bool g_fKeyPromptNeedsShiftCtrl;
 extern const _TCHAR * g_pszGetKeyTitle;
+extern const _TCHAR * g_pszInitialText;
+extern const int g_nInitialTextAlign;
+extern const int g_nInitialTextLeftEdge;
+extern const int g_nInitialTextRightEdge;
 extern const _TCHAR * g_pszExternalHelpFile;
 extern const _TCHAR * g_pszHelpButtonText;
 extern const _TCHAR * g_pszTermsOfUseFile;

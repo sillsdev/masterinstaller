@@ -244,6 +244,43 @@
 	</td>
 	</tr>
 	<tr>
+		<td align="right">
+			<b>Initial text:</b>
+		</td>
+		<td>
+			<table border="1">
+				<tr>
+					<td align="right">Message:</td>
+					<td>
+						<input id="InitialTextMessage" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Message to display above list of products"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Alignment:</td>
+					<td>
+						<select name="InitialTextAlignment">
+							<option value="InitialTextLeftEdge">Left</option>
+							<option value="InitialTextButtons">Buttons</option>
+							<option value="InitialTextCheckBoxes">Checkboxes</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Left edge offset:</td>
+					<td>
+						<input id="InitialTextLeftOffset" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset initial text"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Right edge offset:</td>
+					<td>
+						<input id="InitialTextRightOffset" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset initial text right-hand edge"/>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
 	<td align="right"><b>Allow start from any CD in set</b></td>
 	<td><input id="StartFromAnyCD" type="checkbox" title="If not checked, user must start from CD 1, otherwise a message will be displayed asking them to switch to CD 1."/></td>
 	<script type="text/javascript">document.getElementById("StartFromAnyCD").checked=<xsl:value-of select="StartFromAnyCD"/>;</script>
@@ -1658,38 +1695,45 @@ function GenerateSourceFileLists()
 // from the Edit boxes nodes of each on the Project Setup page.
 function GenerateExtHelpAndTermsFileLists()
 {
-	// Do the same for the External Help file(s):
-	var ExternalHelpSource = document.getElementById("ExternalHelpSource").value;
-	if (ExternalHelpSource.length > 0)
+	try
 	{
-		var Recurse = false;
-		if (fso.FolderExists(ExternalHelpSource))
-			Recurse = true;
-		ExternalHelpFileData = GetFileList(ExternalHelpSource, Recurse);
-	}
-	else
-	{
-		// Set up empty values:
-		ExternalHelpFileData = new Object();
-		ExternalHelpFileData.FileList = new Array();
-		ExternalHelpFileData.RootFolder = "";
-	}
+		// Do the same for the External Help file(s):
+		var ExternalHelpSource = document.getElementById("ExternalHelpSource").value;
+		if (ExternalHelpSource.length > 0)
+		{
+			var Recurse = false;
+			if (fso.FolderExists(ExternalHelpSource))
+				Recurse = true;
+			ExternalHelpFileData = GetFileList(ExternalHelpSource, Recurse);
+		}
+		else
+		{
+			// Set up empty values:
+			ExternalHelpFileData = new Object();
+			ExternalHelpFileData.FileList = new Array();
+			ExternalHelpFileData.RootFolder = "";
+		}
 
-	// Do the same for the Terms of Use file(s):
-	var TermsOfUseSource = document.getElementById("TermsOfUseSource").value;
-	if (TermsOfUseSource.length > 0)
-	{
-		Recurse = false;
-		if (fso.FolderExists(TermsOfUseSource))
-			Recurse = true;
-		TermsOfUseFileData = GetFileList(TermsOfUseSource, Recurse);
+		// Do the same for the Terms of Use file(s):
+		var TermsOfUseSource = document.getElementById("TermsOfUseSource").value;
+		if (TermsOfUseSource.length > 0)
+		{
+			Recurse = false;
+			if (fso.FolderExists(TermsOfUseSource))
+				Recurse = true;
+			TermsOfUseFileData = GetFileList(TermsOfUseSource, Recurse);
+		}
+		else
+		{
+			// Set up empty values:
+			TermsOfUseFileData = new Object();
+			TermsOfUseFileData.FileList = new Array();
+			TermsOfUseFileData.RootFolder = "";
+		}
 	}
-	else
+	catch (err)
 	{
-		// Set up empty values:
-		TermsOfUseFileData = new Object();
-		TermsOfUseFileData.FileList = new Array();
-		TermsOfUseFileData.RootFolder = "";
+		alert("Error while initializing: " + err.description);
 	}
 }
 
@@ -2514,7 +2558,27 @@ function ApplyUserSettings(xmlDoc)
 	BackgroundNode.setAttribute("BlendRight", document.getElementById("BlendRight").value);
 	BackgroundNode.setAttribute("BlendTop", document.getElementById("BlendTop").value);
 	BackgroundNode.setAttribute("BlendBottom", document.getElementById("BlendBottom").value);
-	
+
+	ApplyEditBoxSetting(xmlDoc, "InitialTextMessage", "/MasterInstaller/General/InitialText");
+	var InitialNode = xmlDoc.selectSingleNode("/MasterInstaller/General/InitialText");
+	var InitialTextAlignSelectionElement = document.getElementById("InitialTextAlignment");
+	var InitialTextAlignment;
+	switch(InitialTextAlignSelectionElement.value)
+	{
+		case "InitialTextLeftEdge":
+			InitialTextAlignment = "left";
+			break;
+		case "InitialTextButtons":
+			InitialTextAlignment = "buttons";
+			break;
+		case "InitialTextCheckBoxes":
+			InitialTextAlignment = "checkboxes";
+			break;
+	}
+	InitialNode.setAttribute("Align", InitialTextAlignment);
+	InitialNode.setAttribute("LeftEdge", document.getElementById("InitialTextLeftOffset").value);
+	InitialNode.setAttribute("RightEdge", document.getElementById("InitialTextRightOffset").value);
+
 	ApplyCheckBoxSetting(xmlDoc, "ListEvenOneProduct", "/MasterInstaller/General/ListEvenOneProduct");
 	ApplyEditBoxSetting(xmlDoc, "ListSpacingAdjust", "/MasterInstaller/General/ListSpacingAdjust")
 	ApplyEditBoxSetting(xmlDoc, "InfoButtonAdjust", "/MasterInstaller/General/InfoButtonAdjust")

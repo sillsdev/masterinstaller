@@ -22,7 +22,7 @@ int RemovePreviousFWs(const TCHAR * /*pszCriticalFile*/)
 		_T("{55590E14-D0D4-4D6F-9C33-884401BD26AE}"), // Trunk builds after upgrade to VS 2005
 		_T("{6776923F-FF58-49DA-B57D-3A6056951EDD}"), // FW 4.0
 //		_T("{337432B4-5F5C-4BEB-B862-176D7CF38C8F}"), // FW 4.0.1
-//		_T("{36446AC2-AD0D-4975-A9B1-83C43F17A287}"), // FW 4.1 (TE alpha)
+//		_T("{AA897203-665E-4B51-9478-9D389E81E488}"), // FW 4.1 (TE alpha)
 	};
 	for (int i = 0; i < (sizeof(pszProductCode) / sizeof(pszProductCode[0])); i++)
 	{

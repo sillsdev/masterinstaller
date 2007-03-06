@@ -47,6 +47,27 @@ void SetSilIcon(HWND hwnd)
 	}
 }
 
+int GetTextHeight(const TCHAR * pszText, int nWidth)
+// Calculates the height needed for a static control to display the given text
+// on a dialog box. nWidth is in dialog units.
+{
+	HDC hdc = CreateDC(_T("DISPLAY"), NULL, NULL, NULL);
+	RECT rect;
+	rect.top = 0;
+	rect.left = 0;
+	rect.right = nWidth;
+	rect.bottom = 0;
+	DrawText(hdc, pszText, -1, &rect, DT_CALCRECT);
+	if (rect.right > nWidth)
+	{
+		rect.right = nWidth;
+		rect.bottom = 0;
+		DrawText(hdc, pszText, -1, &rect, DT_CALCRECT | DT_WORDBREAK);
+	}
+	DeleteDC(hdc);
+	return rect.bottom;
+}
+
 INT_PTR CALLBACK DlgProcDisplayReport(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 // The dialog procedure for displaying dependency reports.
 {
@@ -508,6 +529,27 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 			int nYcoord = 40; // Starting place for first check box - beyond introductory text.
 			int nXcoord = 220; // Left hand edge of added controls
 			const int kdy = 30 + g_nListSpacingAdjust; // Allows for checkbox height etc.
+			const int knCheckBoxOffest = 30; // space between help button and checkbox
+			const int knDialogMaxRight = 750; // theoretical max X coord for visible controls
+
+			if (g_pszInitialText)
+			{
+				// Add initial text:
+				int xText = 0;
+				switch (g_nInitialTextAlign)
+				{
+				case eTextAlignButtons:
+					xText = nXcoord - g_nInfoButtonAdjust;
+					break;
+				case eTextAlignCheckBoxes:
+					xText = nXcoord + knCheckBoxOffest;
+				}
+				xText += g_nInitialTextLeftEdge;
+				int xWidth = knDialogMaxRight + g_nInitialTextRightEdge - xText;
+				int yHeight = GetTextHeight(g_pszInitialText, xWidth);
+				CreateWindow(_T("STATIC"), g_pszInitialText, WS_CHILD | WS_VISIBLE, nXcoord, nYcoord, xWidth, yHeight, hwnd, reinterpret_cast<HMENU>(__int64(-1)), NULL, NULL);
+				nYcoord += 8 + yHeight;
+			}
 			pProductManager->GenAvailableMainProductList(rgiAvailableProducts, true);
 			bool fFoundInstalledProduct = false;
 			g_Log.Indent();
@@ -560,14 +602,15 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 					if (fOnlyVisible)
 						wsStyle |= WS_DISABLED;
 
-					CreateWindow(_T("BUTTON"), pszCheckBox, wsStyle, nXcoord + 30, nYcoord, 520, 20,
-						hwnd, reinterpret_cast<HMENU>(__int64(knCheckboxInitialId + i)), NULL,
+					CreateWindow(_T("BUTTON"), pszCheckBox, wsStyle, nXcoord + knCheckBoxOffest, nYcoord,
+						knDialogMaxRight - nXcoord - knCheckBoxOffest, 20, hwnd,
+						reinterpret_cast<HMENU>(__int64(knCheckboxInitialId + i)), NULL,
 						NULL);
 				}
 				else // Product is not installable
 				{
-					CreateWindow(_T("STATIC"), pszCheckBox, WS_CHILD | WS_VISIBLE, nXcoord + 30,
-						nYcoord + 2, 520, 20, hwnd,
+					CreateWindow(_T("STATIC"), pszCheckBox, WS_CHILD | WS_VISIBLE, nXcoord + knCheckBoxOffest,
+						nYcoord + 2, knDialogMaxRight - nXcoord - knCheckBoxOffest, 20, hwnd,
 						reinterpret_cast<HMENU>(__int64(-1)), NULL, NULL);
 				}
 				delete[] pszCheckBox;

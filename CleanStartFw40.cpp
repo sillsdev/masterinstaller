@@ -2,6 +2,8 @@
 
 #include <tchar.h>
 
+static TCHAR * pszUninstallWarning = NULL;
+
 #include "RemovePreviousFWs.cpp"
 #include "RemovePreviousECs.cpp"
 

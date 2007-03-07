@@ -2514,9 +2514,9 @@ function ApplyUserSettings(xmlDoc)
 	switch(ColorSelectionElement.value)
 	{
 		case "Green":
-			rgbRed = 194;
-			rgbGreen = 203;
-			rgbBlue = 41;
+			rgbRed = 196;
+			rgbGreen = 206;
+			rgbBlue = 44;
 			break;
 		case "Yellow":
 			rgbRed = 255;
@@ -2524,9 +2524,9 @@ function ApplyUserSettings(xmlDoc)
 			rgbBlue = 0;
 			break;
 		case "Red":
-			rgbRed = 197;
-			rgbGreen = 21;
-			rgbBlue = 118;
+			rgbRed = 204;
+			rgbGreen = 57;
+			rgbBlue = 33;
 			break;
 		case "Blue":
 			rgbRed = 0;

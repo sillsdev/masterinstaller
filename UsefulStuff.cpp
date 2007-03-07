@@ -348,7 +348,7 @@ _TCHAR * FetchString(int stid)
 // Writes the given text to the Clipboard
 bool WriteClipboardText(const _TCHAR * pszText)
 {
-	int nLen = (int)_tcslen(pszText);
+	int nLen = 1 + (int)_tcslen(pszText);
 	int nRet;
 
 	// Open clipboard for our use:

@@ -18,11 +18,20 @@ void HandleError(vErrorType vType, bool fCheckDependentStatus, int nErrorTextId,
 	va_list arglist;
 	va_start(arglist, nErrorTextId);
 
+	// Initial MessageBox button:
+	UINT uMbType = MB_OK;
+
+	// Check if the first variable argument is the text to be copied to the clipboard:
+	const TCHAR * pszCopyText = NULL;
+	if (vType & kWithCopy)
+	{
+		pszCopyText = va_arg(arglist, TCHAR *);
+		uMbType = MB_YESNOCANCEL;
+	}
+
 	// Get main error message and format it with variable arguments:
 	_TCHAR * pszFormattedMsg = new_vsprintf(FetchString(nErrorTextId), arglist);
 
-	// Initial MessageBox button:
-	UINT uMbType = MB_OK;
 
 	// If error is fatal, add text to say so:
 	if (vType == kNonFatal)
@@ -41,7 +50,7 @@ void HandleError(vErrorType vType, bool fCheckDependentStatus, int nErrorTextId,
 
 	// Display the message.
 	_TCHAR * pszTitle = new_sprintf(_T("%s - %s"), g_pszTitle, FetchString(IDC_ERROR));
-	MessageBox(NULL, pszFormattedMsg, pszTitle, uMbType);
+	int nResponse = MessageBox(NULL, pszFormattedMsg, pszTitle, uMbType);
 	delete[] pszTitle;
 	pszTitle = NULL;
 
@@ -50,6 +59,10 @@ void HandleError(vErrorType vType, bool fCheckDependentStatus, int nErrorTextId,
 
 	delete[] pszFormattedMsg;
 	pszFormattedMsg = NULL;
+
+	// See if we are to write data to Clipboard:
+	if (nResponse == IDYES)
+		WriteClipboardText(pszCopyText);
 
 	try
 	{

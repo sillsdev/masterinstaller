@@ -719,7 +719,7 @@ bool SoftwareProduct::Install()
 			// user has to do some work himself:
 			const _TCHAR * pszUrl = GetDownloadUrl();
 			if (pszUrl)
-				HandleError(kNonFatal, false, IDC_ERROR_FILE_MISSING_URL, m_kpszNiceName, pszUrl);
+				HandleError(vErrorType(kNonFatal | kWithCopy), false, IDC_ERROR_FILE_MISSING_URL, pszUrl, m_kpszNiceName, pszUrl);
 			else
 				HandleError(kNonFatal, false, IDC_ERROR_FILE_MISSING, m_kpszNiceName);
 			m_InstallStatus = InstallFailedFileNotFound;

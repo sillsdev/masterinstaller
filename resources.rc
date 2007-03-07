@@ -250,7 +250,7 @@ BEGIN
     IDC_ERROR_KEY_DLL       "Cannot process product key."
     IDC_ERROR_INSTALLATION  "Installation of %s failed."
     IDC_ERROR_USER_QUIT_INSTALLER "You quit the installation of %s."
-    IDC_ERROR_FILE_MISSING_URL  "%s is not in this package, and will be skipped for now. You will need to install this software yourself. To obtain it, try following the links at %s."
+    IDC_ERROR_FILE_MISSING_URL  "%s is not in this package, and will be skipped for now. You will need to install this software yourself. To obtain it, try following the links at %s.\n\nWould you like this URL to be copied to the Clipboard?"
     IDC_ERROR_FILE_MISSING  "%s is not in this package, and will be skipped for now. You will need to install this software yourself. No data is available on where to obtain this software."
     IDC_ERROR_READ_REG      "Cannot read system Registry."
     IDC_ERROR_WRITE_REG     "Cannot write to system Registry."

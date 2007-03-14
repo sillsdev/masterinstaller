@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tTCHAR.h>
+#include <TCHAR.h>
 
 // If fTestOnly is true, tests to see if the keyman keyboards in pszKeyboardsPath are installed.
 // If fTestOnly is false, installs the keyman keyboards from pszKeyboardsPath.
@@ -60,7 +60,7 @@ DWORD KeymanFunction(bool fTestOnly, const TCHAR * pszKeyboardsPath)
 	TCHAR * pszFolderEnd = _tcsrchr(pszSearch, _TCHAR('\\'));
 	if (pszFolderEnd)
 		*pszFolderEnd = 0;
-	_tcscat_s(pszSearch, knLen _T("\\"));
+	_tcscat_s(pszSearch, knLen, _T("\\"));
 	_tcscat_s(pszSearch, knLen, pszKeyboardsPath);
 	_tcscpy_s(pszFolder, knLen, pszSearch);
 	_tcscat_s(pszSearch, knLen, _T("\\*.kmx"));
@@ -76,7 +76,7 @@ DWORD KeymanFunction(bool fTestOnly, const TCHAR * pszKeyboardsPath)
 	{
 		// See if Keyboard is already installed:
 		bool fKeyboardExists = false;
-		int kcchReg = 1000;
+		const int kcchReg = 1000;
 		TCHAR pszRegKey[kcchReg];
 		_tcscpy_s(pszRegKey, kcchReg, _T("Software\\Tavultesoft\\Keyman\\6.0\\Active Keyboards\\"));
 		_tcscat_s(pszRegKey, kcchReg, wfd.cFileName);
@@ -101,8 +101,9 @@ DWORD KeymanFunction(bool fTestOnly, const TCHAR * pszKeyboardsPath)
 			}
 
 			// Make up command line to install current keyboard:
-			TCHAR pszCmd[1000];
-			sprintf(pszCmd, _T("%s -s \"%s\\%s\""), pszShellCmd, pszFolder, wfd.cFileName);
+			const int cchBuf = 1000;
+			TCHAR pszCmd[cchBuf];
+			sprintf_s(pszCmd, cchBuf, _T("%s -s \"%s\\%s\""), pszShellCmd, pszFolder, wfd.cFileName);
 
 			// Execute command:
 			BOOL bReturnVal = false;

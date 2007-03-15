@@ -305,12 +305,12 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>IPA Help 3.0</Title>
+				<Title>IPA Help 2.04</Title>
 				<Source>Installers\IPA Help</Source>
 				<SetupHelp>Documents\IPA Help\SetupIPAHelp.rtf</SetupHelp>
 				<Destination>IPA Help</Destination>
 			</AutoConfigure>
-			<Title>IPA Help 3.0</Title>
+			<Title>IPA Help 2.04</Title>
 			<Tag>IPA3</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -898,11 +898,11 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Microsoft SQL Server 2005 Express SP1</Title>
+				<Title>Microsoft SQL Server 2005 Express SP2</Title>
 				<Source>3rd Party\SQL Server 2005 Express</Source>
 				<Destination>Utilities\SQL Server 2005 Express</Destination>
 			</AutoConfigure>
-			<Title>Microsoft SQL Server 2005 Express SP1</Title>
+			<Title>Microsoft SQL Server 2005 Express SP2</Title>
 			<Tag>SQL2005</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -910,7 +910,7 @@
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
 			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
 			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
-			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR.EXE</CriticalFile>
+			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR32.EXE</CriticalFile>
 			<Preinstall>TestIfSqlServerUpgradeNeeded</Preinstall>
 			<Install Flag="g_fSqlServerUpgradeNeeded">
 				<True>$CriticalFile$ INSTANCENAME=SILFW UPGRADE=SQL_Engine SAPWD=inscrutable SQLACCOUNT="NT AUTHORITY\SYSTEM" /qb</True>
@@ -918,7 +918,7 @@
 			</Install>
 			<StatusWindow>Monitor 10000</StatusWindow>
 			<Commentary>Please wait while SQL Server installs and then is configured.</Commentary>
-			<TestPresence Version="9.00.2047.00">TestSqlSILFWPresence</TestPresence>
+			<TestPresence Version="9.00.3042.00">TestSqlSILFWPresence</TestPresence>
 			<PostInstall>SqlServer2005PostInstall</PostInstall>
 			<DownloadURL></DownloadURL>
 		</Product>

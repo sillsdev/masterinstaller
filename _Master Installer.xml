@@ -267,6 +267,23 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>Optional Hebrew and Greek Keyman keyboards for BART</Title>
+				<Source>Installers\Bart Keyboards</Source>
+				<Destination>Keyman60</Destination>
+			</AutoConfigure>
+			<Title>Optional Hebrew and Greek Keyman keyboards for BART</Title>
+			<Version>5.0</Version>
+			<Tag>BartKBs</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Keyman60\Keyboards\</CriticalFile>
+			<Install Type="Internal">KeymanKeyboardsInstaller</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<TestPresence>TestKeymanKeyboardsPresence</TestPresence>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Phonology Assistant 3.0</Title>
 				<Source>Installers\Phonology Assistant</Source>
 				<SetupHelp>Documents\Phonology Assistant\SetupPA.rtf</SetupHelp>

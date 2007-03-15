@@ -280,7 +280,6 @@
 			<Install Type="Internal">KeymanKeyboardsInstaller</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<TestPresence>TestKeymanKeyboardsPresence</TestPresence>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>

@@ -258,11 +258,12 @@
 			<Tag>BART5</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
+			<Preinstall>QuitIfBart5BetaPresent</Preinstall>
 			<CriticalFile>BART5\SetupBart.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>BART5\SetupBART.rtf</Help>
-			<ProductCode>{2E38FB46-1985-4112-9727-B8C012A317A6}</ProductCode>
+			<ProductCode>{24D88271-9AA4-4B51-B54D-AC2E744C34B7}</ProductCode>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 		</Product>
 		<Product>

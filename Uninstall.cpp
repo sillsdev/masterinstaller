@@ -2,6 +2,8 @@
 
 #include <tchar.h>
 
+static TCHAR * pszUninstallWarning = NULL;
+
 // Uninstall specified product.
 int Uninstall(const TCHAR * pszProductCode, const TCHAR * pszStatus)
 {

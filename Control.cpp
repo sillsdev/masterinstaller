@@ -442,6 +442,7 @@ void MasterInstaller_t::Run()
 
 		if (g_fRebootPending && nResult == IDOK)
 		{
+			g_ProgRecord.RemoveData(false);
 			Reboot();
 		}
 	}

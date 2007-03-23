@@ -232,6 +232,7 @@
 			<Tag>TW4U3</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
+			<Preinstall>RemovePreviousTW4Updates</Preinstall>
 			<CriticalFile>TW4\TW4 Update 3.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>

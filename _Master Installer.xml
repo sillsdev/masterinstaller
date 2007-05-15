@@ -52,7 +52,7 @@
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{6776923F-FF58-49DA-B57D-3A6056951EDD}</ProductCode>
+			<ProductCode>{821728B7-83CA-44FF-B779-F53D511F9982}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag=".NET2.0" Version="2.0"/>
 			<Preinstall>CleanStartFw40</Preinstall>
@@ -115,7 +115,7 @@
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{6776923F-FF58-49DA-B57D-3A6056951EDD}</ProductCode>
+			<ProductCode>{821728B7-83CA-44FF-B779-F53D511F9982}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag=".NET2.0" Version="2.0"/>
 			<Preinstall>CleanStartFw40</Preinstall>

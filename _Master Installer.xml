@@ -33,7 +33,9 @@
 		<Product>
 			<AutoConfigure>
 				<Title>FW (Trunk build from \\cana)</Title>
-				<Source>\\cana\LSDev\Installers\Trunk</Source>
+				<Source>\\cana\LSDev\Installers\Trunk\SetupFw.msi</Source>
+				<Source>\\cana\LSDev\Installers\Trunk\TE_M.cab</Source>
+				<Source>\\cana\LSDev\Installers\Trunk\Flex_M.cab</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -97,7 +99,8 @@
 		<Product>
 			<AutoConfigure>
 				<Title>FW **without TE** (Trunk build from \\cana)</Title>
-				<Source>\\cana\LSDev\Installers\Trunk_no_TE</Source>
+				<Source>\\cana\LSDev\Installers\Trunk_no_TE\SetupFw.msi</Source>
+				<Source>\\cana\LSDev\Installers\Trunk_no_TE\Flex_M.cab</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>

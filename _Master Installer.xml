@@ -61,7 +61,7 @@
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.3</Title>
 				<Tag>DN_TC</Tag>
-				<MsiFeature>DNr</MsiFeature>
+				<MsiFeature>DN</MsiFeature>
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -69,14 +69,14 @@
 			<Feature>
 				<Title>FieldWorks Language Explorer 0.9 Beta</Title>
 				<Tag>LT_TC</Tag>
-				<MsiFeature>LTr</MsiFeature>
+				<MsiFeature>FLEX</MsiFeature>
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.3</Title>
 				<Tag>TLE_TC</Tag>
-				<MsiFeature>TLEr</MsiFeature>
+				<MsiFeature>TLE</MsiFeature>
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -84,7 +84,7 @@
 			<Feature>
 				<Title>FieldWorks Translation Editor 1.2</Title>
 				<Tag>TE_TC</Tag>
-				<MsiFeature>TEr</MsiFeature>
+				<MsiFeature>TE</MsiFeature>
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -92,7 +92,7 @@
 			<Feature>
 				<Title>FieldWorks WorldPad 2.3</Title>
 				<Tag>WP_TC</Tag>
-				<MsiFeature>WPr</MsiFeature>
+				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 		</Product>
@@ -125,7 +125,7 @@
 			<Feature>
 				<Title>FieldWorks Data Notebook 2.3</Title>
 				<Tag>DN_TC</Tag>
-				<MsiFeature>DNr</MsiFeature>
+				<MsiFeature>DN</MsiFeature>
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -133,14 +133,14 @@
 			<Feature>
 				<Title>FieldWorks Language Explorer 0.9 Beta</Title>
 				<Tag>LT_TC</Tag>
-				<MsiFeature>LTr</MsiFeature>
+				<MsiFeature>FLEX</MsiFeature>
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.3</Title>
 				<Tag>TLE_TC</Tag>
-				<MsiFeature>TLEr</MsiFeature>
+				<MsiFeature>TLE</MsiFeature>
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -148,7 +148,7 @@
 			<Feature>
 				<Title>FieldWorks WorldPad 2.3</Title>
 				<Tag>WP_TC</Tag>
-				<MsiFeature>WPr</MsiFeature>
+				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 		</Product>

@@ -146,6 +146,7 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 		_T("{EB74F31A-3768-4884-B23C-332A6E0E3B07}"), // SpellFixer add-in 2.2.1
 		_T("{C4BEF638-52A5-4480-96BB-B54BDDF566D8}"), // EC Version 1.0.2 (with FW 3.0)
 		_T("{1754401C-BEBE-415E-B0DF-9B6E0420E2F8}"), // Clipboard EC shipped with FW 3.0
+		_T("{6242D132-64F4-46E3-9F39-26B02215B896}"), // EC Version 2.5 shipped with FW 4.0
 	};
 
 	for (int i = 0; i < (sizeof(pszProductCode) / sizeof(pszProductCode[0])); i++)

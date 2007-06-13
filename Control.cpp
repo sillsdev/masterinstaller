@@ -10,6 +10,7 @@
 #include "UsefulStuff.h"
 #include "DiskManager.h"
 #include "PersistantProgress.h"
+#include "UniversalFixes.h"
 
 const _TCHAR * MasterInstaller_t::m_kszMutexName = _T("SIL Installation Bootstrapper");
 const _TCHAR * MasterInstaller_t::m_kszRegProductKeys = _T("Software\\SIL\\Installer\\ProductKeys");
@@ -79,6 +80,8 @@ void MasterInstaller_t::Run()
 		g_Log.Start();
 		if (!CreateMutex())
 			return;
+
+		DoUniversalFixes();
 
 		g_fLessThanWin2k = !IsWindows2000OrBetter();
 		if (!g_fLessThanWin2k)

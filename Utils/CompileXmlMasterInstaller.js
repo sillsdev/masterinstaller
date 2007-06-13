@@ -194,6 +194,7 @@ function PrepareCppRspFile(RspFilePath, CppFilePath, CompilationFolder)
 	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Wp64 /Zi /TP');
 	tso.WriteLine('"' + CppFilePath + '\\WIWrapper.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UsefulStuff.cpp"');
+	tso.WriteLine('"' + CppFilePath + '\\UniversalFixes.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\ThirdPartySoftware.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\ProductManager.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\ProductKeys.cpp"');
@@ -226,6 +227,7 @@ function PrepareObjRspFile(RspFilePath, CompilationFolder)
 	tso.WriteLine('"' + CompilationFolder + '\\ProductManager.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\ThirdPartySoftware.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\UsefulStuff.obj"');
+	tso.WriteLine('"' + CompilationFolder + '\\UniversalFixes.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\WIWrapper.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\resources.res"');
 	tso.Close();

@@ -70,6 +70,14 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 		_T("FindPhone2IPA"),
 		_T("SAGIndic"),
 		_T("Cameroon"),
+		_T("Central_Africa_converters"),
+		_T("East_Africa_converters"),
+		_T("West_Africa_Converters"),
+		_T("Eastern_Congo_Group"),
+		_T("NLCI_India"),
+		_T("Hebrew"),
+		_T("Indic_converters"),
+		_T("Papua_New_Guinea_converters"),
 	};
 
 	bool fFoundOne = false;
@@ -80,7 +88,7 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 		INSTALLSTATE state = INSTALLSTATE_UNKNOWN;
 
 		state = WindowsInstaller.MsiQueryFeatureState(
-			_T("{6242D132-64F4-46E3-9F39-26B02215B896}"), pszEcFeatures[i]);
+			_T("{AA48C03E-F339-430B-B8E9-FA666F607C17}"), pszEcFeatures[i]);
 
 		switch (state)
 		{

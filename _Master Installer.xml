@@ -816,7 +816,7 @@
 				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC18.cab</Source>
 				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC19.cab</Source>
 				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC20.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC21.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\m21.cab</Source>
 				<Source>Documents\Encoding Converters\CopyToCd</Source>
 				<SetupHelp>Documents\Encoding Converters\SetupEC.rtf</SetupHelp>
 				<Destination>Encoding Converters</Destination>

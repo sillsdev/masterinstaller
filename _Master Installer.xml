@@ -1197,7 +1197,6 @@
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
-			<CD>0</CD>
 		</Product>
 		<Product KeyId="2" Version="4.1">
 			<AutoConfigure>

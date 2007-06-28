@@ -70,6 +70,8 @@
 					<script type="text/javascript">document.getElementById("WriteDownloadsXml").checked=true;</script>
 					<input id="Compile" type="checkbox" title="Compile a setup.exe program for each flavor."/>Compile master installer for each flavor<br/>
 					<script type="text/javascript">document.getElementById("Compile").checked=true;</script>
+					<input id="Pause" type="checkbox" title="Pause after compiling the setup.exe program for each flavor."/>Pause for you to sign each setup.exe file<br/>
+					<script type="text/javascript">document.getElementById("Pause").checked=true;</script>
 					<input id="GatherFiles" type="checkbox" title="Gather files needed for each download into one folder."/>Gather files for each download<br/>
 					<script type="text/javascript">document.getElementById("GatherFiles").checked=true;</script>
 					<input id="BuildSfx" type="checkbox" title="Create self extracting 7-zip archive .exe file for each flavor. Assumes 7-Zip utility is present."/>Build 7-zip for each flavor<br/>
@@ -689,6 +691,7 @@ function Go()
 	var WriteFlavorXml = document.getElementById('WriteXml').checked;
 	var WriteDownloadsXml = document.getElementById('WriteDownloadsXml').checked;
 	var CompileFlavorXml = document.getElementById('Compile').checked;
+	var PauseAfterCompileFlavorXml = document.getElementById('Pause').checked;
 	var GatherFlavorFiles = document.getElementById('GatherFiles').checked;
 	var BuildFlavor7zip = document.getElementById('BuildSfx').checked;
 	
@@ -765,6 +768,9 @@ function Go()
 						fso.DeleteFile(FlavorSetupExePath);
 					fso.MoveFile(SetupExePath, FlavorSetupExePath);
 				}
+				
+				if (PauseAfterCompileFlavorXml)
+					alert(FlavorSetupExePath + " is ready for signing. Press OK when signing is complete.");
 
 				if (GatherFlavorFiles)
 				{

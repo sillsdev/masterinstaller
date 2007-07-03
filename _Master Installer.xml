@@ -777,14 +777,14 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Encoding Converters 2.6 Web Installer (On NRSI site)</Title>
+				<Title>Encoding Converters 2.6 Web Installer</Title>
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 2.6</Title>
 			<Tag>EncCvtrs_2_6_Web</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>http://downloads.sil.org/EncodingConverters/SetupEC.msi</CriticalFile>
+			<CriticalFile>http://downloads.sil.org/EncodingConverters/2.6/SetupEC.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 8000</StatusWindow>
 			<ProductCode>{AA48C03E-F339-430B-B8E9-FA666F607C17}</ProductCode>
@@ -795,37 +795,35 @@
 		<Product>
 			<AutoConfigure>
 				<Title>Encoding Converters 2.6 CD Installer (from FW Trunk on \\ls-fwbuilder)</Title>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC.msi</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC1.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC2.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC3.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC4.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC5.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC6.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC7.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC8.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC9.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC10.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC11.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC12.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC13.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC14.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC15.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC16.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC17.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC18.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC19.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\SetupEC20.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW_4.0\Installer\m21.cab</Source>
-				<Source>Documents\Encoding Converters\CopyToCd</Source>
-				<SetupHelp>Documents\Encoding Converters\SetupEC.rtf</SetupHelp>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC.msi</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC1.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC2.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC3.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC4.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC5.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC6.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC7.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC8.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC9.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC10.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC11.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC12.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC13.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC14.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC15.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC16.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC17.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC18.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC19.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC20.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC21.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\m22.cab</Source>
 				<Destination>Encoding Converters</Destination>
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 2.6</Title>
 			<Tag>EncCvtrs_2_6</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
-			<Help>Encoding Converters\SetupEC.rtf</Help>
 			<Preinstall>RemovePreviousECs</Preinstall>
 			<CriticalFile>Encoding Converters\SetupEC.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>

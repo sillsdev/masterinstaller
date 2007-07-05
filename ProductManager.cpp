@@ -147,7 +147,7 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 	// Make a working copy that we can manipulate:
 	_TCHAR * pszTemplateCopy = my_strdup(pszTemplate);
 
-	// Search for "<CriticalFile>" string:
+	// Search for "$CriticalFile$" string:
 	const _TCHAR * kpszCritFileToken = _T("$CriticalFile$");
 	_TCHAR * pszCritFileToken = _tcsstr(pszTemplateCopy, kpszCritFileToken);
 	if (pszCritFileToken)
@@ -163,15 +163,49 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 		delete[] pszIntermediate;
 	}
 
-	// Search for '%' _TCHARacter (environment variable):
+	// Search for "$SID$" string, used to represent the localized name of a well-known SID account:
+	const _TCHAR * kpszSidToken = _T("$SID$");
+	_TCHAR * pszSidToken = _tcsstr(pszTemplateCopy, kpszSidToken);
+	if (pszSidToken)
+	{
+		// Cut off string at the token:
+		*pszSidToken = 0;
+		_TCHAR * pszRemainder = &(pszSidToken[_tcslen(kpszSidToken)]);
+		// Get the SID index:
+		int SidIndex = _tstoi(pszRemainder);
+		// Get the remainder of the string after the SID index:
+		pszRemainder = _tcsstr(pszRemainder, _T("$"));
+		pszRemainder++;
+		// Get the account name with domain:
+		_TCHAR * pszAccount = CreateAccountNameFromWellKnownSidIndex(SidIndex);
+		if (!pszAccount)
+		{
+			_TCHAR * pszMsg = new_sprintf(_T("A request to evaluate Well Known SID %d failed."), SidIndex);
+			HandleError(kNonFatal, false, IDC_ERROR_INTERNAL, pszMsg);
+			delete[] pszMsg;
+			return pszTemplateCopy;
+		}
+
+		// Perform the substitution:
+		_TCHAR * pszIntermediate = new_sprintf(_T("%s%s%s"), pszTemplateCopy, pszAccount,
+			pszRemainder);
+
+		delete[] pszAccount;
+
+		// Now recurse, to see if any more text needs interpretting:
+		pszResult = new_InterpretString(pszIntermediate);
+		delete[] pszIntermediate;
+	}
+
+	// Search for '%' character (environment variable):
 	_TCHAR * pszFirstPercent = _tcschr(pszTemplateCopy, _TCHAR('%'));
 	if (pszFirstPercent)
 	{
-		// We have a '%' _TCHARacter. See if there is a second:
+		// We have a '%' _character. See if there is a second:
 		_TCHAR * pszSecondPercent = _tcschr(pszFirstPercent + 1, _TCHAR('%'));
 		if (pszSecondPercent)
 		{
-			// There are two '%' _TCHARacters, so we will assume we have to substitute text with
+			// There are two '%' characters, so we will assume we have to substitute text with
 			// the value of the given environment variable:
 			*pszFirstPercent = 0;
 			*pszSecondPercent = 0;
@@ -196,11 +230,11 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 		}
 	} // End search for environment variables
 
-	// Search for '[' _TCHARacter (registry data):
+	// Search for '[' character (registry data):
 	_TCHAR * pszOpenBracket = _tcschr(pszTemplateCopy, _TCHAR('['));
 	if (pszOpenBracket)
 	{
-		// We have a '[' _TCHARacter. See if there is a ']':
+		// We have a '[' character. See if there is a ']':
 		_TCHAR * pszCloseBracket = _tcschr(pszOpenBracket + 1, _TCHAR(']'));
 		if (pszCloseBracket)
 		{

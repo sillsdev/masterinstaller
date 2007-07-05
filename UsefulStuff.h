@@ -27,6 +27,7 @@ extern _TCHAR * GenVersionText(__int64 nHugeVersion);
 extern bool VersionInRange(__int64 nVersion, const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion);
 extern bool VersionInRange(const _TCHAR * pszVersion, const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion);
 extern bool WriteClipboardText(const _TCHAR * pszText);
+extern _TCHAR * CreateAccountNameFromWellKnownSidIndex(int SidIndex);
 extern _TCHAR * GenerateHangingWindowsReport();
 
 extern _TCHAR * my_strdup(const _TCHAR * pszOriginal);

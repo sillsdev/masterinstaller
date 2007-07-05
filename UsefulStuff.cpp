@@ -4,7 +4,10 @@
 	Master installer auxilary functions file.
 */
 
+#define _WIN32_WINNT 0x0501
+
 #include <Windows.h>
+#include <Sddl.h>
 #include <stdio.h>
 #include <tchar.h>
 
@@ -377,6 +380,43 @@ bool WriteClipboardText(const _TCHAR * pszText)
 	nRet = GetLastError();
 
 	return true;
+}
+
+// Returns the Domain\Acoount name string formed from the Well Known SID whose index
+// is specified.
+// see ms-help://MS.VSCC.v80/MS.MSDN.vAug06.en/secauthz/security/well_known_sid_type.htm
+// for valid index list.
+_TCHAR * CreateAccountNameFromWellKnownSidIndex(int SidIndex)
+{
+	DWORD SidSize = SECURITY_MAX_SID_SIZE;
+	PSID TheSID;
+
+	// Allocate enough memory for the largest possible SID.
+	if(!(TheSID = LocalAlloc(LMEM_FIXED, SidSize)))
+		return NULL;
+
+	// Create a SID for the given index on the local computer.
+	if (!CreateWellKnownSid(WELL_KNOWN_SID_TYPE(SidIndex), NULL, TheSID, &SidSize))
+		return NULL;
+
+	_TCHAR * pszName = NULL;
+	DWORD cchName = 0;
+	_TCHAR * pszDomain = NULL;
+	DWORD cchDomain = 0;
+	SID_NAME_USE Use;
+	LookupAccountSid(NULL, TheSID, pszName, &cchName, pszDomain, &cchDomain, &Use);
+	pszName = new TCHAR [cchName];
+	pszDomain = new TCHAR [cchDomain];
+	LookupAccountSid(NULL, TheSID, pszName, &cchName, pszDomain, &cchDomain, &Use);
+
+	// When done, free the memory used.
+    LocalFree(TheSID);
+
+	_TCHAR * ReturnVal = new_sprintf(_T("%s\\%s"), pszDomain, pszName);
+	delete[] pszName;
+	delete[] pszDomain;
+
+	return ReturnVal;
 }
 
 

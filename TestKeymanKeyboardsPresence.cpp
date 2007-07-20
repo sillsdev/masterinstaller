@@ -102,8 +102,8 @@ DWORD KeymanFunction(bool fTestOnly, const TCHAR * pszKeyboardsPath)
 
 			// Make up command line to install current keyboard:
 			const int cchBuf = 1000;
-			TCHAR pszCmd[cchBuf];
-			sprintf_s(pszCmd, cchBuf, _T("%s -s \"%s\\%s\""), pszShellCmd, pszFolder, wfd.cFileName);
+			_TCHAR pszCmd[cchBuf];
+			_stprintf_s(pszCmd, cchBuf, _T("%s -s \"%s\\%s\""), pszShellCmd, pszFolder, wfd.cFileName);
 
 			// Execute command:
 			BOOL bReturnVal = false;

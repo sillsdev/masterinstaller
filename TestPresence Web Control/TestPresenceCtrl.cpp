@@ -19,8 +19,10 @@ BEGIN_DISPATCH_MAP(CTestPresenceCtrl, COleControl)
 END_DISPATCH_MAP()
 
 // Initialize class factory and guid
-IMPLEMENT_OLECREATE_EX(CTestPresenceCtrl, "SIL.TestPresenceCtrl.1",
-	0xd40f2c18, 0x4fc2, 0x4351, 0x95, 0x68, 0x3, 0xa5, 0xc1, 0xd1, 0x21, 0x60)
+//IMPLEMENT_OLECREATE_EX(CTestPresenceCtrl, "SIL.TestPresenceCtrl.1",
+//	0xd40f2c18, 0x4fc2, 0x4351, 0x95, 0x68, 0x3, 0xa5, 0xc1, 0xd1, 0x21, 0x60)
+IMPLEMENT_OLECREATE_EX(CTestPresenceCtrl, "SIL.TestPresenceCtrl.2",
+	0x5B4F948B, 0xDDB7, 0x47f3, 0xA2, 0x1B, 0x6B, 0xF3, 0xC7, 0x6C, 0x3F, 0xCD)
 
 // Type library ID and version
 IMPLEMENT_OLETYPELIB(CTestPresenceCtrl, _tlid, _wVerMajor, _wVerMinor)

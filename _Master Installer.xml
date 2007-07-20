@@ -65,6 +65,7 @@
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read some of the training documents, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Language Explorer 0.9 Beta</Title>
@@ -72,6 +73,7 @@
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read some of the training documents, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.3</Title>
@@ -80,6 +82,7 @@
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read the tutorial document, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Translation Editor 1.2</Title>
@@ -88,6 +91,7 @@
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read some of the training documents, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks WorldPad 2.3</Title>
@@ -129,6 +133,7 @@
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read some of the training documents, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Language Explorer 0.9 Beta</Title>
@@ -136,6 +141,7 @@
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read some of the training documents, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.3</Title>
@@ -144,6 +150,7 @@
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read the tutorial document, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks WorldPad 2.3</Title>
@@ -1161,6 +1168,24 @@
 			<TestPresence Version="5.0">TestAcrobatReaderPresence</TestPresence>
 			<FlushReboot>true</FlushReboot>
 			<RebootTestRegPending>true</RebootTestRegPending>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Word Viewer 2003</Title>
+				<Source>3rd Party\Word Viewer 2003</Source>
+				<Destination>Utilities\WordViewer</Destination>
+			</AutoConfigure>
+			<Title>Microsoft Word Viewer 2003</Title>
+			<Tag>WordViewer2003</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<CriticalFile>Utilities\Word Viewer 2003\wdviewer.exe</CriticalFile>
+			<Install>$CriticalFile$ /Q /C:"setup.exe /qb"</Install>
+			<ProductCode>{90850409-6000-11D3-8CFE-0150048383C9}</ProductCode>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=95E24C87-8732-48D5-8689-AB826E7B8FDF&amp;displaylang=en</DownloadURL>
+			<Commentary>Please wait a few moments.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
 		</Product>
 		<Product>
 			<AutoConfigure>

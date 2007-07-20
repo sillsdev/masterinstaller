@@ -139,13 +139,14 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 	// List of all previous EC product codes:
 	const TCHAR * pszProductCode[] = 
 	{
-		_T("{25AEB008-3E0B-4057-A66B-2F3C50228E0E}"), // EC Version 2.2.1 (with FW 3.1)
 		_T("{99DA3CBB-CE9C-4861-BBB6-7FD36077EA70}"), // Clipboard EC 2.2
-		_T("{26001E4D-320E-4162-8843-A798C973E3E2}"), // Clipboard EC shipped with FW 3.1
 		_T("{9D80029B-5B2C-45A1-9C8A-D599598CCAFF}"), // Bulk SFM converter 1.1.1
 		_T("{EB74F31A-3768-4884-B23C-332A6E0E3B07}"), // SpellFixer add-in 2.2.1
 		_T("{C4BEF638-52A5-4480-96BB-B54BDDF566D8}"), // EC Version 1.0.2 (with FW 3.0)
 		_T("{1754401C-BEBE-415E-B0DF-9B6E0420E2F8}"), // Clipboard EC shipped with FW 3.0
+		_T("{25AEB008-3E0B-4057-A66B-2F3C50228E0E}"), // EC Version 2.2.1 (with FW 3.1)
+		_T("{26001E4D-320E-4162-8843-A798C973E3E2}"), // Clipboard EC shipped with FW 3.1
+		_T("{21494256-771F-451F-94F9-8A52AC52BFB2}"), // EC Version 2.3
 		_T("{6242D132-64F4-46E3-9F39-26B02215B896}"), // EC Version 2.5 shipped with FW 4.0
 //		_T("{AA48C03E-F339-430B-B8E9-FA666F607C17}"), // EC Version 2.6 produced with FW 4.2
 	};

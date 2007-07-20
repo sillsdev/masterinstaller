@@ -154,6 +154,62 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>FW 4.2 (from Cana)</Title>
+				<Source>\\cana\LSDev\Installers\FW4.2\SetupFw.msi</Source>
+				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks\TechSupport.txt</Source>
+				<Source>Documents\FieldWorks\CopyToCd</Source>
+				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks SE 4.2</Title>
+			<Tag>FW_42</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{821728B7-83CA-44FF-B779-F53D511F9982}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET2.0" Version="2.0"/>
+			<Preinstall>CleanStartFw40</Preinstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.6</Title>
+				<Tag>DN_26</Tag>
+				<MsiFeature>DN</MsiFeature>
+				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 1.2</Title>
+				<Tag>LT_12</Tag>
+				<MsiFeature>FLEX</MsiFeature>
+				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor 2.6</Title>
+				<Tag>TLE_26</Tag>
+				<MsiFeature>TLE</MsiFeature>
+				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.6</Title>
+				<Tag>WP_26</Tag>
+				<MsiFeature>WP</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>FW (4.1 branch build from \\cana)</Title>
 				<Source>\\cana\LSDev\Installers\FW4.1</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>

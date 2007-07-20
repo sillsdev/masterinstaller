@@ -1179,7 +1179,7 @@
 			<Tag>WordViewer2003</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<CriticalFile>Utilities\Word Viewer 2003\wdviewer.exe</CriticalFile>
+			<CriticalFile>Utilities\WordViewer\wdviewer.exe</CriticalFile>
 			<Install>$CriticalFile$ /Q /C:"setup.exe /qb"</Install>
 			<ProductCode>{90850409-6000-11D3-8CFE-0150048383C9}</ProductCode>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=95E24C87-8732-48D5-8689-AB826E7B8FDF&amp;displaylang=en</DownloadURL>

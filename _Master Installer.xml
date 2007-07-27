@@ -389,12 +389,12 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>IPA Help 2.04</Title>
+				<Title>IPA Help 2.1</Title>
 				<Source>Installers\IPA Help</Source>
 				<SetupHelp>Documents\IPA Help\SetupIPAHelp.rtf</SetupHelp>
 				<Destination>IPA Help</Destination>
 			</AutoConfigure>
-			<Title>IPA Help 2.04</Title>
+			<Title>IPA Help 2.1</Title>
 			<Tag>IPA3</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -403,8 +403,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>IPA Help\SetupIPAHelp.rtf</Help>
 			<ProductCode>{D9388CA9-E056-446C-8E13-111DA0F3A704}</ProductCode>
-			<Prerequisite Tag="WI31" MinVersion="3.0"/>
-			<Requires Tag=".NET2.0" Version="2.0.50727" FailMsg="The program will crash on startup."/>
+			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Requires Tag="IE" MinVersion="5.5" FailMsg="The Word Lists feature will not run correctly."/>
 		</Product>
 		<Product>

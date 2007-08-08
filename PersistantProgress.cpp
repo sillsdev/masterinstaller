@@ -39,12 +39,12 @@ PersistantProgress::~PersistantProgress()
 
 LONG PersistantProgress::OpenForRead()
 {
-	return RegOpenKeyEx(HKEY_LOCAL_MACHINE, m_kpszRegKey, 0, KEY_READ, &m_hKey);
+	return RegOpenKeyEx(HKEY_CURRENT_USER, m_kpszRegKey, 0, KEY_READ, &m_hKey);
 }
 
 void PersistantProgress::OpenForWrite()
 {
-	LONG lResult = RegCreateKeyEx(HKEY_LOCAL_MACHINE, m_kpszRegKey, 0, NULL,
+	LONG lResult = RegCreateKeyEx(HKEY_CURRENT_USER, m_kpszRegKey, 0, NULL,
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &m_hKey, NULL);
 
 	if (ERROR_SUCCESS != lResult)
@@ -62,7 +62,7 @@ void PersistantProgress::Close()
 
 bool PersistantProgress::RecordExists()
 {
-	LONG lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, m_kpszRegKey, 0, KEY_READ, &m_hKey);
+	LONG lResult = RegOpenKeyEx(HKEY_CURRENT_USER, m_kpszRegKey, 0, KEY_READ, &m_hKey);
 	
 	return (ERROR_SUCCESS == lResult);
 }
@@ -237,7 +237,7 @@ void PersistantProgress::WriteInstallStatus(int iProduct, int nStatus)
 
 void PersistantProgress::RemoveData(bool fReportError)
 {
-	LONG lResult = RegDeleteKey(HKEY_LOCAL_MACHINE, m_kpszRegKey);
+	LONG lResult = RegDeleteKey(HKEY_CURRENT_USER, m_kpszRegKey);
 
 	if (ERROR_SUCCESS != lResult && fReportError)
 	{

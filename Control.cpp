@@ -593,140 +593,31 @@ bool MasterInstaller_t::IsWindows2000OrBetter()
 	return true;
 }
 
-// Returns true if the caller is an administrator on the local machine.
-// Otherwise, false.
-// This routine was taken from the Microsoft Knowledgebase, article 118626.
+// Returns true if the caller's process is a member of the Administrators local group.
+// Caller is NOT expected to be impersonating anyone and is expected to be able to
+// open its own process and process token.
+// Return Value: 
+//   true - Caller has Administrators local group. 
+//   false - Caller does not have Administrators local group.
+// Taken from the MS website:
+// http://msdn2.microsoft.com/en-us/library/aa376389.aspx
 bool MasterInstaller_t::IsCurrentUserLocalAdministrator()
 {
-	// First, check if the operating system is at least NT. If not, there is no such thing as
-	// admin user, as all users have admin rights:
-	OSVERSIONINFO OSversion;
-	OSversion.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-	::GetVersionEx(&OSversion);
-	if (OSversion.dwPlatformId != VER_PLATFORM_WIN32_NT)
-		return true;
+	BOOL b;
+	SID_IDENTIFIER_AUTHORITY NtAuthority = SECURITY_NT_AUTHORITY;
+	PSID AdministratorsGroup;
+	b = AllocateAndInitializeSid(&NtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID,
+		DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &AdministratorsGroup);
 
-	BOOL fReturn = false;
-	DWORD dwStatus;
-	DWORD dwAccessMask;
-	DWORD dwAccessDesired;
-	DWORD dwACLSize;
-	DWORD dwStructureSize = sizeof(PRIVILEGE_SET);
-	PACL pACL = NULL;
-	PSID psidAdmin = NULL;
-
-	HANDLE hToken = NULL;
-	HANDLE hImpersonationToken = NULL;
-
-	PRIVILEGE_SET ps;
-	GENERIC_MAPPING GenericMapping;
-
-	PSECURITY_DESCRIPTOR psdAdmin = NULL;
-	SID_IDENTIFIER_AUTHORITY SystemSidAuthority = SECURITY_NT_AUTHORITY;
-
-	/* Determine if the current thread is running as a user that is a member of the local admins
-	group. To do this, create a security descriptor that has a DACL which has an ACE that
-	allows only local aministrators access. Then, call AccessCheck with the current thread's
-	token and the security descriptor. It will say whether the user could access an object if
-	it had that security descriptor. Note: you do not need to actually create the object.
-	Just checking access against the security descriptor alone will be sufficient. */
-	const DWORD ACCESS_READ = 1;
-	const DWORD ACCESS_WRITE = 2;
-
-	__try
+	if (b)
 	{
-		/* AccessCheck() requires an impersonation token. We first get a primary token and then
-		create a duplicate impersonation token. The impersonation token is not actually assigned
-		to the thread, but is used in the call to AccessCheck. Thus, this function itself never
-		impersonates, but does use the identity of the thread. If the thread was impersonating
-		already, this function uses that impersonation context. */
-		if (!OpenThreadToken(GetCurrentThread(), TOKEN_DUPLICATE | TOKEN_QUERY, true, &hToken))
+		if (!CheckTokenMembership(NULL, AdministratorsGroup, &b))
 		{
-			if (GetLastError() != ERROR_NO_TOKEN)
-				__leave;
-
-			if (!OpenProcessToken(GetCurrentProcess(), TOKEN_DUPLICATE | TOKEN_QUERY, &hToken))
-				__leave;
+			b = false;
 		}
-
-		if (!DuplicateToken (hToken, SecurityImpersonation, &hImpersonationToken))
-			 __leave;
-
-		/* Create the binary representation of the well-known SID that represents the local
-		administrators group. Then create the security descriptor and DACL with an ACE that
-		allows only local admins access. After that, perform the access check. This will
-		determine whether the current user is a local admin. */
-		if (!AllocateAndInitializeSid(&SystemSidAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID,
-			DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &psidAdmin))
-		{
-			__leave;
-		}
-
-		psdAdmin = LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH);
-		if (psdAdmin == NULL)
-			__leave;
-
-		if (!InitializeSecurityDescriptor(psdAdmin, SECURITY_DESCRIPTOR_REVISION))
-			__leave;
-
-		// Compute size needed for the ACL.
-		dwACLSize = sizeof(ACL) + sizeof(ACCESS_ALLOWED_ACE) + GetLengthSid(psidAdmin)
-			- sizeof(DWORD);
-
-		pACL = (PACL)LocalAlloc(LPTR, dwACLSize);
-		if (pACL == NULL)
-			__leave;
-
-		if (!InitializeAcl(pACL, dwACLSize, ACL_REVISION2))
-			__leave;
-
-		dwAccessMask = ACCESS_READ | ACCESS_WRITE;
-
-		if (!AddAccessAllowedAce(pACL, ACL_REVISION2, dwAccessMask, psidAdmin))
-			__leave;
-
-		if (!SetSecurityDescriptorDacl(psdAdmin, true, pACL, false))
-			__leave;
-
-		/* AccessCheck validates a security descriptor somewhat; set the group and owner so that
-		enough of the security descriptor is filled out to make AccessCheck happy. */
-		SetSecurityDescriptorGroup(psdAdmin, psidAdmin, false);
-		SetSecurityDescriptorOwner(psdAdmin, psidAdmin, false);
-
-		if (!IsValidSecurityDescriptor(psdAdmin))
-			__leave;
-
-		dwAccessDesired = ACCESS_READ;
-
-		/* Initialize GenericMapping structure even though you do not use generic rights. */
-		GenericMapping.GenericRead = ACCESS_READ;
-		GenericMapping.GenericWrite = ACCESS_WRITE;
-		GenericMapping.GenericExecute = 0;
-		GenericMapping.GenericAll = ACCESS_READ | ACCESS_WRITE;
-
-		if (!AccessCheck(psdAdmin, hImpersonationToken, dwAccessDesired, &GenericMapping, &ps,
-			&dwStructureSize, &dwStatus, &fReturn))
-		{
-			fReturn = false;
-			__leave;
-		}
+		FreeSid(AdministratorsGroup);
 	}
-	__finally
-	{
-		// Clean up.
-		if (pACL)
-			LocalFree(pACL);
-		if (psdAdmin)
-			LocalFree(psdAdmin);
-		if (psidAdmin)
-			FreeSid(psidAdmin);
-		if (hImpersonationToken)
-			CloseHandle(hImpersonationToken);
-		if (hToken)
-			CloseHandle(hToken);
-	}
-
-	return !!fReturn;
+	return !!b;
 }
 
 // Determines which main products are to be installed. If any main products are protected, the

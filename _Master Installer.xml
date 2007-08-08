@@ -417,7 +417,7 @@
 			<Title>Adapt It 3.2.4 (English)</Title>
 			<Tag>Adaptit</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
-			<MustBeAdmin>false</MustBeAdmin>
+			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\English_Adapt_It_Regular_324.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
@@ -435,7 +435,7 @@
 			<Title>Adapt It Unicode 3.2.4 (English)</Title>
 			<Tag>AdaptitU</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>false</MustBeAdmin>
+			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\English_Adapt_It_Unicode_324.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
@@ -453,7 +453,7 @@
 			<Title>Adapt It 3.2.4 (French)</Title>
 			<Tag>AdaptitF</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
-			<MustBeAdmin>false</MustBeAdmin>
+			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\French_Adapt_It_Regular_324.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
@@ -471,7 +471,7 @@
 			<Title>Adapt It Unicode 3.2.4 (French)</Title>
 			<Tag>AdaptitUF</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>false</MustBeAdmin>
+			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\French_Adapt_It_Unicode_324.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
@@ -489,7 +489,7 @@
 			<Title>Adapt It 2.4.1.i (Indonesian)</Title>
 			<Tag>AdaptitI</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
-			<MustBeAdmin>false</MustBeAdmin>
+			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\Indonesian_setupai.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
@@ -507,7 +507,7 @@
 			<Title>Adapt It Unicode 2.4.1.i (Indonesian)</Title>
 			<Tag>AdaptitUI</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>false</MustBeAdmin>
+			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\Indonesian_setupai_u.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
@@ -525,7 +525,7 @@
 			<Title>Adapt It Unicode 3.2.4 (Mandarin)</Title>
 			<Tag>AdaptitUM</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>false</MustBeAdmin>
+			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\Mandarin_Adapt_It_Unicode_324.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
@@ -543,7 +543,7 @@
 			<Title>Adapt It 2.4.1.i (Spanish)</Title>
 			<Tag>AdaptitS</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
-			<MustBeAdmin>false</MustBeAdmin>
+			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\Spanish_setupai.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
@@ -561,7 +561,7 @@
 			<Title>Adapt It Unicode 2.4.1.i (Spanish)</Title>
 			<Tag>AdaptitUS</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>false</MustBeAdmin>
+			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\Spanish_setupai_u.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
@@ -810,6 +810,7 @@
 			</AutoConfigure>
 			<Title>Keyman 6.2 (Requires licensing via Internet)</Title>
 			<Tag>KeymanS</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\Keyman62\keyman6-2-174-0.exe</CriticalFile>
 			<Help>Utilities\Keyman62\Standard_Edition.rtf</Help>
 			<Install>$CriticalFile$</Install>
@@ -828,6 +829,7 @@
 			</AutoConfigure>
 			<Title>Keyman 6.2 (Free - Home Use)</Title>
 			<Tag>KeymanH</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\Keyman62\keyman_free_6-2-174-0.exe</CriticalFile>
 			<Help>Utilities\Keyman62\Home_Use_Edition.rtf</Help>
 			<Install>$CriticalFile$</Install>

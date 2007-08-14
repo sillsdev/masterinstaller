@@ -68,9 +68,6 @@ void RunKB908002Fix()
 		}
 
 		RegCloseKey(hKey);
-
-		// Remove the registry setting:
-		RegDeleteKey(HKEY_LOCAL_MACHINE, pszKeyPath);
 	}
 
 	if (pszCmd)

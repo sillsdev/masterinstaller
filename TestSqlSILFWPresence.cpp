@@ -1,5 +1,6 @@
 #pragma once
-// SQL Server 2005 Express has a version number of 9.00.2047.00 in the CurrentVersion reg value below.
+// SQL Server 2005 Express originally had a version number of 9.00.2047.00 in the CurrentVersion reg value below.
+// After at least one update, the version number reads 9.00.3042.00
 
 #include <tchar.h>
 

@@ -3,79 +3,11 @@
 #include <tchar.h>
 
 #include "services.cpp"
+#include "InitFwData.cpp"
 
-// Utility to initialize FieldWorks access to SQL Server.
-// This used to be done by FieldWorks applications, but is now done at the end
-// of the installation sequence, while we still have administrator privileges.
-int InitSQLServerForFW()
-{
-	const _TCHAR * pszDbAccessDll = _T("DbAccess.dll");
-	LONG lResult;
-	HKEY hKey;
-
-	// Look up the FieldWorks code directory in the registry:
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL\\FieldWorks"), 0, KEY_READ, &hKey);
-	if (ERROR_SUCCESS != lResult)
-	{
-		g_Log.Write(_T("Could not find registry key HKEY_LOCAL_MACHINE\\SOFTWARE\\SIL\\FieldWorks"));
-		return -1;
-	}
-
-	DWORD cbData = 0;
-
-	// Fetch required buffer size:
-	lResult = RegQueryValueEx(hKey, _T("RootCodeDir"), NULL, NULL, NULL, &cbData);
-	if (cbData == 0)
-	{
-		g_Log.Write(_T("Could not find registry value RootCodeDir"));
-		return -2;
-	}
-
-	int cchDbAccessDllPath = cbData + 1 + _tcslen(pszDbAccessDll);
-	_TCHAR * pszDbAccessDllPath = new _TCHAR [cchDbAccessDllPath];
-
-	lResult = RegQueryValueEx(hKey, _T("RootCodeDir"), NULL, NULL, LPBYTE(pszDbAccessDllPath), &cbData);
-	if (ERROR_SUCCESS != lResult)
-	{
-		g_Log.Write(_T("Could not read registry value RootCodeDir"));
-		return -3;
-	}
-
-	// Form full path to DbAccess.dll:
-	if (pszDbAccessDllPath[cbData - 1] != '\\')
-		_tcscat_s(pszDbAccessDllPath, cchDbAccessDllPath, _T("\\"));
-	_tcscat_s(pszDbAccessDllPath, cchDbAccessDllPath, pszDbAccessDll);
-
-	// Load the DbAccess.dll:
-	HMODULE hmodDbAccess = LoadLibrary(pszDbAccessDllPath);
-	if (!hmodDbAccess)
-	{
-		g_Log.Write(_T("Could not load library %s"), pszDbAccessDllPath);
-		return -4;
-	}
-
-	// Get pointer to ExtInitMSDE function:
-	typedef void (WINAPI * ExtInitMSDEFn)(HWND, HINSTANCE, LPSTR, int);
-	ExtInitMSDEFn _ExtInitMSDE;
-	_ExtInitMSDE = (ExtInitMSDEFn)GetProcAddress(hmodDbAccess, "ExtInitMSDE");
-
-	if (!_ExtInitMSDE)
-	{
-		FreeLibrary(hmodDbAccess);
-		g_Log.Write(_T("Could not find function ExtInitMSDE() in %s"), pszDbAccessDllPath);
-		return -5;
-	}
-
-	_ExtInitMSDE(NULL, NULL, "force", SW_SHOW);
-
-	FreeLibrary(hmodDbAccess);
-	hmodDbAccess = NULL;
-
-	return 0;
-}
 
 // Import the Surface Area settings
-int SqlServer2005PostInstall(const _TCHAR * pszCriticalFile)
+int ImportSACSettings(const _TCHAR * pszCriticalFile)
 {
 	// Locate the surface area settings file, should be in the same folder as the critical file:
 	_TCHAR * pszCriticalFileCopy = my_strdup(pszCriticalFile);
@@ -137,7 +69,7 @@ int SqlServer2005PostInstall(const _TCHAR * pszCriticalFile)
 	{
 		MessageBox(NULL, _T("Error: Cannot find Surface Area Configuration tool. SQL Server 2005 will be configured with default settings. Some features may not work."), g_pszTitle, MB_ICONSTOP | MB_OK);
 		g_Log.Write(_T("Cannot find SAC utility."));
-		return -1;
+		return -2;
 	}
 
 	DisplayStatusText(0, _T("Configuring SQL Server: Starting SQL Server Service."));
@@ -150,7 +82,7 @@ int SqlServer2005PostInstall(const _TCHAR * pszCriticalFile)
 	{
 		MessageBox(NULL, _T("Error: Cannot start SQL Server 2005. It will be left with default settings. Some features may not work."), g_pszTitle, MB_ICONSTOP | MB_OK);
 		g_Log.Write(_T("Cannot start SQL Server 2005."));
-		return -1;
+		return -3;
 	}
 
 	// Import SAC settings:
@@ -165,7 +97,7 @@ int SqlServer2005PostInstall(const _TCHAR * pszCriticalFile)
 	{
 		MessageBox(NULL, _T("Error: Failed to configure SQL Server 2005. It will have default settings. Some features may not work."), g_pszTitle, MB_ICONSTOP | MB_OK);
 		g_Log.Write(_T("Cannot start SQL Server 2005."));
-		return -1;
+		return -4;
 	}
 	delete[] pszCmd;
 	pszCmd = NULL;
@@ -178,12 +110,22 @@ int SqlServer2005PostInstall(const _TCHAR * pszCriticalFile)
 		// Cannot restart SQL Server, so order a reboot:
 		g_fRebootPending = true;
 	}
+	return 0;
+}
+
+int SqlServer2005PostInstall(const _TCHAR * pszCriticalFile)
+{
+	g_Log.Write(_T("Importing SQL Server surface area settings..."));
+	g_Log.Indent();
+	int ImportSACSettingsRet = ImportSACSettings(pszCriticalFile);
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done. ImportSACSettings() returned %d"), ImportSACSettingsRet);
 
 	g_Log.Write(_T("Performing FieldWorks initialization of SQL Server..."));
 	g_Log.Indent();
-	int InitSqlRet = InitSQLServerForFW();
+	int InitFwDataRet = InitFwData();
 	g_Log.Unindent();
-	g_Log.Write(_T("...done. InitSQLServerForFW() returned %d"), InitSqlRet);
+	g_Log.Write(_T("...done. InitSQLServerForFW() returned %d"), InitFwDataRet);
 
 	return 0;
 }

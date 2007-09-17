@@ -32,6 +32,73 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
+				<Title>FW 5.0 BTE (from \\ls-fwbuilder)</Title>
+				<Source>\\ls-fwbuilder\c$\FW_5.0\Installer\SetupFw.msi</Source>
+				<Source>\\ls-fwbuilder\c$\FW_5.0\Installer\TE_M.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW_5.0\Installer\Flex_M.cab</Source>
+				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks\TechSupport.txt</Source>
+				<Source>Documents\FieldWorks\CopyToCd</Source>
+				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 5.0 BTE</Title>
+			<Tag>FW50</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{426DCB3B-2887-4218-802B-6DC3BBB420FC}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET2.0" Version="2.0"/>
+			<Preinstall>CleanStartFw40</Preinstall>
+			<PostInstall>FwPostInstall</PostInstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.5</Title>
+				<Tag>DN_TC</Tag>
+				<MsiFeature>DN</MsiFeature>
+				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 1.1</Title>
+				<Tag>LT_TC</Tag>
+				<MsiFeature>FLEX</MsiFeature>
+				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor 2.5</Title>
+				<Tag>TLE_TC</Tag>
+				<MsiFeature>TLE</MsiFeature>
+				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Translation Editor 1.3</Title>
+				<Tag>TE_TC</Tag>
+				<MsiFeature>TE</MsiFeature>
+				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.5</Title>
+				<Tag>WP_TC</Tag>
+				<MsiFeature>WP</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>FW (Trunk build from \\cana)</Title>
 				<Source>\\cana\LSDev\Installers\Trunk\SetupFw.msi</Source>
 				<Source>\\cana\LSDev\Installers\Trunk\TE_M.cab</Source>
@@ -66,7 +133,6 @@
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read some of the training documents, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Language Explorer 1.1</Title>
@@ -74,7 +140,6 @@
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read some of the training documents, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.5</Title>
@@ -83,7 +148,6 @@
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read the tutorial document, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Translation Editor 1.3</Title>
@@ -92,7 +156,6 @@
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read some of the training documents, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks WorldPad 2.5</Title>
@@ -135,7 +198,6 @@
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read some of the training documents, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Language Explorer 1.1</Title>
@@ -143,7 +205,6 @@
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read some of the training documents, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.5</Title>
@@ -152,7 +213,6 @@
 				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-				<Requires Tag="WordViewer2003" FailMsg="You may not be able to read the tutorial document, unless you have another suitable .doc reader."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks WorldPad 2.5</Title>
@@ -1171,6 +1231,23 @@
 			<TestPresence Version="5.0">TestAcrobatReaderPresence</TestPresence>
 			<FlushReboot>true</FlushReboot>
 			<RebootTestRegPending>true</RebootTestRegPending>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Flash Player 9</Title>
+				<Source>3rd Party\Flash Player\For Internet Explorer\install_flash_player_active_x.msi</Source>
+				<Destination>Utilities\Flash Player</Destination>
+			</AutoConfigure>
+			<Title>Flash Player 9</Title>
+			<Tag>Flash9</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<CriticalFile>Utilities\Flash Player\install_flash_player_active_x.msi</CriticalFile>
+			<Install />
+			<ProductCode>{786547F9-59BB-4FA3-B2D8-327FF1F14870}</ProductCode>
+			<DownloadURL>http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash</DownloadURL>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
 		</Product>
 		<Product>
 			<AutoConfigure>

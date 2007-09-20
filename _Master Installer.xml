@@ -903,24 +903,24 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Encoding Converters 2.6 Web Installer</Title>
+				<Title>Encoding Converters 2.6.1 Web Installer</Title>
 			</AutoConfigure>
-			<Title>SIL Converters and Repository 2.6</Title>
-			<Tag>EncCvtrs_2_6_Web</Tag>
+			<Title>SIL Converters and Repository 2.6.1</Title>
+			<Tag>EncCvtrs_2_6_1_Web</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>http://downloads.sil.org/EncodingConverters/2.6/SetupEC.msi</CriticalFile>
+			<CriticalFile>http://downloads.sil.org/EncodingConverters/2.6.1/SetupEC.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 8000</StatusWindow>
-			<ProductCode>{AA48C03E-F339-430B-B8E9-FA666F607C17}</ProductCode>
+			<ProductCode>{DCDE04DF-4429-44E3-939F-E618A8106DC7}</ProductCode>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
 			<Prerequisite Tag=".NET2.0" Version="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Encoding Converters 2.6 CD Installer (from FW Trunk on \\ls-fwbuilder)</Title>
+				<Title>Encoding Converters 2.6.1 CD Installer (from FW Trunk on \\ls-fwbuilder)</Title>
 				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC.msi</Source>
 				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC1.cab</Source>
 				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC2.cab</Source>
@@ -943,18 +943,20 @@
 				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC19.cab</Source>
 				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC20.cab</Source>
 				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC21.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\m22.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC22.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC23.cab</Source>
+				<Source>\\ls-fwbuilder\c$\FW\Installer\m24.cab</Source>
 				<Destination>Encoding Converters</Destination>
 			</AutoConfigure>
-			<Title>SIL Converters and Repository 2.6</Title>
-			<Tag>EncCvtrs_2_6</Tag>
+			<Title>SIL Converters and Repository 2.6.1</Title>
+			<Tag>EncCvtrs_2_6_1</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
 			<CriticalFile>Encoding Converters\SetupEC.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 5000</StatusWindow>
-			<ProductCode>{AA48C03E-F339-430B-B8E9-FA666F607C17}</ProductCode>
+			<ProductCode>{DCDE04DF-4429-44E3-939F-E618A8106DC7}</ProductCode>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
 			<Prerequisite Tag=".NET2.0" Version="2.0"/>

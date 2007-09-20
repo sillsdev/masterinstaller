@@ -148,7 +148,8 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 		_T("{26001E4D-320E-4162-8843-A798C973E3E2}"), // Clipboard EC shipped with FW 3.1
 		_T("{21494256-771F-451F-94F9-8A52AC52BFB2}"), // EC Version 2.3
 		_T("{6242D132-64F4-46E3-9F39-26B02215B896}"), // EC Version 2.5 shipped with FW 4.0
-//		_T("{AA48C03E-F339-430B-B8E9-FA666F607C17}"), // EC Version 2.6 produced with FW 4.2
+		_T("{AA48C03E-F339-430B-B8E9-FA666F607C17}"), // EC Version 2.6 produced with FW 4.2
+//		_T("{DCDE04DF-4429-44E3-939F-E618A8106DC7}"), // EC Version 2.6.1 produced with FW 5.0
 	};
 
 	for (int i = 0; i < (sizeof(pszProductCode) / sizeof(pszProductCode[0])); i++)

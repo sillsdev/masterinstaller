@@ -118,7 +118,7 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 		INSTALLSTATE state = INSTALLSTATE_UNKNOWN;
 
 		state = WindowsInstaller.MsiQueryFeatureState(
-			_T("{AA48C03E-F339-430B-B8E9-FA666F607C17}"), pszEcFeatures[i]);
+			_T("{DCDE04DF-4429-44E3-939F-E618A8106DC7}"), pszEcFeatures[i]);
 
 		switch (state)
 		{

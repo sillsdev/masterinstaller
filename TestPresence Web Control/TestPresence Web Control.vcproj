@@ -350,10 +350,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.h"
-				>
-			</File>
-			<File
 				RelativePath=".\TestPresence Web Control.h"
 				>
 			</File>
@@ -412,6 +408,10 @@
 		</File>
 		<File
 			RelativePath=".\ConfigTestMethods.xsl"
+			>
+		</File>
+		<File
+			RelativePath=".\stdafx.h"
 			>
 		</File>
 		<File

@@ -4,6 +4,7 @@
 
 #include "InitFwData.cpp"
 #include "TestSqlSILFWPresence.cpp"
+#include "InitEC.cpp"
 
 int FwPostInstall(const _TCHAR * /*pszCriticalFile*/)
 {
@@ -12,6 +13,8 @@ int FwPostInstall(const _TCHAR * /*pszCriticalFile*/)
 	// (See SqlServer2005PostInstall.cpp for that case.)
 	if (TestSqlSILFWPresence(_T("9.0.0.0"), _T("9.0.32767.32767"), NULL))
 		return InitFwData();
+
+	InitEC();
 
 	return 0;
 }

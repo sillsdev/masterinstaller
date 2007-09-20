@@ -2,6 +2,8 @@
 
 #include <tchar.h>
 
+#include "InitEC.cpp"
+
 
 // Detect if there is a registry key signalling we are to run the KB908002 Fix, and
 // run it if so. Then remove the temporary Extensibility.dll file, if it exists.
@@ -192,6 +194,7 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 // Call RunKB908002Fix and SetupInstalledConverters
 int EncodingConvertersPostInstall(const TCHAR * pszCriticalFile)
 {
+	InitEC();
 	RunKB908002Fix();
 	return SetupInstalledConverters(pszCriticalFile);
 }

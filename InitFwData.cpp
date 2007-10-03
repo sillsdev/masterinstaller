@@ -38,6 +38,10 @@ int InitSQLServerForFW()
 	_TCHAR * pszDbAccessDllPath = new _TCHAR [cchDbAccessDllPath];
 
 	lResult = RegQueryValueEx(hKey, _T("RootCodeDir"), NULL, NULL, LPBYTE(pszDbAccessDllPath), &cbData);
+
+	RegCloseKey(hKey);
+	hKey = NULL;
+
 	if (ERROR_SUCCESS != lResult)
 	{
 		g_Log.Write(_T("Could not read registry value RootCodeDir"));

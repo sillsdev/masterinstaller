@@ -817,7 +817,7 @@ void MasterInstaller_t::ReRun()
 	m_hMutex = NULL;
 
 	// Run ourself!
-	ExecCmd(szPath, false, false);
+	ExecCmd(szPath, NULL, false);
 
 	// Quit, to let the new instance take over:
 	ExitProcess(0);

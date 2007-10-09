@@ -347,7 +347,7 @@ bool SoftwareProduct::TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * 
 		if (m_pfnAuxTestPresence)
 			fPresent = m_pfnAuxTestPresence(pszMinVersion, pszMaxVersion, GetCriticalFile());
 		if (m_kpszAuxTestPresence)
-			fPresent |= (0 != ExecCmd(m_kpszAuxTestPresence, true, true));
+			fPresent |= (0 != ExecCmd(m_kpszAuxTestPresence, _T(""), true));
 	}
 	else if (m_kpszMsiProductCode)
 	{
@@ -513,7 +513,7 @@ DWORD SoftwareProduct::RunInstaller()
 
 			g_Log.Write(_T("About to run \"%s\""), pszMsiExec);
 
-			nResult = ExecCmd(pszMsiExec, true, true, m_kpszNiceName,
+			nResult = ExecCmd(pszMsiExec, _T(""), true, m_kpszNiceName,
 				m_kpszStatusWindowControl);
 		}
 		else // Not using Windows Installer.
@@ -529,7 +529,7 @@ DWORD SoftwareProduct::RunInstaller()
 			{
 				// Parse the given string, replacing special tokens with runtime data:
 				_TCHAR * pszModCmd = new_InterpretString(pszCmd);
-				nResult = ExecCmd(pszModCmd, true, true, m_kpszNiceName,
+				nResult = ExecCmd(pszModCmd, _T(""), true, m_kpszNiceName,
 					m_kpszStatusWindowControl);
 				delete[] pszModCmd;
 				pszModCmd = NULL;
@@ -627,7 +627,7 @@ bool SoftwareProduct::Install()
 				{
 					g_Log.Write(_T("Executing pre-installation program '%s'..."), m_kpszPreInstallation);
 					g_Log.Indent();
-					nReturn = ExecCmd(m_kpszPreInstallation, true, true);
+					nReturn = ExecCmd(m_kpszPreInstallation, _T(""), true);
 					g_Log.Unindent();
 					g_Log.Write(_T("...Done. Pre-installation program returned %d"), nReturn);
 				}
@@ -773,7 +773,7 @@ bool SoftwareProduct::Install()
 	{
 		g_Log.Write(_T("Executing post-installation program '%s'..."), m_kpszPostInstallation);
 		g_Log.Indent();
-		int nReturn = ExecCmd(m_kpszPostInstallation, true, true);
+		int nReturn = ExecCmd(m_kpszPostInstallation, _T(""), true);
 		g_Log.Unindent();
 		g_Log.Write(_T("...Done. Post-installation program returned %d"), nReturn);
 	}

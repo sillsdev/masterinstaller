@@ -167,7 +167,7 @@ void CopyOldFwData()
 							pszFwCodeFolder, pszFwDataFolder, pszFormerFwInstallationFolder);
 
 						// Run utility to move files:
-						ExecCmd(pszCmd, false, true, _T("FieldWorks data file transfer"),
+						ExecCmd(pszCmd, NULL, true, _T("FieldWorks data file transfer"),
 							_T("show"));
 					}
 				}

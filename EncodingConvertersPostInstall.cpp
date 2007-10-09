@@ -79,7 +79,7 @@ void RunKB908002Fix()
 		DisplayStatusText(0, _T("Installing Microsoft KB908002 Fix for Word macros"));
 		DisplayStatusText(1, _T("Please follow instructions in dialog"));
 
-		ExecCmd(pszCmd, false, true);
+		ExecCmd(pszCmd, NULL, true);
 	}
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done."));
@@ -182,7 +182,7 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 		DisplayStatusText(0, _T("Installing converters to repository"));
 		DisplayStatusText(1, _T("Please follow instructions in dialog"));
 
-		dwExitCode = ExecCmd(pszSetupSC, false, true);
+		dwExitCode = ExecCmd(pszSetupSC, NULL, true);
 	}
 
 	g_Log.Unindent();

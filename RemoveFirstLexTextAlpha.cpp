@@ -32,7 +32,7 @@ int RemoveFirstLexTextAlpha(const _TCHAR * /*pszCriticalFile*/)
 
 		// Remove the WW installation:
 		TCHAR * pszCmd = new_sprintf(_T("msiexec /qb /x %s"), pszProductCodeLT);
-		dwResult = ExecCmd(pszCmd, false, true, NULL, _T("Show"));
+		dwResult = ExecCmd(pszCmd, NULL, true, NULL, _T("Show"));
 		delete[] pszCmd;
 	}
 	return int(dwResult != 0);

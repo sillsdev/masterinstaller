@@ -33,7 +33,7 @@ void UninstallMsde()
 			{
 				TCHAR szCommand[100];
 				sprintf(szCommand, _T("MsiExec.exe /X%s /qb-"), szProductCode);
-				ExecCmd(szCommand, false);
+				ExecCmd(szCommand, NULL);
 				return;
 			}
 		}

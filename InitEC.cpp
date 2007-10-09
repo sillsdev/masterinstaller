@@ -49,7 +49,7 @@ void InitEC()
 					pszEcFolder);
 
 				// Run utility - return code will be logged by ExecCmd() function:
-				ExecCmd(pszCmd, false, true, _T("Encoding Converters initialization"),
+				ExecCmd(pszCmd, NULL, true, _T("Encoding Converters initialization"),
 					_T("show"));
 			}
 			delete[] pszEcFolder;

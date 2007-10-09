@@ -8,9 +8,12 @@
 
 #include <windef.h>
 
-extern DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit = true,
+extern DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit = true,
 					 const _TCHAR * pszDescription = NULL,
-					 const _TCHAR * pszStatusWindowControl = NULL);
+					 const _TCHAR * pszStatusWindowControl = NULL,
+					 const _TCHAR * pszEnvironment = NULL);
+extern void AddToPathEnvVar(_TCHAR * pszExtraPath);
+extern _TCHAR * GetFolderPathNew(int csidlFolder);
 extern bool Reboot();
 extern void FriendlyReboot();
 extern HRESULT GetFileVersion (LPTSTR filename, VS_FIXEDFILEINFO *pvsf);

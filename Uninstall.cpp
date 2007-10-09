@@ -41,7 +41,7 @@ int Uninstall(const TCHAR * pszProductCode, const TCHAR * pszStatus)
 			g_Log.Write(_T("User chose to continue with uninstall."));
 		}
 		TCHAR * pszCmd = new_sprintf(_T("msiexec /qb /x %s"), pszProductCode);
-		dwResult = ExecCmd(pszCmd, false, true, NULL, _T("Show"));
+		dwResult = ExecCmd(pszCmd, NULL, true, NULL, _T("Show"));
 		delete[] pszCmd;
 	}
 	else

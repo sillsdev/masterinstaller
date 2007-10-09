@@ -93,7 +93,7 @@ int ImportSACSettings(const _TCHAR * pszCriticalFile)
 	pszSacPath = NULL;
 	DisplayStatusText(0, _T("Configuring SQL Server: Importing settings."));
 	g_Log.Write(_T("Importing Surface Area Configuration settings for SQL Server."));
-	if (0 != ExecCmd(pszCmd, true, true, _T("configuration file for SQL Server 2005"), _T("show")))
+	if (0 != ExecCmd(pszCmd, _T(""), true, _T("configuration file for SQL Server 2005"), _T("show")))
 	{
 		MessageBox(NULL, _T("Error: Failed to configure SQL Server 2005. It will have default settings. Some features may not work."), g_pszTitle, MB_ICONSTOP | MB_OK);
 		g_Log.Write(_T("Cannot start SQL Server 2005."));

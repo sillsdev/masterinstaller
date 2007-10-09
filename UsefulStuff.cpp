@@ -9,6 +9,7 @@
 #include <Windows.h>
 #include <Sddl.h>
 #include <stdio.h>
+#include <shlobj.h>
 #include <tchar.h>
 
 #include "UsefulStuff.h"
@@ -34,35 +35,41 @@ struct MonitorThreadData_t
 
 // Executes the command in the given string and, if fWaitTillExit is true, waits for
 // the launched process to exit.
-// If fUseCurrentDir is true, the Windows current path is temporarily set to the same path as
-// the location of the main .exe file
+// The Windows current path used in the child process is set to the pszCurrentDir value, or
+// the location of the main .exe file if pszCurrentDir == "".
 // If pszDescription is set, its value is copied to a global variable which can be used in a
 // status window when attempting to quit the created process.
 // If pszStatusWindowControl is set, it contains a string describing what should happen to the
 // status window: show it, hide it or remove it if the new process has any windows visible.
-DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
-			  const _TCHAR * pszDescription, const _TCHAR * pszStatusWindowControl)
+// If pszEnvironment is set, the defined environment will be passed on to CreateProcess.
+DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit,
+			  const _TCHAR * pszDescription, const _TCHAR * pszStatusWindowControl,
+			  const _TCHAR * pszEnvironment)
 {
-	// Preserve current directory:
-	const int knLen = MAX_PATH;
-	_TCHAR szOldPath[knLen];
-	::GetCurrentDirectory(knLen, szOldPath);
+	_TCHAR * pszNewCurrentDir = NULL;
 
-	if (fUseCurrentDir)
+	if (pszCurrentDir != NULL)
 	{
-		// Set current directory to the path where current process was launched from:
-		_TCHAR szPath[knLen];
-		GetModuleFileName(NULL, szPath, knLen);
-		_TCHAR * ch = _tcsrchr(szPath, _TCHAR('\\'));
-		if (ch)
-			ch++;
+		if (_tcscmp(pszCurrentDir, _T("")) == 0)
+		{
+			// Set pszNewCurrentDir to the path where current process was launched from:
+			pszNewCurrentDir = new _TCHAR [MAX_PATH];
+			GetModuleFileName(NULL, pszNewCurrentDir, MAX_PATH);
+			_TCHAR * ch = _tcsrchr(pszNewCurrentDir, _TCHAR('\\'));
+			if (ch)
+				ch++;
+			else
+				ch = pszNewCurrentDir;
+			*ch = 0;
+			g_Log.Write(_T("Setting current directory as per setup.exe: %s"), pszNewCurrentDir);
+		}
 		else
-			ch = szPath;
-		*ch = 0;
-		g_Log.Write(_T("Setting current directory to %s"), szPath);
-		::SetCurrentDirectory(szPath);
+		{
+			pszNewCurrentDir = my_strdup(pszCurrentDir);
+			g_Log.Write(_T("Setting current directory to %s"), pszNewCurrentDir);
+		}
 	}
-
+		
 	// Make copy of command:
 	_TCHAR * pszCmdCopy = my_strdup(pszCmd);
 
@@ -116,11 +123,10 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 	// and also when running on Windows 98, but it is essential for 16-bit programs running on
 	// Windows 2000 or later, else we cannot easily monitor when termination occurs:
 	bReturnVal = CreateProcess(NULL, (LPTSTR)pszCmdCopy, NULL, NULL, false,
-		CREATE_SEPARATE_WOW_VDM, NULL, NULL, &si, &process_info);
+		CREATE_SEPARATE_WOW_VDM, (LPVOID)pszEnvironment, pszNewCurrentDir, &si, &process_info);
 
-	// Retore original current directory:
-	g_Log.Write(_T("Restoring current directory to %s"), szOldPath);
-	::SetCurrentDirectory(szOldPath);
+	delete[] pszNewCurrentDir;
+	pszNewCurrentDir = NULL;
 
 	if (bReturnVal)
 	{
@@ -208,6 +214,118 @@ DWORD ExecCmd(LPCTSTR pszCmd, bool fUseCurrentDir, bool fWaitTillExit,
 	g_Log.Write(_T("Exit code = %d"), dwExitCode);
 
 	return dwExitCode;
+}
+
+// Sets a new PATH environment variable made up of the pre-existing one plus the
+// specified path.
+void AddToPathEnvVar(_TCHAR * pszExtraPath)
+{
+	// Fetch the current PATH environment variable:
+	g_Log.Write(_T("Adding %s to PATH environment variable: "), pszExtraPath);
+	DWORD dwRet, dwErr;
+	DWORD cchPath = 500;
+	_TCHAR * pszPath = new _TCHAR [cchPath];
+	pszPath[0] = 0;
+	const _TCHAR * kpszPathName = _T("PATH");
+
+	dwRet = GetEnvironmentVariable(kpszPathName, pszPath, cchPath);
+
+	if (0 == dwRet)
+	{
+		dwErr = GetLastError();
+		if (ERROR_ENVVAR_NOT_FOUND == dwErr)
+			g_Log.Write(_T("Environment variable PATH does not yet exist."));
+	}
+	else if (cchPath < dwRet)
+	{
+		 // We didn't allocate a big enough buffer, so try again:
+		delete[] pszPath;
+		cchPath = dwRet;
+		pszPath = new _TCHAR [cchPath];
+		pszPath[0] = 0;
+		g_Log.Write(_T("Reallocating PATH buffer with %d."), cchPath);
+
+		dwRet = GetEnvironmentVariable(kpszPathName, pszPath, cchPath);
+		if (!dwRet)
+			g_Log.Write(_T("GetEnvironmentVariable failed (%d)."), GetLastError());
+	}
+	g_Log.Write(_T("Retrieved PATH = %s."), pszPath);
+
+	// Add the pszExtraPath to the existing PATH:
+	_TCHAR * pszNewPath = new_sprintf(_T("%s;%s"), pszPath, pszExtraPath);
+	delete[] pszPath;
+	pszPath = NULL;
+	g_Log.Write(_T("Attempting to set PATH to %s."), pszNewPath);
+
+	if (!SetEnvironmentVariable(kpszPathName, pszNewPath)) 
+		g_Log.Write(_T("SetEnvironmentVariable failed (%d)."), GetLastError());
+
+	delete[] pszNewPath;
+}
+
+// Returns a newly allocated buffer containing the path of the specified folder.
+// Caller must delete[] the returned value.
+// csidlFolder is the CSIDL of the folder requested.
+// This routine uses the SHGetFolderPath, which is not in Windows 98, so the DLL
+// that has it is loaded dynamically.
+_TCHAR * GetFolderPathNew(int csidlFolder)
+{
+	g_Log.Write(_T("Attempting to retrieve folder path with CSIDL %d."), csidlFolder);
+	g_Log.Indent();
+
+	// Prepare for dynamic loading of Shell32.dll, and use of a function which will be missing
+	// on Windows 98:
+	typedef HRESULT (WINAPI * fwpSHGetFolderPathFn)(HWND hwndOwner, int nFolder, HANDLE hToken,
+		DWORD dwFlags, LPTSTR pszPath);
+	fwpSHGetFolderPathFn _fwpSHGetFolderPath;
+
+	HMODULE hmodfwpShell32 = LoadLibrary(_T("SHELL32.DLL"));
+	if (hmodfwpShell32)
+	{
+		// Now get pointers to the functions we want to use:
+#ifdef UNICODE
+		_fwpSHGetFolderPath = (fwpSHGetFolderPathFn)GetProcAddress(hmodfwpShell32, "SHGetFolderPathW");
+#else
+		_fwpSHGetFolderPath = (fwpSHGetFolderPathFn)GetProcAddress(hmodfwpShell32, "SHGetFolderPathA");
+#endif
+	}
+	else
+		g_Log.Write(_T("Could not load Shell32.dll"));
+
+	HRESULT hr = E_NOTIMPL;
+	_TCHAR * pszReturnPath = NULL;
+
+	if (_fwpSHGetFolderPath)
+	{
+		pszReturnPath = new _TCHAR [MAX_PATH];
+
+		if (S_OK == _fwpSHGetFolderPath(NULL, csidlFolder, NULL, SHGFP_TYPE_CURRENT,
+			pszReturnPath))
+		{
+			// Remove any trailing backslash from the folder:
+			if (pszReturnPath[_tcslen(pszReturnPath) - 1] == '\\')
+				pszReturnPath[_tcslen(pszReturnPath) - 1] = 0;
+			g_Log.Write(_T("Retrieved %s"), pszReturnPath);
+		}
+		else
+		{
+			g_Log.Write(_T("SHGetFolderPath did not return a folder path."));
+			delete[] pszReturnPath;
+			pszReturnPath = NULL;
+		}
+	}
+	else
+		g_Log.Write(_T("SHGetFolderPath function not found - can't fetch directory."));
+
+	if (hmodfwpShell32)
+		FreeLibrary(hmodfwpShell32);
+	hmodfwpShell32 = NULL;
+	_fwpSHGetFolderPath = NULL;
+
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done."));
+
+	return pszReturnPath;
 }
 
 // Callback function used by StatusDlgMonitorThreadEntry() to see if any windows belong to a

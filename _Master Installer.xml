@@ -154,7 +154,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 		</Product>
-		<Product List="true">
+		<Product>
 			<AutoConfigure>
 				<Title>FW 4.9 BTE (from \\cana\LSDev\Installers\FW4.9\BTE\FieldWorks)</Title>
 				<Source>\\cana\LSDev\Installers\FW4.9\BTE\FieldWorks\SetupFw.msi</Source>

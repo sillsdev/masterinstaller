@@ -312,20 +312,20 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Speech Analyzer 3.0</Title>
+				<Title>Speech Analyzer 3.0.1</Title>
 				<Source>Installers\Speech Analyzer</Source>
 				<SetupHelp>Documents\Speech Analyzer\SetupSA.rtf</SetupHelp>
 				<Destination>Speech Analyzer</Destination>
 			</AutoConfigure>
-			<Title>Speech Analyzer 3.0</Title>
-			<Tag>SA3</Tag>
+			<Title>Speech Analyzer 3.0.1</Title>
+			<Tag>SA301</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Speech Analyzer\Speech Analyzer.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>Speech Analyzer\SetupSA.rtf</Help>
-			<ProductCode>{A87E80BE-9BB8-481B-AD60-CA8AD8642C3D}</ProductCode>
+			<ProductCode>{C250A187-A757-4E46-928B-D20A7403244D}</ProductCode>
 			<Prerequisite Tag="WI31" MinVersion="3.0"/>
 			<Prerequisite Tag=".NET2.0" Version="2.0.50727"/>
 		</Product>

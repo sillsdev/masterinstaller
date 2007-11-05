@@ -5,6 +5,7 @@
 #include "InitFwData.cpp"
 #include "TestSqlSILFWPresence.cpp"
 #include "InitEC.cpp"
+#include "PreserveWordFormingCharOverrides.cpp"
 
 
 // Utility to initialize FieldWorks InstallLanguage.
@@ -129,6 +130,8 @@ int InitInstallLanguage()
 
 int FwPostInstall(const _TCHAR * /*pszCriticalFile*/)
 {
+	ReinstantiateWordFormingCharOverrides();
+
 	// If SQL Server 2005 is already present, then we need to initialize the FW data
 	// now. Otherwise, this needs to wait until after SQL Server is installed.
 	// (See SqlServer2005PostInstall.cpp for that case.)

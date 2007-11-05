@@ -4,6 +4,7 @@
 
 #include "RemovePreviousFWs.cpp"
 #include "RemovePreviousECs.cpp"
+#include "PreserveWordFormingCharOverrides.cpp"
 
 // Instantiate globally accessible variable storing path to FW installation (4.2 or earlier):
 _TCHAR * pszFormerFwInstallationFolder = NULL;
@@ -30,6 +31,8 @@ int CleanStartFw40(const TCHAR * pszCriticalFile)
 		// value into the RoodDataDir reg value:
 		LONG lResult;
 		HKEY hKey = NULL;
+
+		PreserveWordFormingCharOverrides();
 
 		g_Log.Write(_T("Looking up FW installation folder (4.2 or earlier)..."));
 		lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL\\FieldWorks"), NULL, KEY_READ,

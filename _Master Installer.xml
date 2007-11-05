@@ -332,12 +332,12 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>IPA Help 2.1</Title>
+				<Title>IPA Help 3.0</Title>
 				<Source>Installers\IPA Help</Source>
 				<SetupHelp>Documents\IPA Help\SetupIPAHelp.rtf</SetupHelp>
 				<Destination>IPA Help</Destination>
 			</AutoConfigure>
-			<Title>IPA Help 2.1</Title>
+			<Title>IPA Help 3.0</Title>
 			<Tag>IPA3</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -641,41 +641,6 @@
 			<Commentary>Please follow instructions on installer dialogs.</Commentary>
 <!-- test is unreliable			<TestPresence>TestShoebox50Presence</TestPresence> -->
 			<Help>Shoebox\Shoebox.rtf</Help>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Speech Tools 2.2</Title>
-				<Source>Installers\Speech Tools</Source>
-				<SetupHelp>Documents\Speech Tools\SETUPST.HLP</SetupHelp>
-				<Destination>Speech Tools</Destination>
-			</AutoConfigure>
-			<Title>Speech Tools 2.2</Title>
-			<Tag>SpeechTools</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Speech Tools\SpeechTools.msi</CriticalFile>
-			<Install/>
-			<Commentary>Follow intructions in installer dialogs.</Commentary>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{BFFA9B53-A95A-4E40-A813-EFAF3B6D23B3}</ProductCode>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-			<Help>Speech Tools\SETUPST.HLP</Help>
-			<Feature>
-				<Title>Speech Tools IPA Help 2.04</Title>
-				<Tag>IPA Help</Tag>
-				<MsiFeature>IPA_Help</MsiFeature>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The word list feature will not work."/>
-			</Feature>
-			<Feature>
-				<Title>Speech Analyzer 2.7</Title>
-				<Tag>SA</Tag>
-				<MsiFeature>Speech_Analyzer</MsiFeature>
-			</Feature>
-			<Feature>
-				<Title>Speech Tools Phonology Assistant 2.2</Title>
-				<Tag>PA</Tag>
-				<MsiFeature>Phonology_Assistant</MsiFeature>
-			</Feature>
 		</Product>
 		<Product>
 			<AutoConfigure>

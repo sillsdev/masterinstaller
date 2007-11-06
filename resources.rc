@@ -96,8 +96,6 @@ BEGIN
     PUSHBUTTON      "",IDC_BUTTON_MAIN_HELP,266,39,65,14
 	PUSHBUTTON      "",IDC_BUTTON_TERMS,69,39,65,14
     PUSHBUTTON      "Re-enter Key...",IDC_BUTTON_REENTER_KEY,5,39,56,14
-    CTEXT           "Please select which products you would like to install.",
-                    IDC_STATIC,7,7,386,10
 END
 
 IDD_DIALOG_STATUS DIALOGEX 0, 0, 371, 67
@@ -291,6 +289,8 @@ END
 
 STRINGTABLE 
 BEGIN
+	IDC_MESSAGE_INSTRUCTIONS
+							"Please select which products you would like to install."
     IDC_MESSAGE_INSERT      "Please insert %s."
     IDC_MESSAGE_NOTHING_SELECTED 
                             "You have not chosen any products to install. This installation will end."

@@ -526,8 +526,16 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 				pHelpLauncher = DlgMainProductParams->pHelpLauncher;
 				fReenterKeyAllowed = DlgMainProductParams->m_fReenterKeyAllowed;
 			}
-			int nYcoord = 40; // Starting place for first check box - beyond introductory text.
+			int nYcoord = 90; // Starting place for introductory text.
 			int nXcoord = 220; // Left hand edge of added controls
+
+			// Write introductory text:
+			CreateWindow(_T("STATIC"), FetchString(IDC_MESSAGE_INSTRUCTIONS),
+				WS_CHILD | WS_VISIBLE, nXcoord, nYcoord, 500, 24, hwnd,
+				reinterpret_cast<HMENU>(__int64(-1)), NULL, NULL);
+
+			nYcoord += 40;
+
 			const int kdy = 30 + g_nListSpacingAdjust; // Allows for checkbox height etc.
 			const int knCheckBoxOffest = 30; // space between help button and checkbox
 			const int knDialogMaxRight = 750; // theoretical max X coord for visible controls
@@ -647,7 +655,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 				SendMessage(hwnd3rdParty, BM_SETCHECK, BST_CHECKED, 0);
 			}
 			// Now move bottom buttons beyond check boxes:
-			nYcoord += 5; // Extra gap after last check box
+			nYcoord += 15; // Extra gap after last check box
 			HWND hwndCancel = GetDlgItem(hwnd, IDCANCEL);
 			HWND hwndOk = GetDlgItem(hwnd, IDOK);
 			HWND hwndHelp = GetDlgItem(hwnd, IDC_BUTTON_MAIN_HELP);

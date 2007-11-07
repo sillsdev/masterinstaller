@@ -829,7 +829,7 @@
 			<Title>Resources on this CD</Title>
 			<Tag>Resources</Tag>
 			<Help>Resources\ReadMe - Resources.rtf</Help>
-		</Product>		
+		</Product>
 		<Product>
 			<AutoConfigure>
 				<Title>Keyman 6.2 (build 174) Standard (not free)</Title>
@@ -951,7 +951,8 @@
 		<Product>
 			<AutoConfigure>
 				<Title>Microsoft SQL Server 2005 Express SP2</Title>
-				<Source>3rd Party\SQL Server 2005 Express</Source>
+				<Source>3rd Party\SQL Server 2005 Express\SQLEXPR32.EXE</Source>
+				<Source>3rd Party\SQL Server 2005 Express\Surface Area Settings.xml</Source>
 				<Destination>Utilities\SQL Server 2005 Express</Destination>
 			</AutoConfigure>
 			<Title>Microsoft SQL Server 2005 Express SP2</Title>

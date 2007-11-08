@@ -2,11 +2,11 @@
 
 #include <tchar.h>
 
-#include "TestKeymanPresence.cpp"
+#include "TestKeyman6Presence.cpp"
 
 // Tests for the presence of Tavultesoft's Keyman Free Home Use flavor.
 bool TestKeymanHomePresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
 							const TCHAR * /*pszCriticalFile*/)
 {
-	return TestKeymanPresence(pszMinVersion, pszMaxVersion, _T("FreeHomeUse"));
+	return TestKeyman6Presence(pszMinVersion, pszMaxVersion, _T("FreeHomeUse"));
 }

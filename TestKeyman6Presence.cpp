@@ -2,11 +2,11 @@
 
 #include <tchar.h>
 
-// Tests for the presence of one of the flavors of Tavultesoft's Keyman.
+// Tests for the presence of one of the flavors of Tavultesoft's Keyman 6.
 // The Registry does not record the build number, or the version number part after the decimal
 // point, so for example, if version 6.2.171 is installed, the registry will only record
 // version 6.0 - the .2.171 will have to be read from the version info of the file Keyman32.dll.
-bool TestKeymanPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
+bool TestKeyman6Presence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
 						const TCHAR * pszFlavor)
 {
 	bool fResult = false;

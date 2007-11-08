@@ -453,12 +453,12 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>IPA Help 3.0</Title>
+				<Title>IPA Help 2.1</Title>
 				<Source>Installers\IPA Help</Source>
 				<SetupHelp>Documents\IPA Help\SetupIPAHelp.rtf</SetupHelp>
 				<Destination>IPA Help</Destination>
 			</AutoConfigure>
-			<Title>IPA Help 3.0</Title>
+			<Title>IPA Help 2.1</Title>
 			<Tag>IPA3</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -829,6 +829,44 @@
 			<Title>Resources on this CD</Title>
 			<Tag>Resources</Tag>
 			<Help>Resources\ReadMe - Resources.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Keyman 7.0 (build 240) Light (30 day evaluation)</Title>
+				<Source>3rd Party\Keyman 7.0 Light</Source>
+				<Destination>Utilities\Keyman70</Destination>
+<!--				<SetupHelp>Documents\Keyman70\KeymanLight.rtf</SetupHelp>-->
+			</AutoConfigure>
+			<Title>Keyman 7.0 Light (30 day evaluation)</Title>
+			<Tag>KeymanL</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\Keyman70\keymandesktoplight-7.0.240.0.exe</CriticalFile>
+<!--			<Help>Utilities\Keyman70\KeymanLight.rtf</Help>-->
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Show</StatusWindow>
+			<Commentary>Please follow the instructions on the Keyman Setup dialog.</Commentary>
+			<FlushReboot>true</FlushReboot>
+			<TestPresence Version="7.0.240">TestKeymanDesktopLightPresence</TestPresence>
+			<Prerequisite Tag="IE" MinVersion="5.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Keyman 7.0 (build 240) Professional (30 day evaluation)</Title>
+				<Source>3rd Party\Keyman 7.0 Professional</Source>
+				<Destination>Utilities\Keyman70</Destination>
+				<!--				<SetupHelp>Documents\Keyman70\KeymanPro.rtf</SetupHelp>-->
+			</AutoConfigure>
+			<Title>Keyman 7.0 Professional (30 day evaluation)</Title>
+			<Tag>KeymanP</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\Keyman70\keymandesktoppro-7.0.240.0.exe</CriticalFile>
+			<!--			<Help>Utilities\Keyman70\KeymanPro.rtf</Help>-->
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Show</StatusWindow>
+			<Commentary>Please follow the instructions on the Keyman Setup dialog.</Commentary>
+			<FlushReboot>true</FlushReboot>
+			<TestPresence Version="7.0.240">TestKeymanDesktopProfessionalPresence</TestPresence>
+			<Prerequisite Tag="IE" MinVersion="5.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>

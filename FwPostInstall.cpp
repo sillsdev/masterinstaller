@@ -94,8 +94,11 @@ int InitInstallLanguage()
 	pszInstallLanguageCmd = NULL;
 
 	// Respond to returned value:
-	if (dwResult == 0)
+	if (dwResult == 0 || dwResult == -999)
 	{
+		if (dwResult == -999)
+			g_Log.Write(_T("InstallLanguage returned error code -999, but we don't mind."));
+
 		// Reset the InitIcu registry flag:
 		lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL"), 0, KEY_WRITE, &hKey);
 		if (ERROR_SUCCESS == lResult)

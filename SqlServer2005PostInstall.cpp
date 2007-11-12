@@ -13,19 +13,36 @@ int ImportSACSettings(const _TCHAR * pszCriticalFile)
 	_TCHAR * pszCriticalFileCopy = my_strdup(pszCriticalFile);
 	_TCHAR * pch = _tcsrchr(pszCriticalFileCopy, '\\');
 	if (pch)
-		*pch = 0;
-	// Build full path by getting path of current root:
+		pch++;
+	else
+		pch = pszCriticalFileCopy;
+	*pch = 0;
+
+	// Build full path by getting root path of current process:
 	const int knLen = MAX_PATH;
 	_TCHAR szRootPath[knLen];
 	GetModuleFileName(NULL, szRootPath, knLen);
-	pch = _tcsrchr(szRootPath, _TCHAR('\\'));
+	pch = _tcsrchr(szRootPath, '\\');
 	if (pch)
 		pch++;
 	else
 		pch = szRootPath;
 	*pch = 0;
 
-	_TCHAR * pszSACFile = new_sprintf(_T("%s%s\\Surface Area Settings.xml"), szRootPath, pszCriticalFileCopy);
+	_TCHAR * pszSACFile;
+	const _TCHAR * kpszSACFileName = _T("Surface Area Settings.xml");
+
+	if (_tcslen(szRootPath) > 0 && _tcslen(pszCriticalFileCopy) > 0)
+		pszSACFile = new_sprintf(_T("%s%s%s"), szRootPath, pszCriticalFileCopy, kpszSACFileName);
+	else
+	{
+		if (_tcslen(szRootPath) > 0)
+			pszSACFile = new_sprintf(_T("%s%s"), szRootPath, kpszSACFileName);
+		else if (_tcslen(pszCriticalFileCopy) > 0)
+			pszSACFile = new_sprintf(_T("%s%s"), pszCriticalFileCopy, kpszSACFileName);
+		else
+			pszSACFile = new_sprintf(_T("%s"), kpszSACFileName);
+	}
 	delete[] pszCriticalFileCopy;
 	pszCriticalFileCopy = NULL;
 

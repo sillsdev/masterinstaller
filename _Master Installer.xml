@@ -783,6 +783,23 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>Graphite Compiler 2.4</Title>
+				<Source>Installers\Graphite Compiler\grcompiler_setup_2_4.exe</Source>
+				<SetupHelp>Documents\Graphite Compiler\GrCompiler_setup.rtf</SetupHelp>
+				<Destination>Graphite Compiler</Destination>
+			</AutoConfigure>
+			<Title>Graphite Compiler 2.4</Title>
+			<Tag>GrComp</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Graphite Compiler\grcompiler_setup_2_4.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<Help>Graphite Compiler\GrCompiler_setup.rtf</Help>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Vocabulary Manager 5.7.3</Title>
 				<Source>Installers\Vocabulary Manager</Source>
 				<SetupHelp>Documents\Vocabulary Manager\Vocabulary Manager.rtf</SetupHelp>

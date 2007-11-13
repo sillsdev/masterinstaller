@@ -800,20 +800,20 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Vocabulary Manager 5.7.3</Title>
+				<Title>Vocabulary Manager 5.8</Title>
 				<Source>Installers\Vocabulary Manager</Source>
 				<SetupHelp>Documents\Vocabulary Manager\Vocabulary Manager.rtf</SetupHelp>
 				<Destination>Vocabulary Manager</Destination>
 			</AutoConfigure>
-			<Title>Vocabulary Manager 5.7.3</Title>
+			<Title>Vocabulary Manager 5.8</Title>
 			<Tag>Vocab</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
 			<CriticalFile>Vocabulary Manager\VMSetup.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{42875299-D900-4D11-A91C-845C90A2780B}</ProductCode>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<ProductCode>{47917419-4292-473F-8773-44E1EB2FB1C2}</ProductCode>
+			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Prerequisite Tag="DirectX" MinVersion="4.8.0"/>
 			<Help>Vocabulary Manager\Vocabulary Manager.rtf</Help>
 		</Product>

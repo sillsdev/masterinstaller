@@ -2,13 +2,13 @@
 
 #include <tchar.h>
 
-// Crude test of Lexique Pro installation - currently only recognizes Lexique Pro 2.6.6
+// Crude test of Lexique Pro installation - currently only recognizes Lexique Pro 2.7
 bool TestLexiquePresence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMaxVersion*/,
 						 const TCHAR * /*pszCriticalFile*/)
 {
 	bool fResult = false;
 	HKEY hKey = NULL;
-	const TCHAR * pszTemplateDisplayName = _T("Lexique Pro 2.6.6");
+	const TCHAR * pszTemplateDisplayName = _T("Lexique Pro 2.7");
 
 	if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE,
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Lexique Pro - Bambara_is1"),

@@ -676,16 +676,16 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Lexique Pro (with demo db)</Title>
+				<Title>Lexique Pro 2.7 (with demo db)</Title>
 				<Source>Installers\Lexique Pro</Source>
 				<SetupHelp>Documents\Lexique Pro\Lexique Pro.rtf</SetupHelp>
 				<Destination>Lexique Pro</Destination>
 			</AutoConfigure>
-			<Title>Lexique Pro 2.6.6 (with demo db)</Title>
+			<Title>Lexique Pro 2.7 (with demo db)</Title>
 			<Tag>Lexique</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Lexique Pro\Lexique Pro 2.6.6 - Setup (with demo db).exe</CriticalFile>
+			<CriticalFile>Lexique Pro\Lexique Pro 2.7 - Setup (with demo db).exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>

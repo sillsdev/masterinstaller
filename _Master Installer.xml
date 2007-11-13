@@ -636,12 +636,12 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>PAWS Starter Kit 0.5.0 Beta</Title>
+				<Title>PAWS Starter Kit 0.6.1 Beta</Title>
 				<Source>Installers\PAWS Starter Kit\PAWSSKInstaller.msi</Source>
 				<SetupHelp>Documents\PAWS Starter Kit\PAWS starter kit.rtf</SetupHelp>
 				<Destination>PAWS Starter Kit</Destination>
 			</AutoConfigure>
-			<Title>PAWS Starter Kit 0.5.0 Beta</Title>
+			<Title>PAWS Starter Kit 0.6.1 Beta</Title>
 			<Tag>PAWS</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -649,7 +649,7 @@
 			<CriticalFile>PAWS Starter Kit\PAWSSKInstaller.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{7180C668-46B0-47E7-B4BF-D5A84E540B99}</ProductCode>
+			<ProductCode>{5C2B67EF-C1BE-4B07-9002-A6A4B0F9E043}</ProductCode>
 			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
 			<Prerequisite Tag=".NET_SP1" MinVersion="1"/>
 			<Requires Tag="IE" MinVersion="6.0" FailMsg="The program may not run correctly."/>

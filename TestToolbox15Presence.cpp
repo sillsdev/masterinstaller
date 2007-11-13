@@ -2,14 +2,14 @@
 
 #include <tchar.h>
 
-// Crude test of Toolbox 1.5 installation
+// Crude test of Toolbox 1.5.1 installation
 bool TestToolbox15Presence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMaxVersion*/,
 						   const TCHAR * /*pszCriticalFile*/)
 {
 	bool fResult = false;
 	LONG lResult;
 	HKEY hKey = NULL;
-	const TCHAR * pszTemplateDisplayName = _T("Toolbox 1.5");
+	const TCHAR * pszTemplateDisplayName = _T("Toolbox 1.5.1");
 
 	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Toolbox_is1"),

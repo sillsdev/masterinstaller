@@ -765,16 +765,16 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Toolbox 1.5.0</Title>
+				<Title>Toolbox 1.5.1</Title>
 				<Source>Installers\ToolBox</Source>
 				<SetupHelp>Documents\ToolBox\ToolBox.rtf</SetupHelp>
 				<Destination>ToolBox</Destination>
 			</AutoConfigure>
-			<Title>Toolbox 1.5.0</Title>
+			<Title>Toolbox 1.5.1</Title>
 			<Tag>Toolbox</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Toolbox\InstallToolbox150.exe</CriticalFile>
+			<CriticalFile>Toolbox\InstallToolbox151.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions on installer dialogs.</Commentary>

@@ -700,14 +700,14 @@
 				<Destination>CarlaStudio</Destination>
 			</AutoConfigure>
 			<Title>Carla Studio</Title>
-			<Tag>CarlaStudio 2.9.0.3</Tag>
+			<Tag>CarlaStudio 2.9.0.4</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
 			<CriticalFile>CarlaStudio\Setup.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow StatusPauseWin98="true">Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="2.9.0.3">TestCarlaStudioPresence</TestPresence>
+			<TestPresence Version="2.9.0.4">TestCarlaStudioPresence</TestPresence>
 			<Help>CarlaStudio\CarlaStudio.rtf</Help>
 		</Product>
 		<Product>

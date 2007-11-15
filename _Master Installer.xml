@@ -170,7 +170,7 @@
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
 			<Title>SIL FieldWorks 5.0 BTE</Title>
-			<Tag>FW50BTE</Tag>
+			<Tag>FW50BTEnoM</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
@@ -234,7 +234,7 @@
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
 			<Title>SIL FieldWorks 5.0 SE</Title>
-			<Tag>FW50SE</Tag>
+			<Tag>FW50SEnoM</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
@@ -605,7 +605,7 @@
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
 			<Title>Adapt It 3.5.0 (Portuguese)</Title>
-			<Tag>AdaptitI</Tag>
+			<Tag>AdaptitP</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\Portuguese_Adapt_It_Regular_350.exe</CriticalFile>
@@ -623,7 +623,7 @@
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
 			<Title>Adapt It Unicode 3.5.0 (Portuguese)</Title>
-			<Tag>AdaptitUI</Tag>
+			<Tag>AdaptitUP</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\Portuguese_Adapt_It_Unicode_350.exe</CriticalFile>

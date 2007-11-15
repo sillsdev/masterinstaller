@@ -392,9 +392,13 @@
 			<tr id="ProductCdTr{count(preceding-sibling::Product)}" style="display:none">
 				<td align="center"><xsl:value-of select="AutoConfigure/Title"/></td>
 				<td align="center" id="FileSize{count(preceding-sibling::Product)}"></td>
-				<td align="center"><input id="Included{count(preceding-sibling::Product)}" type="checkbox" checked="true" title="Select to include, clear to omit this product from the CD." onclick="EnableCdIndex({count(preceding-sibling::Product)}, this.checked); UpdateCdTotals();"/></td>
+				<td align="center">
+					<input id="Included{count(preceding-sibling::Product)}" type="checkbox" title="Select to include, clear to omit this product from the CD." onclick="EnableCdIndex({count(preceding-sibling::Product)}, this.checked); UpdateCdTotals();">
+					<xsl:if test="not(CD &lt; 0)"><xsl:attribute name="checked">true</xsl:attribute></xsl:if>
+					</input>
+				</td>
 				<td align="center"><input id="ProductCD{count(preceding-sibling::Product)}" value="0" onkeyup="UpdateCdTotals();" type="text" size="2" title="Index of CD to place this product on. Zero-based." onfocus="this.select();">
-				<xsl:if test="CD"><xsl:attribute name="value"><xsl:value-of select="CD"/></xsl:attribute></xsl:if>
+				<xsl:if test="CD >= 0"><xsl:attribute name="value"><xsl:value-of select="CD"/></xsl:attribute></xsl:if>
 				</input></td>
 			</tr>
 		</xsl:for-each>

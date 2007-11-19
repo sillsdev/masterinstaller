@@ -15,6 +15,62 @@ ServiceManager_t::ServiceManager_t()
 		g_Log.Write(_T("OpenSCManager failed (%d)"), GetLastError());
 }
 
+// Because the API function QueryServiceStatusEx does not exist
+// on Windows 98 or lower, we must not assume it is present. Instead,
+// we must interrogate the Advapi32.dll.
+BOOL _QueryServiceStatusEx(SC_HANDLE hService, SC_STATUS_TYPE InfoLevel, LPBYTE lpBuffer,
+						  DWORD cbBufSize, LPDWORD pcbBytesNeeded)
+{
+	BOOL fReturn = false;
+
+	// Define function type for the function we want to use:
+	typedef BOOL (WINAPI * QueryServiceStatusExFn)(SC_HANDLE, SC_STATUS_TYPE, LPBYTE,
+		DWORD, LPDWORD);
+
+	// Initialize pointer to the function we want to use:
+	QueryServiceStatusExFn __QueryServiceStatusEx = NULL;
+	HMODULE hmodAdvapi32 = NULL;
+
+	const int kcchSystemFolder = 1024;
+	_TCHAR pszSystemFolder[kcchSystemFolder];
+	// Get Windows system folder path:
+	if (GetSystemDirectory(pszSystemFolder, kcchSystemFolder) <= kcchSystemFolder)
+	{
+		// Remove any terminating backslash:
+		int cch = (int)_tcslen(pszSystemFolder);
+		if (cch > 1)
+			if (pszSystemFolder[cch - 1] == _TCHAR('\\'))
+				pszSystemFolder[cch - 1] = 0;
+		// Generate full path of Advapi32.dll:
+		_TCHAR * pszAdvapi32Dll = new_sprintf(_T("%s\\Advapi32.dll"), pszSystemFolder);
+		// Get a handle to the DLL:
+		hmodAdvapi32 = LoadLibrary(pszAdvapi32Dll);
+		delete[] pszAdvapi32Dll;
+		pszAdvapi32Dll = NULL;
+
+		// Check if we were successful:
+		if (hmodAdvapi32)
+		{
+			// Now get a pointer to the function we want to use:
+			__QueryServiceStatusEx = (QueryServiceStatusExFn)GetProcAddress(hmodAdvapi32,
+				"QueryServiceStatusEx");
+		}
+	}
+
+	if (__QueryServiceStatusEx)
+	{
+		fReturn = __QueryServiceStatusEx(hService, InfoLevel, lpBuffer, cbBufSize,
+			pcbBytesNeeded);
+	}
+	
+	if (hmodAdvapi32)
+	{
+		FreeLibrary(hmodAdvapi32);
+		hmodAdvapi32 = NULL;
+	}
+	return fReturn;
+}
+
 bool ServiceManager_t::StartService(_TCHAR * pszServiceName)
 {
 	SC_HANDLE schService;
@@ -51,7 +107,7 @@ bool ServiceManager_t::StartService(_TCHAR * pszServiceName)
 	}
 
 	// Check the status until the service is no longer start pending:
-	if (!QueryServiceStatusEx(schService, SC_STATUS_PROCESS_INFO, (BYTE *)&ssStatus,
+	if (!_QueryServiceStatusEx(schService, SC_STATUS_PROCESS_INFO, (BYTE *)&ssStatus,
 		sizeof(SERVICE_STATUS_PROCESS), &dwBytesNeeded))
 	{
 		g_Log.Write(_T("Could not check status of service '%s'."), pszServiceName);
@@ -78,7 +134,7 @@ bool ServiceManager_t::StartService(_TCHAR * pszServiceName)
 		Sleep(dwWaitTime);
 
 		// Check the status again:
-		if (!QueryServiceStatusEx(schService, SC_STATUS_PROCESS_INFO, (BYTE *)&ssStatus,
+		if (!_QueryServiceStatusEx(schService, SC_STATUS_PROCESS_INFO, (BYTE *)&ssStatus,
 			sizeof(SERVICE_STATUS_PROCESS), &dwBytesNeeded))
 		{
 			break;
@@ -152,7 +208,7 @@ bool ServiceManager_t::StopService(_TCHAR * pszServiceName, bool fStopDependenci
 	}
 
 	// Make sure the service is not already stopped:
-	if (!QueryServiceStatusEx(schService, SC_STATUS_PROCESS_INFO, (LPBYTE)&ssp,
+	if (!_QueryServiceStatusEx(schService, SC_STATUS_PROCESS_INFO, (LPBYTE)&ssp,
 		sizeof(SERVICE_STATUS_PROCESS), &dwBytesNeeded))
 	{
 		g_Log.Write(_T("Could not tell if service '%s' already stopped - error %d."),
@@ -167,7 +223,7 @@ bool ServiceManager_t::StopService(_TCHAR * pszServiceName, bool fStopDependenci
 	while (ssp.dwCurrentState == SERVICE_STOP_PENDING)
 	{
 		Sleep(ssp.dwWaitHint);
-		if (!QueryServiceStatusEx(schService, SC_STATUS_PROCESS_INFO, (LPBYTE)&ssp,
+		if (!_QueryServiceStatusEx(schService, SC_STATUS_PROCESS_INFO, (LPBYTE)&ssp,
 			sizeof(SERVICE_STATUS_PROCESS), &dwBytesNeeded))
 		{
 			g_Log.Write(_T("Could not tell if service '%s' already stopped - error %d."),
@@ -261,7 +317,7 @@ bool ServiceManager_t::StopService(_TCHAR * pszServiceName, bool fStopDependenci
 						// Wait for the service to stop:
 						do
 						{
-							if (!QueryServiceStatusEx(hDepService, SC_STATUS_PROCESS_INFO,
+							if (!_QueryServiceStatusEx(hDepService, SC_STATUS_PROCESS_INFO,
 								(LPBYTE)&ssp, sizeof(SERVICE_STATUS_PROCESS), &dwBytesNeeded))
 							{
 								g_Log.Write(_T("Unexpected error %d while trying to get status of dependent service '%s' of '%s'."),
@@ -309,7 +365,7 @@ bool ServiceManager_t::StopService(_TCHAR * pszServiceName, bool fStopDependenci
 	// Wait for the service to stop:
 	do
 	{
-		if (!QueryServiceStatusEx(schService, SC_STATUS_PROCESS_INFO, (LPBYTE)&ssp,
+		if (!_QueryServiceStatusEx(schService, SC_STATUS_PROCESS_INFO, (LPBYTE)&ssp,
 			sizeof(SERVICE_STATUS_PROCESS), &dwBytesNeeded))
 		{
 			g_Log.Write(_T("Unexpected error %d while trying to get status of service '%s'."),

@@ -506,33 +506,93 @@ bool WriteClipboardText(const _TCHAR * pszText)
 // for valid index list.
 _TCHAR * CreateAccountNameFromWellKnownSidIndex(int SidIndex)
 {
-	DWORD SidSize = SECURITY_MAX_SID_SIZE;
-	PSID TheSID;
+	_TCHAR * ReturnVal = NULL;
 
-	// Allocate enough memory for the largest possible SID.
-	if(!(TheSID = LocalAlloc(LMEM_FIXED, SidSize)))
-		return NULL;
+	// Because the API functions CreateWellKnownSid and LookupAccountSid do not exist
+	// on Windows 98 or lower, we must not assume they are present. Instead,
+	// we must interrogate the Advapi32.dll.
 
-	// Create a SID for the given index on the local computer.
-	if (!CreateWellKnownSid(WELL_KNOWN_SID_TYPE(SidIndex), NULL, TheSID, &SidSize))
-		return NULL;
+	// Define function types for the functions we want to use:
+	typedef BOOL (WINAPI * CreateWellKnownSidFn)(WELL_KNOWN_SID_TYPE, PSID, PSID, DWORD*);
 
-	_TCHAR * pszName = NULL;
-	DWORD cchName = 0;
-	_TCHAR * pszDomain = NULL;
-	DWORD cchDomain = 0;
-	SID_NAME_USE Use;
-	LookupAccountSid(NULL, TheSID, pszName, &cchName, pszDomain, &cchDomain, &Use);
-	pszName = new TCHAR [cchName];
-	pszDomain = new TCHAR [cchDomain];
-	LookupAccountSid(NULL, TheSID, pszName, &cchName, pszDomain, &cchDomain, &Use);
+	typedef BOOL (WINAPI * LookupAccountSidFn)(LPCTSTR, PSID, LPTSTR, LPDWORD, LPTSTR,
+		LPDWORD, PSID_NAME_USE);
 
-	// When done, free the memory used.
-    LocalFree(TheSID);
+	// Initialize pointers to the functions we want to use:
+	CreateWellKnownSidFn _CreateWellKnownSid = NULL;
+	LookupAccountSidFn _LookupAccountSid = NULL;
+	HMODULE hmodAdvapi32 = NULL;
 
-	_TCHAR * ReturnVal = new_sprintf(_T("%s\\%s"), pszDomain, pszName);
-	delete[] pszName;
-	delete[] pszDomain;
+	const int kcchSystemFolder = 1024;
+	_TCHAR pszSystemFolder[kcchSystemFolder];
+	// Get Windows system folder path:
+	if (GetSystemDirectory(pszSystemFolder, kcchSystemFolder) <= kcchSystemFolder)
+	{
+		// Remove any terminating backslash:
+		int cch = (int)_tcslen(pszSystemFolder);
+		if (cch > 1)
+			if (pszSystemFolder[cch - 1] == _TCHAR('\\'))
+				pszSystemFolder[cch - 1] = 0;
+		// Generate full path of Advapi32.dll:
+		_TCHAR * pszAdvapi32Dll = new_sprintf(_T("%s\\Advapi32.dll"), pszSystemFolder);
+		// Get a handle to the DLL:
+		hmodAdvapi32 = LoadLibrary(pszAdvapi32Dll);
+		delete[] pszAdvapi32Dll;
+		pszAdvapi32Dll = NULL;
+
+		// Check if we were successful:
+		if (hmodAdvapi32)
+		{
+			// Now get a pointer to the functions we want to use:
+			_CreateWellKnownSid = (CreateWellKnownSidFn)GetProcAddress(hmodAdvapi32,
+				"CreateWellKnownSid");
+
+			// Now get a pointer to the functions we want to use:
+			_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvapi32,
+				"LookupAccountSid");
+
+		}
+	}
+
+	if (_CreateWellKnownSid && _LookupAccountSid)
+	{
+		DWORD SidSize = SECURITY_MAX_SID_SIZE;
+		PSID TheSID;
+
+		// Allocate enough memory for the largest possible SID.
+		if(!(TheSID = LocalAlloc(LMEM_FIXED, SidSize)))
+		{
+			FreeLibrary(hmodAdvapi32);
+			return NULL;
+		}
+
+		// Create a SID for the given index on the local computer.
+		if (!_CreateWellKnownSid(WELL_KNOWN_SID_TYPE(SidIndex), NULL, TheSID, &SidSize))
+		{
+			FreeLibrary(hmodAdvapi32);
+			return NULL;
+		}
+
+		_TCHAR * pszName = NULL;
+		DWORD cchName = 0;
+		_TCHAR * pszDomain = NULL;
+		DWORD cchDomain = 0;
+		SID_NAME_USE Use;
+		_LookupAccountSid(NULL, TheSID, pszName, &cchName, pszDomain, &cchDomain, &Use);
+		pszName = new TCHAR [cchName];
+		pszDomain = new TCHAR [cchDomain];
+		_LookupAccountSid(NULL, TheSID, pszName, &cchName, pszDomain, &cchDomain, &Use);
+
+		// When done, free the memory used.
+		LocalFree(TheSID);
+
+		ReturnVal = new_sprintf(_T("%s\\%s"), pszDomain, pszName);
+		delete[] pszName;
+		delete[] pszDomain;
+
+		FreeLibrary(hmodAdvapi32);
+		hmodAdvapi32 = NULL;
+	}
 
 	return ReturnVal;
 }

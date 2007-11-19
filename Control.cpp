@@ -603,21 +603,74 @@ bool MasterInstaller_t::IsWindows2000OrBetter()
 // http://msdn2.microsoft.com/en-us/library/aa376389.aspx
 bool MasterInstaller_t::IsCurrentUserLocalAdministrator()
 {
-	BOOL b;
-	SID_IDENTIFIER_AUTHORITY NtAuthority = SECURITY_NT_AUTHORITY;
-	PSID AdministratorsGroup;
-	b = AllocateAndInitializeSid(&NtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID,
-		DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &AdministratorsGroup);
+	// First check if we are running Windows 98 or earlier. If so, we are an administrator:
+	if (g_fLessThanWin2k)
+		return true;
 
-	if (b)
+	// Because the API function CheckTokenMembership does not exist
+	// on Windows 98 or lower, we must not assume it is present. Instead,
+	// we must interrogate the Advapi32.dll.
+
+	// Define function type for the function we want to use:
+	typedef BOOL (WINAPI * CheckTokenMembershipFn)(HANDLE, PSID, PBOOL);
+
+	// Initialize pointer to the function we want to use:
+	CheckTokenMembershipFn _CheckTokenMembership = NULL;
+	HMODULE hmodAdvapi32 = NULL;
+
+	const int kcchSystemFolder = 1024;
+	_TCHAR pszSystemFolder[kcchSystemFolder];
+	// Get Windows system folder path:
+	if (GetSystemDirectory(pszSystemFolder, kcchSystemFolder) <= kcchSystemFolder)
 	{
-		if (!CheckTokenMembership(NULL, AdministratorsGroup, &b))
+		// Remove any terminating backslash:
+		int cch = (int)_tcslen(pszSystemFolder);
+		if (cch > 1)
+			if (pszSystemFolder[cch - 1] == _TCHAR('\\'))
+				pszSystemFolder[cch - 1] = 0;
+		// Generate full path of Advapi32.dll:
+		_TCHAR * pszAdvapi32Dll = new_sprintf(_T("%s\\Advapi32.dll"), pszSystemFolder);
+		// Get a handle to the DLL:
+		hmodAdvapi32 = LoadLibrary(pszAdvapi32Dll);
+		delete[] pszAdvapi32Dll;
+		pszAdvapi32Dll = NULL;
+
+		// Check if we were successful:
+		if (hmodAdvapi32)
 		{
-			b = false;
+			// Now get a pointer to the function we want to use:
+			_CheckTokenMembership = (CheckTokenMembershipFn)GetProcAddress(hmodAdvapi32,
+				"CheckTokenMembership");
 		}
-		FreeSid(AdministratorsGroup);
 	}
-	return !!b;
+
+	if (_CheckTokenMembership)
+	{
+		BOOL b;
+		SID_IDENTIFIER_AUTHORITY NtAuthority = SECURITY_NT_AUTHORITY;
+		PSID AdministratorsGroup;
+		b = AllocateAndInitializeSid(&NtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID,
+			DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &AdministratorsGroup);
+
+		if (b)
+		{
+			if (!_CheckTokenMembership(NULL, AdministratorsGroup, &b))
+			{
+				b = false;
+			}
+			FreeSid(AdministratorsGroup);
+		}
+
+		FreeLibrary(hmodAdvapi32);
+		hmodAdvapi32 = NULL;
+
+		return !!b;
+	}
+
+	FreeLibrary(hmodAdvapi32);
+	hmodAdvapi32 = NULL;
+
+	return false;
 }
 
 // Determines which main products are to be installed. If any main products are protected, the

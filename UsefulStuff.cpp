@@ -548,9 +548,13 @@ _TCHAR * CreateAccountNameFromWellKnownSidIndex(int SidIndex)
 				"CreateWellKnownSid");
 
 			// Now get a pointer to the functions we want to use:
+#ifdef UNICODE
 			_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvapi32,
-				"LookupAccountSid");
-
+				"LookupAccountSidW");
+#else
+			_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvapi32,
+				"LookupAccountSidA");
+#endif
 		}
 	}
 

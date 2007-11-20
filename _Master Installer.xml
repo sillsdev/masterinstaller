@@ -978,32 +978,8 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Encoding Converters 2.6.1 CD Installer (from FW Trunk on \\ls-fwbuilder)</Title>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC.msi</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC1.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC2.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC3.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC4.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC5.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC6.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC7.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC8.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC9.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC10.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC11.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC12.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC13.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC14.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC15.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC16.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC17.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC18.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC19.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC20.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC21.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC22.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\SetupEC23.cab</Source>
-				<Source>\\ls-fwbuilder\c$\FW\Installer\m24.cab</Source>
+				<Title>Encoding Converters 2.6.1 CD Installer (from EC2.6.1 on \\cana)</Title>
+				<Source>\\cana\LSDev\Installers\EC2.6.1\Encoding Converters\SetupEC.msi</Source>
 				<Destination>Encoding Converters</Destination>
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 2.6.1</Title>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "FixRepositoryAndMapsFilesACLs.cpp"
+
 // Initializes Encoding Converters, including moving old data if the location has been changed.
 // This is all done by launching the EncConvertersAppDataMover.exe utility, which is expected
 // to have been installed in a folder recorded in the registry in key 
@@ -57,4 +59,7 @@ void InitEC()
 		}
 		RegCloseKey(hKey);
 	}
+	// Finally, patch up the file permissions which were omitted in older versions of
+	// EncConvertersAppDataMover:
+	FixRepositoryAndMapsFilesACLs();
 }

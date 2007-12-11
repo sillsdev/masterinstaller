@@ -76,8 +76,8 @@ void RunKB908002Fix()
 	{
 		g_Log.Write(_T("About to launch '%s'."), pszCmd);
 		ShowStatusDialog();
-		DisplayStatusText(0, _T("Installing Microsoft KB908002 Fix for Word macros"));
-		DisplayStatusText(1, _T("Please follow instructions in dialog"));
+		DisplayStatusText(0, _T("Installing Shared Add-in Support Update for Microsoft .NET Framework 2.0 (KB908002)."));
+		DisplayStatusText(1, _T("Please press the install button on its setup dialog."));
 
 		ExecCmd(pszCmd, NULL, true);
 	}

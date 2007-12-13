@@ -182,6 +182,7 @@
 					<option value="White">White</option>
 				</select>
 			</td>
+			<script type="text/javascript">SelectBackgroundColor();</script>			
 		</tr>
 		<tr>
 			<td align="right">Bitmap source folder:</td>
@@ -581,8 +582,14 @@ function CheckRelativePath(Path)
 	// If Path was found to be relative, prepend the path of the source XML file:
 	if (IsRelative)
 	{
+		var OrigPath = Path; // Keep a copy, just in case.
+		
 		var fso = new ActiveXObject("Scripting.FileSystemObject");
 		Path = fso.BuildPath(GetDocumentFolder(), Path);
+		
+		// If the new path doesn't exist, try prepending the original path with the Cpp File Path:
+		if (!fso.FolderExists(Path))
+			Path = fso.BuildPath(GetCppFilePath(), OrigPath);
 	}
 	return Path;
 }
@@ -906,10 +913,13 @@ function setPageNo(Stage)
 				var HelpFileDest = document.getElementById("ExternalHelpFileDest").value;
 				var HelpFile = document.getElementById("ExternalHelpFile").value;
 				var MsgNeeded = false;
-				if (HelpFile.length <= HelpFileDest)
-					MsgNeeded = true;
-				else if (HelpFile.slice(0, HelpFileDest.length + 1) != HelpFileDest + "\\")
-					MsgNeeded = true;
+				if (HelpFile.length > 0)
+				{
+					if (HelpFile.length <= HelpFileDest)
+						MsgNeeded = true;
+					else if (HelpFile.slice(0, HelpFileDest.length + 1) != HelpFileDest + "\\")
+						MsgNeeded = true;
+				}
 				if (MsgNeeded)
 				{
 					alert("Warning - External Help file specified on this page has a path inconsistent with the Destination specified on the previous page.");
@@ -989,6 +999,44 @@ function RefreshBitmapList()
 	if (!fSelected && OriginalPath.length > 0)
 	{
 		alert('Warning: Background bitmap specification "' + OriginalPath + '" is not valid.');
+	}
+}
+
+// Selects the background color item in the combo box that matches existing Red, Green and Blue values.
+function SelectBackgroundColor()
+{
+	var BackgroundNode = document.XMLDocument.selectSingleNode("/MasterInstaller/General/ListBackground");
+	if (!BackgroundNode)
+		return;
+		
+	var rgbRed = BackgroundNode.getAttribute("Red");
+	var rgbGreen = BackgroundNode.getAttribute("Green");
+	var rgbBlue = BackgroundNode.getAttribute("Blue");
+	
+	var Color;
+	
+	if (rgbRed == 196 && rgbGreen == 206 && rgbBlue == 44)
+		Color = "Green";
+	else if (rgbRed == 255 && rgbGreen == 242 && rgbBlue == 0)
+		Color = "Yellow";
+	else if (rgbRed == 204 && rgbGreen == 57 && rgbBlue == 33)
+		Color = "Red";
+	else if (rgbRed == 0 && rgbGreen == 103 && rgbBlue == 166)
+		Color = "Blue";
+	else if (rgbRed == 0 && rgbGreen == 0 && rgbBlue == 1)
+		Color = "Black";
+	else if (rgbRed == 255 && rgbGreen == 255 && rgbBlue == 255)
+		Color = "White";
+
+	var i;
+	var ColorElement = document.getElementById("ListBackground");
+	for (i = 0; i < ColorElement.options.length; i++)
+	{
+		if (ColorElement.options[i].value == Color)
+		{
+			ColorElement.options[i].selected = true;
+			break;
+		}
 	}
 }
 
@@ -2635,6 +2683,10 @@ function ApplyUserSettings(xmlDoc)
 			var CdIndex = GetCdIndexOfProduct(iProduct); // This could be -1 if product omitted.
 			var CdNode = xmlDoc.createElement("CD");
 			CdNode.text = CdIndex;
+			// Remove any previous CD nodes:
+			var PreviousCdNodes = ProductNode.selectNodes("CD");
+			PreviousCdNodes.removeAll();
+			// Add new CD node:
 			ProductNode.appendChild(CdNode);
 			ProductNode.appendChild(xmlDoc.createTextNode("\n\t\t"));
 

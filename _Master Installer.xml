@@ -436,6 +436,7 @@
 				<Title>Speech Analyzer 3.0.1</Title>
 				<Source>Installers\Speech Analyzer</Source>
 				<SetupHelp>Documents\Speech Analyzer\SetupSA.rtf</SetupHelp>
+				<Source>Documents\Speech Analyzer\CopyToCd</Source>
 				<Destination>Speech Analyzer</Destination>
 			</AutoConfigure>
 			<Title>Speech Analyzer 3.0.1</Title>

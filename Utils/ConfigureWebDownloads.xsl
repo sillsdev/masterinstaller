@@ -1083,7 +1083,10 @@ function AdjustMasterInstaller(xmlDoc, flavor)
 		var ProductNode = ProductNodeList[iProduct];
 		var CdNode = ProductNode.selectSingleNode('CD');
 		if (!IncludedCheckBox.checked)
+		{
 			CdNode.text = "-1";
+			ProductNode.removeAttribute("List");
+		}
 			
 		// If product is locked, there may be some substitutions specified:
 		if (IsProductLocked(iProduct))

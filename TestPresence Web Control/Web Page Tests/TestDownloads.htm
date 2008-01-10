@@ -349,6 +349,8 @@ function AnyNeedsWithoutUrl(NeedsList)
 		var DownloadUrlNode = ProductNode.selectSingleNode('DownloadURL');
 		if (!DownloadUrlNode)
 			return true;
+		else if (DownloadUrlNode.text.length < 1)
+			return true;
 	}
 	return false;
 }
@@ -367,7 +369,7 @@ function ReportNeeds(NeedsList)
 			var ProductNode = NeedsList[i];
 			List += "<li><b>" + ProductNode.selectSingleNode('Title').text + "</b>";
 			var DownloadUrlNode = ProductNode.selectSingleNode('DownloadURL');
-			if (DownloadUrlNode)
+			if (DownloadUrlNode && DownloadUrlNode.text.length >= 1)
 				List += ' which can be found <a href="' + DownloadUrlNode.text + '" target="_blank">here</a>.<br/>';
 			else
 			{
@@ -576,7 +578,7 @@ function FindAndAddDependentProducts(List, DependenciesAndPrerequisites, FlavorN
 			{
 				// If it's not in the download package, record it in the Needs List for this Flavor:
 				if (!InDownloadPackage)
-				FlavorNeedsList.push(TagProduct);
+					FlavorNeedsList.push(TagProduct);
 			}
 			// Also record it in the Needs List for the current parent product:
 			if (!ArrayContainsProduct(DependenciesAndPrerequisites.NeedsList, TagProduct))
@@ -592,7 +594,7 @@ function FindAndAddDependentProducts(List, DependenciesAndPrerequisites, FlavorN
 	}
 }
 
-// Returns an array of indexes of products withing the given Flavor having the given Tag.
+// Returns an array of indexes of products within the given Flavor having the given Tag.
 function FindProductsByTag(Tag, FlavorNode, StopAfterFirstMatch)
 {
 	var Products = new Array();
@@ -645,14 +647,14 @@ function ArrayRemoveProduct(array, product)
 
 </head>
 <body onload="Go();">
-<OBJECT ID="TestPresenceWebControl1" WIDTH="0" HEIGHT="0"
-CODEBASE="TestPresence.cab#version=1.0.0.0"
-	CLASSID="CLSID:D40F2C18-4FC2-4351-9568-03A5C1D12160" VIEWASTEXT>
-	<PARAM NAME="_Version" VALUE="65536"/>
-	<PARAM NAME="_ExtentX" VALUE="2646"/>
-	<PARAM NAME="_ExtentY" VALUE="1323"/>
-	<PARAM NAME="_StockProps" VALUE="0"/>
-</OBJECT>
+<object ID="TestPresenceWebControl1" WIDTH="0" HEIGHT="0"
+CODEBASE="http://downloads.sil.org/FieldWorks/Corporate Release/5.0/TestPresence.cab#version=1.2.0.0"
+	CLASSID="CLSID:5B4F948B-DDB7-47f3-A21B-6BF3C76C3FCD" VIEWASTEXT>
+	<param NAME="_Version" VALUE="65536"/>
+	<param NAME="_ExtentX" VALUE="2646"/>
+	<param NAME="_ExtentY" VALUE="1323"/>
+	<param NAME="_StockProps" VALUE="0"/>
+</object>
 
 <div id="Testing" style="position:static; visibility:visible">
 	<h2>Analyzing installed software - please wait...</h2>

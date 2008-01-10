@@ -65,6 +65,9 @@
 		<script type="text/javascript">document.getElementById("WriteXml").checked=true;</script>
 		<input id="Compile" type="checkbox" title="Compile a setup.exe program with your settings."/>Compile master installer<br/>
 		<script type="text/javascript">document.getElementById("Compile").checked=true;</script>
+		<input id="SignWithCertificate" type="checkbox" title="Sign setup.exe with the certificate in the root folder on the CD in the specified drive."/>Sign master installer - certificate location:
+		<script type="text/javascript">document.getElementById("SignWithCertificate").checked=true;</script>
+		<input id="CdDrive" type="text" onselect="InputTextSelected(this);" size="2" onfocus="this.select();" title="Drive (or folder) containing digital certifiate CD." value="D:"/><br/>
 		<div id="CompileHelpsDiv" style="position:absolute; visibility:hidden">
 		<input id="CompileHelps" type="checkbox" title="Compile InstallerHelp2.dll to provide embedded setup helps."/>Compile InstallerHelp2.dll<br/>
 		<script type="text/javascript">document.getElementById("CompileHelps").checked=true;</script>
@@ -1949,7 +1952,7 @@ function PrelimCompile()
 	showPage('PrelimCompileActiveDiv', true);
 	showPage('Stage5', false);
 	
-	if (BuildCd(true, true, true, false, false, false, true, false) != 0)
+	if (BuildCd(true, true, true, false, false, false, false, true, false) != 0)
 		alert("The build has failed. Estimated values will still be used. Run a full build (from the last configuration page) to get more information about the error.");
 	
 	showPage('PrelimCompileActiveDiv', false);
@@ -1963,6 +1966,7 @@ function detailsEntered()
 	BuildCd(document.getElementById('WriteXml').checked,
 		document.getElementById('CompileHelps').checked,
 		document.getElementById('Compile').checked,
+		document.getElementById('SignWithCertificate').checked,
 		document.getElementById('GatherFiles').checked,
 		document.getElementById('BuildIso').checked,
 		document.getElementById('BuildSfx').checked,
@@ -2044,13 +2048,14 @@ function AltCopy(Source, Dest)
 //	fWriteXml - true if the reulting XML configuration document is to be saved;
 //	fCompileHelps - true if any products are locked and need their setup help embedding in InstallerHelp2.dll;
 //	fCompileSetup - true if Setup.exe is to be compiled;
+//	fSignSetupExe - true if Setup.exe is to be digitally signed; (user will need to enter password)
 //	fGatherFiles - true if all files for the CD are to be collected and copied to the CD image folder(s);
 //	fCreateIso - true if CD image (ISO file) is to be produced. Only works if files are gathered and the miso.exe file in Utils folder is licensed.
 //	fCreateSfx - true if self-extracting 7-zip file of gathered files is to be produced. Only works if files are gathered and the 7za.exe and 7zC.sfx files are in the Utils folder.
 //	fDeleteJunk - true if temp files created during compilation and linking are to be deleted;
 //	fDisplayCommentary - true if a running commentary is to be displayed during build.
 // Note that the order actions needed to build the CD image is not necessarily reflected by the order of paramters.
-function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fCreateIso, fCreateSfx, fDeleteJunk, fDisplayCommentary)
+function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGatherFiles, fCreateIso, fCreateSfx, fDeleteJunk, fDisplayCommentary)
 {
 	if (fDisplayCommentary)
 		AddCommentary(0, "Initializing...", true);
@@ -2200,9 +2205,20 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fCreateI
 			if (fDisplayCommentary)
 				AddCommentary(1, "Done.", false);
 
+			if (fSignSetupExe)
+			{
+				var Drive = document.getElementById("CdDrive").value;
+				var SignCmd = '"' + CppFilePath + '\\Utils\\Sign\\signcode.exe" -spc "' + Drive + '\\comodo.spc" -v "' + Drive + '\\comodo.pvk" -n "SIL Software Installer" -t http://timestamp.comodoca.com/authenticode -a sha1 "' + SetupExePath + '"';
+				if (fDisplayCommentary)
+					AddCommentary(0, "Signing setup.exe...", true);
+				shellObj.Run(SignCmd, 1, true);
+				if (fDisplayCommentary)
+					AddCommentary(1, "Done.", false);
+			}
+
 			// Generate an autorun.inf:
 			if (fDisplayCommentary)
-				AddCommentary(1, "Generating Autorun.inf", false);
+				AddCommentary(0, "Generating Autorun.inf", true);
 			WriteAutorunInfFile(NewCompilationFolder);
 		}
 

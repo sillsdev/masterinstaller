@@ -7,6 +7,8 @@
 #pragma once
 
 #include <windef.h>
+#include <AccCtrl.h>
+#include <Aclapi.h>
 
 extern DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit = true,
 					 const _TCHAR * pszDescription = NULL,
@@ -36,3 +38,36 @@ extern _TCHAR * GenerateHangingWindowsReport();
 extern _TCHAR * my_strdup(const _TCHAR * pszOriginal);
 
 extern _TCHAR g_rgchActiveProcessDescription[];
+
+// Define function types for the AdvApi32 functions we want to use dynamically:
+typedef BOOL (WINAPI * CheckTokenMembershipFn)(HANDLE, PSID, PBOOL);
+extern CheckTokenMembershipFn _CheckTokenMembership;
+
+typedef BOOL (WINAPI * ConvertStringSidToSidFn)(LPCTSTR StringSid, PSID* Sid);
+extern ConvertStringSidToSidFn _ConvertStringSidToSid;
+
+typedef BOOL (WINAPI * CreateWellKnownSidFn)(WELL_KNOWN_SID_TYPE, PSID, PSID, DWORD*);
+extern CreateWellKnownSidFn _CreateWellKnownSid;
+
+typedef DWORD (WINAPI * GetNamedSecurityInfoFn)(LPTSTR, SE_OBJECT_TYPE, SECURITY_INFORMATION,
+												PSID*, PSID*, PACL*, PACL*,
+												PSECURITY_DESCRIPTOR*);
+extern GetNamedSecurityInfoFn _GetNamedSecurityInfo;
+
+typedef BOOL (WINAPI * LookupAccountSidFn)(LPCTSTR, PSID, LPTSTR, LPDWORD, LPTSTR, LPDWORD,
+										   PSID_NAME_USE);
+extern LookupAccountSidFn _LookupAccountSid;
+
+typedef BOOL (WINAPI * QueryServiceStatusExFn)(SC_HANDLE, SC_STATUS_TYPE, LPBYTE, DWORD,
+											   LPDWORD);
+extern QueryServiceStatusExFn _QueryServiceStatusEx;
+
+typedef DWORD (WINAPI * SetEntriesInAclFn)(ULONG, PEXPLICIT_ACCESS, PACL, PACL*);
+extern SetEntriesInAclFn _SetEntriesInAcl;
+
+typedef DWORD (WINAPI * SetNamedSecurityInfoFn)(LPTSTR, SE_OBJECT_TYPE, SECURITY_INFORMATION,
+												PSID, PSID, PACL, PACL);
+extern SetNamedSecurityInfoFn _SetNamedSecurityInfo;
+
+extern void InitAdvancedApi();
+extern void DropAdvancedApi();

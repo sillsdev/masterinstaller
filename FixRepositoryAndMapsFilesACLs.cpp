@@ -12,99 +12,10 @@
 bool AmendFilesPermissions(_TCHAR * pszFolder, _TCHAR * pszSearchPattern, int SidIndex,
 						   DWORD dwPermissions)
 {
-	// Because the several API functions used here do not exist on Windows 98 or lower, we must
-	// not assume they are present. Instead, we must interrogate the Advapi32.dll.
-
-	// Define function types for the functions we want to use:
-	typedef BOOL (WINAPI * CreateWellKnownSidFn)(WELL_KNOWN_SID_TYPE, PSID, PSID, DWORD*);
-	typedef DWORD (WINAPI * GetNamedSecurityInfoFn)(LPTSTR, SE_OBJECT_TYPE,
-		SECURITY_INFORMATION, PSID*, PSID*, PACL*, PACL*, PSECURITY_DESCRIPTOR*);
-	typedef DWORD (WINAPI * SetEntriesInAclFn)(ULONG, PEXPLICIT_ACCESS, PACL, PACL*);
-	typedef DWORD (WINAPI * SetNamedSecurityInfoFn)(LPTSTR, SE_OBJECT_TYPE,
-		SECURITY_INFORMATION, PSID, PSID, PACL, PACL);
-
-	// Initialize pointers to the functions we want to use:
-	CreateWellKnownSidFn _CreateWellKnownSid = NULL;
-	GetNamedSecurityInfoFn _GetNamedSecurityInfo = NULL;
-	SetEntriesInAclFn _SetEntriesInAcl = NULL;
-	SetNamedSecurityInfoFn _SetNamedSecurityInfo = NULL;
-
-	// Initialise pointer to Advapi32 DLL:
-	HMODULE hmodAdvapi32 = NULL;
-
-	// Get Windows system folder path:
-	_TCHAR * pszSystemFolder = GetFolderPathNew(CSIDL_SYSTEM);
-	if (!pszSystemFolder)
-	{
-		g_Log.Write(_T("Could not get Windows system directory."));
-		return false;
-	}
-	g_Log.Write(_T("Windows system directory = %s."), pszSystemFolder);
-
-	// Remove any terminating backslash:
-	int cch = (int)_tcslen(pszSystemFolder);
-	if (cch > 1)
-		if (pszSystemFolder[cch - 1] == _TCHAR('\\'))
-			pszSystemFolder[cch - 1] = 0;
-
-	// Generate full path of Advapi32.dll:
-	_TCHAR * pszAdvapi32Dll = new_sprintf(_T("%s\\Advapi32.dll"), pszSystemFolder);
-
-	delete[] pszSystemFolder;
-	pszSystemFolder = NULL;
-
-	// Get a handle to the DLL:
-	hmodAdvapi32 = LoadLibrary(pszAdvapi32Dll);
-
-	// If we were not successful, report it and quit:
-	if (!hmodAdvapi32)
-	{
-		g_Log.Write(_T("Could not get handle to %s."), pszAdvapi32Dll);
-
-		delete[] pszAdvapi32Dll;
-		pszAdvapi32Dll = NULL;
-
-		return false;
-	}
-
-	delete[] pszAdvapi32Dll;
-	pszAdvapi32Dll = NULL;
-
-	// Get the addresses of the functions we want to use:
-	_CreateWellKnownSid = (CreateWellKnownSidFn)GetProcAddress(hmodAdvapi32,
-		"CreateWellKnownSid");
-
-	// The following functions have different versions for ANSI and Unicode:
-#ifdef UNICODE
-	_GetNamedSecurityInfo = (GetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
-		"GetNamedSecurityInfoW");
-	_SetEntriesInAcl = (SetEntriesInAclFn)GetProcAddress(hmodAdvapi32,
-		"SetEntriesInAclW");
-	_SetNamedSecurityInfo = (SetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
-		"SetNamedSecurityInfoW");
-#else
-	_GetNamedSecurityInfo = (GetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
-		"GetNamedSecurityInfoA");
-	_SetEntriesInAcl = (SetEntriesInAclFn)GetProcAddress(hmodAdvapi32,
-		"SetEntriesInAclA");
-	_SetNamedSecurityInfo = (SetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
-		"SetNamedSecurityInfoA");
-#endif
-
 	// If we could not get all the functions' addresses, report it and quit:
 	if (!_CreateWellKnownSid || !_GetNamedSecurityInfo || !_SetEntriesInAcl || !_SetNamedSecurityInfo)
 	{
-		if (!_CreateWellKnownSid)
-			g_Log.Write(_T("Could not get address of function CreateWellKnownSid."));
-		if (!_GetNamedSecurityInfo)
-			g_Log.Write(_T("Could not get address of function GetNamedSecurityInfo."));
-		if (!_SetEntriesInAcl)
-			g_Log.Write(_T("Could not get address of function SetEntriesInAcl."));
-		if (!_SetNamedSecurityInfo)
-			g_Log.Write(_T("Could not get address of function SetNamedSecurityInfo."));
-
-		FreeLibrary(hmodAdvapi32);
-
+		g_Log.Write(_T("Dynamic functions not allocated."));
 		return false;
 	}
 
@@ -116,8 +27,6 @@ bool AmendFilesPermissions(_TCHAR * pszFolder, _TCHAR * pszSearchPattern, int Si
 	if(!(TheSID = LocalAlloc(LMEM_FIXED, SidSize)))
 	{
 		g_Log.Write(_T("Could not allocate memory for largest possible SID."));
-
-		FreeLibrary(hmodAdvapi32);
 		return false;
 	}
 
@@ -126,7 +35,6 @@ bool AmendFilesPermissions(_TCHAR * pszFolder, _TCHAR * pszSearchPattern, int Si
 	{
 		g_Log.Write(_T("Could not create SID with index %d."), SidIndex);
 
-		FreeLibrary(hmodAdvapi32);
 		return false;
 	}
 
@@ -212,9 +120,6 @@ bool AmendFilesPermissions(_TCHAR * pszFolder, _TCHAR * pszSearchPattern, int Si
 	LocalFree(TheSID);
 	TheSID = NULL;
 
-	FreeLibrary(hmodAdvapi32);
-	hmodAdvapi32 = NULL;
-	
 	return true;
 }
 
@@ -235,13 +140,13 @@ void FixRepositoryAndMapsFilesACLs()
 
 	bool fRet;
 
-	g_Log.Write(_T("Attemping in Repository folder %s..."), pszRepositoryFolder);
+	g_Log.Write(_T("Attempting in Repository folder %s..."), pszRepositoryFolder);
 	g_Log.Indent();
 	fRet = AmendFilesPermissions(pszRepositoryFolder, _T("*.*"), WinAuthenticatedUserSid, GENERIC_ALL);
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done - returned %s."), fRet? _T("OK") : _T("an error"));
 
-	g_Log.Write(_T("Attemping in MapsTables folder %s..."), pszMapsTablesFolder);
+	g_Log.Write(_T("Attempting in MapsTables folder %s..."), pszMapsTablesFolder);
 	g_Log.Indent();
 	fRet = AmendFilesPermissions(pszMapsTablesFolder, _T("*.*"), WinAuthenticatedUserSid, GENERIC_ALL);
 	g_Log.Unindent();

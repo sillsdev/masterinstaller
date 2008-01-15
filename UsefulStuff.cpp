@@ -270,7 +270,7 @@ void AddToPathEnvVar(_TCHAR * pszExtraPath)
 // that has it is loaded dynamically.
 _TCHAR * GetFolderPathNew(int csidlFolder)
 {
-	g_Log.Write(_T("Attempting to retrieve folder path with CSIDL %d."), csidlFolder);
+	g_Log.Write(_T("Attempting to retrieve folder path with CSIDL %d..."), csidlFolder);
 	g_Log.Indent();
 
 	// Prepare for dynamic loading of Shell32.dll, and use of a function which will be missing
@@ -508,56 +508,6 @@ _TCHAR * CreateAccountNameFromWellKnownSidIndex(int SidIndex)
 {
 	_TCHAR * ReturnVal = NULL;
 
-	// Because the API functions CreateWellKnownSid and LookupAccountSid do not exist
-	// on Windows 98 or lower, we must not assume they are present. Instead,
-	// we must interrogate the Advapi32.dll.
-
-	// Define function types for the functions we want to use:
-	typedef BOOL (WINAPI * CreateWellKnownSidFn)(WELL_KNOWN_SID_TYPE, PSID, PSID, DWORD*);
-
-	typedef BOOL (WINAPI * LookupAccountSidFn)(LPCTSTR, PSID, LPTSTR, LPDWORD, LPTSTR,
-		LPDWORD, PSID_NAME_USE);
-
-	// Initialize pointers to the functions we want to use:
-	CreateWellKnownSidFn _CreateWellKnownSid = NULL;
-	LookupAccountSidFn _LookupAccountSid = NULL;
-	HMODULE hmodAdvapi32 = NULL;
-
-	const int kcchSystemFolder = 1024;
-	_TCHAR pszSystemFolder[kcchSystemFolder];
-	// Get Windows system folder path:
-	if (GetSystemDirectory(pszSystemFolder, kcchSystemFolder) <= kcchSystemFolder)
-	{
-		// Remove any terminating backslash:
-		int cch = (int)_tcslen(pszSystemFolder);
-		if (cch > 1)
-			if (pszSystemFolder[cch - 1] == _TCHAR('\\'))
-				pszSystemFolder[cch - 1] = 0;
-		// Generate full path of Advapi32.dll:
-		_TCHAR * pszAdvapi32Dll = new_sprintf(_T("%s\\Advapi32.dll"), pszSystemFolder);
-		// Get a handle to the DLL:
-		hmodAdvapi32 = LoadLibrary(pszAdvapi32Dll);
-		delete[] pszAdvapi32Dll;
-		pszAdvapi32Dll = NULL;
-
-		// Check if we were successful:
-		if (hmodAdvapi32)
-		{
-			// Now get a pointer to the functions we want to use:
-			_CreateWellKnownSid = (CreateWellKnownSidFn)GetProcAddress(hmodAdvapi32,
-				"CreateWellKnownSid");
-
-			// Now get a pointer to the functions we want to use:
-#ifdef UNICODE
-			_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvapi32,
-				"LookupAccountSidW");
-#else
-			_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvapi32,
-				"LookupAccountSidA");
-#endif
-		}
-	}
-
 	if (_CreateWellKnownSid && _LookupAccountSid)
 	{
 		DWORD SidSize = SECURITY_MAX_SID_SIZE;
@@ -565,17 +515,11 @@ _TCHAR * CreateAccountNameFromWellKnownSidIndex(int SidIndex)
 
 		// Allocate enough memory for the largest possible SID.
 		if(!(TheSID = LocalAlloc(LMEM_FIXED, SidSize)))
-		{
-			FreeLibrary(hmodAdvapi32);
 			return NULL;
-		}
 
 		// Create a SID for the given index on the local computer.
 		if (!_CreateWellKnownSid(WELL_KNOWN_SID_TYPE(SidIndex), NULL, TheSID, &SidSize))
-		{
-			FreeLibrary(hmodAdvapi32);
 			return NULL;
-		}
 
 		_TCHAR * pszName = NULL;
 		DWORD cchName = 0;
@@ -593,14 +537,153 @@ _TCHAR * CreateAccountNameFromWellKnownSidIndex(int SidIndex)
 		ReturnVal = new_sprintf(_T("%s\\%s"), pszDomain, pszName);
 		delete[] pszName;
 		delete[] pszDomain;
-
-		FreeLibrary(hmodAdvapi32);
-		hmodAdvapi32 = NULL;
 	}
 
 	return ReturnVal;
 }
 
+// Instantiate pointers to dynamic functions in AdvApi32.dll:
+static 	HMODULE hmodAdvapi32 = NULL; // Pointer to the DLL
+CheckTokenMembershipFn _CheckTokenMembership;
+ConvertStringSidToSidFn _ConvertStringSidToSid;
+CreateWellKnownSidFn _CreateWellKnownSid;
+GetNamedSecurityInfoFn _GetNamedSecurityInfo;
+LookupAccountSidFn _LookupAccountSid;
+QueryServiceStatusExFn _QueryServiceStatusEx;
+SetEntriesInAclFn _SetEntriesInAcl;
+SetNamedSecurityInfoFn _SetNamedSecurityInfo;
+
+// Loads the AdvApi32.dll and initializes pointers to functions within it that don't exist
+// on Windows 98 or earlier. This is so that the master installer can still run on Windows 98
+// (although applications that need a later OS will be grayed out).
+// Pointers to functions that don't exist will be set to NULL.
+void InitAdvancedApi()
+{
+	// Begin by initializing all the dynamic function pointers to NULL:
+	g_Log.Write(_T("Initializing dynamic function pointers..."));
+	g_Log.Indent();
+	_CheckTokenMembership = NULL;
+	_ConvertStringSidToSid = NULL;
+	_CreateWellKnownSid = NULL;
+	_GetNamedSecurityInfo = NULL;
+	_LookupAccountSid = NULL;
+	_QueryServiceStatusEx = NULL;
+	_SetEntriesInAcl = NULL;
+	_SetNamedSecurityInfo = NULL;
+
+	// Get Windows system folder path:
+	_TCHAR * pszSystemFolder = GetFolderPathNew(CSIDL_SYSTEM);
+	if (pszSystemFolder)
+	{
+		g_Log.Write(_T("System folder is %s"), pszSystemFolder);
+
+		// Remove any terminating backslash:
+		int cch = (int)_tcslen(pszSystemFolder);
+		if (cch > 1)
+			if (pszSystemFolder[cch - 1] == _TCHAR('\\'))
+				pszSystemFolder[cch - 1] = 0;
+
+		// Generate full path of Advapi32.dll:
+		_TCHAR * pszAdvapi32Dll = new_sprintf(_T("%s\\Advapi32.dll"), pszSystemFolder);
+
+		// Release memory used to hold path to System32 folder:
+		delete[] pszSystemFolder;
+		pszSystemFolder = NULL;
+
+		// Get a handle to the DLL:
+		hmodAdvapi32 = LoadLibrary(pszAdvapi32Dll);
+
+		// If we were successful, find addresses of functions we need:
+		if (hmodAdvapi32)
+		{
+			g_Log.Write(_T("Loaded %s"), pszAdvapi32Dll);
+
+			_CheckTokenMembership = (CheckTokenMembershipFn)GetProcAddress(hmodAdvapi32,
+				"CheckTokenMembership");
+			g_Log.Write(_T("Address of CheckTokenMembership: %s"), _CheckTokenMembership? "found" : "NULL");
+
+			_CreateWellKnownSid = (CreateWellKnownSidFn)GetProcAddress(hmodAdvapi32,
+				"CreateWellKnownSid");
+			g_Log.Write(_T("Address of CreateWellKnownSid: %s"), _CreateWellKnownSid? "found" : "NULL");
+
+			_QueryServiceStatusEx = (QueryServiceStatusExFn)GetProcAddress(hmodAdvapi32,
+				"QueryServiceStatusEx");
+			g_Log.Write(_T("Address of QueryServiceStatusEx: %s"), _QueryServiceStatusEx? "found" : "NULL");
+
+
+			// The following functions have different versions for ANSI and Unicode:
+#ifdef UNICODE
+			_ConvertStringSidToSid = (ConvertStringSidToSidFn)GetProcAddress(hmodAdvApi,
+				"ConvertStringSidToSidW");
+			g_Log.Write(_T("Address of ConvertStringSidToSidW: %s"), _ConvertStringSidToSid? "found" : "NULL");
+
+			_GetNamedSecurityInfo = (GetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
+				"GetNamedSecurityInfoW");
+			g_Log.Write(_T("Address of GetNamedSecurityInfoW: %s"), _GetNamedSecurityInfo? "found" : "NULL");
+
+			_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvApi,
+				"LookupAccountSidW");
+			g_Log.Write(_T("Address of LookupAccountSidW: %s"), _LookupAccountSid? "found" : "NULL");
+
+			_SetEntriesInAcl = (SetEntriesInAclFn)GetProcAddress(hmodAdvapi32,
+				"SetEntriesInAclW");
+			g_Log.Write(_T("Address of SetEntriesInAclW: %s"), _SetEntriesInAcl? "found" : "NULL");
+
+			_SetNamedSecurityInfo = (SetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
+				"SetNamedSecurityInfoW");
+			g_Log.Write(_T("Address of SetNamedSecurityInfoW: %s"), _SetNamedSecurityInfo? "found" : "NULL");
+
+#else
+			_ConvertStringSidToSid = (ConvertStringSidToSidFn)GetProcAddress(hmodAdvapi32,
+				"ConvertStringSidToSidA");
+			g_Log.Write(_T("Address of ConvertStringSidToSidA: %s"), _ConvertStringSidToSid? "found" : "NULL");
+
+			_GetNamedSecurityInfo = (GetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
+				"GetNamedSecurityInfoA");
+			g_Log.Write(_T("Address of GetNamedSecurityInfoA: %s"), _GetNamedSecurityInfo? "found" : "NULL");
+
+			_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvapi32,
+				"LookupAccountSidA");
+			g_Log.Write(_T("Address of LookupAccountSidA: %s"), _LookupAccountSid? "found" : "NULL");
+
+			_SetEntriesInAcl = (SetEntriesInAclFn)GetProcAddress(hmodAdvapi32,
+				"SetEntriesInAclA");
+			g_Log.Write(_T("Address of CheckTokenMembership: %s"), _SetEntriesInAcl? "found" : "NULL");
+
+			_SetNamedSecurityInfo = (SetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
+				"SetNamedSecurityInfoA");
+			g_Log.Write(_T("Address of SetNamedSecurityInfoA: %s"), _SetNamedSecurityInfo? "found" : "NULL");
+
+#endif
+		}
+		else
+			g_Log.Write(_T("Could not load %s"), pszAdvapi32Dll);
+
+		// Release memory used to hold path to Advapi32.dll:
+		delete[] pszAdvapi32Dll;
+		pszAdvapi32Dll = NULL;
+	}
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done."));
+}
+
+// Releases any resources allocated in InitAdvancedApi().
+void DropAdvancedApi()
+{
+	if (hmodAdvapi32)
+	{
+		FreeLibrary(hmodAdvapi32);
+		hmodAdvapi32 = NULL;
+	}
+
+	_CheckTokenMembership = NULL;
+	_CreateWellKnownSid = NULL;
+	_GetNamedSecurityInfo = NULL;
+	_LookupAccountSid = NULL;
+	_QueryServiceStatusEx = NULL;
+	_SetEntriesInAcl = NULL;
+	_SetNamedSecurityInfo = NULL;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /*

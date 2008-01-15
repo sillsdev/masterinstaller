@@ -36,8 +36,14 @@ int APIENTRY WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/,
 
 	g_ProgRecord.SetCmdLine(pszCmdLine);
 
+	// Initialize dynamically allocated functions:
+	InitAdvancedApi();
+
 	MasterInstaller_t MasterInstaller;
 	MasterInstaller.Run();
+
+	// Release dynamically allocated functions:
+	DropAdvancedApi();
 
 	delete[] pszCmdLine;
 }

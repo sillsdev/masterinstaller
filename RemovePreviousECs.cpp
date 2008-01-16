@@ -173,59 +173,42 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 	// so we must go one deeper, then chop off back to the backslash:
 	g_Log.Write(_T("Looking for unremoved shortcuts in Start Menu..."));
 	g_Log.Indent();
-	TCHAR szStartMenuProgramsStartupPath[MAX_PATH] = { 0 };
+	TCHAR * pszStartMenuProgramsStartupPath = GetFolderPathNew(CSIDL_STARTUP);
 
-	// Prepare for dynamic loading of Shell32.dll, and use of function which will be missing
-	// on Windows 98:
-	typedef HRESULT (WINAPI * SHGetFolderPathFn)(HWND hwndOwner, int nFolder, HANDLE hToken,
-		DWORD dwFlags, LPTSTR pszPath);
-	SHGetFolderPathFn _SHGetFolderPath;
-
-	HMODULE hmodShell32 = LoadLibrary(_T("SHELL32.DLL"));
-	if (hmodShell32)
+	if (pszStartMenuProgramsStartupPath)
 	{
-		// Now get pointers to the functions we want to use:
-#ifdef UNICODE
-		_SHGetFolderPath = (SHGetFolderPathFn)GetProcAddress(hmodShell32, "SHGetFolderPathW");
-#else
-		_SHGetFolderPath = (SHGetFolderPathFn)GetProcAddress(hmodShell32, "SHGetFolderPathA");
-#endif
-	}
-	HRESULT hr = E_NOTIMPL;
-	if (_SHGetFolderPath)
-	{
-		hr = _SHGetFolderPath(NULL, CSIDL_STARTUP, NULL, SHGFP_TYPE_CURRENT,
-			szStartMenuProgramsStartupPath);
-	}
-	else
-		g_Log.Write(_T("SHGetFolderPath function not found"));
-
-	if (hmodShell32)
-		FreeLibrary(hmodShell32);
-	hmodShell32 = NULL;
-	_SHGetFolderPath = NULL;
-
-	g_Log.Write(_T("Initial folder is '%s'"), szStartMenuProgramsStartupPath);
-	if (hr == S_OK)
-	{
+		g_Log.Write(_T("Initial folder is '%s'"), pszStartMenuProgramsStartupPath);
+	
 		// Chop off the last folder component:
-		TCHAR * ch = _tcsrchr(szStartMenuProgramsStartupPath, '\\');
+		TCHAR * ch = _tcsrchr(pszStartMenuProgramsStartupPath, '\\');
 		if (ch)
 			*ch = 0;
-		_tcscat_s(szStartMenuProgramsStartupPath, MAX_PATH, _T("\\SIL Converters"));
-		g_Log.Write(_T("Deleting *.* in '%s'"), szStartMenuProgramsStartupPath);
-		_tcscat_s(szStartMenuProgramsStartupPath, MAX_PATH, _T("\\*.*"));
-		// We need to stick an extra zero on the end of the string:
-		ZeroMemory(&szStartMenuProgramsStartupPath[1 + _tcslen(szStartMenuProgramsStartupPath)],
-			sizeof(TCHAR));
+
+		// Add the rest of the path:
+		new_sprintf_concat(pszStartMenuProgramsStartupPath, 0, _T("\\SIL Converters"));
+		g_Log.Write(_T("Deleting *.* in '%s'"), pszStartMenuProgramsStartupPath);
+
+		// Prepare the search string, with an extra zero on the end, formed first with an '@'
+		// then changed:
+		new_sprintf_concat(pszStartMenuProgramsStartupPath, 0, _T("\\*.*@"));
+		ch = _tcsrchr(pszStartMenuProgramsStartupPath, '@');
+		if (ch)
+			*ch = 0;
+
 		SHFILEOPSTRUCT sfos;
 		sfos.hwnd = NULL;
 		sfos.wFunc = FO_DELETE;
-		sfos.pFrom = szStartMenuProgramsStartupPath;
+		sfos.pFrom = pszStartMenuProgramsStartupPath;
 		sfos.pTo = NULL;
 		sfos.fFlags = FOF_FILESONLY | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT;
 		SHFileOperation(&sfos);
 	}
+	else
+		g_Log.Write(_T("Could not retrieve Startup folder path"));
+
+	delete[] pszStartMenuProgramsStartupPath;
+	pszStartMenuProgramsStartupPath = NULL;
+
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done"));
 	

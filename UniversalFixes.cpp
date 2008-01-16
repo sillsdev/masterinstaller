@@ -93,14 +93,23 @@ void DoFW40UninstallFix()
 
 	CheckRegData(HKEY_CLASSES_ROOT, _T("CLSID\\{00000320-0000-0000-C000-000000000046}"), _T("PSFactoryBuffer"));
 
-	HKEY hkeyPSFactoryBuffer;
-	TCHAR pszSystemFolderPath[MAX_PATH];
-	SHGetSpecialFolderPath(NULL, pszSystemFolderPath, CSIDL_SYSTEM, false);
-	TCHAR * pszInprocServer32 = new_sprintf(_T("%s\\ole32.dll"), pszSystemFolderPath);
-	CheckRegData(HKEY_CLASSES_ROOT, _T("CLSID\\{00000320-0000-0000-C000-000000000046}\\InprocServer32"),
-		pszInprocServer32, &hkeyPSFactoryBuffer);
-	delete[] pszInprocServer32;
-	pszInprocServer32 = NULL;
+	HKEY hkeyPSFactoryBuffer = NULL;
+	_TCHAR * pszSystemFolderPath = GetFolderPathNew(CSIDL_SYSTEM);
+	
+	if (pszSystemFolderPath)
+	{
+		_TCHAR * pszInprocServer32 = new_sprintf(_T("%s\\ole32.dll"), pszSystemFolderPath);
+
+		delete[] pszSystemFolderPath;
+		pszSystemFolderPath = NULL;
+
+		CheckRegData(HKEY_CLASSES_ROOT, _T("CLSID\\{00000320-0000-0000-C000-000000000046}\\InprocServer32"),
+			pszInprocServer32, &hkeyPSFactoryBuffer);
+
+		delete[] pszInprocServer32;
+		pszInprocServer32 = NULL;
+	}
+
 	if (hkeyPSFactoryBuffer)
 	{
 		if (ERROR_SUCCESS == RegSetValueEx(hkeyPSFactoryBuffer, _T("ThreadingModel"), 0, REG_SZ, (BYTE *)_T("Both"), 4 * sizeof(TCHAR)))

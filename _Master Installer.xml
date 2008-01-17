@@ -32,7 +32,7 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 5.1 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.1\BTE\FieldWorks)</Title>
+				<Title>FW 5.2 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.1\BTE\FieldWorks)</Title>
 				<Source>\\cana\LSDev\Installers\FW5.1\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
@@ -45,7 +45,7 @@
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 5.1 BTE</Title>
+			<Title>SIL FieldWorks 5.2 BTE</Title>
 			<Tag>FW52BTEnoM</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -97,7 +97,7 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 5.1 SE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.1\SE\FieldWorks)</Title>
+				<Title>FW 5.2 SE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.1\SE\FieldWorks)</Title>
 				<Source>\\cana\LSDev\Installers\FW5.1\SE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
@@ -109,7 +109,7 @@
 				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 5.1 SE</Title>
+			<Title>SIL FieldWorks 5.2 SE</Title>
 			<Tag>FW52SEnoM</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>

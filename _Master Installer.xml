@@ -32,6 +32,127 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
+				<Title>FW 5.1 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.1\BTE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW5.1\BTE\FieldWorks\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks\TechSupport.txt</Source>
+				<Source>Documents\FieldWorks\CopyToCd</Source>
+				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 5.1 BTE</Title>
+			<Tag>FW52BTEnoM</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{45FFED60-12CE-4430-945D-ED43943EAEA3}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET2.0" Version="2.0"/>
+			<Preinstall>CleanStartFw40</Preinstall>
+			<PostInstall>FwPostInstall</PostInstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.10</Title>
+				<Tag>DN_TC</Tag>
+				<MsiFeature>DN</MsiFeature>
+				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 2.2</Title>
+				<Tag>LT_TC</Tag>
+				<MsiFeature>FLEX</MsiFeature>
+				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor 2.10</Title>
+				<Tag>TLE_TC</Tag>
+				<MsiFeature>TLE</MsiFeature>
+				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Translation Editor 2.2</Title>
+				<Tag>TE_TC</Tag>
+				<MsiFeature>TE</MsiFeature>
+				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.10</Title>
+				<Tag>WP_TC</Tag>
+				<MsiFeature>WP</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>FW 5.1 SE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.1\SE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW5.1\SE\FieldWorks\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks without TE\TechSupport.txt</Source>
+				<Source>Documents\FieldWorks\CopyToCd</Source>
+				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 5.1 SE</Title>
+			<Tag>FW52SEnoM</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{45FFED60-12CE-4430-945D-ED43943EAEA3}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET2.0" Version="2.0"/>
+			<Preinstall>CleanStartFw40</Preinstall>
+			<PostInstall>FwPostInstall</PostInstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.10</Title>
+				<Tag>DN_TC</Tag>
+				<MsiFeature>DN</MsiFeature>
+				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 2.2</Title>
+				<Tag>LT_TC</Tag>
+				<MsiFeature>FLEX</MsiFeature>
+				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor 2.10</Title>
+				<Tag>TLE_TC</Tag>
+				<MsiFeature>TLE</MsiFeature>
+				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.10</Title>
+				<Tag>WP_TC</Tag>
+				<MsiFeature>WP</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>FW 5.0 BTE with movies (from \\cana\LSDev\Installers\FW5.0\BTE\FieldWorks)</Title>
 				<Source>\\cana\LSDev\Installers\FW5.0\BTE\FieldWorks\SetupFw.msi</Source>
 				<Source>\\cana\LSDev\Installers\FW5.0\BTE\FieldWorks\TE_M.cab</Source>
@@ -1019,7 +1140,34 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Microsoft SQL Server 2005 Express SP2</Title>
+				<Title>Microsoft SQL Server 2005 Express SP2 (32 and 64 bit)</Title>
+				<Source>3rd Party\SQL Server 2005 Express\SQLEXPR.EXE</Source>
+				<Source>3rd Party\SQL Server 2005 Express\Surface Area Settings.xml</Source>
+				<Destination>Utilities\SQL Server 2005 Express</Destination>
+			</AutoConfigure>
+			<Title>Microsoft SQL Server 2005 Express SP2</Title>
+			<Tag>SQL2005_64</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<Prerequisite Tag=".NET2.0" Version="2.0"/>
+			<Prerequisite Tag="WI31" MinVersion="3.1"/>
+			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
+			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
+			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR.EXE</CriticalFile>
+			<Preinstall>TestIfSqlServerUpgradeNeeded</Preinstall>
+			<Install Flag="g_fSqlServerUpgradeNeeded">
+				<True>$CriticalFile$ INSTANCENAME=SILFW UPGRADE=SQL_Engine SAPWD=inscrutable SQLACCOUNT="$SID$22$" /qb</True>
+				<False>$CriticalFile$ INSTANCENAME=SILFW ADDLOCAL=All SAPWD=inscrutable SECURITYMODE=SQL SQLACCOUNT="$SID$22$" DISABLENETWORKPROTOCOLS=0 /qb</False>
+			</Install>
+			<StatusWindow>Monitor 10000</StatusWindow>
+			<Commentary>Please wait while SQL Server installs and then is configured.</Commentary>
+			<TestPresence Version="9.00.3042.00">TestSqlSILFWPresence</TestPresence>
+			<PostInstall>SqlServer2005PostInstall</PostInstall>
+			<DownloadURL></DownloadURL>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Microsoft SQL Server 2005 Express SP2 (32-bit only)</Title>
 				<Source>3rd Party\SQL Server 2005 Express\SQLEXPR32.EXE</Source>
 				<Source>3rd Party\SQL Server 2005 Express\Surface Area Settings.xml</Source>
 				<Destination>Utilities\SQL Server 2005 Express</Destination>

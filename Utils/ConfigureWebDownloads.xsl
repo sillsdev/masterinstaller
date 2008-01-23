@@ -32,8 +32,8 @@
 					<h2>Initializing - please wait...</h2>
 				</div>
 				<div id="Stage1" style="position:absolute; visibility:hidden">
-					<h2>Flavor Names Setup</h2>
-					<xsl:call-template name="CollectFlavorNames"/>
+					<h2>Flavors Setup</h2>
+					<xsl:call-template name="CollectFlavors"/>
 				</div>
 				<div id="Stage2" style="position:absolute; visibility:hidden">
 					<h2>Flavor Configurations</h2>
@@ -108,12 +108,18 @@
 	<!-- =============================================== -->
 	<!-- Flavor Naming Template                  -->
 	<!-- =============================================== -->
-	<xsl:template name="CollectFlavorNames">
+	<xsl:template name="CollectFlavors">
 		<table id="FlavorTable">
+			<th></th>
+			<th>Flavor Name</th>
+			<th>Download URL</th>
 			<tr>
 				<td>1.</td>
 				<td>
 					<input id="FlavorName1" type="text" onselect="InputTextSelected(this);" size="40" onfocus="this.select();" title="Name of flavor 1." value="Full Install"/>
+				</td>
+				<td>
+					<input id="FlavorUrl1" type="text" onselect="InputTextSelected(this);" size="40" onfocus="this.select();" title="Download URL of flavor 1." value="http://downloads.sil.org/"/>
 				</td>
 			</tr>
 		</table>
@@ -336,7 +342,7 @@ function setPageNo(Stage)
 	switch (GetStageNo())
 	{
 		case 1:
-			// If we're about to leave the Flavor Names Setup page, update the Flavor Configuration table:
+			// If we're about to leave the Flavors Setup page, update the Flavor Configuration table:
 			UpdateFlavorConfigTable();
 			//RedrawFlavorConfigTable();
 			break;
@@ -622,9 +628,11 @@ function AddFlavor()
 	NewCell.innerText = NumFlavors + ".";
 	NewCell = Row.insertCell();
 	NewCell.innerHTML = '<input id="FlavorName' + NumFlavors + '" type="text" onselect="InputTextSelected(this);" size="40" onfocus="this.select();" title="Name of flavor ' + NumFlavors + '."/>'
+	NewCell.focus();
+	NewCell = Row.insertCell();
+	NewCell.innerHTML = '<input id="FlavorUrl' + NumFlavors + '" type="text" onselect="InputTextSelected(this);" size="40" onfocus="this.select();" title="Download URL of flavor ' + NumFlavors + '."/>'
 	var DeleteButton = document.getElementById("DeleteLastFlavor");
 	DeleteButton.disabled = false;
-	NewCell.focus();
 	
 	// Add a new column to the Flavor Config table, too:
 	Table = document.getElementById("FlavorConfigTable");
@@ -709,7 +717,7 @@ function Go()
 			var OutputPath = document.getElementById('OutputPath').value;
 			MakeSureFolderExists(OutputPath);
 			var XmlDocs = new Array();
-			
+
 			for (flavor = 1; flavor <= NumFlavors; flavor++)
 			{				
 				var FlavorName = document.getElementById("FlavorName" + flavor).value;
@@ -746,6 +754,8 @@ function Go()
 					XmlData.Doc = xmlDoc;
 					XmlData.Path = FlavorXmlPath;
 					XmlData.Flavor = FlavorName;
+					XmlData.FlavorURL = document.getElementById("FlavorUrl" + flavor).value;
+
 					// Record number of missing products - where CD index is -1:
 					var CdNodes = xmlDoc.selectNodes("/MasterInstaller/Products/Product/CD");
 					var TotalMissing = 0;
@@ -1148,6 +1158,11 @@ function GenerateDownloadsXml(XmlDocs, OutputPath)
 	for (i = 0; i < XmlDocs.length; i++)
 	{
 		tso.WriteLine('<Download Flavor="' + XmlDocs[i].Flavor + '" Rank="' + (i+1) + '">');
+		
+		var FlavorURL = XmlDocs[i].FlavorURL;
+		if (FlavorURL)
+			if (FlavorURL.length > 0)
+				tso.WriteLine('<DownloadURL>' + XmlDocs[i].FlavorURL + '</DownloadURL>');
 
 		// Make a copy of the original XML document:
 		var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");

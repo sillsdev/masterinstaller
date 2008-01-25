@@ -1,0 +1,1 @@
+signcode.exe -spc D:\comodo.spc -v D:\comodo.pvk -n "SIL Software Package" -t http://timestamp.comodoca.com/authenticode -a sha1 %1

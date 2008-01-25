@@ -32,8 +32,8 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 5.2 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.1\BTE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW5.1\BTE\FieldWorks\SetupFW.msi</Source>
+				<Title>FW 5.2 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.2\BTE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW5.2\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -97,8 +97,8 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 5.2 SE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.1\SE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW5.1\SE\FieldWorks\SetupFW.msi</Source>
+				<Title>FW 5.2 SE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.2\SE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW5.2\SE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>

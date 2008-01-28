@@ -1362,7 +1362,7 @@
 			<Tag>.NET2.0SP1</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\DotNet 2.0\NetFx20SP1_x86.exe</CriticalFile>
-			<Install>$CriticalFile$ /q:a /c:"install /l /q"</Install>
+			<Install>$CriticalFile$ /q</Install>
 			<TestPresence Version="1">TestDotNet2point0SPPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/Downloads/details.aspx?familyid=79BC3B77-E02C-4AD3-AACF-A7633F706BA5&amp;displaylang=en</DownloadURL>
 			<Commentary>This installation may take a few minutes, without visible sign of progress.</Commentary>

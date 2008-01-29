@@ -2560,6 +2560,14 @@ function ApplyUserSettings(xmlDoc)
 	// Settings from Project Setup:
 	ApplyEditBoxSetting(xmlDoc, "CppFilePath", "/MasterInstaller/AutoConfigure/CppFilePath");
 	ApplyEditBoxSetting(xmlDoc, "CdImagePath", "/MasterInstaller/AutoConfigure/CdImagePath");
+	
+	ApplyEditBoxSetting(xmlDoc, "ExternalHelpSource", "/MasterInstaller/AutoConfigure/ExternalHelpSource");
+	ApplyEditBoxSetting(xmlDoc, "ExternalHelpFileDest", "/MasterInstaller/AutoConfigure/ExternalHelpDestination");
+	if (document.getElementById("ExternalHelpFile").value.length < 1 || document.getElementById("HelpButtonText").value.length < 1)
+	{
+		xmlDoc.selectSingleNode("/MasterInstaller/AutoConfigure/ExternalHelpSource").text = "";
+		xmlDoc.selectSingleNode("/MasterInstaller/AutoConfigure/ExternalHelpDestination").text = "";
+	}
 
 	// Settings from General:
 	ApplyEditBoxSetting(xmlDoc, "OverallTitle", "/MasterInstaller/General/Title")

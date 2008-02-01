@@ -54,7 +54,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{45FFED60-12CE-4430-945D-ED43943EAEA3}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite Tag=".NET2.0" MinVersion="2.0"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
@@ -118,7 +118,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{45FFED60-12CE-4430-945D-ED43943EAEA3}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite Tag=".NET2.0" MinVersion="2.0"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
@@ -549,7 +549,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>Phonology Assistant\SetupPA.rtf</Help>
 			<ProductCode>{81584AC8-1718-4B20-8189-8A9F149C5CCD}</ProductCode>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite Tag=".NET2.0" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -568,7 +568,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>Speech Analyzer\SetupSA.rtf</Help>
 			<ProductCode>{C250A187-A757-4E46-928B-D20A7403244D}</ProductCode>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite Tag=".NET2.0" MinVersion="2.0"/>
 			<Preinstall>SAPreInstall</Preinstall>
 			<PostInstall>SAPostInstall</PostInstall>
 		</Product>
@@ -1147,7 +1147,7 @@
 			<Tag>SQL2005_64</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite Tag=".NET2.0" MinVersion="2.0"/>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
 			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
 			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
@@ -1174,7 +1174,7 @@
 			<Tag>SQL2005</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite Tag=".NET2.0" MinVersion="2.0"/>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
 			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
 			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>

@@ -301,7 +301,7 @@ BEGIN
     IDC_MESSAGE_DEPENDENCIES "Evaluating product dependencies"
     IDC_MESSAGE_REMAINING   "Number of products left to install (after this one): %d"
     IDC_MESSAGE_RETRY_INSTRUCTIONS 
-                            "If you would like to stop installing software altogether, press Abort. If you would like to try again to install this product, press Retry. If you would like to skip this product and go on to the next, press Ignore."
+                            "If you would like to stop installing software altogether, press Abort. If you would like to try again to install this product, press Retry. If you would like to skip this product, press Ignore."
     IDC_MESSAGE_FINISHED    "%s has finished."
     IDC_MESSAGE_PENDING_REBOOT 
                             "The computer should be rebooted now, otherwise some software may not function correctly. Press OK to reboot immediately, or Cancel if you would prefer to do this later yourself."
@@ -361,7 +361,7 @@ BEGIN
     IDC_MESSAGE_CONSEQUENCES "These are the consequences:"
     IDC_MESSAGE_NEED_WIN2K  "- needs Windows 2000 or better"
     IDC_MESSAGE_NEED_ADMIN_PRIV "- needs administrator rights"
-    IDC_MESSAGE_MUST_WAIT   "Please press Continue when this installation has fininshed."
+    IDC_MESSAGE_MUST_WAIT   "Please press Continue when this installation has finished."
 END
 
 STRINGTABLE 

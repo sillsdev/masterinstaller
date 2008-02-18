@@ -768,15 +768,33 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 				}
 				g_Log.Unindent();
 				bool fInstallRequiredSoftware = true;
+				bool fInstallRequiredSoftwareButtonChecked = false;
 				// See if we offered the user a choice of installing 3rd party software:
 				if (GetDlgItem(hwnd, knCheckboxInitialId + rgiAvailableProducts.GetCount()))
 				{
 					// We did, so collect their choice:
-					fInstallRequiredSoftware = (SendDlgItemMessage(hwnd,
+					fInstallRequiredSoftwareButtonChecked = (SendDlgItemMessage(hwnd,
 						knCheckboxInitialId + rgiAvailableProducts.GetCount(), BM_GETCHECK, 0,
 						0) == BST_CHECKED);
+					if (!fInstallRequiredSoftwareButtonChecked)
+						fInstallRequiredSoftware = false;
 					g_Log.Write(_T("User opted for additional software: %s."),
 						fInstallRequiredSoftware ? _T("true") : _T("false"));
+				}
+				if (rgiChosen.GetCount() == 0 && !fInstallRequiredSoftwareButtonChecked)
+				{
+					g_Log.Write(_T("User selected no products, nor the additional software."));
+					if (MessageBox(hwnd, FetchString(IDC_MESSAGE_CONFIRM_QUIT_MAIN), g_pszTitle,
+						MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) == IDYES)
+					{
+						g_Log.Write(_T("User quit in Main Product Selection Dialog."));
+						EndDialog(hwnd, 0);
+					}
+					else
+					{
+						g_Log.Write(_T("User decided to reconsider."));
+						break;
+					}
 				}
 				// The return value of this dialog will be a pointer to this structure:
 				MainSelectionReturn_t * MainSelectionReturn = new MainSelectionReturn_t;

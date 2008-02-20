@@ -585,10 +585,7 @@ bool MasterInstaller_t::CreateMutex()
 bool MasterInstaller_t::IsWindows2000OrBetter()
 {
 	// See if we're running on less than Windows 2000:
-	OSVERSIONINFO OSversion;
-	OSversion.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-	::GetVersionEx(&OSversion);
-	if (OSversion.dwMajorVersion < 5)
+	if (g_OSversion.dwMajorVersion < 5)
 		return false;
 	return true;
 }

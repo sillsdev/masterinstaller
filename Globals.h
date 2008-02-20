@@ -1,5 +1,6 @@
 #pragma once
 
+extern OSVERSIONINFOEX g_OSversion;
 extern bool g_fStopRequested;
 extern bool g_fLessThanWin2k;
 extern DWORD g_langidWindowsLanguage;

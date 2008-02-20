@@ -4,6 +4,7 @@
 #include "Globals.h"
 
 // Global instantiations:
+OSVERSIONINFOEX g_OSversion;
 bool g_fLessThanWin2k = false;
 DWORD g_langidWindowsLanguage = 0;
 bool g_fAdministrator = false;

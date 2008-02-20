@@ -2,10 +2,17 @@
 
 #include <tchar.h>
 
-// Tests for presence of Service Packs for Microsoft .NET 1.1
+// Tests for presence of Service Packs for Microsoft .NET 2.0
 bool TestDotNet2point0SPPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
 								 const TCHAR * /*pszCriticalFile*/)
 {
+	// If the operating system is Windows Vista or later, then the service packs for .NET 2.0
+	// cannot be directly installed. They can only be obtained through OS service packs.
+	// In those cases, we will just pretend the service pack is present, to avoid running the
+	// installer when we know it will fail:
+	if (g_OSversion.dwMajorVersion >= 6)
+		return true;
+
 	DWORD nMinVersion = 0;
 	DWORD nMaxVersion = 0xFFFFFFFF;
 	if (pszMinVersion)

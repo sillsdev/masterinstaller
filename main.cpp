@@ -15,6 +15,10 @@
 int APIENTRY WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, 
 					 LPSTR lpCmdLine, int /*nCmdShow*/)
 {
+	// Get details of the version of Windows we're running on:
+	g_OSversion.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	::GetVersionEx((LPOSVERSIONINFO)(&g_OSversion));
+
 	_TCHAR * pszCmdLine;
 #ifdef UNICODE
 	int cch = 1 + (int)strlen(lpCmdLine);

@@ -17,9 +17,9 @@ bool TestWinXpSp1Presence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersi
 		// running Win XP:
 		return true;
 	}
-
+#if !defined NOLOGGING
 	g_Log.Write(_T("Found Windows version %d.%d"), osvi.dwMajorVersion, osvi.dwMinorVersion);
-
+#endif
 	if (osvi.dwMajorVersion == 5)
 	{
 		if (osvi.dwMinorVersion == 1)

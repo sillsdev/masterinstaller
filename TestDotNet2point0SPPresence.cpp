@@ -10,7 +10,11 @@ bool TestDotNet2point0SPPresence(const TCHAR * pszMinVersion, const TCHAR * pszM
 	// cannot be directly installed. They can only be obtained through OS service packs.
 	// In those cases, we will just pretend the service pack is present, to avoid running the
 	// installer when we know it will fail:
-	if (g_OSversion.dwMajorVersion >= 6)
+	// Get details of the version of Windows we're running on:
+	OSVERSIONINFOEX OSversion;
+	OSversion.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	::GetVersionEx((LPOSVERSIONINFO)(&OSversion));
+	if (OSversion.dwMajorVersion >= 6)
 		return true;
 
 	DWORD nMinVersion = 0;

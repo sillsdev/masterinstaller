@@ -1,0 +1,776 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link HREF="http://www.sil.org/" REL="home">
+<meta CONTENT="WWW@sil.org" HTTP-EQUIV="Reply-to">
+<meta CONTENT="Document" NAME="Object-type">
+<meta CONTENT="SIL, SIL International, cultural anthropology, data collection, ethnography, multilingual text processing, research, text editing, text processing, lexicography, lexicon, interlinear, dictionary, FLEx" NAME="Keywords">
+<meta CONTENT="A suite of software tools to help language teams manage cultural data, with support for complex scripts." NAME="Description">
+<meta CONTENT="SIL Webmaster" NAME="Maintained-by">
+<meta CONTENT="Language Software Development" NAME="Approved-by"> 
+<title>SIL Software: Selecting best download package</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="http://fieldworks.sil.org/sil_org.css" rel="stylesheet" type="text/css">
+<script language="javascript">
+
+var SelectableProducts;
+var MasterNeedsList;
+var Win2kOrBetterNeeded;
+var ControlElement;
+var ReportIsFull;
+
+function Go()
+{
+	// Works on IE 5.5 or later. Does not work on Firefox.
+	var RunningWin2KOrBetter;
+	
+	// Test if control is working:
+	try
+	{
+		ControlElement = document.getElementById("TestPresenceWebControl1");
+		RunningWin2KOrBetter = ControlElement.RunningWin2KOrBetter();
+	}
+	catch(err)
+	{
+		showPage("Testing", false);
+		showPage("Report", true);
+		var Report = "The ActiveX control has failed to load. This utility cannot run.<br>";
+		var ReportElement = document.getElementById("Report");
+		ReportElement.innerHTML = Report;
+		return;
+	}
+	MasterNeedsList = new Array();
+	SelectableProducts = new Array();
+	Win2kOrBetterNeeded = false;
+
+	// Try to get some version of the MSXML FreeThreadedDOMDocument object:
+	var GlobalXmlDoc = null;
+	try
+	{
+		GlobalXmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
+	}
+	catch(err)
+	{
+		GlobalXmlDoc = null;
+	}
+	if (GlobalXmlDoc == null)
+	{
+		// Try to get an early model XML parser:
+		try
+		{
+			GlobalXmlDoc = new ActiveXObject("MSXML.DOMDocument");
+		}
+		catch(err)
+		{
+			showPage("Testing", false);
+			showPage("Report", true);
+			var Report = "This web browser does not support Microsoft's XML DOMDocument processing. This utility cannot run.";
+			var ReportElement = document.getElementById("Report");
+			ReportElement.innerHTML = Report;
+			return;
+			GlobalXmlDoc = null;
+		}
+	}
+	// Load in the xml documement describing all the download flavors:
+	GlobalXmlDoc.async = false;
+	GlobalXmlDoc.load("downloads.xml");
+
+	// Iterate over each download flavor:
+	var FlavorNodes = GlobalXmlDoc.selectNodes('/Downloads/Download');
+	for (dnld = 0; dnld < FlavorNodes.length; dnld++)
+		TestAllFiles(FlavorNodes[dnld]);
+		
+	// Sort results arrays according to rank:
+	MasterNeedsList.sort(sortRank);
+	SelectableProducts.sort(sortRank);
+	
+	if (Win2kOrBetterNeeded)
+		Win2kOrBetterNeeded = !RunningWin2KOrBetter;
+
+	ReportIsFull = false;
+	ShowReport();	
+}
+
+// Shows or hides a specified page or subpage of configuration settings.
+function showPage(sPage, bShow)
+{
+	var Element = document.getElementById(sPage);
+	Element.style.visibility = bShow ? 'visible' : 'hidden';
+	Element.style.position = bShow ? 'static' : 'absolute';
+}
+
+function ShowReport()
+{
+	showPage("Testing", false);
+	showPage("Report", true);
+	
+	var Report = CreateReport();
+	
+	var ReportElement = document.getElementById("Report");
+	ReportElement.innerHTML = Report;
+}
+
+function CreateReport()
+{
+	var Report;
+	
+	if (Win2kOrBetterNeeded)
+	{
+		Report = "This computer cannot install the software - Windows 2000, XP or later is required."
+		return Report;
+	}
+	
+	var NumFlavors = MasterNeedsList.length;
+
+	// Find out the smallest flavor that has everything needed:
+	var iSmallestComplete = -1;
+	for (f = NumFlavors - 1; f >= 0 ; f--)
+	{
+		if (MasterNeedsList[f].NeedsList.length == 0)
+		{
+			iSmallestComplete = f;
+			break;
+		}
+	}
+
+	// Find out the largest flavor that contains no superfluous software and no unlinkable
+	// missing products:
+	var iLargestNoSuperfluity = -1;
+	var fSmallerDownloadsAvailable = false;
+	for (f = 0; f < NumFlavors; f++)
+	{
+		if (MasterNeedsList[f].SuperfluousList.length == 0
+			&& !AnyNeedsWithoutUrl(MasterNeedsList[f].NeedsList))
+		{
+			iLargestNoSuperfluity = f;
+			for (f2 = f+1; f2 < NumFlavors; f2++)
+			{
+				if (!AnyNeedsWithoutUrl(MasterNeedsList[f].NeedsList))
+				{
+					fSmallerDownloadsAvailable = true;
+					break;
+				}
+			}
+			break;
+		}
+	}
+
+	// Find out how many flavors can at least be made to work via links to other URLs:
+	var NumNoHopers = 0;
+	for (f = 0; f < NumFlavors; f++)
+		if (AnyNeedsWithoutUrl(MasterNeedsList[f].NeedsList))
+			NumNoHopers++;
+	var NumPossibilities = NumFlavors - NumNoHopers;
+
+	// The headline of the report:
+	Report = '<h1>';
+	if (iSmallestComplete == -1 || NumPossibilities == 0)
+	{
+		if (NumFlavors > 1)
+			Report += 'None of the available downloads contains a complete set of software for this computer.';
+		else
+			Report += 'This download does not contain a complete set of software for this computer.';
+	}
+	else
+	{
+		if (NumFlavors > 1)
+		{
+			Report += 'The recommended download for this computer is';
+			Report += ' "' + MasterNeedsList[iSmallestComplete].FlavorName + '".';
+			if (MasterNeedsList[iSmallestComplete].FlavorURL)
+				Report += '</h1><h2>Click <a href="' + MasterNeedsList[iSmallestComplete].FlavorURL + '" target="_blank">here</a> to download it.</h2><h1>';
+		}
+		else
+			Report += 'This download has everything needed for a complete installation on this computer.';
+	}
+	Report += '</h1>';
+	
+	if (!ReportIsFull)
+	{
+		// We're only doing a summary, so now add a Details button and return:
+		Report += '<button id="DetailsButton" onclick="ReportIsFull=true;ShowReport();">Details...</button>';
+		return Report;
+	}
+	
+	if (NumPossibilities > 1)
+	{
+		if (iLargestNoSuperfluity == iSmallestComplete)
+		{
+			if (iSmallestComplete >= 0) // Sanity check
+			{
+				Report += '<h2>';
+				Report += '"' + MasterNeedsList[iSmallestComplete].FlavorName + '"';
+				Report += ' is the optimal download for this computer, in terms of';
+				Report += '<ul>';
+				Report += '<li>convenience (containing everything needed for this computer)</li>';
+				Report += "<li>bandwidth (not containing products that are superfluous to this computer's requirements).</li>";
+				Report += '</ul>';
+				Report += '</h2>';
+			}
+		}
+		else // iLargestNoSuperfluity != iSmallestComplete
+		{
+			if (iSmallestComplete >= 0) // Sanity check
+			{
+				Report += '<h2>';
+				Report += '"' + MasterNeedsList[iSmallestComplete].FlavorName + '" is ';
+				Report += 'recommended because it is the smallest complete download for ';
+				Report += 'this computer (optimal convenience).';
+				Report += '</h2>';
+				if (iLargestNoSuperfluity != -1)
+				{
+					if (fSmallerDownloadsAvailable)
+					{
+						Report += 'However, you might be able to reduce download time by picking '
+						Report += 'one of the smaller downloads ';
+						Report += '("' + MasterNeedsList[iLargestNoSuperfluity].FlavorName + '" is suggested - see below), ';
+						Report += 'if you first click on its listed links to collect missing software.';
+					}
+					else
+					{
+						Report += 'However, you might be able to reduce download time by picking '
+						Report += '"' + MasterNeedsList[iLargestNoSuperfluity].FlavorName + '" '
+						Report += '(a smaller download - see below), ';
+						Report += 'if you first click on its listed links to collect missing software.';
+					}
+					Report += '<br/>';
+					Report += 'This is because smaller downloads contain fewer products that are ';
+					Report += "superfluous to this computer's requirements.";
+					Report += '<br/>';
+					Report += 'Beware, though! The downloads on the SIL website are very tightly compressed, ';
+					Report += 'which is not necessarily true of downloads from other sites, so ';
+					Report += 'the package recommended above may provide optimal download time, too.';
+					Report += '<br/>';
+				}
+			}
+		}
+	}
+	
+	Report += '<br/><h3>Details (in decreasing order of download size):</h3>';
+	
+	// Now list everything that is missing in each download:
+	for (f = 0; f < NumFlavors; f++)
+	{
+		Report += '<h4>';
+		Report += 'Option ' + (f+1) + ': ';
+		if (MasterNeedsList[f].FlavorURL)
+			Report += '<a href="' + MasterNeedsList[f].FlavorURL + '" target="_blank">' + MasterNeedsList[f].FlavorName + '</a>';
+		else
+			Report += '"' + MasterNeedsList[f].FlavorName + '"';
+		if (f == iSmallestComplete || f == iLargestNoSuperfluity)
+		{
+			Report += ' (';
+			if (f == iSmallestComplete)
+				Report += 'optimal convenience';
+			if (f == iSmallestComplete && f == iLargestNoSuperfluity)
+				Report += ' and ';
+			else
+			{
+				if (f == iLargestNoSuperfluity)
+					Report += 'optimal ';
+			}
+			if (f == iLargestNoSuperfluity)
+				Report += 'bandwidth';
+			Report += ')';
+		}
+		Report += '</h4>';
+
+		var NeedsList = MasterNeedsList[f].NeedsList;
+		var SuperfluousList = MasterNeedsList[f].SuperfluousList;
+		var SelProducts = SelectableProducts[f].ProductsList;
+		var FlavorNode = MasterNeedsList[f].FlavorNode;
+		
+		// See if this flavor is unsuitable due to at least one need having no Download URL:
+		var FlavorUnsuitable = AnyNeedsWithoutUrl(NeedsList);
+		
+		if (FlavorUnsuitable)
+		{
+			Report += '<h4>This download will not work on this computer.</h4>';
+			Report += '<font color="#C0C0C0">';
+		}
+
+		if (SelProducts.length == 1)
+		{
+			if (NeedsList.length == 0)
+				Report += "This download contains everything needed to install " + SelProducts[0].Name + " on this computer.<br/>";
+			else
+			{
+				Report += "This download does not contain everything needed to install " + SelProducts[0].Name + " on this computer.<br/>";
+				if (f == 0 && iSmallestComplete == -1 && NumFlavors > 1)
+				{
+					if (NumFlavors == 2)
+						Report += "However, it comes closer to completeness than the other download.<br/>";
+					else
+						Report += "However, it comes closer to completeness than any of the other downloads.<br/>";
+				}
+			}
+		}
+		else
+		{
+			if (NeedsList.length == 0)
+				Report += "This download contains everything needed for a complete installation on this computer.<br/>";
+			else
+			{
+				var List = "";
+				for (var i = 0; i < SelProducts.length; i++)
+					if (SelProducts[i].DependenciesAndPrerequisites.NeedsList.length == 0)
+						List += "<li>" + SelProducts[i].Name + "</li>";
+
+				if (List.length > 0 )
+				{
+					Report += "This download contains everything needed to install the following on this computer:<br/>";
+					Report += "<ul>" + List + "</ul>";
+				}
+				
+				List = "";
+				for (var i = 0; i < SelProducts.length; i++)
+					if (SelProducts[i].DependenciesAndPrerequisites.NeedsList.length != 0)
+						List += "<li>" + SelProducts[i].Name + "</li>";
+
+				if (List.length > 0 )
+				{
+					Report += "The following cannot be installed just from this download:<br/>";
+					Report += "<ul>" + List + "</ul>";
+				}
+					
+				if (f == 0 && iSmallestComplete == -1 && NumFlavors > 1)
+				{
+					if (NumFlavors == 2)
+						Report += "However, this download comes closer to completeness than the other download.<br/>";
+					else
+						Report += "However, this download comes closer to completeness than any of the other downloads.<br/>";
+				}
+			}
+		}
+		
+		Report += ReportNeeds(NeedsList);
+		Report += ReportSuperfluousProducts(SuperfluousList);
+
+		// Restore font color:
+		if (FlavorUnsuitable)
+			Report += '<font color="#000000">';
+
+
+		Report += '<br/>';
+		
+	} // Next flavor
+	return Report;
+}
+
+// Returns true if any product in the NeedsList has no Download URL.
+function AnyNeedsWithoutUrl(NeedsList)
+{
+	for (var i = 0; i < NeedsList.length; i++)
+	{
+		var ProductNode = NeedsList[i];
+		var DownloadUrlNode = ProductNode.selectSingleNode('DownloadURL');
+		if (!DownloadUrlNode)
+			return true;
+		else if (DownloadUrlNode.text.length < 1)
+			return true;
+	}
+	return false;
+}
+
+// Returns an HTML string reporting on the products in the given NeedsList.
+function ReportNeeds(NeedsList)
+{
+	var Report = "";
+	
+	if (NeedsList.length > 0)
+	{
+		var List = "";
+		var MissingUrl = false;
+		for (var i = 0; i < NeedsList.length; i++)
+		{
+			var ProductNode = NeedsList[i];
+			List += "<li><b>" + ProductNode.selectSingleNode('Title').text + "</b>";
+			var DownloadUrlNode = ProductNode.selectSingleNode('DownloadURL');
+			if (DownloadUrlNode && DownloadUrlNode.text.length >= 1)
+				List += ' which can be found <a href="' + DownloadUrlNode.text + '" target="_blank">here</a>.<br/>';
+			else
+			{
+				MissingUrl = true;
+				List += '<br/>which in this case cannot be installed as a separate entity,';
+				List += '<br/><b><u>therefore this download is unsuitable for this computer</u></b><br/>';
+			}
+			List += "</li>";
+		}
+		if (MissingUrl)
+			Report += "The following software is also required:";
+		else
+			Report += "You can make this download work, if you first install the following software:";
+		Report += "<ul>" + List + "</ul>";
+	}
+	return Report;
+}
+
+// Returns an HTML string reporting on the products in the given SuperfluousList.
+function ReportSuperfluousProducts(SuperfluousList)
+{
+	var Report = "";
+	if (SuperfluousList.length > 0)
+	{
+		if (SuperfluousList.length == 1)
+			Report += "This download also contains the following product, which is superfluous to this computer's requirements:";
+		else
+			Report += "This download also contains the following products, which are superfluous to this computer's requirements:";
+		Report += "<ul>";
+		
+		for (var i = 0; i < SuperfluousList.length; i++)
+		{
+			var ProductNode = SuperfluousList[i];
+			Report += "<li>" + ProductNode.selectSingleNode('Title').text + "</li>";
+		}
+		Report += "</ul>";
+	}
+	return Report;
+}
+
+// The function passed to the sort() method when sorting an array of objects containing a "Rank"
+// element.
+function sortRank(a, b)
+{
+	var x = a.Rank;
+	var y = b.Rank;
+	return((x < y) ? -1 : ((x > y) ? 1 : 0));
+}
+
+// The main control function. We sift through our XML file and test dependencies for
+// all list-able files in the given flavor.
+function TestAllFiles(FlavorNode)
+{
+	// Get name and rank of this flavor:
+	var FlavorName = FlavorNode.getAttribute("Flavor");
+	var FlavorRank = FlavorNode.getAttribute("Rank");
+	var URLnode =  FlavorNode.selectSingleNode('DownloadURL');
+	var FlavorURL = null;
+	if ( URLnode)
+		FlavorURL = URLnode.text;
+
+	// Get list of all products in our flavor:
+	var ProductNodeList = FlavorNode.selectNodes('MasterInstaller/Products/Product');
+	NumProducts = ProductNodeList.length;
+	
+	var FlavorSelProducts = new Array();
+	var FlavorNeedsList = new Array();
+	var FlavorSuperfluousList = new Array();
+	
+	// Start off by assuming that every product in the package but not selectable is superfluous.
+	// When later we know it isn't, we'll remove it from the superfluous list:
+	for (var iProduct = 0; iProduct < NumProducts; iProduct++)
+	{
+		var ProductNode = ProductNodeList[iProduct];
+		
+		// Only consider those that are in the package but which the user can't select:
+		if (ProductNode.getAttribute("List") != "true" && ProductNode.selectSingleNode('CD').text != "-1")
+			FlavorSuperfluousList.push(ProductNode)
+	}
+
+	// Iterate through every product:
+	for (var iProduct = 0; iProduct < NumProducts; iProduct++)
+	{
+		var ProductNode = ProductNodeList[iProduct];
+		
+		// Only deal with those that the user can select:
+		if (ProductNode.getAttribute("List") == "true")
+		{
+			var SelectableProduct = new Object();
+			SelectableProduct.Name = ProductNode.selectSingleNode('Title').text;
+
+			// Form a list of all dependencies and requirements of current product:
+			DependenciesAndPrerequisites = new Object();
+			DependenciesAndPrerequisites.NeedsList = new Array();
+			AddDependenciesOfProductNode(ProductNode, DependenciesAndPrerequisites, FlavorNode,
+				FlavorNeedsList, FlavorSuperfluousList);
+
+			// Add in dependencies and requirements of any features:
+			var ProductFeaturesList = ProductNode.selectNodes('Feature');
+			for (var iFeature = 0; iFeature < ProductFeaturesList.length; iFeature++)
+			{
+				AddDependenciesOfProductNode(ProductFeaturesList[iFeature],
+					DependenciesAndPrerequisites, FlavorNode, FlavorNeedsList,
+					FlavorSuperfluousList);
+			}
+			
+			// Store details:
+			SelectableProduct.DependenciesAndPrerequisites = DependenciesAndPrerequisites;
+			FlavorSelProducts.push(SelectableProduct);
+		}
+	} // Next product
+	
+	var MasterNeedsData = new Object();
+	MasterNeedsData.FlavorName = FlavorName;
+	MasterNeedsData.FlavorNode = FlavorNode;
+	MasterNeedsData.Rank = FlavorRank;
+	MasterNeedsData.FlavorURL = FlavorURL;
+	MasterNeedsData.NeedsList = FlavorNeedsList;
+	MasterNeedsData.SuperfluousList = FlavorSuperfluousList;
+	MasterNeedsList.push(MasterNeedsData);
+
+	var SelectableProductsData = new Object();
+	SelectableProductsData.FlavorName = FlavorName;
+	SelectableProductsData.FlavorNode = FlavorNode;
+	SelectableProductsData.Rank = FlavorRank;
+	SelectableProductsData.ProductsList = FlavorSelProducts;
+	SelectableProducts.push(SelectableProductsData);
+}
+
+// Works out which other products are needed by the given product.
+function AddDependenciesOfProductNode(ProductNode, DependenciesAndPrerequisites, FlavorNode,
+									  FlavorNeedsList, FlavorSuperfluousList)
+{
+	// First determine on a global level whether the user needs Windows 2000 or better:
+	if (!Win2kOrBetterNeeded)
+	{
+		var Win2kNode = ProductNode.selectSingleNode("MustHaveWin2kOrBetter");
+		if (Win2kNode)
+			if (Win2kNode.text == "true")
+				Win2kOrBetterNeeded = true;
+	}
+	var PrerequisitesList = ProductNode.selectNodes('Prerequisite');
+	if (PrerequisitesList != null)
+	{
+		FindAndAddDependentProducts(PrerequisitesList, DependenciesAndPrerequisites, FlavorNode,
+			FlavorNeedsList, FlavorSuperfluousList);
+	}
+
+	var RequirementsList = ProductNode.selectNodes('Requires');
+	if (RequirementsList != null)
+	{
+		FindAndAddDependentProducts(RequirementsList, DependenciesAndPrerequisites, FlavorNode,
+			FlavorNeedsList, FlavorSuperfluousList);
+	}
+}
+
+// Records in the DependenciesAndPrerequisites array the products listed by the given 
+// prerequisites or requirements list, along with min and max version numbers, and whether
+// the described product exists on the machine. Recurses for prerequisites and dependencies
+// of each product listed.
+function FindAndAddDependentProducts(List, DependenciesAndPrerequisites, FlavorNode,
+									 FlavorNeedsList, FlavorSuperfluousList)
+{
+	for (var iProductDep = 0; iProductDep < List.length; iProductDep++)
+	{
+		var DependencyNode = List[iProductDep];
+		var Tag = DependencyNode.getAttribute("Tag");
+		var InDownloadPackage = false;
+		
+		// Get the product node for the current tag (assume no duplicate tags within flavor):
+		var TagProducts = FindProductsByTag(Tag, FlavorNode, true);
+		var TagProduct = TagProducts[0];
+
+		// Determine whether the dependency is available in this flavor of download:
+		var CdNode = TagProduct.selectSingleNode("CD");
+		if (CdNode)
+		{
+			if (CdNode.text != "-1")
+			{
+				// The current dependency is available in the download package:
+				InDownloadPackage = true;
+			}
+		}
+		
+		var MinVersion = DependencyNode.getAttribute("MinVersion");
+		var MaxVersion = DependencyNode.getAttribute("MaxVersion");
+		var Version = DependencyNode.getAttribute("Version");
+		if (Version != null)
+		{
+			MinVersion = Version;
+			MaxVersion = Version;
+		}
+		else
+		{
+			if (MinVersion == null)
+				MinVersion = "0.0.0.0";
+			if (MaxVersion == null)
+				MaxVersion = "32767.32767.32767.32767";
+		}
+
+		// Test if the product is on this machine:		
+		if (!ControlElement.TestPresence(Tag, MinVersion, MaxVersion))
+		{
+			// Product is not on this machine, so it can't be superfluous, so remove it from the
+			// superfluous list (if it exists there):
+			ArrayRemoveProduct(FlavorSuperfluousList, TagProduct);
+			
+			// The given product does not exist on this machine. Test if we've already put it
+			// in the needs list for this flavor:
+			if (!ArrayContainsProduct(FlavorNeedsList, TagProduct))
+			{
+				// If it's not in the download package, record it in the Needs List for this Flavor:
+				if (!InDownloadPackage)
+					FlavorNeedsList.push(TagProduct);
+			}
+			// Also record it in the Needs List for the current parent product:
+			if (!ArrayContainsProduct(DependenciesAndPrerequisites.NeedsList, TagProduct))
+			{
+				if (!InDownloadPackage)
+					DependenciesAndPrerequisites.NeedsList.push(TagProduct);
+					
+				// Recurse to discover dependencies of this dependency:
+				AddDependenciesOfProductNode(TagProduct, DependenciesAndPrerequisites,
+					FlavorNode, FlavorNeedsList, FlavorSuperfluousList);
+			}
+		}
+	}
+}
+
+// Returns an array of indexes of products within the given Flavor having the given Tag.
+function FindProductsByTag(Tag, FlavorNode, StopAfterFirstMatch)
+{
+	var Products = new Array();
+	var ProductList = FlavorNode.selectNodes('MasterInstaller/Products/Product');
+
+	for (var i = 0; i < NumProducts; i++)
+	{
+		var ProductNode = ProductList[i];
+		var TagNode = ProductNode.selectSingleNode("Tag");
+		if (TagNode == null)
+			alert("Missing tag in XML product " + ProductNode.selectSingleNode("Title").text);
+		else
+		{
+			if (TagNode.text == Tag)
+			{
+				Products.push(ProductNode);
+				if (StopAfterFirstMatch)
+					return Products;
+			}
+		}
+	}
+	if (Products.length == 0)
+		alert("Error: Invalid tag '" + Tag + "' used in XML file.");
+	return Products;
+}
+
+// Returns true if the given array of products contains the given product.
+function ArrayContainsProduct(array, product)
+{
+	for (var i = 0; i < array.length; i++)
+		if (array[i].selectSingleNode("Tag").text == product.selectSingleNode("Tag").text)
+			return true;
+	
+	return false;
+}
+
+// Removes any and all instances of the product from the array.
+function ArrayRemoveProduct(array, product)
+{
+	for (var i = 0; i < array.length; i++)
+	{
+		if (array[i].selectSingleNode("Tag").text == product.selectSingleNode("Tag").text)
+		{
+			array.splice(i, 1);
+			i--;
+		}
+	}
+}
+</script>
+
+</head>
+<body onload="Go();">
+<object ID="TestPresenceWebControl1" WIDTH="0" HEIGHT="0"
+CODEBASE="http://downloads.sil.org/FieldWorks/Stable Release/5.2/TestPresence.cab#version=1.3.0.0"
+	CLASSID="CLSID:9B721D13-6A40-4582-8030-2602B7720A28" VIEWASTEXT>
+	<param NAME="_Version" VALUE="65536"/>
+	<param NAME="_ExtentX" VALUE="2646"/>
+	<param NAME="_ExtentY" VALUE="1323"/>
+	<param NAME="_StockProps" VALUE="0"/>
+</object>
+
+
+<div id="top_banner">
+</div>
+<div id="logo_bar"><a href="http://www.sil.org/"><img src="http://www.sil.org/graphics/left_column_logo.gif" alt="SIL International Home" width="144" height="144" hspace="0" vspace="0" border="0" align="left"></a>
+</div>
+
+<div id="nav_top">
+<a class="menuItem" href="http://fieldworks.sil.org/" title="FieldWorks home page">FIELDWORKS HOME</a>
+<a class="menuItem" href="http://fieldworks.sil.org/map.html"  title="Site map for FieldWorks developers site">SITE MAP</a>
+<a class="menuItem" href="http://fieldworks.sil.org/contact.html" title="Support">SUPPORT</a>
+</div>
+<div id="nav_menu">
+	<h4><a href="http://fieldworks.sil.org/">SIL FieldWorks</a></h4>
+	
+  <ul>
+    <li><a HREF="http://fieldworks.sil.org/stable_download.htm">Download<br>
+      stable release</a></li>
+    <li><a HREF="http://www.sil.org/computing/fieldworks/index.html#get">Download<br>
+      corporate release</a></li>
+    <li><a HREF="http://fieldworks.sil.org/archives.htm">Archived<br>
+      Releases</a></li> 
+    <li><a href="http://fieldworks.sil.org/techsupportdocs.htm">Technical Documents</a></li>
+    <li><a href="http://fieldworks.sil.org/FieldWorksScriptSupport.html">Script Support</a></li>
+    <li><a href="http://fieldworks.sil.org/source.html">Source Code / C++ Class Documentation</a></li>
+    <li><a href="http://fieldworks.sil.org/ModelDoc/ModelDocumentation.chm">Model Documentation (Download 
+      only)</a></li>
+  </ul>
+	<h4>Related Pages</h4>
+	<ul>
+		
+		<li><a HREF="http://www.sil.org/computing/fieldworks/index.html">SIL FieldWorks,<br>user infomation</a></li>
+		<li><a href="http://www.sil.org/computing/downloads/freeware.htm">SIL Language Freeware</a></li>
+	</ul>
+</div>
+
+<div id="main">
+<div id="Testing" style="position:static; visibility:visible">
+	<h2>Analyzing installed software - please wait...</h2>
+	<h3>Please allow active content in your browser, including ActiveX controls.</h3>
+</div>
+<div id="Report" style="position:absolute; visibility:hidden">
+</div>
+
+  <div id="footer"> 
+    <hr>
+    <p class="bottommenu">[ <a href="http://fieldworks.sil.org/">SIL FieldWorks Development</a> 
+      | <a href="http://www.sil.org/computing/fieldworks/index.html">SIL FieldWorks</a> 
+      | <a HREF="http://www.sil.org/computing/catalog/index.asp">SIL Software</a> 
+      | <a href="http://www.sil.org/">SIL Home</a> ]</p>
+    <p><SCRIPT LANGUAGE="javascript">
+<!--
+/*if (Date.parse(document.lastModified) !=0)
+	document.write("<STRONG>Last Modified:</STRONG>&nbsp;<EM>" + document.lastModified +"</EM><br>");*/
+document.write("<STRONG>URL:</STRONG>&nbsp;<EM><A HREF=" +document.location+ ">" +document.location+ "</A></EM><br>")
+// -->
+</SCRIPT>
+<strong>Support:</strong> <EM><script type="text/javascript">
+//<![CDATA[
+function hiveware_enkoder(){var i,j,x,y,x=
+"x=\"783d227d4227362535637d23253235426127313a2532324545332a3771433a3e707c41" +
+"3e6f76393e6d746c3e362532323a3a44716b3d43386c3b45713e3e307a3d3e776e3a3f432f" +
+"403e2f45383a2343393e642a6b3b373a3a3a6a3b403a383b3d3e6a3b3c3f413a413e3a3a3a" +
+"3f6d3b3f3f393e6d3a6e233c3f2a376d3e37433d3e31316c3e3a343d3f71303b3e7a7c6e3e" +
+"7b6a3c3e7d7b642a36253232373a332a45253232373a3a6b43233d3f452f3e3a2f433f6e6e" +
+"773e6d7a303a6b71453e4138433e3b71443f38253232363c3c746d3f3a766f3f6e7c703e38" +
+"43713f3833453f3d3e3a3f3b312532353d6e6e773d3b7a303f6a72453e3a55693f6e7c703e" +
+"3f36753d3c71763e6b302532323e3d36743e416d763e3e6f7c3c6970343b6e71333e3c3e3a" +
+"3f6b31433f3a35353f6e72463e3845713f3843313f3d253235233f3b33453d38253232363a" +
+"3b6b703f6a697a3e3a497c3f6e30723e3f31433d3c2a373e6b372a3e3d37373e4123433e3e" +
+"6127403c387e423a6b2c2c3c41407d3c3b427a3d3a736a3a6b78683d6c66753b3d6a2d3e6b" +
+"7d2e3e3c406b3f4174773e3c2d6e3f3842353a3a406e3a6b417d3b3f33713e3a6a733f6e6c" +
+"793e6d6d403a6b6e303e41302e3e3b2532326f3f38427d3c3c33683f3a6d663f6e77483e38" +
+"74693f386a463f3d792d3f3b6e2e3d6e32383d3b406e3f6a6b2d3e3a6f413f6e38373e3f2e" +
+"6f3d3c30423e6b3e393e3d407e3e4130423e3e58793c6d776e3b3a736c3a6b336b3d3c7774" +
+"2f2d72482f306d666d787748696b74697b6d6a2d767d6f2e4533247e27406f426a7b66712d" +
+"7d33686d667746792d352e2e407d427d33787a677879772d362e407e422c2c406b74772d6e" +
+"4235406e417d33716a736c796d406e3042392e2532327e30427d33787a677879772d6e3137" +
+"2e40246b74772d6e4237406e417d33716a736c796d406e3042392e2532327e30427d33787a" +
+"677879772d6e31372e40247e427e33787a677879772d6f2e40223b793d27273b783d756e65" +
+"73636170652878293b666f7228693d303b693c782e6c656e6774683b692b2b297b6a3d782e" +
+"63686172436f646541742869292d353b6966286a3c3332296a2b3d39343b792b3d53747269" +
+"6e672e66726f6d43686172436f6465286a297d79\";y='';for(i=0;i<x.length;i+=2){y" +
+"+=unescape('%'+x.substr(i,2));}y";
+while(x=eval(x));}hiveware_enkoder();
+//]]>
+</script></EM></p>
+<div  class="copyright">
+	<p><a href="http://www.sil.org/policies.htm#terms">Terms of Use</a> | <a href="http://www.sil.org/policies.htm#privacy">Privacy Policy</a> | <a href="http://www.sil.org/policies.htm#links">External Links</a><br>
+    Copyright &copy; 2007 SIL International</p>
+</div>
+  </div>
+
+</div>
+
+</body>
+</html>

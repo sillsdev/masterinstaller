@@ -550,6 +550,7 @@
 			<Help>Phonology Assistant\SetupPA.rtf</Help>
 			<ProductCode>{81584AC8-1718-4B20-8189-8A9F149C5CCD}</ProductCode>
 			<Prerequisite Tag=".NET2.0" MinVersion="2.0"/>
+			<PostInstall>PAPostInstall</PostInstall>
 		</Product>
 		<Product>
 			<AutoConfigure>

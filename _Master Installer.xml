@@ -1132,7 +1132,7 @@
 			<StatusWindow>Show</StatusWindow>
 			<ProductCode>{A49F249F-0C91-497F-86DF-B2585E8E76B7}</ProductCode>
 			<Commentary>Please wait while the package is installed.</Commentary>
-			<Prerequisite Tag="WI3" MinVersion="3.0"/>
+			<Prerequisite Tag="WI31" MinVersion="3.0"/>
 			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
 			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=32BC1BEE-A3F9-4C13-9C99-220B62A191EE&amp;displaylang=en</DownloadURL>
@@ -1289,6 +1289,24 @@
 			<Install>$CriticalFile$</Install>
 			<TestPresence Version="2">TestWinXpSpPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/windowsxp/sp2/default.mspx</DownloadURL>
+			<Commentary>Follow instructions in installer wizard.</Commentary>
+			<StatusWindow>Monitor</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<MustNotDelayReboot>true</MustNotDelayReboot>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows Vista Service Pack 1</Title>
+				<Source>3rd Party\Win Vista SP1</Source>
+				<Destination>Utilities\Win Vista SP1</Destination>
+			</AutoConfigure>
+			<Title>Windows Vista Service Pack 1</Title>
+			<Tag>Win Vista SP1</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>$LANG$09$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$07$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$10$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$12$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$17$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<TestPresence Version="1">TestWinVistaSpPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=B0C7136D-5EBB-413B-89C9-CB3D06D12674&amp;displaylang=en</DownloadURL>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Monitor</StatusWindow>
 			<FlushReboot>true</FlushReboot>

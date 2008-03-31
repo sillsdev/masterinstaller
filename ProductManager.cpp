@@ -74,16 +74,25 @@ _TCHAR * SoftwareProduct::new_LanguageDecodedString(const _TCHAR * pszTemplate)
 	// Make a working copy that we can manipulate:
 	_TCHAR * pszTemplateCopy = my_strdup(pszTemplate);
 
+	g_Log.Write(_T("Examining %s for language identifiers..."), pszTemplate);
+	g_Log.Indent();
+
 	// Search for "$LANG$" string:
 	const _TCHAR * kpszToken = _T("$LANG$");
 	_TCHAR * pszNextToken = _tcsstr(pszTemplateCopy, kpszToken);
 	if (!pszNextToken)
 	{
 		// There are no language specifiers in the string:
+		g_Log.Write(_T("No language identifiers found."));
+		g_Log.Unindent();
+		g_Log.Write(_T("...Done."));
+
 		return pszTemplateCopy;
 	}
 	do
 	{
+		g_Log.Write(_T("Found language identifier %s."), pszNextToken);
+
 		_TCHAR * pszToken = pszNextToken;
 		bool fSubLang = false;
 		int nTokenLen = (int)_tcslen(kpszToken);
@@ -91,6 +100,7 @@ _TCHAR * SoftwareProduct::new_LanguageDecodedString(const _TCHAR * pszTemplate)
 		// See if Sublanguage is included:
 		if (_tcsncmp(pszToken, kpszSubToken, _tcslen(kpszSubToken)) == 0)
 		{
+			g_Log.Write(_T("Found sub-language."));
 			fSubLang = true;
 			nTokenLen = (int)_tcslen(kpszSubToken);
 		}
@@ -99,12 +109,16 @@ _TCHAR * SoftwareProduct::new_LanguageDecodedString(const _TCHAR * pszTemplate)
 		pszToken += nTokenLen;
 		DWORD langid = _tstoi(pszToken);
 
+		g_Log.Write(_T("Language ID = %d."), langid);
+
 		// Jump past end of token:
 		pszToken = _tcschr(pszToken, _TCHAR('$'));
 		pszToken++;
 
 		// Find next "$LANG$" token:
 		pszNextToken = _tcsstr(pszToken, kpszToken);
+
+		g_Log.Write(_T("Windows Language ID = %d."), g_langidWindowsLanguage);
 
 		// See if the language description matches current Windows language:
 		bool fLanguageMatches = false;
@@ -127,9 +141,23 @@ _TCHAR * SoftwareProduct::new_LanguageDecodedString(const _TCHAR * pszTemplate)
 				*pszNextToken = 0;
 			_TCHAR * pszResult = my_strdup(pszToken);		
 			delete[] pszTemplateCopy;
+
+			g_Log.Write(_T("Windows Language ID matches candidate ID. Returning %s"), pszResult);
+
+			g_Log.Unindent();
+			g_Log.Write(_T("...Done."));
+
 			return pszResult;
 		}
+		else
+			g_Log.Write(_T("Windows Language ID does not match candidate ID."));
+
 	} while (pszNextToken);
+
+	g_Log.Write(_T("Windows Language ID did not match any candidate IDs. Returning NULL."));
+
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done."));
 
 	delete[] pszTemplateCopy;
 	return NULL;

@@ -32,6 +32,73 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
+				<Title>FW 5.2.1 BTE WITH MOVIES (from \\cana\LSDev\Installers\FW5.2.1\BTE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW5.2.1\BTE\FieldWorks\SetupFW.msi</Source>
+				<Source>\\cana\LSDev\Installers\FW5.2.1\BTE\FieldWorks\TE_M.cab</Source>
+				<Source>\\cana\LSDev\Installers\FW5.2.1\BTE\FieldWorks\Flex_M.cab</Source>
+				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks\TechSupport.txt</Source>
+				<Source>Documents\FieldWorks\CopyToCd</Source>
+				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 5.2.1 BTE</Title>
+			<Tag>FW521BTE</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{96EB41BB-4ED7-43b6-838C-643C0FE574B8}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Preinstall>CleanStartFw40</Preinstall>
+			<PostInstall>FwPostInstall</PostInstall>
+			<Feature>
+				<Title>FieldWorks Data Notebook 2.10.1</Title>
+				<Tag>DN_TC</Tag>
+				<MsiFeature>DN</MsiFeature>
+				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Language Explorer 2.2.1</Title>
+				<Tag>LT_TC</Tag>
+				<MsiFeature>FLEX</MsiFeature>
+				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Topics List Editor 2.10.1</Title>
+				<Tag>TLE_TC</Tag>
+				<MsiFeature>TLE</MsiFeature>
+				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks Translation Editor 2.2.1</Title>
+				<Tag>TE_TC</Tag>
+				<MsiFeature>TE</MsiFeature>
+				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.10.1</Title>
+				<Tag>WP_TC</Tag>
+				<MsiFeature>WP</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>FW 5.2 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.2\BTE\FieldWorks)</Title>
 				<Source>\\cana\LSDev\Installers\FW5.2\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
@@ -396,73 +463,6 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>FW 4.9 BTE (from \\cana\LSDev\Installers\FW4.9\BTE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW4.9\BTE\FieldWorks\SetupFw.msi</Source>
-				<Source>\\cana\LSDev\Installers\FW4.9\BTE\FieldWorks\TE_M.cab</Source>
-				<Source>\\cana\LSDev\Installers\FW4.9\BTE\FieldWorks\Flex_M.cab</Source>
-				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
-				<Source>Documents\FieldWorks\TechSupport.txt</Source>
-				<Source>Documents\FieldWorks\CopyToCd</Source>
-				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
-			</AutoConfigure>
-			<Title>SIL FieldWorks 4.9 BTE</Title>
-			<Tag>FW49</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{426DCB3B-2887-4218-802B-6DC3BBB420FC}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag=".NET2.0" Version="2.0"/>
-			<Preinstall>CleanStartFw40</Preinstall>
-			<PostInstall>FwPostInstall</PostInstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.7.1</Title>
-				<Tag>DN_TC</Tag>
-				<MsiFeature>DN</MsiFeature>
-				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 1.3.1</Title>
-				<Tag>LT_TC</Tag>
-				<MsiFeature>FLEX</MsiFeature>
-				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor 2.7.1</Title>
-				<Tag>TLE_TC</Tag>
-				<MsiFeature>TLE</MsiFeature>
-				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Translation Editor 1.3.1</Title>
-				<Tag>TE_TC</Tag>
-				<MsiFeature>TE</MsiFeature>
-				<Requires Tag="SQL2005" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.7.1</Title>
-				<Tag>WP_TC</Tag>
-				<MsiFeature>WP</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-		</Product>
 		<Product KeyId="2" Version="4.2">
 			<AutoConfigure>
 				<Title>TW4 Update 3 (From source control repository)</Title>
@@ -550,7 +550,6 @@
 			<Help>Phonology Assistant\SetupPA.rtf</Help>
 			<ProductCode>{81584AC8-1718-4B20-8189-8A9F149C5CCD}</ProductCode>
 			<Prerequisite Tag=".NET2.0" MinVersion="2.0"/>
-			<PostInstall>PAPostInstall</PostInstall>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1132,7 +1131,7 @@
 			<StatusWindow>Show</StatusWindow>
 			<ProductCode>{A49F249F-0C91-497F-86DF-B2585E8E76B7}</ProductCode>
 			<Commentary>Please wait while the package is installed.</Commentary>
-			<Prerequisite Tag="WI31" MinVersion="3.0"/>
+			<Prerequisite Tag="WI3" MinVersion="3.0"/>
 			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
 			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=32BC1BEE-A3F9-4C13-9C99-220B62A191EE&amp;displaylang=en</DownloadURL>
@@ -1289,24 +1288,6 @@
 			<Install>$CriticalFile$</Install>
 			<TestPresence Version="2">TestWinXpSpPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/windowsxp/sp2/default.mspx</DownloadURL>
-			<Commentary>Follow instructions in installer wizard.</Commentary>
-			<StatusWindow>Monitor</StatusWindow>
-			<FlushReboot>true</FlushReboot>
-			<MustNotDelayReboot>true</MustNotDelayReboot>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Windows Vista Service Pack 1</Title>
-				<Source>3rd Party\Win Vista SP1</Source>
-				<Destination>Utilities\Win Vista SP1</Destination>
-			</AutoConfigure>
-			<Title>Windows Vista Service Pack 1</Title>
-			<Tag>Win Vista SP1</Tag>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>$LANG$09$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$07$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$10$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$12$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$17$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe</CriticalFile>
-			<Install>$CriticalFile$</Install>
-			<TestPresence Version="1">TestWinVistaSpPresence</TestPresence>
-			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=B0C7136D-5EBB-413B-89C9-CB3D06D12674&amp;displaylang=en</DownloadURL>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Monitor</StatusWindow>
 			<FlushReboot>true</FlushReboot>

@@ -555,7 +555,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 				xText += g_nInitialTextLeftEdge;
 				int xWidth = knDialogMaxRight + g_nInitialTextRightEdge - xText;
 				int yHeight = GetTextHeight(g_pszInitialText, xWidth);
-				CreateWindow(_T("STATIC"), g_pszInitialText, WS_CHILD | WS_VISIBLE, nXcoord, nYcoord, xWidth, yHeight, hwnd, reinterpret_cast<HMENU>(__int64(-1)), NULL, NULL);
+				CreateWindow(_T("STATIC"), g_pszInitialText, WS_CHILD | WS_VISIBLE, xText, nYcoord, xWidth, yHeight, hwnd, reinterpret_cast<HMENU>(__int64(-1)), NULL, NULL);
 				nYcoord += 8 + yHeight;
 			}
 			pProductManager->GenAvailableMainProductList(rgiAvailableProducts, true);

@@ -34,7 +34,7 @@ int QuitIfBart5BetaPresent(const TCHAR * /*pszCriticalFile*/)
 		HideStatusDialog();
 		g_Log.Write(_T("Earlier BART 5 found. Informing user."));
 
-		MessageBox(NULL, _T("Setup has detected an earlier version of BART 5 already installed on your computer. Please use Add/Remove programs to uninstall your current version before installing BART 5.2. This installation will now quit."), g_pszTitle, MB_ICONSTOP | MB_OK);
+		MessageBox(NULL, _T("Setup has detected an earlier version of BART 5 already installed on your computer. Please use Add/Remove programs to uninstall your existing version before installing this new one. This installation will now quit."), g_pszTitle, MB_ICONSTOP | MB_OK);
 		return 5;
 	}
 	g_Log.Write(_T("...Done."));

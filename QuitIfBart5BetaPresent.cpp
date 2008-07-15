@@ -7,9 +7,9 @@
 int QuitIfBart5BetaPresent(const TCHAR * /*pszCriticalFile*/)
 {
 	g_Log.Write(_T("Checking for BART 5 Beta..."));
+	bool fInstalled = false;
 	// See if the installation is present:
 	INSTALLSTATE state = WindowsInstaller.MsiQueryProductState(_T("{2E38FB46-1985-4112-9727-B8C012A317A6}"));
-	bool fInstalled = false;
 	switch (state)
 	{
 	case INSTALLSTATE_ADVERTISED:
@@ -20,7 +20,6 @@ int QuitIfBart5BetaPresent(const TCHAR * /*pszCriticalFile*/)
 	}
 	g_Log.Write(_T("Checking for BART 5.2..."));
 	state = WindowsInstaller.MsiQueryProductState(_T("{24D88271-9AA4-4B51-B54D-AC2E744C34B7}"));
-	bool fInstalled = false;
 	switch (state)
 	{
 	case INSTALLSTATE_ADVERTISED:

@@ -2,7 +2,7 @@
 
 #include <tchar.h>
 
-// Checks if BART 5 Beta is present, and warns user to uninstall it if so, halting
+// Checks if an earlier BART 5 is present, and warns user to uninstall it if so, halting
 // this installation of a later BART 5.
 int QuitIfBart5BetaPresent(const TCHAR * /*pszCriticalFile*/)
 {
@@ -18,11 +18,22 @@ int QuitIfBart5BetaPresent(const TCHAR * /*pszCriticalFile*/)
 	case INSTALLSTATE_DEFAULT:
 		fInstalled = true;
 	}
+	g_Log.Write(_T("Checking for BART 5.2..."));
+	state = WindowsInstaller.MsiQueryProductState(_T("{24D88271-9AA4-4B51-B54D-AC2E744C34B7}"));
+	bool fInstalled = false;
+	switch (state)
+	{
+	case INSTALLSTATE_ADVERTISED:
+	case INSTALLSTATE_LOCAL:
+	case INSTALLSTATE_SOURCE:
+	case INSTALLSTATE_DEFAULT:
+		fInstalled = true;
+	}
 	if (fInstalled)
 	{
 		// Display status message, and write progress to log file:
 		HideStatusDialog();
-		g_Log.Write(_T("BART 5 Beta found. Informing user."));
+		g_Log.Write(_T("Earlier BART 5 found. Informing user."));
 
 		MessageBox(NULL, _T("Setup has detected an earlier version of BART 5 already installed on your computer. Please use Add/Remove programs to uninstall your current version before installing BART 5.2. This installation will now quit."), g_pszTitle, MB_ICONSTOP | MB_OK);
 		return 5;

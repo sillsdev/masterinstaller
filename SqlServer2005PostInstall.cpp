@@ -102,8 +102,9 @@ int ImportSACSettings(const _TCHAR * pszCriticalFile)
 		return -3;
 	}
 
-	// Import SAC settings:
-	_TCHAR * pszCmd = new_sprintf(_T("\"%s\" in \"%s\""), pszSacPath, pszSACFile);
+	// Import SAC settings to the SILFW instance:
+	// Note the capital 'I's in this command are required for Turkish Windows to work.
+	_TCHAR * pszCmd = new_sprintf(_T("\"%s\" -ISILFW IN \"%s\""), pszSacPath, pszSACFile);
 	delete[] pszSACFile;
 	pszSACFile = NULL;
 	delete[] pszSacPath;

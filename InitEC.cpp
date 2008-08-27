@@ -3,7 +3,7 @@
 #include "FixRepositoryAndMapsFilesACLs.cpp"
 
 // Initializes Encoding Converters, including moving old data if the location has been changed.
-// This is all done by launching the EncConvertersAppDataMover.exe utility, which is expected
+// This is all done by launching the EncConvertersAppDataMover30.exe utility, which is expected
 // to have been installed in a folder recorded in the registry in key 
 // HKEY_LOCAL_MACHINE\SOFTWARE\SIL\SilEncConverters22 and value RootDir.
 void InitEC()
@@ -47,7 +47,7 @@ void InitEC()
 					pszEcFolder[_tcslen(pszEcFolder) - 1] = 0;
 
 				// Make command line from code folder and utility name:
-				_TCHAR * pszCmd = new_sprintf(_T("\"%s\\EncConvertersAppDataMover.exe\""),
+				_TCHAR * pszCmd = new_sprintf(_T("\"%s\\EncConvertersAppDataMover30.exe\""),
 					pszEcFolder);
 
 				// Run utility - return code will be logged by ExecCmd() function:

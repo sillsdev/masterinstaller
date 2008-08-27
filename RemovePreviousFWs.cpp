@@ -28,8 +28,9 @@ int RemovePreviousFWs(const TCHAR * /*pszCriticalFile*/)
 		_T("{426DCB3B-2887-4218-802B-6DC3BBB420FC}"), // FW 4.9
 		_T("{A8085A68-E2AC-43B1-913E-5D50D9FADF4D}"), // FW 5.0
 		_T("{45FFED60-12CE-4430-945D-ED43943EAEA3}"), // FW 5.2
-//		_T("{96EB41BB-4ED7-43b6-838C-643C0FE574B8}"), // FW 5.2.1
-//		_T("{A0E40635-1CDF-4415-9D3F-AF18250F5253}"), // FW 5.3 alpha
+		_T("{96EB41BB-4ED7-43b6-838C-643C0FE574B8}"), // FW 5.2.1
+		_T("{A0E40635-1CDF-4415-9D3F-AF18250F5253}"), // FW 5.3 alpha
+//		_T("{ECD94743-2EDF-4cc5-88FE-4515B84ACDE0}"), // FW 5.4
 	};
 	for (int i = 0; i < (sizeof(pszProductCode) / sizeof(pszProductCode[0])); i++)
 	{

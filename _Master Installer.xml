@@ -56,6 +56,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{ECD94743-2EDF-4cc5-88FE-4515B84ACDE0}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
@@ -121,6 +122,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{ECD94743-2EDF-4cc5-88FE-4515B84ACDE0}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
@@ -178,6 +180,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{ECD94743-2EDF-4cc5-88FE-4515B84ACDE0}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
@@ -242,6 +245,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{ECD94743-2EDF-4cc5-88FE-4515B84ACDE0}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
@@ -1288,6 +1292,25 @@
 			<Install>$CriticalFile$</Install>
 			<TestPresence Version="2">TestWinXpSpPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/windowsxp/sp2/default.mspx</DownloadURL>
+			<Commentary>Follow instructions in installer wizard.</Commentary>
+			<StatusWindow>Monitor</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<MustNotDelayReboot>true</MustNotDelayReboot>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows Vista Service Pack 1</Title>
+				<Source>3rd Party\Win Vista SP1</Source>
+				<Destination>Utilities\Win Vista SP1</Destination>
+			</AutoConfigure>
+			<Title>Windows Vista Service Pack 1</Title>
+			<Tag>Win Vista SP1</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>$LANG$09$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$07$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$10$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$12$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe$LANG$17$Utilities\Win Vista SP1\de_en_es_fr_ja_windows_vista_service_pack_1_x86_72327.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<TestPresence Version="1">TestWinVistaSpPresence</TestPresence>
+			<DownloadURL>http://windowsupdate.microsoft.com/</DownloadURL>
+<!--			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=B0C7136D-5EBB-413B-89C9-CB3D06D12674&amp;displaylang=en</DownloadURL>-->
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Monitor</StatusWindow>
 			<FlushReboot>true</FlushReboot>

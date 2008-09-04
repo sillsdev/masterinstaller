@@ -281,6 +281,36 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>WorldPad 2.12 (from FW 5.4 at \\cana\LSDev\Installers\WP5.4\SetupWP.msi)</Title>
+				<Source>\\cana\LSDev\Installers\WP5.4\SetupWP.msi</Source>
+				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks without TE\TechSupport.txt</Source>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL WorldPad from FieldWorks 5.4</Title>
+			<Tag>FW54WP</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<Help>FieldWorks\WPReadMe.rtf</Help>
+			<CriticalFile>FieldWorks\SetupWP.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{ECD94743-2EDF-4cc5-88FE-4515B84ACDE0}</ProductCode>
+			<!--<Help>FieldWorks\SetupFW.rtf</Help>-->
+			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<!--<Preinstall>CleanStartFw40</Preinstall>-->
+			<PostInstall>WpPostInstall</PostInstall>
+			<Feature>
+				<Title>FieldWorks WorldPad 2.12</Title>
+				<Tag>WP_TC</Tag>
+				<MsiFeature>WP</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>FW 5.2.1 BTE WITH MOVIES (from \\cana\LSDev\Installers\FW5.2.1\BTE\FieldWorks)</Title>
 				<Source>\\cana\LSDev\Installers\FW5.2.1\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>\\cana\LSDev\Installers\FW5.2.1\BTE\FieldWorks\TE_M.cab</Source>

@@ -1,5 +1,7 @@
 #pragma once
 
+#error "This file is supposed to be obsolete. It is only present becuase it contains useful code in C++ to set file permissions."
+
 #include <tchar.h>
 #include <AccCtrl.h>
 #include <Aclapi.h>

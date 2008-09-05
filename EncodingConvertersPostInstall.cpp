@@ -12,74 +12,86 @@ void RunKB908002Fix()
 	g_Log.Write(_T("Checking whether to run KB908002 Fix..."));
 	g_Log.Indent();
 
-	TCHAR * pszCmd = NULL;
-	TCHAR * pszExtensibilityPath = NULL;
 	HKEY hKey;
-	const TCHAR * pszKeyPath = _T("SOFTWARE\\SIL\\Installer\\EC\\MS KB908002 Fix");
-	const TCHAR * pszKeyValueRun = _T("Run");
-	const TCHAR * pszKeyValueDelete = _T("Delete");
-	LONG lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, pszKeyPath, 0, KEY_READ, &hKey);
+	// First, check to see if the fix is already installed:
+	LONG lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+		"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{09959E11-AD5D-408E-96AF-E3346954D6B8}",
+		0, KEY_READ, &hKey);
 	if (ERROR_SUCCESS == lResult)
 	{
-		g_Log.Write(_T("Opened reg key."));
-		DWORD cbData = 0;		
-		lResult = RegQueryValueEx(hKey, pszKeyValueRun, NULL, NULL, NULL, &cbData);
-		if (ERROR_SUCCESS == lResult)
-		{
-			g_Log.Write(_T("Got required buffer size for 'run' file."));
-			cbData++;
-			pszCmd = new TCHAR [cbData];
-			lResult = RegQueryValueEx(hKey, pszKeyValueRun, NULL, NULL, (LPBYTE)pszCmd,
-				&cbData);
-			if (ERROR_SUCCESS == lResult)
-				g_Log.Write(_T("Got executable path: '%s'."), pszCmd);
-			else
-			{
-				g_Log.Write(_T("Could not read path."));
-				delete[] pszCmd;
-				pszCmd = NULL;
-			}
-		}
-
-		g_Log.Write(_T("Looking for temporary Extensibility.dll."));
-		cbData = 0;		
-		lResult = RegQueryValueEx(hKey, pszKeyValueDelete, NULL, NULL, NULL, &cbData);
-		if (ERROR_SUCCESS == lResult)
-		{
-			g_Log.Write(_T("Got required buffer size."));
-			cbData++;
-			pszExtensibilityPath = new TCHAR [cbData];
-			lResult = RegQueryValueEx(hKey, pszKeyValueDelete, NULL, NULL, (LPBYTE)pszExtensibilityPath,
-				&cbData);
-			if (ERROR_SUCCESS == lResult)
-			{
-				g_Log.Write(_T("Deleting Extensibility.dll path: '%s'."), pszExtensibilityPath);
-				if (0 == DeleteFile(pszExtensibilityPath))
-				{
-					int err = GetLastError();
-					g_Log.Write(_T("'%s' was not deleted [error %d]."), pszExtensibilityPath, err);
-				}
-				g_Log.Write(_T("'%s' deleted successfully."), pszExtensibilityPath);
-			}
-			else
-			{
-				g_Log.Write(_T("Could not read path."));
-				delete[] pszExtensibilityPath;
-				pszExtensibilityPath = NULL;
-			}
-		}
-
+		g_Log.Write(_T("KB908002 Fix is already installed; Product GUID {09959E11-AD5D-408E-96AF-E3346954D6B8} found in registry."));
 		RegCloseKey(hKey);
 	}
-
-	if (pszCmd)
+	else
 	{
-		g_Log.Write(_T("About to launch '%s'."), pszCmd);
-		ShowStatusDialog();
-		DisplayStatusText(0, _T("Installing Shared Add-in Support Update for Microsoft .NET Framework 2.0 (KB908002)."));
-		DisplayStatusText(1, _T("Please press the install button on its setup dialog."));
+		// Test if a registry key was left telling us where the Fix can be found:
+		TCHAR * pszCmd = NULL;
+		TCHAR * pszExtensibilityPath = NULL;
+		const TCHAR * pszKeyPath = _T("SOFTWARE\\SIL\\Installer\\EC\\MS KB908002 Fix");
+		const TCHAR * pszKeyValueRun = _T("Run");
+		const TCHAR * pszKeyValueDelete = _T("Delete");
+		lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, pszKeyPath, 0, KEY_READ, &hKey);
+		if (ERROR_SUCCESS == lResult)
+		{
+			g_Log.Write(_T("Opened reg key."));
+			DWORD cbData = 0;		
+			lResult = RegQueryValueEx(hKey, pszKeyValueRun, NULL, NULL, NULL, &cbData);
+			if (ERROR_SUCCESS == lResult)
+			{
+				g_Log.Write(_T("Got required buffer size for 'run' file."));
+				cbData++;
+				pszCmd = new TCHAR [cbData];
+				lResult = RegQueryValueEx(hKey, pszKeyValueRun, NULL, NULL, (LPBYTE)pszCmd,
+					&cbData);
+				if (ERROR_SUCCESS == lResult)
+					g_Log.Write(_T("Got executable path: '%s'."), pszCmd);
+				else
+				{
+					g_Log.Write(_T("Could not read path."));
+					delete[] pszCmd;
+					pszCmd = NULL;
+				}
+			}
 
-		ExecCmd(pszCmd, NULL, true);
+			g_Log.Write(_T("Looking for temporary Extensibility.dll."));
+			cbData = 0;		
+			lResult = RegQueryValueEx(hKey, pszKeyValueDelete, NULL, NULL, NULL, &cbData);
+			if (ERROR_SUCCESS == lResult)
+			{
+				g_Log.Write(_T("Got required buffer size."));
+				cbData++;
+				pszExtensibilityPath = new TCHAR [cbData];
+				lResult = RegQueryValueEx(hKey, pszKeyValueDelete, NULL, NULL, (LPBYTE)pszExtensibilityPath,
+					&cbData);
+				if (ERROR_SUCCESS == lResult)
+				{
+					g_Log.Write(_T("Deleting Extensibility.dll path: '%s'."), pszExtensibilityPath);
+					if (0 == DeleteFile(pszExtensibilityPath))
+					{
+						int err = GetLastError();
+						g_Log.Write(_T("'%s' was not deleted [error %d]."), pszExtensibilityPath, err);
+					}
+					g_Log.Write(_T("'%s' deleted successfully."), pszExtensibilityPath);
+				}
+				else
+				{
+					g_Log.Write(_T("Could not read path."));
+					delete[] pszExtensibilityPath;
+					pszExtensibilityPath = NULL;
+				}
+			}
+			RegCloseKey(hKey);
+		}
+
+		if (pszCmd)
+		{
+			g_Log.Write(_T("About to launch '%s'."), pszCmd);
+			ShowStatusDialog();
+			DisplayStatusText(0, _T("Installing Shared Add-in Support Update for Microsoft .NET Framework 2.0 (KB908002)."));
+			DisplayStatusText(1, _T("Please press the install button on its setup dialog."));
+
+			ExecCmd(pszCmd, NULL, true);
+		}
 	}
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done."));
@@ -147,7 +159,7 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 	HKEY hKey = NULL;
 
 	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		_T("SOFTWARE\\SIL\\SilEncConverters22\\Installer"), NULL, KEY_READ, &hKey);
+		_T("SOFTWARE\\SIL\\SilEncConverters30\\Installer"), NULL, KEY_READ, &hKey);
 
 	// We don't proceed unless the call above succeeds:
 	if (ERROR_SUCCESS == lResult)

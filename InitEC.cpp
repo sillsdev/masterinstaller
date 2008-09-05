@@ -3,7 +3,7 @@
 // Initializes Encoding Converters, including moving old data if the location has been changed.
 // This is all done by launching the EncConvertersAppDataMover30.exe utility, which is expected
 // to have been installed in a folder recorded in the registry in key 
-// HKEY_LOCAL_MACHINE\SOFTWARE\SIL\SilEncConverters22 and value RootDir.
+// HKEY_LOCAL_MACHINE\SOFTWARE\SIL\SilEncConverters30 and value RootDir.
 void InitEC()
 {
 	DisplayStatusText(0, _T("Initializing Encoding Converters module."));
@@ -13,10 +13,10 @@ void InitEC()
 	g_Log.Write(_T("Looking up EC installation folder..."));
 	LONG lResult;
 	HKEY hKey;
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL\\SilEncConverters22"), NULL,
+	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL\\SilEncConverters30"), NULL,
 		KEY_READ, &hKey);
 	if (ERROR_SUCCESS != lResult)
-		g_Log.Write(_T("...HKEY_LOCAL_MACHINE\\SOFTWARE\\SIL\\SilEncConverters22 cannot be opened."));
+		g_Log.Write(_T("...HKEY_LOCAL_MACHINE\\SOFTWARE\\SIL\\SilEncConverters30 cannot be opened."));
 	else
 	{
 		DWORD cbData = 0;

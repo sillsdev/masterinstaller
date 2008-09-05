@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tchar.h>
+#include <shlobj.h>
 
 #include "InitFwData.cpp"
 #include "TestSqlSILFWPresence.cpp"

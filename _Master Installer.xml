@@ -1133,16 +1133,16 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Encoding Converters 3.0 CD Installer (from \\cana\LSDev\Installers\FW5.4\Encoding Converters)</Title>
-				<Source>\\cana\LSDev\Installers\FW5.4\Encoding Converters\SetupEC.msi</Source>
-				<Destination>Encoding Converters</Destination>
+				<Title>Encoding Converters 3.0 CD Installer (from \\cana\LSDev\Installers\FW5.4\SEC3.0\SIL Converters)</Title>
+				<Source>\\cana\LSDev\Installers\FW5.4\SEC3.0\SIL Converters\SetupEC.msi</Source>
+				<Destination>SIL Converters</Destination>
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 3.0</Title>
 			<Tag>EncCvtrs_3_0</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>Encoding Converters\SetupEC.msi</CriticalFile>
+			<CriticalFile>SIL Converters\SetupEC.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 5000</StatusWindow>
 			<ProductCode>{287F6ADF-DA8A-46fc-8BE0-351AA6412B79}</ProductCode>

@@ -260,6 +260,8 @@ void PersistantProgress::RemoveData(bool fReportError)
 	if (ERROR_SUCCESS != lResult)
 		HandleError(kNonFatal, false, IDC_ERROR_REMOVE_REG);
 
+	g_Log.Write("Removing RunOnce registry setting.");
+
 	::RegDeleteValue(hKey, m_kpszRegValueRunOnce);
 	RegCloseKey(hKey);
 }

@@ -76,7 +76,8 @@ void PersistantProgress::WriteRunOnce()
 {
 	HKEY hKey;
 
-	g_Log.Write(_T("Writing RunOnce registry data."));
+	g_Log.Write(_T("Writing registry data to HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce..."));
+	g_Log.Indent();
 
 	LONG lResult = RegCreateKeyEx(HKEY_CURRENT_USER,
 		_T("Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce"), 0, NULL,
@@ -89,6 +90,9 @@ void PersistantProgress::WriteRunOnce()
 	_TCHAR szPath[knLen];
 	GetModuleFileName(NULL, szPath, knLen);
 	_TCHAR * pszRunOnce = new_sprintf(_T("\"%s\" %s"), szPath, m_pszCmdLine);
+
+	g_Log.Write("Writing data '%s' to value '%s'", pszRunOnce, m_kpszRegValueRunOnce);
+
 	lResult = RegSetValueEx(hKey, m_kpszRegValueRunOnce, 0, REG_SZ, (LPBYTE)pszRunOnce,
 		(DWORD)_tcslen(pszRunOnce));
 	delete[] pszRunOnce;
@@ -98,6 +102,9 @@ void PersistantProgress::WriteRunOnce()
 
 	if (ERROR_SUCCESS != lResult)
 		HandleError(kFatal, true, IDC_ERROR_WRITE_REG);
+
+	g_Log.Unindent();
+	g_Log.Write("...Done.");
 }
 
 int PersistantProgress::ReadPhase()

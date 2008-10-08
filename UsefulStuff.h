@@ -71,3 +71,6 @@ extern SetNamedSecurityInfoFn _SetNamedSecurityInfo;
 
 extern void InitAdvancedApi();
 extern void DropAdvancedApi();
+
+//extern bool IsFolderCompressed(const _TCHAR * pszFolderPath);
+//extern bool IsFolderCompressed(int csidlFolder);

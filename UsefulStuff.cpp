@@ -685,6 +685,80 @@ void DropAdvancedApi()
 	_SetNamedSecurityInfo = NULL;
 }
 
+/*
+// Tests to see if the specified folder is compressed.
+bool IsFolderCompressed(const _TCHAR * pszFolderPath)
+{
+	g_Log.Write("Testing if folder '%s' is compressed...", pszFolderPath);
+	g_Log.Indent();
+
+	bool fResult = false;
+
+	DWORD dwAttr = GetFileAttributes(pszFolderPath);
+	if (dwAttr == 0xffffffff)
+	{
+		DWORD dwError = GetLastError();
+		if (dwError == ERROR_FILE_NOT_FOUND)
+		{
+			// file not found
+			g_Log.Write("File not found!");
+			return false;
+		}
+		else if (dwError == ERROR_PATH_NOT_FOUND)
+		{
+			// path not found
+			g_Log.Write("Path not found!");
+			return false;
+		}
+		else if (dwError == ERROR_ACCESS_DENIED)
+		{
+			// file or directory exists, but access is denied
+			g_Log.Write("Access is denied.");
+			return false;
+		}
+		else
+		{
+			// some other error has occured
+			g_Log.Write("Error %d - could not get attributes.", dwError);
+			return false;
+		}
+	}
+	else
+	{
+		if (dwAttr & FILE_ATTRIBUTE_DIRECTORY)
+		{
+			// this is a directory
+			if (dwAttr & FILE_ATTRIBUTE_COMPRESSED)
+			{
+				// Directory is compressed
+				fResult = true;
+			}
+		}
+	}
+
+	g_Log.Unindent();
+	g_Log.Write("...Done. Folder '%s' is %scompressed.", pszFolderPath, fResult? "" : "not ");
+
+	return fResult;
+}
+
+bool IsFolderCompressed(int csidlFolder)
+{
+	g_Log.Write("Testing if folder with CSIDL %d is compressed...", csidlFolder);
+	g_Log.Indent();
+
+	_TCHAR * pszAppDataFolder = GetFolderPathNew(csidlFolder);
+	bool fResult = IsFolderCompressed(pszAppDataFolder);
+	delete[] pszAppDataFolder;
+	pszAppDataFolder = NULL;
+
+	g_Log.Unindent();
+	g_Log.Write("...Done. Folder with CSIDL %d is %scompressed.", csidlFolder, fResult? "" : "not ");
+
+	return fResult;
+}
+*/
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /*
 The following section checks the system for top level windows that are not responding to

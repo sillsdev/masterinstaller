@@ -1224,8 +1224,8 @@
 			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR.EXE</CriticalFile>
 			<Preinstall>TestIfSqlServerUpgradeNeeded</Preinstall>
 			<Install Flag="g_fSqlServerUpgradeNeeded">
-				<True>$CriticalFile$ INSTANCENAME=SILFW UPGRADE=SQL_Engine SAPWD=inscrutable SQLACCOUNT="$SID$22$" /qb</True>
-				<False>$CriticalFile$ INSTANCENAME=SILFW ADDLOCAL=All SAPWD=inscrutable SECURITYMODE=SQL SQLACCOUNT="$SID$22$" DISABLENETWORKPROTOCOLS=0 /qb</False>
+				<True>$CriticalFile$ INSTANCENAME=SILFW UPGRADE=SQL_Engine SAPWD=inscrutable SQLACCOUNT="$SID$22$" SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /qb</True>
+				<False>$CriticalFile$ INSTANCENAME=SILFW ADDLOCAL=All SAPWD=inscrutable SECURITYMODE=SQL SQLACCOUNT="$SID$22$" DISABLENETWORKPROTOCOLS=0 SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /qb</False>
 			</Install>
 			<StatusWindow>Monitor 10000</StatusWindow>
 			<Commentary>Please wait while SQL Server installs and then is configured.</Commentary>
@@ -1251,8 +1251,8 @@
 			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR32.EXE</CriticalFile>
 			<Preinstall>TestIfSqlServerUpgradeNeeded</Preinstall>
 			<Install Flag="g_fSqlServerUpgradeNeeded">
-				<True>$CriticalFile$ INSTANCENAME=SILFW UPGRADE=SQL_Engine SAPWD=inscrutable SQLACCOUNT="$SID$22$" /qb</True>
-				<False>$CriticalFile$ INSTANCENAME=SILFW ADDLOCAL=All SAPWD=inscrutable SECURITYMODE=SQL SQLACCOUNT="$SID$22$" DISABLENETWORKPROTOCOLS=0 /qb</False>
+				<True>$CriticalFile$ INSTANCENAME=SILFW UPGRADE=SQL_Engine SAPWD=inscrutable SQLACCOUNT="$SID$22$" SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /qb</True>
+				<False>$CriticalFile$ INSTANCENAME=SILFW ADDLOCAL=All SAPWD=inscrutable SECURITYMODE=SQL SQLACCOUNT="$SID$22$" DISABLENETWORKPROTOCOLS=0 SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /qb</False>
 			</Install>
 			<StatusWindow>Monitor 10000</StatusWindow>
 			<Commentary>Please wait while SQL Server installs and then is configured.</Commentary>

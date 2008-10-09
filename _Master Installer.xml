@@ -497,6 +497,33 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 		</Product>
+		<Product KeyId="2" Version="5.0">
+			<AutoConfigure>
+				<Title>TW5 (From source control repository)</Title>
+				<Source NameWhenLocked="2.msi">Installers\Translator's Workplace 5\SetupTW.msi</Source>
+				<Source>Documents\Translator's Workplace 5\CopyToCd</Source>
+				<SetupHelp>Documents\Translator's Workplace 5\SetupTW.rtf</SetupHelp>
+				<Destination>TW5</Destination>
+				<WhenLocked>
+					<Destination></Destination>
+					<Substitutions>
+						<CriticalFile>2.msi</CriticalFile>
+						<Help Internal="true">SetupTW.rtf</Help>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>Translator's Workplace 5.0</Title>
+			<Tag>TW5</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>TW5\SetupTW.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>This installer may take a few minutes to start from the DVD.</Commentary>
+			<ProductCode>{E98FADB8-031E-42E3-B581-268B126C81B6}</ProductCode>
+			<Help>TW5\SetupTW.rtf</Help>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+		</Product>
 		<Product KeyId="2" Version="4.2">
 			<AutoConfigure>
 				<Title>TW4 Update 3 (From source control repository)</Title>
@@ -528,13 +555,13 @@
 		<Product KeyId="1" Version="5.3">
 			<AutoConfigure>
 				<Title>BART 5.3 (From source control repository)</Title>
-				<Source NameWhenLocked="setup.msi">Installers\BART 5\SetupBart.msi</Source>
+				<Source NameWhenLocked="3.msi">Installers\BART 5\SetupBart.msi</Source>
 				<SetupHelp>Documents\BART 5\SetupBART.rtf</SetupHelp>
 				<Destination>BART5</Destination>
 				<WhenLocked>
-					<Destination>3</Destination>
+					<Destination></Destination>
 					<Substitutions>
-						<CriticalFile>3\setup.msi</CriticalFile>
+						<CriticalFile>3.msi</CriticalFile>
 						<Help Internal="true">SetupBART.rtf</Help>
 					</Substitutions>
 				</WhenLocked>

@@ -2669,6 +2669,7 @@ function ApplyUserSettings(xmlDoc)
 	InitialNode.setAttribute("RightEdge", document.getElementById("InitialTextRightOffset").value);
 
 	ApplyCheckBoxSetting(xmlDoc, "ListEvenOneProduct", "/MasterInstaller/General/ListEvenOneProduct");
+	ApplyCheckBoxSetting(xmlDoc, "ShowInstallCompleteMessage", "/MasterInstaller/General/ShowInstallCompleteMessage");
 	ApplyEditBoxSetting(xmlDoc, "ListSpacingAdjust", "/MasterInstaller/General/ListSpacingAdjust")
 	ApplyEditBoxSetting(xmlDoc, "InfoButtonAdjust", "/MasterInstaller/General/InfoButtonAdjust")
 	ApplyCheckBoxSetting(xmlDoc, "StartFromAnyCD", "/MasterInstaller/General/StartFromAnyCD");

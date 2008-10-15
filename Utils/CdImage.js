@@ -43,6 +43,15 @@ if (WScript.Arguments.Length < 1)
 	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\CD_Image\\command]');
 	// OK, deep breath, now:
 	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CdImage.js\\" \\"%1\\"\"');
+
+	// Repeat for DVD image:
+	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\DVD_Image]');
+	tso.WriteLine('"EditFlags"=hex:01,00,00,00');
+	tso.WriteLine('@="Make DVD image (using UDF) with this label"');
+	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\DVD_Image\\command]');
+	// OK, even deeper breath, now:
+	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CdImage.js\\" \\"%1\\" -UDF\"');
+
 	tso.Close();
 	
 	// Run Regedit with the new file:
@@ -64,6 +73,12 @@ if (!fso.FolderExists(SourceFolder))
 var IsoFile = SourceFolder + ".iso";
 var BatchFile = SourceFolder + ".temp.bat";
 
+var UDF = false;
+if (WScript.Arguments.Length > 1)
+{
+	if (WScript.Arguments.Item(1).toUpperCase() == "-UDF")
+		UDF = true;
+}
 // Check that we can access the MagicISO Console tool:
 var MagicISOFile = "C:\\Program Files\\MagicISO\\miso.exe"
 if (!fso.FileExists(MagicISOFile))
@@ -94,7 +109,12 @@ var FileList = GetFileList(SourceFolder, true);
 var tso = fso.OpenTextFile(BatchFile, 2, true);
 tso.WriteLine("@echo off");
 tso.Close();
-MagicISO("-l " + VolumeLabel + " -aj -l2 -k2");
+
+var args = " -aj -l2 -k2";
+if (UDF)
+	args = " -aj -au -l2 -k2";
+
+MagicISO("-l " + VolumeLabel + args);
 
 // If we found any .svn folders, we have to set up a batch file adding individual
 // files to the ISO one by one.

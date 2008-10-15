@@ -327,7 +327,6 @@ void MasterInstaller_t::Run()
 		CheckIfStopRequested();
 
 		// Install dependent software, unless in manual mode:
-		bool fFreeOfRequiredSoftware = true;
 		if (m_nPhase == phaseDependencies && m_fInstallRequiredProducts && !g_fManualInstall)
 		{
 			g_Log.Write(_T("Starting dependent software phase."));
@@ -363,7 +362,6 @@ void MasterInstaller_t::Run()
 				delete[] pszTitle;
 				delete[] pszIntro;
 				delete[] pszContinue;
-				fFreeOfRequiredSoftware = false;
 				ShowStatusDialog();
 			}
 			// Check if any required product has a prerequisite or requirement that has a
@@ -420,7 +418,7 @@ void MasterInstaller_t::Run()
 
 		_TCHAR * pszWksp = NULL;
 		bool fShowFinalMessage = true;
-		if (m_ppmProductManager->ShowFinalReport() || fFreeOfRequiredSoftware)
+		if (m_ppmProductManager->ShowFinalReport() || !g_fShowInstallCompleteMessage)
 			fShowFinalMessage = false;
 		else // No error report needed
 			pszWksp = new_sprintf(FetchString(IDC_MESSAGE_FINISHED), g_pszTitle);

@@ -46,6 +46,7 @@ extern const _TCHAR * g_pszExternalHelpFile;
 extern const _TCHAR * g_pszHelpButtonText;
 extern const _TCHAR * g_pszTermsOfUseFile;
 extern const _TCHAR * g_pszTermsButtonText;
+extern const bool g_fShowInstallCompleteMessage;
 
 // Used to signify products which are visible but not installable:
 extern const int knVisibleOnlyOffset;

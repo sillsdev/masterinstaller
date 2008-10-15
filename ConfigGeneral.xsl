@@ -107,7 +107,7 @@ project to make an executable master installer.
 	<xsl:text>;&#13;</xsl:text>
 	<xsl:text>&#13;</xsl:text>
 
-	<xsl:text>// This set to true when user is allowed to start from any CD in the set (otherwise they must start from CD 1):&#13;</xsl:text>
+	<xsl:text>// This is set to true when user is allowed to start from any CD in the set (otherwise they must start from CD 1):&#13;</xsl:text>
 	<xsl:text>const bool g_fStartFromAnyCd = </xsl:text>
 	<xsl:call-template name="StrOrFalseIfEmpty">
 		<xsl:with-param name="str" select="MasterInstaller/General/StartFromAnyCD"/>
@@ -224,6 +224,14 @@ project to make an executable master installer.
 	</xsl:if>
 	<xsl:text>;&#13;</xsl:text>
 	<xsl:text>&#13;</xsl:text>
+
+	<xsl:text>// This is set to true when a message should be shown indicating that the whole installation process is complete:&#13;</xsl:text>
+	<xsl:text>const bool g_fShowInstallCompleteMessage = </xsl:text>
+	<xsl:call-template name="StrOrTrueIfEmpty">
+		<xsl:with-param name="str" select="MasterInstaller/General/ShowInstallCompleteMessage"/>
+	</xsl:call-template>
+	<xsl:text>;&#13;</xsl:text>
+	<xsl:text>&#13;</xsl:text>
 </xsl:template>
 
 <!--
@@ -273,6 +281,19 @@ This template is used as a function to test a string and output "false" if empty
 	</xsl:if>
 </xsl:template>
 
+<!--
+This template is used as a function to test a string and output "true" if empty.
+-->
+	<xsl:template name="StrOrTrueIfEmpty">
+		<xsl:param name="str"/>
+		<xsl:if test="not(string-length($str)=0)">
+			<xsl:value-of select="$str"/>
+		</xsl:if>
+		<xsl:if test="string-length($str)=0">
+			<xsl:text>true</xsl:text>
+		</xsl:if>
+	</xsl:template>
+	
 <!--
 This template is used as a function to test a string and output 0 if empty.
 -->

@@ -142,8 +142,13 @@
 	<script type="text/javascript">document.getElementById("TermsOfUseFileDest").value="<xsl:value-of select="TermsOfUseDestination"/>";</script>
 	</tr>
 	<tr>
-	<td align="right"><b>CD size (MB): </b></td><td><input id="CdSize" type="text" onselect="InputTextSelected(this);" size="5" onfocus="this.select();" title="Capacity of individual target CD"/></td>
+	<td align="right"><b>CD size (MB):</b></td><td><input id="CdSize" type="text" onselect="InputTextSelected(this);" size="5" onfocus="this.select();" title="Capacity of individual target CD"/></td>
 	<script type="text/javascript">document.getElementById("CdSize").value="<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="CdSize"/></xsl:call-template>"</script>
+	</tr>
+	<tr>
+	<td align="right"><b>Use Universal Disk Format (if this is to be a DVD):</b></td>
+	<td><input id="UseUDF" type="checkbox" title="If checked, any .iso disk image file created will be set to use UDF."/></td>
+	<script type="text/javascript">document.getElementById("UseUDF").checked=<xsl:value-of select="UseUDF"/></script>
 	</tr>
 	<tr>
 	<td align="right"><b>Min file size (Bytes): </b></td><td><input id="MinFileSize" type="text" onselect="InputTextSelected(this);" size="5" onfocus="this.select();" title="The amount of space actually used on CD for a 1-byte file"/></td>
@@ -293,6 +298,11 @@
 	<td align="right"><b>List even one product</b></td>
 	<td><input id="ListEvenOneProduct" type="checkbox" title="If checked, the user will get a list of products to select even if there is only one product. If not checked and there is only one product, it will be installed automatically."/></td>
 	<script type="text/javascript">document.getElementById("ListEvenOneProduct").checked=<xsl:value-of select="ListEvenOneProduct"/></script>
+	</tr>
+	<tr>
+	<td align="right"><b>Show final 'Installation has finished' message:</b></td>
+	<td><input id="ShowInstallCompleteMessage" type="checkbox" title="If checked, a message box will be shown at the end of the entire installation sequence indicating that it has finished."/></td>
+	<script type="text/javascript">document.getElementById("ShowInstallCompleteMessage").checked=<xsl:if test="string-length(ShowInstallCompleteMessage)=0"><xsl:text>true</xsl:text></xsl:if><xsl:if test="not(string-length(ShowInstallCompleteMessage)=0)"><xsl:value-of select="ShowInstallCompleteMessage"/></xsl:if>;</script>
 	</tr>
 	<tr>
 	<td align="right"><b>List spacing adjust:</b></td>
@@ -2270,7 +2280,10 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 					var CdFolder = GetCdFolderPath(CdImagePath, iCd);
 					
 					var shellObj = new ActiveXObject("WScript.Shell");
-					shellObj.Run('wscript.exe "' + fso.BuildPath(GetUtilsPath(), "CdImage.js") + '" "' + CdFolder + '"', 0, true);
+					var UDF_arg = "";
+					if (document.getElementById("UseUDF").checked)
+						UDF_arg = " -UDF";
+					shellObj.Run('wscript.exe "' + fso.BuildPath(GetUtilsPath(), "CdImage.js") + '" "' + CdFolder + '"' + UDF_arg, 0, true);
 
 					if (fDisplayCommentary)
 						AddCommentary(1, "Done.", false);

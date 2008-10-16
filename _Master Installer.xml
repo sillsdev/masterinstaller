@@ -504,13 +504,13 @@
 				<Title>TW5 (From source control repository)</Title>
 				<Source NameWhenLocked="2.msi">Installers\Translator's Workplace 5\SetupTW.msi</Source>
 				<Source>Documents\Translator's Workplace 5\CopyToCd</Source>
-				<SetupHelp>Documents\Translator's Workplace 5\SetupTW.rtf</SetupHelp>
+				<SetupHelp>Documents\Translator's Workplace 5\ReadMe.rtf</SetupHelp>
 				<Destination>TW5</Destination>
 				<WhenLocked>
 					<Destination></Destination>
 					<Substitutions>
 						<CriticalFile>2.msi</CriticalFile>
-						<Help Internal="true">SetupTW.rtf</Help>
+						<Help Internal="true">ReadMe.rtf</Help>
 					</Substitutions>
 				</WhenLocked>
 			</AutoConfigure>
@@ -523,7 +523,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>This installer may take a few minutes to start from the DVD.</Commentary>
 			<ProductCode>{E98FADB8-031E-42E3-B581-268B126C81B6}</ProductCode>
-			<Help>TW5\SetupTW.rtf</Help>
+			<Help>TW5\ReadMe.rtf</Help>
 			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 		</Product>
 		<Product KeyId="2" Version="4.2">

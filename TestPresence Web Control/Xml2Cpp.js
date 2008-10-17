@@ -1,4 +1,4 @@
-// This script takes an XML file, and parses it according to an XSL style sheets, to yield a C++
+// This script takes an XML file, and parses it according to an XSL style sheet, to yield a C++
 // file.
 if (WScript.Arguments.Length < 1)
 {

@@ -4,9 +4,9 @@ TestPresence.inf=TestPresence.inf
  
 [TestPresence.ocx]
 file=thiscab
-clsid={9B721D13-6A40-4582-8030-2602B7720A28}
+clsid={13642917-ACB7-4791-9C64-C3EB9D9DCE9D}
 RegisterServer=yes
-FileVersion=1,3,0,0
+FileVersion=1,4,0,0
  
 [TestPresence.inf]
 file=thiscab

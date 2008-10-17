@@ -45,8 +45,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,3,0,0
- PRODUCTVERSION 1,3,0,0
+ FILEVERSION 1,4,0,0
+ PRODUCTVERSION 1,4,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -63,12 +63,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "SIL International"
             VALUE "FileDescription", "ActiveX control to test for presence of required supporting software."
-            VALUE "FileVersion", "1.3.0.0"
+            VALUE "FileVersion", "1.4.0.0"
             VALUE "InternalName", "TestPresence Web Control.ocx"
             VALUE "LegalCopyright", "(c) SIL International.  All rights reserved."
             VALUE "OriginalFilename", "TestPresence Web Control.ocx"
             VALUE "ProductName", "TestPresence Web Control"
-            VALUE "ProductVersion", "1.3.0.0"
+            VALUE "ProductVersion", "1.4.0.0"
             VALUE "OLESelfRegister", "\0"
         END
     END

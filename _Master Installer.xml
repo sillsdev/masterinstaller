@@ -1152,7 +1152,7 @@
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>http://downloads.sil.org/EncodingConverters/3.0/SetupEC.msi</CriticalFile>
+			<CriticalFile>http://downloads.sil.org/EncodingConverters/3.0/WebSetupEC.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 8000</StatusWindow>
 			<ProductCode>{287F6ADF-DA8A-46fc-8BE0-351AA6412B79}</ProductCode>

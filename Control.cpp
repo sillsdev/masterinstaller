@@ -120,6 +120,19 @@ void MasterInstaller_t::Run()
 					if (_GetSystemDefaultUILanguage)
 						g_langidWindowsLanguage = _GetSystemDefaultUILanguage();
 
+					// While we have the handle to Kernel32.dll open, we'll do some
+					// other tests to see if the g_OSversion is accurate, or whether
+					// it was duped because of the program being run in a different
+					// compatibility mode, which can happen to a naive user on Vista:
+					if (g_OSversion.dwMajorVersion < 6 && 
+						NULL != GetProcAddress(hmodKernel32, "GetLocaleInfoEx"))
+					{
+						// OS is really Vista, but we're duped into thinking it's less:
+						g_Log.Write(_T("OS version is reported as %d.%d, yet GetLocaleInfoEx function exists in Kernel32.dll, indicating version 6.0 (Vista) or higher."),
+							g_OSversion.dwMajorVersion, g_OSversion.dwMinorVersion);
+						HandleError(kFatal, false, IDC_ERROR_OS_VERSION_LIE_VISTA);
+					}
+
 					FreeLibrary(hmodKernel32);
 					hmodKernel32 = NULL;
 				}

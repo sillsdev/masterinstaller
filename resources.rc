@@ -285,6 +285,8 @@ BEGIN
                             "This software list has been copied to the clipboard. You should paste it somewhere (e.g. Notepad) immediately, if you want to keep a record of it."
     IDC_ERROR_LANGUAGE_INCOMPATIBLE_URL 
                             " - Follow the links from this website: "
+	IDC_ERROR_OS_VERSION_LIE_VISTA
+							"This setup program appears to be running in a Compatibility Mode that is different from the real operating system. This can lead to an inability to determine accurately which supporting software needs to be installed. Consequently, this installation will be halted. To correct the problem, right-click on the setup.exe file, select properties; in the compatibility tab show settings for all users, then uncheck the box 'Run this program in compatibility mode'."
 END
 
 STRINGTABLE 

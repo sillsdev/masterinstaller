@@ -104,6 +104,10 @@ if (!fso.FileExists(SetupExePath))
 	WScript.Quit();
 }
 
+// Embed the manifest file specifying "requireAdministrator":
+var MtCmd = 'mt.exe –manifest ..\\setup.manifest -outputresource:' + SetupExePath + ';#1"'; 
+shellObj.Run(MtCmd, 7, true);
+
 // Remove junk from the NewCompilationFolder:			
 DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.obj"));
 DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.res"));

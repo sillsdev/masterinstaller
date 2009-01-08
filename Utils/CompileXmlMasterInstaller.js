@@ -105,7 +105,7 @@ if (!fso.FileExists(SetupExePath))
 }
 
 // Embed the manifest file specifying "requireAdministrator":
-var MtCmd = 'mt.exe –manifest ..\\setup.manifest -outputresource:' + SetupExePath + ';#1"'; 
+var MtCmd = 'mt.exe -manifest "' + CppFilePath + '\\setup.manifest" -outputresource:"' + SetupExePath + '";#1'; 
 shellObj.Run(MtCmd, 7, true);
 
 // Remove junk from the NewCompilationFolder:			

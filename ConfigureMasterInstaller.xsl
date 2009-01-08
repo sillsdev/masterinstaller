@@ -2212,6 +2212,10 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 				throw(Exception);
 			}
 
+			// Embed the manifest file specifying "requireAdministrator":
+			var MtCmd = 'mt.exe -manifest "' + CppFilePath + '\\setup.manifest" -outputresource:"' + SetupExePath + '";#1'; 
+			shellObj.Run(MtCmd, 7, true);
+
 			if (fDisplayCommentary)
 				AddCommentary(1, "Done.", false);
 

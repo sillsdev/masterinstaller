@@ -1038,7 +1038,7 @@
 			<ProductCode>{287F6ADF-DA8A-46fc-8BE0-351AA6412B79}</ProductCode>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
-			<Prerequisite Tag=".NET2.0SP1" Version="1"/>
+			<Prerequisite Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1057,7 +1057,7 @@
 			<ProductCode>{287F6ADF-DA8A-46fc-8BE0-351AA6412B79}</ProductCode>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
-			<Prerequisite Tag=".NET2.0SP1" Version="1"/>
+			<Prerequisite Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1362,6 +1362,28 @@
 			<CriticalFile>Utilities\DotNet 2.0\NetFx20SP1_x86.exe</CriticalFile>
 			<Install>$CriticalFile$ /q</Install>
 			<TestPresence Version="1">TestDotNet2point0SPPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/Downloads/details.aspx?familyid=79BC3B77-E02C-4AD3-AACF-A7633F706BA5&amp;displaylang=en</DownloadURL>
+			<Commentary>This installation may take a few minutes, without visible sign of progress.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<Prerequisite Tag="IE" MinVersion="5.01"/>
+			<Prerequisite Tag="WI31" MinVersion="3.1"/>
+			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
+			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
+		</Product>
+		<Product>
+			<!-- Alternative version of .NET 2.0 SP1 which will permit .NET 2.0 or higher without forcing an install of this. -->
+			<AutoConfigure>
+				<Title>.NET Framework 2.0 SP1 (Satisfied by 2.0 without SP or higher)</Title>
+				<Source>3rd Party\DotNet 2.0 SP1</Source>
+				<Destination>Utilities\DotNet 2.0</Destination>
+			</AutoConfigure>
+			<Title>Microsoft .NET Framework version 2.0 Service Pack 1</Title>
+			<Tag>.NET2.0SP1ALT</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\DotNet 2.0\NetFx20SP1_x86.exe</CriticalFile>
+			<Install>$CriticalFile$ /q</Install>
+			<TestPresence MinVersion="2.0">TestDotNetPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/Downloads/details.aspx?familyid=79BC3B77-E02C-4AD3-AACF-A7633F706BA5&amp;displaylang=en</DownloadURL>
 			<Commentary>This installation may take a few minutes, without visible sign of progress.</Commentary>
 			<StatusWindow>Show</StatusWindow>

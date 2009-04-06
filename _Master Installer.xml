@@ -305,7 +305,7 @@
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{5A789B25-5206-49e2-968B-88C17835B80A</ProductCode>
+			<ProductCode>{5A789B25-5206-49e2-968B-88C17835B80A}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>

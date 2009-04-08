@@ -14,4 +14,4 @@ Prior to that, we used MSDE 2000 SP4
 
 FW 4.0 used MSDE 2000
 FW 4.1 used SQL Server Express SP1
-FW 4.9 used SQL Server Express SP2
+FW 4.2 used SQL Server Express SP2

@@ -1,0 +1,17 @@
+SQL Server Express
+
+SP2
+version no. = 9.00.3042.00
+Added to Master Installer 3/15/07
+
+
+SP1
+version no. = 9.00.2047.00
+Added to Master Installer 1/26/07
+
+Prior to that, we used MSDE 2000 SP4
+
+
+FW 4.0 used MSDE 2000
+FW 4.1 used SQL Server Express SP1
+FW 4.9 used SQL Server Express SP2

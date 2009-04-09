@@ -15,3 +15,14 @@ Prior to that, we used MSDE 2000 SP4
 FW 4.0 used MSDE 2000
 FW 4.1 used SQL Server Express SP1
 FW 4.2 used SQL Server Express SP2
+
+Attempts to transition to SQL Server 2005 SP3 failed as follows:
+Using a virtual machine running Windows XP SP2, clean install worked, but
+and upgrade from SQL 2005 SP2 resulted in a perpetual reboot of the machine.
+See the following:
+http://blog.deploymentengineering.com/2009/03/sql-server-2005-sp3-horrible-setup.html
+http://blogs.msdn.com/petersad/archive/2009/01/20/sql-server-2005-sp3-sql-server-2005-sp2-cus-or-sql-server-2008-may-cause-xp-sp2-to-restart.aspx
+http://support.microsoft.com/kb/921337
+Using a virtual machine running Vista SP1 to attempt an upgrade from SQL 2005 SP2 worked,
+but mid-way the installer asked me to manually terminate the existing SQL Server service.
+This is too much to ask of our users.

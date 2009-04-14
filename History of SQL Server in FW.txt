@@ -16,7 +16,7 @@ FW 4.0 used MSDE 2000
 FW 4.1 used SQL Server Express SP1
 FW 4.2 used SQL Server Express SP2
 
-Attempts to transition to SQL Server 2005 SP3 failed as follows:
+Attempts to transition to SQL Server 2005 SP3 (version 9.0.4035.0) failed as follows:
 Using a virtual machine running Windows XP SP2, clean install worked, but
 and upgrade from SQL 2005 SP2 resulted in a perpetual reboot of the machine.
 See the following:

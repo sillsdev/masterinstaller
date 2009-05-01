@@ -13,7 +13,8 @@
 extern DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit = true,
 					 const _TCHAR * pszDescription = NULL,
 					 const _TCHAR * pszStatusWindowControl = NULL,
-					 const _TCHAR * pszEnvironment = NULL);
+					 const _TCHAR * pszEnvironment = NULL,
+					 STARTUPINFO * pStartupInfo = NULL);
 extern void AddToPathEnvVar(_TCHAR * pszExtraPath);
 extern _TCHAR * GetFolderPathNew(int csidlFolder);
 extern bool Reboot();

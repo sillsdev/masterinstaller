@@ -44,7 +44,7 @@ struct MonitorThreadData_t
 // If pszEnvironment is set, the defined environment will be passed on to CreateProcess.
 DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit,
 			  const _TCHAR * pszDescription, const _TCHAR * pszStatusWindowControl,
-			  const _TCHAR * pszEnvironment)
+			  const _TCHAR * pszEnvironment, STARTUPINFO * pStartupInfo)
 {
 	_TCHAR * pszNewCurrentDir = NULL;
 
@@ -110,12 +110,13 @@ DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit,
 
 	// Set up data for creating new process:
 	BOOL bReturnVal = false;
-	STARTUPINFO si;
 	DWORD dwExitCode =  0;
 	PROCESS_INFORMATION process_info;
 
-	ZeroMemory(&si, sizeof(si));
-	si.cb = sizeof(si);
+	STARTUPINFO siBlank;
+	ZeroMemory(&siBlank, sizeof(siBlank));
+	siBlank.cb = sizeof(siBlank);
+	STARTUPINFO * psiInUse = pStartupInfo ? pStartupInfo : &siBlank;
 
 	g_Log.Write(_T("Adjusted cmd to \"%s\""), pszCmdCopy);
 
@@ -123,7 +124,8 @@ DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit,
 	// and also when running on Windows 98, but it is essential for 16-bit programs running on
 	// Windows 2000 or later, else we cannot easily monitor when termination occurs:
 	bReturnVal = CreateProcess(NULL, (LPTSTR)pszCmdCopy, NULL, NULL, false,
-		CREATE_SEPARATE_WOW_VDM, (LPVOID)pszEnvironment, pszNewCurrentDir, &si, &process_info);
+		CREATE_SEPARATE_WOW_VDM, (LPVOID)pszEnvironment, pszNewCurrentDir, psiInUse,
+		&process_info);
 
 	delete[] pszNewCurrentDir;
 	pszNewCurrentDir = NULL;

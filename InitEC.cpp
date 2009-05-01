@@ -48,9 +48,16 @@ void InitEC()
 				_TCHAR * pszCmd = new_sprintf(_T("\"%s\\EncConvertersAppDataMover30.exe\""),
 					pszEcFolder);
 
+				// Arrange for utility to not display a window:
+				STARTUPINFO si;
+				ZeroMemory(&si, sizeof(si));
+				si.cb = sizeof(si);
+				si.dwFlags = STARTF_USESHOWWINDOW;
+				si.wShowWindow = SW_HIDE;
+
 				// Run utility - return code will be logged by ExecCmd() function:
 				ExecCmd(pszCmd, NULL, true, _T("Encoding Converters initialization"),
-					_T("show"));
+					_T("show"), 0, &si);
 			}
 			delete[] pszEcFolder;
 			pszEcFolder = NULL;

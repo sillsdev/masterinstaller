@@ -137,9 +137,16 @@ int InitInstallLanguage()
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done."));
 
+	// Arrange for utility to not display a window:
+	STARTUPINFO si;
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	si.dwFlags = STARTF_USESHOWWINDOW;
+	si.wShowWindow = SW_HIDE;
+
 	// Run the utility:
 	DWORD dwResult = ExecCmd(pszInstallLanguageCmd, NULL, true,
-		_T("FieldWorks Install Language initialization"), _T("show"));
+		_T("FieldWorks Install Language initialization"), _T("show"), 0, &si);
 
 	delete[] pszInstallLanguageCmd;
 	pszInstallLanguageCmd = NULL;

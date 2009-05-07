@@ -22,10 +22,10 @@ void HandleError(vErrorType vType, bool fCheckDependentStatus, int nErrorTextId,
 	UINT uMbType = MB_OK;
 
 	// Check if the first variable argument is the text to be copied to the clipboard:
-	const TCHAR * pszCopyText = NULL;
+	const _TCHAR * pszCopyText = NULL;
 	if (vType & kWithCopy)
 	{
-		pszCopyText = va_arg(arglist, TCHAR *);
+		pszCopyText = va_arg(arglist, _TCHAR *);
 		uMbType = MB_YESNOCANCEL;
 	}
 

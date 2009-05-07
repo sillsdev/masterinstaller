@@ -26,7 +26,7 @@ void DoUniversalFixes()
 // phkeyReturn is a holder for the return of the HKEY of the key in question, but only if created
 // by this function. Caller should set parameter to NULL if key not needed, otherwise caller must
 // close key handle.
-void CheckRegData(HKEY hkeyRoot, TCHAR * pszSubKey, TCHAR * pszDefaultData, HKEY * phkeyReturn = NULL)
+void CheckRegData(HKEY hkeyRoot, _TCHAR * pszSubKey, _TCHAR * pszDefaultData, HKEY * phkeyReturn = NULL)
 {
 	LONG lResult;
 	HKEY hKey = NULL;
@@ -67,7 +67,7 @@ void CheckRegData(HKEY hkeyRoot, TCHAR * pszSubKey, TCHAR * pszDefaultData, HKEY
 			g_Log.Write(_T("Created %s\\%s."), pszKeyRoot, pszSubKey);
 
 			lResult = RegSetValueEx(hKey, NULL, 0, REG_SZ, (BYTE *)pszDefaultData,
-				(DWORD)(_tcslen(pszDefaultData) * sizeof(TCHAR)));
+				(DWORD)((1 + _tcslen(pszDefaultData)) * sizeof(TCHAR)));
 
 			if (ERROR_SUCCESS == lResult)
 				g_Log.Write(_T("Written default value [%s]."), pszDefaultData);
@@ -112,7 +112,7 @@ void DoFW40UninstallFix()
 
 	if (hkeyPSFactoryBuffer)
 	{
-		if (ERROR_SUCCESS == RegSetValueEx(hkeyPSFactoryBuffer, _T("ThreadingModel"), 0, REG_SZ, (BYTE *)_T("Both"), 4 * sizeof(TCHAR)))
+		if (ERROR_SUCCESS == RegSetValueEx(hkeyPSFactoryBuffer, _T("ThreadingModel"), 0, REG_SZ, (BYTE *)_T("Both"), 5 * sizeof(TCHAR)))
 			g_Log.Write(_T("ThreadingModel set to Both."));
 		else
 			g_Log.Write(_T("Unable to set ThreadingModel to Both."));

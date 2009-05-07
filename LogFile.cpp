@@ -51,7 +51,11 @@ void LogFile::SetActiveWriting(const _TCHAR * pszFilePath)
 	if (m_pszFilePath)
 	{
 		FILE * file;
+#ifdef UNICODE
+		if (_tfopen_s(&file, m_pszFilePath, _T("a, ccs=UNICODE")) == 0)
+#else
 		if (_tfopen_s(&file, m_pszFilePath, _T("a")) == 0)
+#endif
 			fclose(file);
 		else
 			HandleError(kNonFatal, false, IDC_ERROR_LOG_FILE_INVALID, m_pszFilePath);
@@ -113,7 +117,11 @@ void LogFile::Write(const _TCHAR * szText, ...)
 	if (m_pszFilePath)
 	{
 		FILE * file;
+#ifdef UNICODE
+		if (_tfopen_s(&file, m_pszFilePath, _T("a, ccs=UNICODE")) == 0)
+#else
 		if (_tfopen_s(&file, m_pszFilePath, _T("a")) == 0)
+#endif
 		{
 			if (m_pszPendingMessages)
 			{

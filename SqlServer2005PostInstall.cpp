@@ -70,7 +70,7 @@ int ImportSACSettings(const _TCHAR * pszCriticalFile)
 		lResult = RegQueryValueEx(hKey, _T("SQLBinRoot"), NULL, NULL, NULL, &cbData);
 
 		// Get path to SAC.exe program:
-		_TCHAR * pszSacFolderPath = new TCHAR [cbData];
+		_TCHAR * pszSacFolderPath = new _TCHAR [cbData];
 		lResult = RegQueryValueEx(hKey, _T("SQLBinRoot"), NULL, NULL, (LPBYTE)pszSacFolderPath,
 			&cbData);
 		RegCloseKey(hKey);

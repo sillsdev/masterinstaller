@@ -33,6 +33,7 @@
 	const _TCHAR * m_kpszInstallerFlagTrue;
 	const _TCHAR * m_kpszInstallerFlagFalse;
 	const _TCHAR * m_kpszMsiFlags;
+	bool m_fTestAnsiConversion;
 	const _TCHAR * m_kpszMsiVersion;
 	const _TCHAR * m_kpszMsiUpgrade;
 	pfnInstall m_pfnInstall;

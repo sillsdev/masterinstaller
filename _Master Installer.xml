@@ -1381,7 +1381,7 @@
 			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
 			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR.EXE</CriticalFile>
 			<Preinstall>TestIfSqlServerUpgradeNeeded</Preinstall>
-			<Install Flag="g_fSqlServerUpgradeNeeded">
+			<Install Flag="g_fSqlServerUpgradeNeeded" TestAnsiConversion="true">
 				<True>$CriticalFile$ INSTANCENAME=SILFW UPGRADE=SQL_Engine SAPWD=inscrutable SQLACCOUNT="$SID$22$" SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /qb</True>
 				<False>$CriticalFile$ INSTANCENAME=SILFW ADDLOCAL=All SAPWD=inscrutable SECURITYMODE=SQL SQLACCOUNT="$SID$22$" DISABLENETWORKPROTOCOLS=0 SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /qb</False>
 			</Install>

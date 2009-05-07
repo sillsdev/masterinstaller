@@ -91,10 +91,10 @@ void PersistantProgress::WriteRunOnce()
 	GetModuleFileName(NULL, szPath, knLen);
 	_TCHAR * pszRunOnce = new_sprintf(_T("\"%s\" %s"), szPath, m_pszCmdLine);
 
-	g_Log.Write("Writing data '%s' to value '%s'", pszRunOnce, m_kpszRegValueRunOnce);
+	g_Log.Write(_T("Writing data '%s' to value '%s'"), pszRunOnce, m_kpszRegValueRunOnce);
 
 	lResult = RegSetValueEx(hKey, m_kpszRegValueRunOnce, 0, REG_SZ, (LPBYTE)pszRunOnce,
-		(DWORD)_tcslen(pszRunOnce));
+		(DWORD)((1 + _tcslen(pszRunOnce)) * sizeof(_TCHAR)));
 	delete[] pszRunOnce;
 	pszRunOnce = NULL;
 
@@ -104,7 +104,7 @@ void PersistantProgress::WriteRunOnce()
 		HandleError(kFatal, true, IDC_ERROR_WRITE_REG);
 
 	g_Log.Unindent();
-	g_Log.Write("...Done.");
+	g_Log.Write(_T("...Done."));
 }
 
 int PersistantProgress::ReadPhase()
@@ -260,7 +260,7 @@ void PersistantProgress::RemoveData(bool fReportError)
 	if (ERROR_SUCCESS != lResult)
 		HandleError(kNonFatal, false, IDC_ERROR_REMOVE_REG);
 
-	g_Log.Write("Removing RunOnce registry setting.");
+	g_Log.Write(_T("Removing RunOnce registry setting."));
 
 	::RegDeleteValue(hKey, m_kpszRegValueRunOnce);
 	RegCloseKey(hKey);

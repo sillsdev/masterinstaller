@@ -557,6 +557,55 @@ DWORD SoftwareProduct::RunInstaller()
 			{
 				// Parse the given string, replacing special tokens with runtime data:
 				_TCHAR * pszModCmd = new_InterpretString(pszCmd);
+
+				// This will only loop if the ANSI conversion of the command is bad, the user
+				// opts to bring up the language settings dialog, and no reboot follows from
+				// that:
+				while (m_fTestAnsiConversion)
+				{
+					// We have to test the processed command line to make sure it will convert
+					// safely to ANSI:
+					g_Log.Write(_T("Command line '%s' must be tested for ANSI compatibility."), pszModCmd);
+					BOOL fUsedDefaultChar = false;
+					WideCharToMultiByte(CP_ACP, 0, pszModCmd, -1, NULL, 0, NULL,
+						&fUsedDefaultChar);
+
+					if (fUsedDefaultChar)
+					{
+						// The conversion is not safe, so warn the user:
+						g_Log.Write(_T("Command line did not convert properly to ANSI."));
+
+						if (::MessageBox(NULL, FetchString(IDC_MESSAGE_ANSI_ERROR), g_pszTitle,
+							MB_OKCANCEL | MB_ICONEXCLAMATION) == IDOK)
+						{
+							g_Log.Write(_T("User opted to run Regional and Language Options dialog."), pszModCmd);
+
+							DisplayStatusText(0, FetchString(IDC_MESSAGE_INSTALLATION_PAUSED));
+							DisplayStatusText(1, FetchString(IDC_MESSAGE_SET_LANGUAGE1));
+							DisplayStatusText(2, FetchString(IDC_MESSAGE_SET_LANGUAGE2));
+
+							DWORD dwResult = ExecCmd(
+								_T("rundll32.exe shell32.dll,Control_RunDLL intl.cpl,,2"),
+								NULL);
+
+							if (dwResult == ERROR_SUCCESS_REBOOT_REQUIRED
+								|| dwResult == ERROR_SUCCESS_RESTART_REQUIRED)
+							{
+								g_Log.Write(_T("Regional and Language Options dialog requested a reboot."), m_kpszNiceName);
+								g_fRebootPending = true;
+								FriendlyReboot();
+							}
+						}
+						else
+						{
+							g_Log.Write(_T("User opted not to run Regional and Language Options dialog."), pszModCmd);
+							return ERROR_CANCELLED;
+						}
+					}
+					else // fUsedDefaultChar is false - conversion was fine.
+						break;
+				}
+
 				nResult = ExecCmd(pszModCmd, _T(""), true, m_kpszNiceName,
 					m_kpszStatusWindowControl);
 				delete[] pszModCmd;

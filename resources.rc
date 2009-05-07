@@ -364,6 +364,10 @@ BEGIN
     IDC_MESSAGE_NEED_WIN2K  "- needs Windows 2000 or better"
     IDC_MESSAGE_NEED_ADMIN_PRIV "- needs administrator rights"
     IDC_MESSAGE_MUST_WAIT   "Please press Continue when this installation has finished."
+	IDC_MESSAGE_ANSI_ERROR	"The current installer cannot be run because its command line will not convert correctly from Unicode to ANSI.\n\nThe language setting for non-Unicode programs is probably different from the main Windows language.\n\nPress OK if you think you can correct this, whereupon the relevant dialog box will be displayed automatically. You will probably need to reboot your machine after this, but installation should resume automatically after that.\n\nPress Cancel to skip installation of this product."
+	IDC_MESSAGE_INSTALLATION_PAUSED	"The installation has been paused."
+	IDC_MESSAGE_SET_LANGUAGE1	"Please set the Language for non-Unicode progams"
+	IDC_MESSAGE_SET_LANGUAGE2	"to match the language of your Windows system."
 END
 
 STRINGTABLE 
@@ -385,4 +389,5 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
 

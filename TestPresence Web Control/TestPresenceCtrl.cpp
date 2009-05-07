@@ -88,8 +88,8 @@ typedef bool (* pfnAuxTestPresence)(const _TCHAR * pszMinVersion, const _TCHAR *
 // product:
 typedef struct
 {
-	const TCHAR * Tag;
-	const TCHAR * ProductCode;
+	const _TCHAR * Tag;
+	const _TCHAR * ProductCode;
 	pfnAuxTestPresence TestPresence;
 } Product_t;
 

@@ -47,7 +47,7 @@ void SetSilIcon(HWND hwnd)
 	}
 }
 
-int GetTextHeight(const TCHAR * pszText, int nWidth)
+int GetTextHeight(const _TCHAR * pszText, int nWidth)
 // Calculates the height needed for a static control to display the given text
 // on a dialog box. nWidth is in dialog units.
 {

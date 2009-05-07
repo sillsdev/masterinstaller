@@ -24,28 +24,28 @@ project to make an executable master installer.
 		<xsl:if test="not(@Type='External')">
 			<xsl:text>extern bool </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion, const TCHAR * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion, const _TCHAR * pszCriticalFile);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:for-each select="MasterInstaller/Products/Product/Preinstall">
 		<xsl:if test="not(@Type='External') and not(@IgnoreError='true')">
 			<xsl:text>extern int </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(const TCHAR * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(const _TCHAR * pszCriticalFile);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:for-each select="MasterInstaller/Products/Product/Install">
 		<xsl:if test="@Type='Internal'">
 			<xsl:text>extern DWORD </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(bool fFlag, const TCHAR * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(bool fFlag, const _TCHAR * pszCriticalFile);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:for-each select="MasterInstaller/Products/Product/PostInstall">
 		<xsl:if test="not(@Type='External')">
 			<xsl:text>extern int </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(const TCHAR * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(const _TCHAR * pszCriticalFile);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:text>&#13;</xsl:text>
@@ -248,6 +248,11 @@ project to make an executable master installer.
 				<xsl:with-param name="str" select="Install/@MsiFlags"/>
 			</xsl:call-template>
 			<xsl:text>, // MsiFlags&#13;</xsl:text>
+			<xsl:text>&#09;&#09;</xsl:text>
+			<xsl:call-template name="StrOrFalseIfEmpty">
+				<xsl:with-param name="str" select="Install/@TestAnsiConversion"/>
+			</xsl:call-template>
+			<xsl:text>, // TestAnsiConversion&#13;</xsl:text>
 			<xsl:text>&#09;&#09;</xsl:text>
 			<xsl:call-template name="QuotedStrOrNullIfEmpty">
 				<xsl:with-param name="str" select="Install/@MsiVersion"/>

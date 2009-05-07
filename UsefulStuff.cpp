@@ -494,7 +494,11 @@ bool WriteClipboardText(const _TCHAR * pszText)
 	GlobalUnlock(hglbCopy);
 
 	// Place the handle on the clipboard.
+#ifdef UNICODE
+	SetClipboardData(CF_UNICODETEXT, hglbCopy);
+#else
 	SetClipboardData(CF_TEXT, hglbCopy);
+#endif
 	nRet = GetLastError();
 	CloseClipboard();
 	nRet = GetLastError();
@@ -529,8 +533,8 @@ _TCHAR * CreateAccountNameFromWellKnownSidIndex(int SidIndex)
 		DWORD cchDomain = 0;
 		SID_NAME_USE Use;
 		_LookupAccountSid(NULL, TheSID, pszName, &cchName, pszDomain, &cchDomain, &Use);
-		pszName = new TCHAR [cchName];
-		pszDomain = new TCHAR [cchDomain];
+		pszName = new _TCHAR [cchName];
+		pszDomain = new _TCHAR [cchDomain];
 		_LookupAccountSid(NULL, TheSID, pszName, &cchName, pszDomain, &cchDomain, &Use);
 
 		// When done, free the memory used.
@@ -615,7 +619,7 @@ void InitAdvancedApi()
 
 			// The following functions have different versions for ANSI and Unicode:
 #ifdef UNICODE
-			_ConvertStringSidToSid = (ConvertStringSidToSidFn)GetProcAddress(hmodAdvApi,
+			_ConvertStringSidToSid = (ConvertStringSidToSidFn)GetProcAddress(hmodAdvapi32,
 				"ConvertStringSidToSidW");
 			g_Log.Write(_T("Address of ConvertStringSidToSidW: %s"), _ConvertStringSidToSid? "found" : "NULL");
 
@@ -623,7 +627,7 @@ void InitAdvancedApi()
 				"GetNamedSecurityInfoW");
 			g_Log.Write(_T("Address of GetNamedSecurityInfoW: %s"), _GetNamedSecurityInfo? "found" : "NULL");
 
-			_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvApi,
+			_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvapi32,
 				"LookupAccountSidW");
 			g_Log.Write(_T("Address of LookupAccountSidW: %s"), _LookupAccountSid? "found" : "NULL");
 

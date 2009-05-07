@@ -584,9 +584,20 @@ DWORD SoftwareProduct::RunInstaller()
 							DisplayStatusText(1, FetchString(IDC_MESSAGE_SET_LANGUAGE1));
 							DisplayStatusText(2, FetchString(IDC_MESSAGE_SET_LANGUAGE2));
 
-							DWORD dwResult = ExecCmd(
+							DWORD dwResult;
+							if (g_OSversion.dwMajorVersion >= 6)
+							{
+								// For Vista, there is an extra tab on the Language settings dialog:
+								dwResult = ExecCmd(
+								_T("rundll32.exe shell32.dll,Control_RunDLL intl.cpl,,3"),
+								NULL);
+							}
+							else // Windows XP or earlier:
+							{
+								dwResult = ExecCmd(
 								_T("rundll32.exe shell32.dll,Control_RunDLL intl.cpl,,2"),
 								NULL);
+							}
 
 							if (dwResult == ERROR_SUCCESS_REBOOT_REQUIRED
 								|| dwResult == ERROR_SUCCESS_RESTART_REQUIRED)

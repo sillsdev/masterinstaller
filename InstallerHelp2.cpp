@@ -1,7 +1,33 @@
 /*
 	Copyright (c) 2003 SIL International.
 
-	Installer main security file.
+	This file is the basis of a DLL which is used to display the Setup Help files of products
+	that need a license key to unlock their installers.
+
+	Normally, InstallerHelp2.dll is built automatically by the Master Installer Configuration
+	Utility. To build InstallerHelp2.dll manually, follow these steps:
+	
+	1) Use the Bin2Cpp utility (in Utils folder) to produce a .cpp file for each help file you
+	wish to embed this way.
+	2) Edit the FileList.cpp to #include each of the .cpp files produced by Bin2Cpp.
+	3) Edit the Helps.cpp file to connect each help file to the array produced by the Bin2Cpp
+	   utility.
+	   For example: Translator's Workplace help file is SetupTW.rtf, so Bin2Cpp defines an array 
+	   called  rgbSetupTW. So you would add this section:
+
+			if (strcmp(pszStem, "SetupTW") == 0) // File name with extension omitted
+			{
+				pbBuffer = rgbSetupTW;
+				cbSize = sizeof(rgbSetupTW) / sizeof(rgbSetupTW[0]);
+			}
+
+	4) Compile this project.
+
+	To invoke InstallerHelp2.dll within a master installer, define in the master installer 
+	configuation file an internal help file. For example, using Translator's Workplace as above:
+
+	<Help Internal="true">SetupTW.rtf</Help>
+
 */
 
 #include <stdio.h>

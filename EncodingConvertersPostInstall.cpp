@@ -15,7 +15,7 @@ void RunKB908002Fix()
 	HKEY hKey;
 	// First, check to see if the fix is already installed:
 	LONG lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{09959E11-AD5D-408E-96AF-E3346954D6B8}",
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{09959E11-AD5D-408E-96AF-E3346954D6B8}"),
 		0, KEY_READ, &hKey);
 	if (ERROR_SUCCESS == lResult)
 	{
@@ -130,7 +130,7 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 		INSTALLSTATE state = INSTALLSTATE_UNKNOWN;
 
 		state = WindowsInstaller.MsiQueryFeatureState(
-			_T("{287F6ADF-DA8A-46fc-8BE0-351AA6412B79}"), pszEcFeatures[i]);
+			_T("{DC07DA97-25EB-4B1C-8B1B-190E3FBDB00A}"), pszEcFeatures[i]);
 
 		switch (state)
 		{

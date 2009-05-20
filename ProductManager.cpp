@@ -567,6 +567,7 @@ DWORD SoftwareProduct::RunInstaller()
 					// safely to ANSI:
 					g_Log.Write(_T("Command line '%s' must be tested for ANSI compatibility."), pszModCmd);
 					BOOL fUsedDefaultChar = false;
+					// This line does not compile unless Unicode is specified in compilation settings:
 					WideCharToMultiByte(CP_ACP, 0, pszModCmd, -1, NULL, 0, NULL,
 						&fUsedDefaultChar);
 

@@ -150,7 +150,8 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 		_T("{6242D132-64F4-46E3-9F39-26B02215B896}"), // EC Version 2.5 shipped with FW 4.0
 		_T("{AA48C03E-F339-430B-B8E9-FA666F607C17}"), // EC Version 2.6 produced with FW 4.2
 		_T("{DCDE04DF-4429-44E3-939F-E618A8106DC7}"), // EC Version 2.6.1 produced with FW 5.0
-//		_T("{287F6ADF-DA8A-46fc-8BE0-351AA6412B79}"), // EC Version 3.0 produced with FW 5.4
+		_T("{287F6ADF-DA8A-46fc-8BE0-351AA6412B79}"), // EC Version 3.0 produced with FW 5.4
+//		_T("{DC07DA97-25EB-4B1C-8B1B-190E3FBDB00A}"), // EC Version 3.1 produced with FW 6.0
 	};
 
 	for (int i = 0; i < (sizeof(pszProductCode) / sizeof(pszProductCode[0])); i++)

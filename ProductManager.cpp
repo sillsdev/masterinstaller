@@ -755,6 +755,14 @@ bool SoftwareProduct::Install()
 			m_InstallStatus = InstallSucceeded;
 			_TCHAR * pszRetry = NULL;
 
+			DWORD dwSuccess = ERROR_SUCCESS;
+			if (dwSuccessCodeOverride)
+			{
+				g_Log.Write(_T("Allowing error code of %d to mean success."),
+					dwSuccessCodeOverride);
+				dwSuccess = dwSuccessCodeOverride;
+			}
+
 			if (dwResult == ERROR_SUCCESS_REBOOT_REQUIRED
 				|| dwResult == ERROR_SUCCESS_RESTART_REQUIRED)
 			{
@@ -769,7 +777,7 @@ bool SoftwareProduct::Install()
 					FriendlyReboot();
 				}
 			}
-			else if (dwResult != ERROR_SUCCESS && dwResult != ERROR_INSTALL_USEREXIT &&
+			else if (dwResult != dwSuccess && dwResult != ERROR_INSTALL_USEREXIT &&
 				dwResult != ERROR_CANCELLED)
 			{
 				// Some error occurred:

@@ -37,6 +37,7 @@
 	const _TCHAR * m_kpszMsiVersion;
 	const _TCHAR * m_kpszMsiUpgrade;
 	pfnInstall m_pfnInstall;
+	DWORD dwSuccessCodeOverride;
 
 	bool m_fMustNotDelayReboot;
 

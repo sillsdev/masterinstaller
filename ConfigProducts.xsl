@@ -266,6 +266,13 @@ project to make an executable master installer.
 			<xsl:text>&#09;&#09;NULL, // No internal Install function&#13;</xsl:text>
 		</xsl:if>
 
+		<!-- dwSuccessCodeOverride -->
+		<xsl:text>&#09;&#09;</xsl:text>
+		<xsl:call-template name="StrOrZeroIfEmpty">
+			<xsl:with-param name="str" select="Install/@SuccessReturns"/>
+		</xsl:call-template>
+		<xsl:text>, // Success code override&#13;</xsl:text>
+		
 		<!-- Flag to say if pending reboot must be executed right after installation -->
 		<xsl:text>&#09;&#09;</xsl:text>
 		<xsl:call-template name="StrOrFalseIfEmpty">
@@ -694,6 +701,20 @@ quotes around it.
 	</xsl:if>
 	<xsl:if test="string-length($str)=0">
 		<xsl:text>NULL</xsl:text>
+	</xsl:if>
+</xsl:template>
+
+<!--
+This template is used as a function to test a string and output "0" if empty, else output
+the string.
+-->
+<xsl:template name="StrOrZeroIfEmpty">
+	<xsl:param name="str"/>
+	<xsl:if test="not(string-length($str)=0)">
+		<xsl:value-of select="$str"/>
+	</xsl:if>
+	<xsl:if test="string-length($str)=0">
+		<xsl:text>0</xsl:text>
 	</xsl:if>
 </xsl:template>
 

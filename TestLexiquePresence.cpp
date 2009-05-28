@@ -8,7 +8,7 @@ bool TestLexiquePresence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMax
 {
 	bool fResult = false;
 	HKEY hKey = NULL;
-	const TCHAR * pszTemplateDisplayName = _T("Lexique Pro 2.7");
+	const TCHAR * pszTemplateDisplayName = _T("Lexique Pro 3.2");
 
 	if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE,
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Lexique Pro - Bambara_is1"),

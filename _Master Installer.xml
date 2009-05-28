@@ -349,285 +349,6 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>FW 5.4.1 BTE with movies (from \\cana\LSDev\Installers\FW5.4.1\BTE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW5.4.1\BTE\FieldWorks\SetupFW.msi</Source>
-				<Source>\\cana\LSDev\Installers\FW5.4.1\BTE\FieldWorks\TE_M.cab</Source>
-				<Source>\\cana\LSDev\Installers\FW5.4.1\BTE\FieldWorks\Flex_M.cab</Source>
-				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
-				<Source>Documents\FieldWorks\TechSupport.txt</Source>
-				<Source>Documents\FieldWorks\CopyToCd</Source>
-				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
-			</AutoConfigure>
-			<Title>SIL FieldWorks 5.4.1 BTE</Title>
-			<Tag>FW541BTE</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{91D0D4E7-43D5-486f-8B1D-B1B765C06928}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
-			<Preinstall>CleanStartFw40</Preinstall>
-			<PostInstall>FwPostInstall</PostInstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.12</Title>
-				<Tag>DN_TC</Tag>
-				<MsiFeature>DN</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 2.4</Title>
-				<Tag>LT_TC</Tag>
-				<MsiFeature>FLEX</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor 2.12</Title>
-				<Tag>TLE_TC</Tag>
-				<MsiFeature>TLE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Translation Editor 2.4</Title>
-				<Tag>TE_TC</Tag>
-				<MsiFeature>TE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.12</Title>
-				<Tag>WP_TC</Tag>
-				<MsiFeature>WP</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>FW 5.4.1 SE with movies (from \\cana\LSDev\Installers\FW5.4.1\SE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW5.4.1\SE\FieldWorks\SetupFW.msi</Source>
-				<Source>\\cana\LSDev\Installers\FW5.4.1\SE\FieldWorks\Flex_M.cab</Source>
-				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
-				<Source>Documents\FieldWorks without TE\TechSupport.txt</Source>
-				<Source>Documents\FieldWorks\CopyToCd</Source>
-				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
-			</AutoConfigure>
-			<Title>SIL FieldWorks 5.4.1 SE</Title>
-			<Tag>FW541SE</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{91D0D4E7-43D5-486f-8B1D-B1B765C06928}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
-			<Preinstall>CleanStartFw40</Preinstall>
-			<PostInstall>FwPostInstall</PostInstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.12</Title>
-				<Tag>DN_TC</Tag>
-				<MsiFeature>DN</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 2.4</Title>
-				<Tag>LT_TC</Tag>
-				<MsiFeature>FLEX</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor 2.12</Title>
-				<Tag>TLE_TC</Tag>
-				<MsiFeature>TLE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.12</Title>
-				<Tag>WP_TC</Tag>
-				<MsiFeature>WP</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>FW 5.4.1 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.4.1\BTE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW5.4.1\BTE\FieldWorks\SetupFW.msi</Source>
-				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
-				<Source>Documents\FieldWorks\TechSupport.txt</Source>
-				<Source>Documents\FieldWorks\CopyToCd</Source>
-				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
-			</AutoConfigure>
-			<Title>SIL FieldWorks 5.4.1 BTE</Title>
-			<Tag>FW541BTEnoM</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{91D0D4E7-43D5-486f-8B1D-B1B765C06928}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
-			<Preinstall>CleanStartFw40</Preinstall>
-			<PostInstall>FwPostInstall</PostInstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.12</Title>
-				<Tag>DN_TC</Tag>
-				<MsiFeature>DN</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 2.4</Title>
-				<Tag>LT_TC</Tag>
-				<MsiFeature>FLEX</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor 2.12</Title>
-				<Tag>TLE_TC</Tag>
-				<MsiFeature>TLE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Translation Editor 2.4</Title>
-				<Tag>TE_TC</Tag>
-				<MsiFeature>TE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.12</Title>
-				<Tag>WP_TC</Tag>
-				<MsiFeature>WP</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>FW 5.4.1 SE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW5.4.1\SE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW5.4.1\SE\FieldWorks\SetupFW.msi</Source>
-				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
-				<Source>Documents\FieldWorks without TE\TechSupport.txt</Source>
-				<Source>Documents\FieldWorks\CopyToCd</Source>
-				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
-			</AutoConfigure>
-			<Title>SIL FieldWorks 5.4.1 SE</Title>
-			<Tag>FW541SEnoM</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{91D0D4E7-43D5-486f-8B1D-B1B765C06928}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
-			<Preinstall>CleanStartFw40</Preinstall>
-			<PostInstall>FwPostInstall</PostInstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.12</Title>
-				<Tag>DN_TC</Tag>
-				<MsiFeature>DN</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 2.4</Title>
-				<Tag>LT_TC</Tag>
-				<MsiFeature>FLEX</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor 2.12</Title>
-				<Tag>TLE_TC</Tag>
-				<MsiFeature>TLE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.12</Title>
-				<Tag>WP_TC</Tag>
-				<MsiFeature>WP</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>WorldPad 2.12 (from FW 5.4 at \\cana\LSDev\Installers\WP5.4\SetupWP.msi)</Title>
-				<Source>\\cana\LSDev\Installers\WP5.4\SetupWP.msi</Source>
-				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
-				<Source>Documents\FieldWorks without TE\TechSupport.txt</Source>
-				<Destination>FieldWorks</Destination>
-			</AutoConfigure>
-			<Title>SIL WorldPad from FieldWorks 5.4</Title>
-			<Tag>FW54WP</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<Help>FieldWorks\WPReadMe.rtf</Help>
-			<CriticalFile>FieldWorks\SetupWP.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{ECD94743-2EDF-4cc5-88FE-4515B84ACDE0}</ProductCode>
-			<!--<Help>FieldWorks\SetupFW.rtf</Help>-->
-			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
-			<!--<Preinstall>CleanStartFw40</Preinstall>-->
-			<PostInstall>WpPostInstall</PostInstall>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.12</Title>
-				<Tag>WP_TC</Tag>
-				<MsiFeature>WP</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-		</Product>
 		<Product KeyId="2" Version="5.0">
 			<AutoConfigure>
 				<Title>TW5 (From source control repository)</Title>
@@ -653,35 +374,7 @@
 			<Commentary>This installer may take a few minutes to start from the DVD.</Commentary>
 			<ProductCode>{E98FADB8-031E-42E3-B581-268B126C81B6}</ProductCode>
 			<Help>TW5\ReadMe.rtf</Help>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
-		</Product>
-		<Product KeyId="2" Version="4.2">
-			<AutoConfigure>
-				<Title>TW4 Update 3 (From source control repository)</Title>
-				<Source NameWhenLocked="setup.msi">Installers\Translator's Workplace 4 Update 3\TW4 Update 3.msi</Source>
-				<SetupHelp>Documents\Translator's Workplace 4 Update 3\SetupTW.rtf</SetupHelp>
-				<Destination>TW4</Destination>
-				<WhenLocked>
-					<Destination>2</Destination>
-					<Substitutions>
-						<CriticalFile>2\setup.msi</CriticalFile>
-						<Install>MsiExec.exe /i 2\setup.msi</Install>
-						<Help Internal="true">SetupTW.rtf</Help>
-					</Substitutions>
-				</WhenLocked>
-			</AutoConfigure>
-			<Title>Translator's Workplace 4.0 Update 3</Title>
-			<Tag>TW4U3</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<Preinstall>RemovePreviousTW4Updates</Preinstall>
-			<CriticalFile>TW4\TW4 Update 3.msi</CriticalFile>
-			<Install/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>This installer may take a few minutes to start from the CD.</Commentary>
-			<ProductCode>{838FEC91-1CDB-4F69-9FE1-E194D03FB144}</ProductCode>
-			<Help>TW4\SetupTW.rtf</Help>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 		</Product>
 		<Product KeyId="1" Version="5.3">
 			<AutoConfigure>
@@ -707,7 +400,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>BART5\SetupBART.rtf</Help>
 			<ProductCode>{574CC5E0-54C0-4A8E-9F96-7F16734DCF35}</ProductCode>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -727,12 +420,12 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Phonology Assistant 3.0</Title>
+				<Title>Phonology Assistant 3.0.1</Title>
 				<Source>Installers\Phonology Assistant</Source>
 				<SetupHelp>Documents\Phonology Assistant\SetupPA.rtf</SetupHelp>
 				<Destination>Phonology Assistant</Destination>
 			</AutoConfigure>
-			<Title>Phonology Assistant 3.0</Title>
+			<Title>Phonology Assistant 3.0.1</Title>
 			<Tag>PA3</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -741,7 +434,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>Phonology Assistant\SetupPA.rtf</Help>
 			<ProductCode>{81584AC8-1718-4B20-8189-8A9F149C5CCD}</ProductCode>
-			<Prerequisite Tag=".NET2.0" MinVersion="2.0"/>
+			<Prerequisite Tag=".NET2.0SP1" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -760,7 +453,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>Speech Analyzer\SetupSA.rtf</Help>
 			<ProductCode>{C250A187-A757-4E46-928B-D20A7403244D}</ProductCode>
-			<Prerequisite Tag=".NET2.0" MinVersion="2.0"/>
+			<Prerequisite Tag=".NET2.0SP1" MinVersion="2.0"/>
 			<Preinstall>SAPreInstall</Preinstall>
 			<PostInstall>SAPostInstall</PostInstall>
 		</Product>
@@ -999,42 +692,41 @@
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{5C2B67EF-C1BE-4B07-9002-A6A4B0F9E043}</ProductCode>
-			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
-			<Prerequisite Tag=".NET_SP1" MinVersion="1"/>
+			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
 			<Requires Tag="IE" MinVersion="6.0" FailMsg="The program may not run correctly."/>
 			<Requires Tag="MSXML4" FailMsg="The program may not run correctly."/>
 			<Help>PAWS Starter Kit\PAWS starter kit.rtf</Help>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Carla Studio</Title>
+				<Title>Carla Studio Unicode 2.9.2</Title>
 				<Source>Installers\CarlaStudio</Source>
 				<SetupHelp>Documents\CarlaStudio\CarlaStudio.rtf</SetupHelp>
 				<Destination>CarlaStudio</Destination>
 			</AutoConfigure>
-			<Title>Carla Studio</Title>
-			<Tag>CarlaStudio 2.9.0.4</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<Title>Carla Studio Unicode 2.9.2</Title>
+			<Tag>CarlaStudio 2.9.2</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
 			<CriticalFile>CarlaStudio\Setup.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow StatusPauseWin98="true">Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="2.9.0.4">TestCarlaStudioPresence</TestPresence>
+			<TestPresence Version="2.9.2.0">TestCarlaStudioPresence</TestPresence>
 			<Help>CarlaStudio\CarlaStudio.rtf</Help>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Lexique Pro 2.7 (with demo db)</Title>
+				<Title>Lexique Pro 3.2 (with demo db)</Title>
 				<Source>Installers\Lexique Pro</Source>
 				<SetupHelp>Documents\Lexique Pro\Lexique Pro.rtf</SetupHelp>
 				<Destination>Lexique Pro</Destination>
 			</AutoConfigure>
-			<Title>Lexique Pro 2.7 (with demo db)</Title>
+			<Title>Lexique Pro 3.2 (with demo db)</Title>
 			<Tag>Lexique</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Lexique Pro\Lexique Pro 2.7 - Setup (with demo db).exe</CriticalFile>
+			<CriticalFile>Lexique Pro\Lexique Pro 3.2 - Setup (with demo db).exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
@@ -1043,7 +735,7 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>PalmSurv (on its own)</Title>
+				<Title>PalmSurv 1.6 (on its own)</Title>
 				<Source>Installers\PalmSurv\PalmSurv.msi</Source>
 				<SetupHelp>Documents\PalmSurv\SetupPS.rtf</SetupHelp>
 				<Destination>PalmSurv</Destination>
@@ -1149,38 +841,38 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Vocabulary Manager 5.8</Title>
+				<Title>Vocabulary Manager 5.8.2</Title>
 				<Source>Installers\Vocabulary Manager</Source>
 				<SetupHelp>Documents\Vocabulary Manager\Vocabulary Manager.rtf</SetupHelp>
 				<Destination>Vocabulary Manager</Destination>
 			</AutoConfigure>
-			<Title>Vocabulary Manager 5.8</Title>
+			<Title>Vocabulary Manager 5.8.2</Title>
 			<Tag>Vocab</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
 			<CriticalFile>Vocabulary Manager\VMSetup.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{47917419-4292-473F-8773-44E1EB2FB1C2}</ProductCode>
+			<ProductCode>{CEBDD499-3385-458B-98E9-31BBDD9BB993}</ProductCode>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
-			<Prerequisite Tag="DirectX" MinVersion="4.8.0"/>
+			<Prerequisite Tag="DirectX" MinVersion="4.8.1"/>
 			<Help>Vocabulary Manager\Vocabulary Manager.rtf</Help>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>WordSurv 6.0</Title>
+				<Title>WordSurv 6.0.2</Title>
 				<Source>Installers\WordSurv</Source>
 				<SetupHelp>Documents\WordSurv\SetupWS.rtf</SetupHelp>
 				<Destination>WordSurv</Destination>
 			</AutoConfigure>
-			<Title>WordSurv 6.0</Title>
+			<Title>WordSurv 6.0.2</Title>
 			<Tag>WordSurv</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>WordSurv\WordSurv 6.msi</CriticalFile>
+			<CriticalFile>WordSurv\WordSurv 6.0.2.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{F6F67FCD-7634-4C33-A4B3-D7043581E33E}</ProductCode>
+			<ProductCode>{C572BBAD-6E76-41A9-B575-A7CB666EA545}</ProductCode>
 			<Help>WordSurv\SetupWS.rtf</Help>
 			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
 			<Requires Tag="MDAC2.8" MinVersion="2.60" FailMsg="The program will not run correctly."/>
@@ -1198,79 +890,63 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Keyman 7.0 (build 240) Light (30 day evaluation)</Title>
-				<Source>3rd Party\Keyman 7.0 Light</Source>
-				<Destination>Utilities\Keyman70</Destination>
-<!--				<SetupHelp>Documents\Keyman70\KeymanLight.rtf</SetupHelp>-->
+				<Title>Keyman Desktop Light 7.1 (30 day evaluation)</Title>
+				<Source>3rd Party\Keyman 7.1 Light</Source>
+				<Destination>Utilities\Keyman71</Destination>
+<!--				<SetupHelp>Documents\Keyman71\KeymanLight.rtf</SetupHelp>-->
 			</AutoConfigure>
-			<Title>Keyman 7.0 Light (30 day evaluation)</Title>
+			<Title>Keyman Desktop Light 7.1 (30 day evaluation)</Title>
 			<Tag>KeymanL</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Utilities\Keyman70\keymandesktoplight-7.0.240.0.exe</CriticalFile>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<CriticalFile>Utilities\Keyman71\keymandesktoplight-7.1.265.0.exe</CriticalFile>
 <!--			<Help>Utilities\Keyman70\KeymanLight.rtf</Help>-->
-			<Install>$CriticalFile$</Install>
+			<Install SuccessReturns="1">$CriticalFile$</Install>
 			<StatusWindow>Show</StatusWindow>
 			<Commentary>Please follow the instructions on the Keyman Setup dialog.</Commentary>
 			<FlushReboot>true</FlushReboot>
-			<TestPresence Version="7.0.240">TestKeymanDesktopLightPresence</TestPresence>
-			<Prerequisite Tag="IE" MinVersion="5.0"/>
+			<ProductCode>{FA684353-85D7-416a-9394-1279AAFE0A85}</ProductCode>
+			<Prerequisite Tag="IE" MinVersion="6.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Keyman 7.0 (build 240) Professional (30 day evaluation)</Title>
-				<Source>3rd Party\Keyman 7.0 Professional</Source>
-				<Destination>Utilities\Keyman70</Destination>
-				<!--				<SetupHelp>Documents\Keyman70\KeymanPro.rtf</SetupHelp>-->
+				<Title>Keyman Desktop Professional 7.1 (30 day evaluation)</Title>
+				<Source>3rd Party\Keyman 7.1 Professional</Source>
+				<Destination>Utilities\Keyman71</Destination>
+<!--				<SetupHelp>Documents\Keyman71\KeymanProfessional.rtf</SetupHelp>-->
 			</AutoConfigure>
-			<Title>Keyman 7.0 Professional (30 day evaluation)</Title>
+			<Title>Keyman Desktop Professional 7.1 (30 day evaluation)</Title>
 			<Tag>KeymanP</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Utilities\Keyman70\keymandesktoppro-7.0.240.0.exe</CriticalFile>
-			<!--			<Help>Utilities\Keyman70\KeymanPro.rtf</Help>-->
-			<Install>$CriticalFile$</Install>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<CriticalFile>Utilities\Keyman71\keymandesktoppro-7.1.265.0.exe</CriticalFile>
+<!--			<Help>Utilities\Keyman71\KeymanProfessional.rtf</Help>-->
+			<Install SuccessReturns="1">$CriticalFile$</Install>
 			<StatusWindow>Show</StatusWindow>
 			<Commentary>Please follow the instructions on the Keyman Setup dialog.</Commentary>
 			<FlushReboot>true</FlushReboot>
-			<TestPresence Version="7.0.240">TestKeymanDesktopProfessionalPresence</TestPresence>
-			<Prerequisite Tag="IE" MinVersion="5.0"/>
+			<ProductCode>{9FFA5AC0-21BC-4495-8FE0-F6B86954F507}</ProductCode>
+			<Prerequisite Tag="IE" MinVersion="6.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Keyman 6.2 (build 174) Standard (not free)</Title>
-				<Source>3rd Party\Keyman 6.2.174 Standard</Source>
-				<Destination>Utilities\Keyman62</Destination>
-				<SetupHelp>Documents\Keyman\Standard_Edition.rtf</SetupHelp>
+				<Title>Keyman Developer 7.1 (30 day evaluation)</Title>
+				<Source>3rd Party\Keyman Developer 7.1</Source>
+				<Destination>Utilities\Keyman71</Destination>
+<!--				<SetupHelp>Documents\Keyman71\KeymanDeveloper.rtf</SetupHelp>-->
 			</AutoConfigure>
-			<Title>Keyman 6.2 (Requires licensing via Internet)</Title>
-			<Tag>KeymanS</Tag>
+			<Title>Keyman Developer 7.1 (30 day evaluation)</Title>
+			<Tag>KeymanD</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Utilities\Keyman62\keyman6-2-174-0.exe</CriticalFile>
-			<Help>Utilities\Keyman62\Standard_Edition.rtf</Help>
-			<Install>$CriticalFile$</Install>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<CriticalFile>Utilities\Keyman71\keymandeveloper-7.1.265.0.exe</CriticalFile>
+<!--			<Help>Utilities\Keyman70\KeymanDeveloper.rtf</Help>-->
+			<Install SuccessReturns="1">$CriticalFile$</Install>
 			<StatusWindow>Show</StatusWindow>
-			<Commentary>Please select 'Install' from the first menu, and read the new license information.</Commentary>
+			<Commentary>Please follow the instructions on the Keyman Setup dialog.</Commentary>
 			<FlushReboot>true</FlushReboot>
-			<TestPresence Version="6.2.174">TestKeymanStandardPresence</TestPresence>
-			<Prerequisite Tag="IE" MinVersion="5.0"/>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Keyman 6.2 (build 174) Home (free)</Title>
-				<Source>3rd Party\Keyman 6.2.174 Home</Source>
-				<SetupHelp>Documents\Keyman\Home_Use_Edition.rtf</SetupHelp>
-				<Destination>Utilities\Keyman62</Destination>
-			</AutoConfigure>
-			<Title>Keyman 6.2 (Free - Home Use)</Title>
-			<Tag>KeymanH</Tag>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Utilities\Keyman62\keyman_free_6-2-174-0.exe</CriticalFile>
-			<Help>Utilities\Keyman62\Home_Use_Edition.rtf</Help>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Show</StatusWindow>
-			<Commentary>Please select 'Install' from the first menu.</Commentary>
-			<FlushReboot>true</FlushReboot>
-			<TestPresence Version="6.2.174">TestKeymanHomePresence</TestPresence>
-			<Prerequisite Tag="IE" MinVersion="5.0"/>
+			<ProductCode>{3B6B7700-0514-449E-BCA9-CB8B139938C6}</ProductCode>
+			<Prerequisite Tag="IE" MinVersion="6.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1329,42 +1005,6 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Encoding Converters 2.6.1 Web Installer</Title>
-			</AutoConfigure>
-			<Title>SIL Converters and Repository 2.6.1</Title>
-			<Tag>EncCvtrs_2_6_1_Web</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>http://downloads.sil.org/EncodingConverters/2.6.1/SetupEC.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
-			<StatusWindow>Monitor 8000</StatusWindow>
-			<ProductCode>{DCDE04DF-4429-44E3-939F-E618A8106DC7}</ProductCode>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<PostInstall>EncodingConvertersPostInstall</PostInstall>
-			<Prerequisite Tag=".NET2.0" Version="2.0"/>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Encoding Converters 2.6.1 CD Installer (from EC2.6.1 on \\cana)</Title>
-				<Source>\\cana\LSDev\Installers\EC2.6.1\Encoding Converters\SetupEC.msi</Source>
-				<Destination>Encoding Converters</Destination>
-			</AutoConfigure>
-			<Title>SIL Converters and Repository 2.6.1</Title>
-			<Tag>EncCvtrs_2_6_1</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>Encoding Converters\SetupEC.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
-			<StatusWindow>Monitor 5000</StatusWindow>
-			<ProductCode>{DCDE04DF-4429-44E3-939F-E618A8106DC7}</ProductCode>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<PostInstall>EncodingConvertersPostInstall</PostInstall>
-			<Prerequisite Tag=".NET2.0" Version="2.0"/>
-		</Product>
-		<Product>
-			<AutoConfigure>
 				<Title>Microsoft Visual C++ 2005 Redistributable Package</Title>
 				<Source>3rd Party\MS VC++ 2005 Redist\vcredist_x86.exe</Source>
 				<Destination>Utilities\VC++ 2005 Redist</Destination>
@@ -1378,7 +1018,7 @@
 			<StatusWindow>Show</StatusWindow>
 			<ProductCode>{A49F249F-0C91-497F-86DF-B2585E8E76B7}</ProductCode>
 			<Commentary>Please wait while the package is installed.</Commentary>
-			<Prerequisite Tag="WI3" MinVersion="3.0"/>
+			<Prerequisite Tag="WI31" MinVersion="3.0"/>
 			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
 			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=32BC1BEE-A3F9-4C13-9C99-220B62A191EE&amp;displaylang=en</DownloadURL>
@@ -1575,7 +1215,7 @@
 			<Commentary>This installation may take a few minutes, without visible sign of progress.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 			<FlushReboot>true</FlushReboot>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Prerequisite Tag="IE" MinVersion="5.01"/>
 			<Requires Tag=".NET_SP1" MinVersion="1" FailMsg="Your software may work, but you may be vulnerable to the JPEG processing (GDI+) security issue."/>
 		</Product>
@@ -1780,61 +1420,6 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Windows Installer 2.0 (Win 2K and up only)</Title>
-				<Source>3rd Party\Windows Installer 2 (Win 2K and up)</Source>
-				<Destination>Utilities\MSInstall</Destination>
-			</AutoConfigure>
-			<Title>Windows Installer 2.0</Title>
-			<Tag>WI2</Tag>
-			<MustBeAdmin>true</MustBeAdmin>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<CriticalFile>Utilities\MSInstall\instmsiw.exe</CriticalFile>
-			<Install>$CriticalFile$ /c:"msiinst.exe /delayrebootq"</Install>
-			<TestPresence Version="2.0">TestWinInstallerPresence</TestPresence>
-			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=4b6140f9-2d36-4977-8fa1-6f8a0f5dca8f&amp;DisplayLang=en</DownloadURL>
-			<Commentary>Please wait a few moments.</Commentary>
-			<StatusWindow>Show</StatusWindow>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Windows Installer 2.0 (Win 98 and up - takes up more space)</Title>
-				<Source>3rd Party\Windows Installer 2 (Win 2K and up)</Source>
-				<Source>3rd Party\Windows Installer 2 (Win 98)</Source>
-				<Destination>Utilities\MSInstall</Destination>
-			</AutoConfigure>
-			<Title>Windows Installer 2.0</Title>
-			<Tag>WI2</Tag>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile Flag="g_fLessThanWin2k">
-				<True>Utilities\MSInstall\instmsia.exe</True>
-				<False>Utilities\MSInstall\instmsiw.exe</False>
-			</CriticalFile>
-			<Install>$CriticalFile$ /c:"msiinst.exe /delayrebootq"</Install>
-			<TestPresence Version="2.0">TestWinInstallerPresence</TestPresence>
-			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=4b6140f9-2d36-4977-8fa1-6f8a0f5dca8f&amp;DisplayLang=en</DownloadURL>
-			<Commentary>Please wait a few moments.</Commentary>
-			<StatusWindow>Show</StatusWindow>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Windows Installer 3.0 (Win 2K and up only)</Title>
-				<Source>3rd Party\Windows Installer 3.0</Source>
-				<Destination>Utilities\MSInstall</Destination>
-			</AutoConfigure>
-			<Title>Windows Installer 3.0</Title>
-			<Tag>WI3</Tag>
-			<MustBeAdmin>true</MustBeAdmin>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<CriticalFile>Utilities\MSInstall\WindowsInstaller-KB884016-v2-x86.exe</CriticalFile>
-			<Install>$CriticalFile$ /quiet /norestart</Install>
-			<TestPresence Version="3.0">TestWinInstallerPresence</TestPresence>
-			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=5fbc5470-b259-4733-a914-a956122e08e8&amp;DisplayLang=en</DownloadURL>
-			<Commentary>Please wait a few moments.</Commentary>
-			<StatusWindow>Show</StatusWindow>
-			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
-		</Product>
-		<Product>
-			<AutoConfigure>
 				<Title>Windows Installer 3.1 (Win 2K and up only)</Title>
 				<Source>3rd Party\Windows Installer 3.1</Source>
 				<Destination>Utilities\MSInstall</Destination>
@@ -1850,32 +1435,6 @@
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
-		</Product>
-		<Product KeyId="2" Version="4.1">
-			<AutoConfigure>
-				<Title>TW4 Update 2(From source control repository)</Title>
-				<Source NameWhenLocked="setup.msi">Installers\Translator's Workplace 4 Update 2\TW4Update.msi</Source>
-				<SetupHelp>Documents\Translator's Workplace 4 Update 2\SetupTW.rtf</SetupHelp>
-				<Destination>TW4</Destination>
-				<WhenLocked>
-					<Destination>2</Destination>
-					<Substitutions>
-						<CriticalFile>2\setup.msi</CriticalFile>
-						<Install>MsiExec.exe /i 2\setup.msi</Install>
-					</Substitutions>
-				</WhenLocked>
-			</AutoConfigure>
-			<Title>Translator's Workplace 4.0 Update 2</Title>
-			<Tag>TW4</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>TW4\TW4Update.msi</CriticalFile>
-			<Install/>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>This installer may take a few minutes to start from the CD.</Commentary>
-			<ProductCode>{D938E793-A00B-4849-BCA8-9C25B4A6C081}</ProductCode>
-			<Help>TW4\SetupTW.rtf</Help>
-			<Prerequisite Tag="WI2" MinVersion="2.0"/>
 		</Product>
 	</Products>
 </MasterInstaller>

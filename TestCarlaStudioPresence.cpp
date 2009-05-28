@@ -11,7 +11,7 @@ bool TestCarlaStudioPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVe
 	HKEY hKey = NULL;
 
 	if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudio"),
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudioUnicode"),
 		NULL, KEY_READ, &hKey))
 	{
 		// Get the uninstall string:
@@ -27,7 +27,7 @@ bool TestCarlaStudioPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVe
 				(LPBYTE)pszUninstallString, &cchUninstallString))
 			{
 				// Parse the UninstallString to get the installation path. It typically looks like this:
-				// C:\WINDOWS\IsUninst.exe -f"C:\Program Files\SIL\CarlaStudio\Uninst.isu"
+				// C:\WINDOWS\IsUninst.exe -f"C:\Program Files\SIL\CarlaStudioUnicode\Uninst.isu"
 				const TCHAR * pszFlag = _T("-f");
 				TCHAR * pchFlagStart = _tcsstr(pszUninstallString, pszFlag);
 				if (pchFlagStart)
@@ -46,7 +46,7 @@ bool TestCarlaStudioPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVe
 					if (pchLastBackslash)
 					{
 						*pchLastBackslash = 0;
-						TCHAR * pszMainExePath = new_sprintf(_T("%s\\CStudio.exe"), pszInstallPath);
+						TCHAR * pszMainExePath = new_sprintf(_T("%s\\CStudioU.exe"), pszInstallPath);
 
 						// See if the file exists and what version it is:
 						__int64 nVersion;

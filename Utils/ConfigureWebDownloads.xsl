@@ -20,7 +20,7 @@
 				</span><span style="font-size:80%">
 					by <a href="mailto:alistair_imrie@sil.org?subject=Web Downloads Auto-configuration Tool">Alistair Imrie</a>
 				</span>
-				<br/>&#169; 2006 <a href="http://www.sil.org">SIL International</a><br/><br/>
+				<br/>&#169; 2006 - 2009 <a href="http://www.sil.org">SIL International</a><br/><br/>
 				<button id="PrevButton" onclick='PrevStage()' disabled="true">&lt; Previous</button>
 				<button id="NextButton" onclick='NextStage()' title='On to General Configuration'>&#160;&#160;&#160;&#160;Next &gt;&#160;&#160;</button>
 				<div id="BlockedContentWarning" style="position:static; visibility:visible">
@@ -175,9 +175,11 @@ var SelectedTextElement;
 var VisibleStage = 1;
 var MaxStage = 4;
 var NumFlavors = 1;
-var CppFilePath = "F:\\CD Builder\\Master Installer";
-var ProductsPath = "F:\\CD Builder\\Products";
-var SevenZipExeFile = "C:\\Program Files\\7zip\\7za.exe";
+var CdBuilderPath = "F:\\CD Builder";
+var CppFilePath = CdBuilderPath + "\\Master Installer";
+var ProductsPath = CdBuilderPath + "\\Products";
+var UtilsPath = CppFilePath + "\\Utils";
+var SevenZipExeFile = UtilsPath + "\\7za.exe";
 var f7ZipFoundSvn = false;
 
 var fso = new ActiveXObject("Scripting.FileSystemObject");	
@@ -1458,11 +1460,13 @@ function Compress(SourceFolder)
 	var iLastBackslash = SourceFolder.lastIndexOf("\\");
 	var RootFolder = SourceFolder.slice(iLastBackslash + 1);
 	var LocationFolder = SourceFolder.slice(0, iLastBackslash);
-	var ZipFile = RootFolder + ".exe";;
+	var ZipFile = RootFolder + ".7z";
+	var SfxFile = RootFolder + ".exe";
 	var iFirstBackslash = SourceFolder.indexOf("\\");
 	var LocationDrive = SourceFolder.slice(0, iFirstBackslash);
 
 	var BatchFile = SourceFolder + ".temp.bat";
+	var ConfigFile = SourceFolder + ".Config.txt";
 	var ListFile = SourceFolder + ".list.txt";
 
 	// Get list of all files to be used in archive:
@@ -1492,12 +1496,24 @@ function Compress(SourceFolder)
 			tso.WriteLine('"' + FileList[i] + '"');
 			tso.Close();
 		}
-		tso.WriteLine('"' + SevenZipExeFile + '"' + ' a -sfx7zC.sfx "' + ZipFile + '" + @"' + ListFile + '" -mx=9 -mmt=on');
+		tso.WriteLine('"' + SevenZipExeFile + '" a "' + ZipFile + '" + @"' + ListFile + '" -mx=9 -mmt=on');
 	}
 	else
 	{
-		tso.WriteLine('"' + SevenZipExeFile + '"' + ' a -sfx7zC.sfx "' + ZipFile + '" + "' + RootFolder + '\\*" -r -mx=9 -mmt=on');
+		tso.WriteLine('"' + SevenZipExeFile + '" a "' + ZipFile + '" + "' + RootFolder + '\\*" -r -mx=9 -mmt=on');
 	}
+	
+	// Create configuration file to bind to self-extracting archive:
+	var tsoConfig = fso.OpenTextFile(ConfigFile, 2, true, 0); // Must be UTF-8; ASCII will do for us
+	tsoConfig.WriteLine(';!@Install@!UTF-8!');
+	tsoConfig.WriteLine('Title="SIL Software Package"');
+	tsoConfig.WriteLine('BeginPrompt="Do you want to extract and launch the \'' + RootFolder + '\' installation files?"');
+	tsoConfig.WriteLine('RunProgram="' + RootFolder + '\\setup.exe"');
+	tsoConfig.WriteLine(';!@InstallEnd@!');
+	tsoConfig.Close();
+
+	// Add self-extracting module and configuration to launch setup.exe:
+	tso.WriteLine('copy /b "' + UtilsPath + '\\7zS.sfx" + "' + ConfigFile + '" + "' + ZipFile + '" "' + SfxFile + '"');
 	tso.Close();
 
 	// Run the temporary batch file we have been building:
@@ -1519,7 +1535,7 @@ function Compress(SourceFolder)
 		tso.WriteLine("@echo off");
 		tso.WriteLine(LocationDrive);
 		tso.WriteLine('cd "' + LocationFolder + '"');
-		tso.WriteLine('"' + Md5SumsPath + '" -u "' + LocationFolder + '\\' + ZipFile + '" >"' + md5File + '"');
+		tso.WriteLine('"' + Md5SumsPath + '" -u "' + LocationFolder + '\\' + SfxFile + '" >"' + md5File + '"');
 		tso.Close();
 
 		// Run the temporary batch file we have been building:

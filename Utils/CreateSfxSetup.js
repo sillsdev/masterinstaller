@@ -131,7 +131,7 @@ tsoConfig.WriteLine(';!@InstallEnd@!');
 tsoConfig.Close();
 
 // Add self-extracting module and configuration to launch setup.exe:
-tso.WriteLine('copy /b "' + ScriptPath + '\\7zSD.sfx" + "' + ConfigFile + '" + "' + ZipFile + '" "' + SfxFile + '"');
+tso.WriteLine('copy /b "' + ScriptPath + '\\7zS.sfx" + "' + ConfigFile + '" + "' + ZipFile + '" "' + SfxFile + '"');
 tso.Close();
 
 // Run the temporary batch file we have been building:

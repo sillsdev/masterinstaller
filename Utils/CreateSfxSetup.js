@@ -124,14 +124,18 @@ else
 // Create configuration file to bind to self-extracting archive:
 var tsoConfig = fso.OpenTextFile(ConfigFile, 2, true, 0); // Must be UTF-8; ASCII will do for us
 tsoConfig.WriteLine(';!@Install@!UTF-8!');
-tsoConfig.WriteLine('Title="SIL Software Package"');
-tsoConfig.WriteLine('BeginPrompt="Do you want to extract and launch the \'' + RootFolder + '\' installation files?"');
-tsoConfig.WriteLine('RunProgram="' + RootFolder + '\\setup.exe"');
+tsoConfig.WriteLine('Title="SIL \'' + RootFolder + '\' Software Package"');
+tsoConfig.WriteLine('HelpText="Double-click the file \'' + RootFolder + '.exe\' to extract the installation files and run the installer.\nThe extracted files will be deleted when the installer has finished.\n\nRun the file with the -nr option to simply extract the files and leave them.\n\nFile extraction will be to the same folder where this file is, in both cases."');
+tsoConfig.WriteLine('InstallPath="%%S"');
+tsoConfig.WriteLine('Delete="%%S\\' + RootFolder + '"');
+tsoConfig.WriteLine('ExtractTitle="Extracting installation files"');
+tsoConfig.WriteLine('ExtractDialogText="Preparing the \'' + RootFolder + '\' files for installation"');
+tsoConfig.WriteLine('RunProgram="fm0:\\"' + RootFolder + '\\setup.exe\\""');
 tsoConfig.WriteLine(';!@InstallEnd@!');
 tsoConfig.Close();
 
 // Add self-extracting module and configuration to launch setup.exe:
-tso.WriteLine('copy /b "' + ScriptPath + '\\7zS.sfx" + "' + ConfigFile + '" + "' + ZipFile + '" "' + SfxFile + '"');
+tso.WriteLine('copy /b "' + ScriptPath + '\\7zSD_new.sfx" + "' + ConfigFile + '" + "' + ZipFile + '" "' + SfxFile + '"');
 tso.Close();
 
 // Run the temporary batch file we have been building:

@@ -73,9 +73,9 @@
 					<input id="SignWithCertificate" type="checkbox" title="Sign each setup.exe with the certificate in the root folder on the CD in the specified drive."/>Sign each setup.exe - certificate location:
 					<script type="text/javascript">document.getElementById("SignWithCertificate").checked=true;</script>
 					<input id="CdDrive" type="text" onselect="InputTextSelected(this);" size="2" onfocus="this.select();" title="Drive (or folder) containing digital certifiate CD." value="D:"/><br/>
-					<input id="GatherFiles" type="checkbox" title="Gather files needed for each download into one folder."/>Gather files for each download<br/>
+					<input id="GatherFiles" type="checkbox" title="Gather files needed for each flavor into one folder."/>Gather files for each flavor<br/>
 					<script type="text/javascript">document.getElementById("GatherFiles").checked=true;</script>
-					<input id="BuildSfx" type="checkbox" title="Create self extracting 7-zip archive .exe file for each flavor. Assumes 7-Zip utility is present."/>Build 7-zip for each flavor<br/>
+					<input id="BuildSfx" type="checkbox" title="Create self extracting 7-zip archive .exe file for each flavor. Assumes 7-Zip utility is present."/>Build self-extracting download package for each flavor<br/>
 					<script type="text/javascript">document.getElementById("BuildSfx").checked=true;</script>
 					<br/>
 					<br/>

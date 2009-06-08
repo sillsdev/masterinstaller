@@ -744,6 +744,8 @@
 			<FlushReboot>true</FlushReboot>
 			<ProductCode>{FA684353-85D7-416a-9394-1279AAFE0A85}</ProductCode>
 			<Prerequisite Tag="IE" MinVersion="6.0"/>
+			<Prerequisite Tag="MSXML3" MinVersion="8.70.1104.0"/>
+			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -764,6 +766,8 @@
 			<FlushReboot>true</FlushReboot>
 			<ProductCode>{9FFA5AC0-21BC-4495-8FE0-F6B86954F507}</ProductCode>
 			<Prerequisite Tag="IE" MinVersion="6.0"/>
+			<Prerequisite Tag="MSXML3" MinVersion="8.70.1104.0"/>
+			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -784,6 +788,8 @@
 			<FlushReboot>true</FlushReboot>
 			<ProductCode>{3B6B7700-0514-449E-BCA9-CB8B139938C6}</ProductCode>
 			<Prerequisite Tag="IE" MinVersion="6.0"/>
+			<Prerequisite Tag="MSXML3" MinVersion="8.70.1104.0"/>
+			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -949,6 +955,21 @@
 			<Install>MsiExec.exe /i $CriticalFile$ /qb</Install>
 			<StatusWindow>Show</StatusWindow>
 			<TestPresence>TestXml2Presence</TestPresence>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>MSXML3 SP7</Title>
+				<Source>3rd Party\MSXML3</Source>
+				<Destination>Utilities\MSXML3</Destination>
+			</AutoConfigure>
+			<Title>Microsoft XML Core Services 3 SP7</Title>
+			<Tag>MSXML3</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\MSXML\msxml3.msi</CriticalFile>
+			<Install>MsiExec.exe /i $CriticalFile$ /qb</Install>
+			<StatusWindow>Show</StatusWindow>
+			<TestPresence MinVersion="8.70.1104.0">TestMsXml3Presence</TestPresence>
+			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>

@@ -468,6 +468,23 @@ _TCHAR * FetchString(int stid)
 #include "StringFunctions.cpp"
 #include "VersionFunctions.cpp"
 
+// Concatenates the two path fragments, making sure exactly one backslash is between them.
+// Returns a new string that the caller must delete[].
+_TCHAR * MakePath(const _TCHAR * pszFolder, const _TCHAR * pszFile)
+{
+	_TCHAR * pszFolderDup = my_strdup(pszFolder);
+	while (pszFolderDup[_tcslen(pszFolderDup) - 1] == '\\')
+		pszFolderDup[_tcslen(pszFolderDup) - 1] = 0;
+
+	while (pszFile[0] == '\\')
+		pszFile++;
+
+	_TCHAR * pszPath = new_sprintf(_T("%s\\%s"), pszFolderDup, pszFile);
+	delete[] pszFolderDup;
+
+	return pszPath;
+}
+
 // Writes the given text to the Clipboard
 bool WriteClipboardText(const _TCHAR * pszText)
 {

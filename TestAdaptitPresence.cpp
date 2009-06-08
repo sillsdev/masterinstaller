@@ -2,8 +2,8 @@
 
 #include "TestAdaptitGenericPresence.cpp"
 
-bool TestAdaptitPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
-						 const TCHAR * /*pszCriticalFile*/)
+bool TestAdaptitPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
+						 const _TCHAR * /*pszCriticalFile*/)
 {
-	return TestAdaptitGenericPresence(_T("English_AdaptIt.exe"), false, pszMinVersion, pszMaxVersion);
+	return TestAdaptitGenericPresence(false, pszMinVersion, pszMaxVersion);
 }

@@ -7,18 +7,18 @@
 // remove it.
 // The returned path does not end with a backslash '\'.
 // The caller must delete[]  the string afterwards.
-TCHAR * MakePathToAdaptIt(bool fUnicode)
+_TCHAR * MakePathToAdaptIt(bool fUnicode)
 {
 	bool fResult = false;
 	LONG lResult;
 	HKEY hKey = NULL;
-	TCHAR * pszKeyPath;
-	const TCHAR * pszRegRoot = _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\");
+	_TCHAR * pszKeyPath;
+	const _TCHAR * pszRegRoot = _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\");
 
 	if (fUnicode)
 	{
 		// See if Unicode version is present:
-		pszKeyPath = new_sprintf(_T("%sAdapt It Unicode"), pszRegRoot);
+		pszKeyPath = new_sprintf(_T("%sAdapt It WX Unicode"), pszRegRoot);
 #if !defined NOLOGGING
 		g_Log.Write(_T("Looking for Adapt It Unicode path in HKEY_LOCAL_MACHINE\\%s..."), pszKeyPath);
 #endif
@@ -26,7 +26,7 @@ TCHAR * MakePathToAdaptIt(bool fUnicode)
 	else
 	{
 		// See if non-Unicode version is present:
-		pszKeyPath = new_sprintf(_T("%sAdapt It"), pszRegRoot);
+		pszKeyPath = new_sprintf(_T("%sAdapt It WX"), pszRegRoot);
 #if !defined NOLOGGING
 		g_Log.Write(_T("Looking for Adapt It path in HKEY_LOCAL_MACHINE\\%s..."), pszKeyPath);
 #endif
@@ -42,7 +42,7 @@ TCHAR * MakePathToAdaptIt(bool fUnicode)
 		lResult = RegQueryValueEx(hKey, _T("UninstallString"), NULL, NULL, NULL, &cbData);
 
 		// Get path to uninstall program:
-		TCHAR * pszPath = new TCHAR [cbData];
+		_TCHAR * pszPath = new _TCHAR [cbData];
 		lResult = RegQueryValueEx(hKey, _T("UninstallString"), NULL, NULL, (LPBYTE)pszPath,
 			&cbData);
 		RegCloseKey(hKey);
@@ -50,7 +50,7 @@ TCHAR * MakePathToAdaptIt(bool fUnicode)
 		if (ERROR_SUCCESS == lResult)
 		{
 			// Truncate the uninstall.exe bit at the end of the string:
-			TCHAR * ch = _tcsrchr(pszPath, (_TCHAR)('\\'));
+			_TCHAR * ch = _tcsrchr(pszPath, (_TCHAR)('\\'));
 			if (ch)
 				*ch = 0;
 #if !defined NOLOGGING
@@ -67,34 +67,74 @@ TCHAR * MakePathToAdaptIt(bool fUnicode)
 }
 
 
-// Generic test of Adapt It installation, for all localizations.
-// We read the location of the uninstall file, and use its path to see if the relevant .exe
-// is present.
-bool TestAdaptitGenericPresence(const TCHAR * pszExeFileName, bool fUnicode,
-								const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion)
+// Generic test of Adapt It installation.
+// We read the location of the "Adapt It changes.txt" file from the registry, then read the
+// first line of that file to see what version it is.
+bool TestAdaptitGenericPresence(bool fUnicode, const _TCHAR * pszMinVersion,
+								const _TCHAR * pszMaxVersion)
 {
-	TCHAR * pszAdaptItFolder = MakePathToAdaptIt(fUnicode);
+	_TCHAR * pszAdaptItFolder = MakePathToAdaptIt(fUnicode);
 	if (!pszAdaptItFolder)
 		return false;
-	TCHAR * pszAdaptItExe = new_sprintf(_T("%s\\%s"), pszAdaptItFolder, pszExeFileName);
+	_TCHAR * pszAdaptItChanges = new_sprintf(_T("%s\\Adapt It changes.txt"), pszAdaptItFolder);
 	delete[] pszAdaptItFolder;
 	pszAdaptItFolder = NULL;
 
-	// See if the file exists and what version it is:
-	__int64 nVersion;
-	bool fFound = GetFileVersion(pszAdaptItExe, nVersion);
-	delete[] pszAdaptItExe;
-	pszAdaptItExe = NULL;
-
-	if (!fFound)
-		return false;
-
 #if !defined NOLOGGING
-	TCHAR * pszVersion = GenVersionText(nVersion);
-	g_Log.Write(_T("Found Adapt It%sversion %s"), fUnicode? _T(" Unicode ") : _T(" "), pszVersion);
-	delete[] pszVersion;
-	pszVersion = NULL;
+	g_Log.Write(_T("Opening '%s' to read version number."), pszAdaptItChanges);
 #endif
 
-	return VersionInRange(nVersion, pszMinVersion, pszMaxVersion);
+	// See what version the changes file claims to be:
+	FILE * f = NULL;
+	_TCHAR * pszVersion = NULL;
+	if (0 == _tfopen_s(&f, pszAdaptItChanges, _T("rt")))
+	{
+		// Get first line of Changes file:
+		const int cchLine = 200;
+		_TCHAR pszLine[cchLine] = { 0 };
+		_fgetts(pszLine, cchLine, f);
+		fclose(f);
+		f = NULL;
+
+#if !defined NOLOGGING
+		g_Log.Write(_T("First line of '%s' is '%s'."), pszAdaptItChanges, pszLine);
+#endif
+
+		// Test if it starts with "Version ":
+		const _TCHAR * pszHeader = _T("Version ");
+		int cchHeader = _tcslen(pszHeader);
+		if (_tcsncicmp(pszLine, pszHeader, cchHeader) == 0)
+		{
+			// The next characters up to the space represent the version:
+			pszVersion = &pszLine[cchHeader];
+			// Terminate the string after the version number:
+			_TCHAR * pszHeaderEnd = pszVersion;
+			while (*pszHeaderEnd != 0 && *pszHeaderEnd != ' ')
+				pszHeaderEnd++;
+			if (*pszHeaderEnd == ' ')
+				*pszHeaderEnd = 0;
+
+#if !defined NOLOGGING
+			g_Log.Write(_T("Extracted version string '%s'."), pszVersion);
+#endif
+		}
+	}
+	else
+	{
+#if !defined NOLOGGING
+		g_Log.Write(_T("Could not open '%s'."), pszAdaptItChanges);
+#endif
+	}
+	delete[] pszAdaptItChanges;
+	pszAdaptItChanges = NULL;
+
+	if (pszVersion)
+	{
+#if !defined NOLOGGING
+		g_Log.Write(_T("Found Adapt It%sversion %s"), fUnicode? _T(" Unicode ") : _T(" "), pszVersion);
+#endif
+
+		return VersionInRange(pszVersion, pszMinVersion, pszMaxVersion);
+	}
+	return false;
 }

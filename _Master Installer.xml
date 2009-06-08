@@ -478,202 +478,39 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It 3.5.2 (English)</Title>
-				<Source>Installers\Adapt It\English_Adapt_It_Regular_352.exe</Source>
-				<Source>Installers\Adapt It\BTPrep.exe</Source>
+				<Title>Adapt It WX 4.1.4</Title>
+				<Source>Installers\Adapt It\Adapt_It_WX_4_1_4_Regular.exe</Source>
 				<SetupHelp>Documents\Adapt It\Adapt It.rtf</SetupHelp>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It 3.5.2 (English)</Title>
+			<Title>Adapt It WX 4.1.4</Title>
 			<Tag>Adaptit</Tag>
 			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\English_Adapt_It_Regular_352.exe</CriticalFile>
+			<CriticalFile>Adapt It\Adapt_It_WX_4_1_4_Regular.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.5.2">TestAdaptitPresence</TestPresence>
+			<TestPresence Version="4.1.4">TestAdaptitPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It Unicode 3.5.2 (English)</Title>
-				<Source>Installers\Adapt It\English_Adapt_It_Unicode_352.exe</Source>
+				<Title>Adapt It WX 4.1.4 Unicode</Title>
+				<Source>Installers\Adapt It\Adapt_It_WX_4_1_4_Unicode.exe</Source>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It Unicode 3.5.2 (English)</Title>
+			<Title>Adapt It WX 4.1.4 Unicode</Title>
 			<Tag>AdaptitU</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\English_Adapt_It_Unicode_352.exe</CriticalFile>
+			<CriticalFile>Adapt It\Adapt_It_WX_4_1_4_Unicode.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.5.2">TestAdaptitUPresence</TestPresence>
-			<Help>Adapt It\Adapt It.rtf</Help>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Adapt It 3.4.0 (French)</Title>
-				<Source>Installers\Adapt It\French_Adapt_It_Regular_340.exe</Source>
-				<Destination>Adapt It</Destination>
-			</AutoConfigure>
-			<Title>Adapt It 3.4.0 (French)</Title>
-			<Tag>AdaptitF</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\French_Adapt_It_Regular_340.exe</CriticalFile>
-			<Preinstall>AdaptItPreinstall</Preinstall>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.4.0">TestAdaptitFPresence</TestPresence>
-			<Help>Adapt It\Adapt It.rtf</Help>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Adapt It Unicode 3.4.0 (French)</Title>
-				<Source>Installers\Adapt It\French_Adapt_It_Unicode_340.exe</Source>
-				<Destination>Adapt It</Destination>
-			</AutoConfigure>
-			<Title>Adapt It Unicode 3.4.0 (French)</Title>
-			<Tag>AdaptitUF</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\French_Adapt_It_Unicode_340.exe</CriticalFile>
-			<Preinstall>AdaptItPreinstall</Preinstall>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.4.0">TestAdaptitUFPresence</TestPresence>
-			<Help>Adapt It\Adapt It.rtf</Help>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Adapt It 3.5.2 (Indonesian)</Title>
-				<Source>Installers\Adapt It\Indonesian_Adapt_It_Regular_352.exe</Source>
-				<Destination>Adapt It</Destination>
-			</AutoConfigure>
-			<Title>Adapt It 3.5.2 (Indonesian)</Title>
-			<Tag>AdaptitI</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\Indonesian_Adapt_It_Regular_352.exe</CriticalFile>
-			<Preinstall>AdaptItPreinstall</Preinstall>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.5.2">TestAdaptitIPresence</TestPresence>
-			<Help>Adapt It\Adapt It.rtf</Help>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Adapt It Unicode 3.5.2 (Indonesian)</Title>
-				<Source>Installers\Adapt It\Indonesian_Adapt_It_Unicode_352.exe</Source>
-				<Destination>Adapt It</Destination>
-			</AutoConfigure>
-			<Title>Adapt It Unicode 3.5.2 (Indonesian)</Title>
-			<Tag>AdaptitUI</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\Indonesian_Adapt_It_Unicode_352.exe</CriticalFile>
-			<Preinstall>AdaptItPreinstall</Preinstall>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.5.2">TestAdaptitUIPresence</TestPresence>
-			<Help>Adapt It\Adapt It.rtf</Help>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Adapt It Unicode 3.4.0 (Mandarin)</Title>
-				<Source>Installers\Adapt It\Mandarin_Adapt_It_Unicode_340.exe</Source>
-				<Destination>Adapt It</Destination>
-			</AutoConfigure>
-			<Title>Adapt It Unicode 3.4.0 (Mandarin)</Title>
-			<Tag>AdaptitUM</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\Mandarin_Adapt_It_Unicode_340.exe</CriticalFile>
-			<Preinstall>AdaptItPreinstall</Preinstall>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.4.0">TestAdaptitUMPresence</TestPresence>
-			<Help>Adapt It\Adapt It.rtf</Help>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Adapt It 3.5.0 (Portuguese)</Title>
-				<Source>Installers\Adapt It\Portuguese_Adapt_It_Regular_350.exe</Source>
-				<Destination>Adapt It</Destination>
-			</AutoConfigure>
-			<Title>Adapt It 3.5.0 (Portuguese)</Title>
-			<Tag>AdaptitP</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\Portuguese_Adapt_It_Regular_350.exe</CriticalFile>
-			<Preinstall>AdaptItPreinstall</Preinstall>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.5.0">TestAdaptitPPresence</TestPresence>
-			<Help>Adapt It\Adapt It.rtf</Help>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Adapt It Unicode 3.5.0 (Portuguese)</Title>
-				<Source>Installers\Adapt It\Portuguese_Adapt_It_Unicode_350.exe</Source>
-				<Destination>Adapt It</Destination>
-			</AutoConfigure>
-			<Title>Adapt It Unicode 3.5.0 (Portuguese)</Title>
-			<Tag>AdaptitUP</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\Portuguese_Adapt_It_Unicode_350.exe</CriticalFile>
-			<Preinstall>AdaptItPreinstall</Preinstall>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.5.0">TestAdaptitUPPresence</TestPresence>
-			<Help>Adapt It\Adapt It.rtf</Help>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Adapt It 3.5.0 (Spanish)</Title>
-				<Source>Installers\Adapt It\Spanish_Adapt_It_Regular_350_.exe</Source>
-				<Destination>Adapt It</Destination>
-			</AutoConfigure>
-			<Title>Adapt It 3.5.0 (Spanish)</Title>
-			<Tag>AdaptitS</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\Spanish_Adapt_It_Regular_350_.exe</CriticalFile>
-			<Preinstall>AdaptItPreinstall</Preinstall>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.5.0">TestAdaptitSPresence</TestPresence>
-			<Help>Adapt It\Adapt It.rtf</Help>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Adapt It Unicode 3.5.0 (Spanish)</Title>
-				<Source>Installers\Adapt It\Spanish_Adapt_It_Unicode_350_.exe</Source>
-				<Destination>Adapt It</Destination>
-			</AutoConfigure>
-			<Title>Adapt It Unicode 3.5.0 (Spanish)</Title>
-			<Tag>AdaptitUS</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
-			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\Spanish_Adapt_It_Unicode_350_.exe</CriticalFile>
-			<Preinstall>AdaptItPreinstall</Preinstall>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="3.5.0">TestAdaptitUSPresence</TestPresence>
+			<TestPresence Version="4.1.4">TestAdaptitUPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
 		</Product>
 		<Product>

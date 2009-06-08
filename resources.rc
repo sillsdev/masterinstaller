@@ -56,6 +56,16 @@ END
 // remains consistent on all systems.
 IDR_MAIN_ICON           ICON                    "Setup.ico"
 
+#ifdef EASTER_EGGS
+EasyW MIDI "Easy Winners.mid"
+BWRag MIDI "Black and White Rag.mid"
+Elite MIDI "Elite Syncopations.mid"
+Maple MIDI "Maple Leaf Rag.mid"
+NewRag MIDI "New Rag.mid"
+Entert MIDI "The Entertainer.mid"
+Polonaise MIDI "Chopin Polonaise A Flat.mid"
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // AVI
@@ -106,6 +116,10 @@ FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,133,46,105,14
     PUSHBUTTON      "Continue",IDC_BUTTON_CONTINUE,20,44,105,16
+#ifdef EASTER_EGGS
+    PUSHBUTTON      "",IDC_BUTTON_HIDDEN1,-50,-50,1,1
+    PUSHBUTTON      "",IDC_BUTTON_HIDDEN2,-51,-51,1,1
+#endif
     CTEXT           "",IDC_STATIC_STATUS_MAIN,7,7,285,16
     CTEXT           "",IDC_STATIC_STATUS_SUB,7,24,285,8
     CONTROL         "",IDC_ANIMATE_STATUS,"SysAnimate32",ACS_CENTER | 

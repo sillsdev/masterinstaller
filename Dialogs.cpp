@@ -17,6 +17,9 @@
 #include "HelpLauncher.h"
 #include "LogFile.h"
 #include "DiskManager.h"
+#ifdef EASTER_EGGS
+#include "midi.h"
+#endif
 
 void CentralizeWindow(HWND hwnd)
 // Move specified window to center of desktop.
@@ -1002,13 +1005,21 @@ INT_PTR CALLBACK DlgProcStatus(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 			break;
 
-			case IDC_BUTTON_CONTINUE: // Main thread, user pressed Continue.
-				DisplayStatusText(2, _T(""));
-				EndDialog(hwnd, 0);
-				break;
+		case IDC_BUTTON_CONTINUE: // Main thread, user pressed Continue.
+			DisplayStatusText(2, _T(""));
+			EndDialog(hwnd, 0);
+			break;
+
+#ifdef EASTER_EGGS
+		case IDC_BUTTON_HIDDEN1:
+			JukeBox.PlayNextSong();
+			break;
+		case IDC_BUTTON_HIDDEN2:
+			JukeBox.TogglePause();
+			break;
+#endif
 		}
 		break;
-
 	case WM_USER: // Sent from another thread to force this dialog to quit.
 		EndDialog(hwnd, 0);
 		break;

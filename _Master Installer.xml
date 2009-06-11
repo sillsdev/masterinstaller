@@ -58,8 +58,8 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite MinOS="6.0.0" MaxOs="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
@@ -124,8 +124,8 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite MinOS="6.0.0" MaxOs="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
@@ -182,8 +182,8 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite MinOS="6.0.0" MaxOs="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
@@ -247,8 +247,8 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite MinOS="6.0.0" MaxOs="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
@@ -307,8 +307,8 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{5A789B25-5206-49e2-968B-88C17835B80A}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite Tag="Win Vista SP1" MinVersion="1"/>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite MinOS="6.0.0" MaxOs="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
@@ -434,7 +434,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>Phonology Assistant\SetupPA.rtf</Help>
 			<ProductCode>{81584AC8-1718-4B20-8189-8A9F149C5CCD}</ProductCode>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="2.0"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -453,7 +453,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>Speech Analyzer\SetupSA.rtf</Help>
 			<ProductCode>{C250A187-A757-4E46-928B-D20A7403244D}</ProductCode>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="2.0"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>SAPreInstall</Preinstall>
 			<PostInstall>SAPostInstall</PostInstall>
 		</Product>
@@ -529,7 +529,7 @@
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{5C2B67EF-C1BE-4B07-9002-A6A4B0F9E043}</ProductCode>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Requires Tag="IE" MinVersion="6.0" FailMsg="The program may not run correctly."/>
 			<Requires Tag="MSXML4" FailMsg="The program may not run correctly."/>
 			<Help>PAWS Starter Kit\PAWS starter kit.rtf</Help>
@@ -712,7 +712,7 @@
 			<ProductCode>{C572BBAD-6E76-41A9-B575-A7CB666EA545}</ProductCode>
 			<Help>WordSurv\SetupWS.rtf</Help>
 			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
-			<Requires Tag="MDAC2.8" MinVersion="2.60" FailMsg="The program will not run correctly."/>
+			<Requires Tag="MDAC2.8SP1" MinVersion="2.60" FailMsg="The program will not run correctly."/>
 		</Product>		
 		<Product>
 			<AutoConfigure>
@@ -808,7 +808,7 @@
 			<ProductCode>{DC07DA97-25EB-4B1C-8B1B-190E3FBDB00A}</ProductCode>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
-			<Prerequisite Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -825,7 +825,7 @@
 			<ProductCode>{287F6ADF-DA8A-46fc-8BE0-351AA6412B79}</ProductCode>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
-			<Prerequisite Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -844,7 +844,7 @@
 			<ProductCode>{287F6ADF-DA8A-46fc-8BE0-351AA6412B79}</ProductCode>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
-			<Prerequisite Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -862,8 +862,8 @@
 			<ProductCode>{A49F249F-0C91-497F-86DF-B2585E8E76B7}</ProductCode>
 			<Commentary>Please wait while the package is installed.</Commentary>
 			<Prerequisite Tag="WI31" MinVersion="3.0"/>
-			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
-			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
+			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="3"/>
+			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP2" MinVersion="2"/>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=32BC1BEE-A3F9-4C13-9C99-220B62A191EE&amp;displaylang=en</DownloadURL>
 		</Product>
 		<Product>
@@ -877,10 +877,11 @@
 			<Tag>SQL2005_64</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
-			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
-			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
+			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="4"/>
+			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP2" MinVersion="2"/>
+			<Prerequisite Tag="MDAC2.8SP1" MinVersion="2.81.1117.6"/>
 			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR.EXE</CriticalFile>
 			<Preinstall>SQLServer2005Preinstall</Preinstall>
 			<Install Flag="g_fSqlServerUpgradeNeeded" TestAnsiConversion="true">
@@ -904,10 +905,11 @@
 			<Tag>SQL2005</Tag>
 			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
-			<Prerequisite Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
-			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
-			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
+			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="4"/>
+			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP2" MinVersion="2"/>
+			<Prerequisite Tag="MDAC2.8SP1" MinVersion="2.81.1117.6"/>
 			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR32.EXE</CriticalFile>
 			<Preinstall>TestIfSqlServerUpgradeNeeded</Preinstall>
 			<Install Flag="g_fSqlServerUpgradeNeeded">
@@ -1000,7 +1002,7 @@
 			<TestPresence Version="4">TestWin2kSpPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/windows2000/downloads/servicepacks/sp4/default.mspx</DownloadURL>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
-			<StatusWindow>Monitor</StatusWindow>
+			<StatusWindow>Monitor 4000</StatusWindow>
 			<FlushReboot>true</FlushReboot>
 		</Product>
 		<Product>
@@ -1017,7 +1019,7 @@
 			<TestPresence Version="1">TestWinXpSpPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/windowsxp/downloads/updates/sp1/default.mspx</DownloadURL>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
-			<StatusWindow>Monitor</StatusWindow>
+			<StatusWindow>Monitor 4000</StatusWindow>
 			<FlushReboot>true</FlushReboot>
 		</Product>
 		<Product>
@@ -1034,7 +1036,7 @@
 			<TestPresence Version="2">TestWinXpSpPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/windowsxp/sp2/default.mspx</DownloadURL>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
-			<StatusWindow>Monitor</StatusWindow>
+			<StatusWindow>Monitor 4000</StatusWindow>
 			<FlushReboot>true</FlushReboot>
 			<MustNotDelayReboot>true</MustNotDelayReboot>
 		</Product>
@@ -1053,7 +1055,7 @@
 			<DownloadURL>http://windowsupdate.microsoft.com/</DownloadURL>
 <!--			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=B0C7136D-5EBB-413B-89C9-CB3D06D12674&amp;displaylang=en</DownloadURL>-->
 			<Commentary>Follow instructions in installer wizard.</Commentary>
-			<StatusWindow>Monitor</StatusWindow>
+			<StatusWindow>Monitor 4000</StatusWindow>
 			<FlushReboot>true</FlushReboot>
 			<MustNotDelayReboot>true</MustNotDelayReboot>
 		</Product>
@@ -1113,8 +1115,8 @@
 			<FlushReboot>true</FlushReboot>
 			<Prerequisite Tag="IE" MinVersion="5.01"/>
 			<Prerequisite Tag="WI31" MinVersion="3.0"/>
-			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
-			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
+			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="3"/>
+			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP2" MinVersion="2"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1134,8 +1136,28 @@
 			<FlushReboot>true</FlushReboot>
 			<Prerequisite Tag="IE" MinVersion="5.01"/>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
-			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
-			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
+			<Prerequisite MinOS="5.0" MaxOS="5.0.32767.32767" Tag="KB835732"/>
+			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="4"/>
+			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP2" MinVersion="2"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Security Update for Windows 2000 (KB835732)</Title>
+				<Source>3rd Party\KB835732</Source>
+				<Destination>Utilities\KB835732</Destination>
+			</AutoConfigure>
+			<Title>Security Update for Windows 2000 (KB835732)</Title>
+			<Tag>KB835732</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<CriticalFile>Utilities\KB835732\Windows2000-KB835732-x86-ENU.EXE</CriticalFile>
+			<Install>$CriticalFile$ /q</Install>
+			<TestPresence>TestKB835732Presence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=0692C27E-F63A-414C-B3EB-D2342FBB6C00&amp;displaylang=en</DownloadURL>
+			<Commentary>Please wait while this silently installs. Your computer will probably reboot afterwards.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="2"/>
 		</Product>
 		<Product>
 			<!-- Alternative version of .NET 2.0 SP1 which will permit .NET 2.0 or higher without forcing an install of this. -->
@@ -1156,8 +1178,8 @@
 			<FlushReboot>true</FlushReboot>
 			<Prerequisite Tag="IE" MinVersion="5.01"/>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
-			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
-			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
+			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="4"/>
+			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP2" MinVersion="2"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1194,18 +1216,18 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Microsoft Data Access Components (MDAC) 2.8</Title>
+				<Title>Microsoft Data Access Components (MDAC) 2.8 SP1</Title>
 				<Source>3rd Party\MDAC 2.8\New</Source>
 				<Destination>Utilities\MDAC 2.8</Destination>
 			</AutoConfigure>
-			<Title>Microsoft Data Access Components 2.8</Title>
-			<Tag>MDAC2.8</Tag>
+			<Title>Microsoft Data Access Components 2.8 SP1</Title>
+			<Tag>MDAC2.8SP1</Tag>
 			<CriticalFile>Utilities\MDAC 2.8\MDAC_TYP.EXE</CriticalFile>
 			<Install>Utilities\MDAC 2.8\MDAC_TYP.EXE</Install>
-			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=6c050fe3-c795-4b7d-b037-185d0506396c&amp;DisplayLang=en</DownloadURL>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?familyid=78CAC895-EFC2-4F8E-A9E0-3A1AFBD5922E&amp;displaylang=en#Overview</DownloadURL>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Monitor</StatusWindow>
-			<TestPresence Version="2.80.1022.3">TestMDACPresence</TestPresence>
+			<TestPresence Version="2.81.1117.6">TestMDACPresence</TestPresence>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1257,7 +1279,7 @@
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=95E24C87-8732-48D5-8689-AB826E7B8FDF&amp;displaylang=en</DownloadURL>
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
-			<Prerequisite Tag="Win 2K SP4" MinVersion="4"/>
+			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="4"/>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1292,7 +1314,7 @@
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?familyid=889482fc-5f56-4a38-b838-de776fd4138c&amp;displaylang=en</DownloadURL>
 			<Commentary>Please wait a few moments.</Commentary>
 			<StatusWindow>Show</StatusWindow>
-			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
+			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="3"/>
 		</Product>
 	</Products>
 </MasterInstaller>

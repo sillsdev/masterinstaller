@@ -21,25 +21,19 @@ static const int kctDiskDetails = sizeof(DiskDetails) / sizeof(DiskDetails[0]);
 
 DiskManager_t::DiskManager_t()
 {
-	_TCHAR szCurrentPath[MAX_PATH];
-
 	// Get current drive root:
-	GetModuleFileName(NULL, szCurrentPath, MAX_PATH);
-	for (int i = 0; i < 3; i++)
-	 m_szCurrentDriveRoot[i] = szCurrentPath[i];
+	GetModuleFileName(NULL, m_szCurrentDriveRoot, 3);
 	m_szCurrentDriveRoot[3] = 0;
 	g_Log.Write(_T("Current drive root: %s"), m_szCurrentDriveRoot);
 
 	// Get current path:
-	_tcscpy_s(m_szCurrentPath, MAX_PATH, szCurrentPath);
-	_TCHAR * ch = _tcsrchr(m_szCurrentPath, _TCHAR('\\'));
-	if (ch)
-		*(ch + 1) = 0;
+	m_szCurrentPath = NewGetExeFolder();
 	g_Log.Write(_T("Current path: %s"), m_szCurrentPath);
 }
 
 DiskManager_t::~DiskManager_t()
 {
+	delete[] m_szCurrentPath;
 }
 
 int DiskManager_t::CurrentCd()
@@ -122,26 +116,41 @@ int DiskManager_t::EnsureCdForFile(const _TCHAR * pszFile, int iCd, const _TCHAR
 	int iCurrentCd = CurrentCd();
 
 	// See if file can be found from current directory:
-	const int knLen = MAX_PATH;
-	_TCHAR szPath[knLen];
-	_tcscpy_s(szPath, MAX_PATH, m_szCurrentPath);
-	_tcscat_s(szPath, MAX_PATH, pszFile);
-	if (GetFileAttributes(szPath) != INVALID_FILE_ATTRIBUTES)
+	_TCHAR * pszPath = MakePath(m_szCurrentPath, pszFile);
+
+	if (GetFileAttributes(pszPath) != INVALID_FILE_ATTRIBUTES)
 	{
 		if (iCurrentCd == iCd)
+		{
+			delete[] pszPath;
+			pszPath = NULL;
 			return knCorrectCdAlready;
+		}
 		else if (iCurrentCd == -1)
+		{
+			delete[] pszPath;
+			pszPath = NULL;
 			return knFileFoundWrongCd;
+		}
 	}
 	int nResult = CheckCdPresent(iCd, false, pszSkipMsgProduct);
 	if (nResult == knCorrectCdFinally || nResult == knCorrectCdAlready)
-		if (GetFileAttributes(szPath) == INVALID_FILE_ATTRIBUTES)
+	{
+		if (GetFileAttributes(pszPath) == INVALID_FILE_ATTRIBUTES)
+		{
+			delete[] pszPath;
+			pszPath = NULL;
 			return knFileNotFoundCorrectCd;
+		}
+	}
+	delete[] pszPath;
+	pszPath = NULL;
+
 	return nResult;
 }
 
 // Make a new string containing a concatenation of the current path and the given path.
 _TCHAR * DiskManager_t::NewFullPath(const _TCHAR * pszRelativePath)
 {
-	return new_sprintf(_T("%s%s"), m_szCurrentPath, pszRelativePath);
+	return MakePath(m_szCurrentPath, pszRelativePath);
 }

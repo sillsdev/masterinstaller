@@ -11,57 +11,37 @@ void InitEC()
 
 	// Look up new code location:
 	g_Log.Write(_T("Looking up EC installation folder..."));
-	LONG lResult;
-	HKEY hKey;
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL\\SilEncConverters30"), NULL,
-		KEY_READ, &hKey);
-	if (ERROR_SUCCESS != lResult)
-		g_Log.Write(_T("...HKEY_LOCAL_MACHINE\\SOFTWARE\\SIL\\SilEncConverters30 cannot be opened."));
+
+	_TCHAR * pszEcFolder = NewRegString(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\SIL\\SilEncConverters30"), _T("RootDir"));
+
+	if (!pszEcFolder)
+		g_Log.Write(_T("...RootDir could not be read."));
 	else
 	{
-		DWORD cbData = 0;
-		_TCHAR * pszEcFolder = NULL;
+		g_Log.Write(_T("...EC root folder = '%s'."), pszEcFolder);
 
-		// Get required buffer size:
-		lResult = RegQueryValueEx(hKey, _T("RootDir"), NULL, NULL, NULL, &cbData);
-		if (ERROR_SUCCESS != lResult)
-			g_Log.Write(_T("...Cannot get required buffer size."));
-		else
-		{
-			pszEcFolder = new _TCHAR [cbData];
+		RemoveTrailingBackslashes(pszEcFolder);
 
-			// Retrieve folder path:
-			lResult = RegQueryValueEx(hKey, _T("RootDir"), NULL, NULL, (LPBYTE)pszEcFolder,
-				&cbData);
+		// Make command line from code folder and utility name:
+		_TCHAR * pszCmd = MakePath(pszEcFolder, _T("EncConvertersAppDataMover30.exe"),
+			true); // Quoted path
 
-			if (ERROR_SUCCESS != lResult)
-				g_Log.Write(_T("...RootDir could not be read."));
-			else
-			{
-				g_Log.Write(_T("...EC root folder = '%s'."), pszEcFolder);
+		delete[] pszEcFolder;
+		pszEcFolder = NULL;
 
-				// Remove any trailing backslash:
-				if (pszEcFolder[_tcslen(pszEcFolder) - 1] == '\\')
-					pszEcFolder[_tcslen(pszEcFolder) - 1] = 0;
+		// Arrange for utility to not display a window:
+		STARTUPINFO si;
+		ZeroMemory(&si, sizeof(si));
+		si.cb = sizeof(si);
+		si.dwFlags = STARTF_USESHOWWINDOW;
+		si.wShowWindow = SW_HIDE;
 
-				// Make command line from code folder and utility name:
-				_TCHAR * pszCmd = new_sprintf(_T("\"%s\\EncConvertersAppDataMover30.exe\""),
-					pszEcFolder);
+		// Run utility - return code will be logged by ExecCmd() function:
+		ExecCmd(pszCmd, NULL, true, _T("Encoding Converters initialization"),
+			_T("show"), 0, &si);
 
-				// Arrange for utility to not display a window:
-				STARTUPINFO si;
-				ZeroMemory(&si, sizeof(si));
-				si.cb = sizeof(si);
-				si.dwFlags = STARTF_USESHOWWINDOW;
-				si.wShowWindow = SW_HIDE;
-
-				// Run utility - return code will be logged by ExecCmd() function:
-				ExecCmd(pszCmd, NULL, true, _T("Encoding Converters initialization"),
-					_T("show"), 0, &si);
-			}
-			delete[] pszEcFolder;
-			pszEcFolder = NULL;
-		}
-		RegCloseKey(hKey);
+		delete[] pszCmd;
+		pszCmd = NULL;
 	}
 }

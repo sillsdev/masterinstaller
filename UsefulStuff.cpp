@@ -53,14 +53,7 @@ DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit,
 		if (_tcscmp(pszCurrentDir, _T("")) == 0)
 		{
 			// Set pszNewCurrentDir to the path where current process was launched from:
-			pszNewCurrentDir = new _TCHAR [MAX_PATH];
-			GetModuleFileName(NULL, pszNewCurrentDir, MAX_PATH);
-			_TCHAR * ch = _tcsrchr(pszNewCurrentDir, _TCHAR('\\'));
-			if (ch)
-				ch++;
-			else
-				ch = pszNewCurrentDir;
-			*ch = 0;
+			pszNewCurrentDir = NewGetExeFolder();
 			g_Log.Write(_T("Setting current directory as per setup.exe: %s"), pszNewCurrentDir);
 		}
 		else
@@ -268,7 +261,7 @@ void AddToPathEnvVar(_TCHAR * pszExtraPath)
 // Returns a newly allocated buffer containing the path of the specified folder.
 // Caller must delete[] the returned value.
 // csidlFolder is the CSIDL of the folder requested.
-// This routine uses the SHGetFolderPath, which is not in Windows 98, so the DLL
+// This routine uses the SHGetFolderPath, which may not be in Windows 98, so the DLL
 // that has it is loaded dynamically.
 _TCHAR * GetFolderPathNew(int csidlFolder)
 {
@@ -305,8 +298,7 @@ _TCHAR * GetFolderPathNew(int csidlFolder)
 			pszReturnPath))
 		{
 			// Remove any trailing backslash from the folder:
-			if (pszReturnPath[_tcslen(pszReturnPath) - 1] == '\\')
-				pszReturnPath[_tcslen(pszReturnPath) - 1] = 0;
+			RemoveTrailingBackslashes(pszReturnPath);
 			g_Log.Write(_T("Retrieved %s"), pszReturnPath);
 		}
 		else
@@ -470,19 +462,148 @@ _TCHAR * FetchString(int stid)
 
 // Concatenates the two path fragments, making sure exactly one backslash is between them.
 // Returns a new string that the caller must delete[].
-_TCHAR * MakePath(const _TCHAR * pszFolder, const _TCHAR * pszFile)
+_TCHAR * MakePath(const _TCHAR * pszFolder, const _TCHAR * pszFile, bool fQuoted)
 {
 	_TCHAR * pszFolderDup = my_strdup(pszFolder);
-	while (pszFolderDup[_tcslen(pszFolderDup) - 1] == '\\')
-		pszFolderDup[_tcslen(pszFolderDup) - 1] = 0;
+	RemoveTrailingBackslashes(pszFolderDup);
 
 	while (pszFile[0] == '\\')
 		pszFile++;
 
-	_TCHAR * pszPath = new_sprintf(_T("%s\\%s"), pszFolderDup, pszFile);
+	_TCHAR * pszPath;
+
+	if (_tcslen(pszFolderDup) > 0)
+	{
+		if (fQuoted)
+			pszPath = new_sprintf(_T("\"%s\\%s\""), pszFolderDup, pszFile);
+		else
+			pszPath = new_sprintf(_T("%s\\%s"), pszFolderDup, pszFile);
+	}
+	else
+	{
+		if (fQuoted)
+			pszPath = new_sprintf(_T("\"%s\""), pszFile);
+		else
+			pszPath = new_sprintf(_T("%s"), pszFile);
+	}
 	delete[] pszFolderDup;
 
 	return pszPath;
+}
+
+// Terminates given string at the last backslash, thus removing any file name
+// from a full path, or the last folder from a folder path.
+void RemoveLastPathSection(_TCHAR * pszFilePath)
+{
+	_TCHAR * ch = _tcsrchr(pszFilePath, (_TCHAR)('\\'));
+	if (ch)
+		*ch = 0;
+}
+
+// Concatenates the two path fragments, making sure exactly one backslash is between them.
+// Result overwrites the first argument, which must be dynamically allocated.
+void NewConcatenatePath(_TCHAR *& pszFolder, const _TCHAR * pszFile)
+{
+	while (pszFolder[_tcslen(pszFolder) - 1] == '\\')
+		pszFolder[_tcslen(pszFolder) - 1] = 0;
+
+	while (pszFile[0] == '\\')
+		pszFile++;
+
+	new_sprintf_concat(pszFolder, 0, pszFile);
+}
+
+// Removes all contiguous backslashes from the end of the given string.
+void RemoveTrailingBackslashes(_TCHAR * pszFolder)
+{
+	size_t nLen = _tcslen(pszFolder);
+	if (nLen >= 1)
+	{
+		if (pszFolder[nLen - 1] == '\\')
+		{
+			pszFolder[nLen - 1] = 0;
+			RemoveTrailingBackslashes(pszFolder);
+		}
+	}
+}
+
+// Returns a new dynamically allocated string contaning the folder where our .exe is located.
+_TCHAR * NewGetExeFolder()
+{
+	int cchExeDir = MAX_PATH;
+	_TCHAR * pszExeDir = NULL;
+
+	// Try to get full path to our .exe, doubling buffer size each time we don't have enough:
+	while (!pszExeDir)
+	{
+		pszExeDir = new _TCHAR [cchExeDir];
+		if (0 == GetModuleFileName(NULL, pszExeDir, MAX_PATH))
+			HandleError(kFatal, true, IDC_ERROR_INTERNAL);
+
+		if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
+		{
+			delete[] pszExeDir;
+			pszExeDir = NULL;
+			cchExeDir *= 2;
+		}
+	}
+
+	// Find last backslash, and remove it and any text after it:
+	RemoveLastPathSection(pszExeDir);
+	return pszExeDir;
+}
+
+// Returns newly allocated string containing the specified registry value from the specified
+// key. Caller must delete[] the returned value. pszValueName can be NULL to get default value.
+// Returns NULL if something went wrong.
+_TCHAR * NewRegString(HKEY hKeyRoot, const _TCHAR * pszSubKey, const _TCHAR * pszValueName)
+{
+	LONG lResult;
+	HKEY hKey;
+
+	const _TCHAR * pszKeyRoot = _T("");
+	if (hKeyRoot == HKEY_CLASSES_ROOT)
+		pszKeyRoot = _T("HKEY_CLASSES_ROOT");
+	else if (hKeyRoot == HKEY_CURRENT_USER)
+		pszKeyRoot = _T("HKEY_CURRENT_USER");
+	if (hKeyRoot == HKEY_LOCAL_MACHINE)
+		pszKeyRoot = _T("HKEY_LOCAL_MACHINE");
+	else if (hKeyRoot == HKEY_USERS)
+		pszKeyRoot = _T("HKEY_USERS");
+
+	// Open Registry at required key:
+	lResult = RegOpenKeyEx(hKeyRoot, pszSubKey, 0, KEY_READ, &hKey);
+	if (ERROR_SUCCESS != lResult)
+	{
+		g_Log.Write(_T("Could not find registry key %s\\%s"), pszKeyRoot, pszSubKey);
+		return NULL;
+	}
+
+	// Fetch required buffer size:
+	DWORD cbData = 0;
+	lResult = RegQueryValueEx(hKey, pszValueName, NULL, NULL, NULL, &cbData);
+	if (cbData == 0)
+	{
+		g_Log.Write(_T("Could not find registry value '%s' in key %s\\%s"),
+			(pszValueName? pszValueName : _T("[Default]")), pszKeyRoot, pszSubKey);
+		return NULL;
+	}
+
+	// Read actual data:
+	_TCHAR * pszRetVal = new _TCHAR [cbData + 1];
+	lResult = RegQueryValueEx(hKey, pszValueName, NULL, NULL, LPBYTE(pszRetVal), &cbData);
+
+	RegCloseKey(hKey);
+	hKey = NULL;
+
+	if (ERROR_SUCCESS != lResult)
+	{
+		g_Log.Write(_T("Could not read registry value '%s' in key %s\\%s"), pszValueName,
+			pszKeyRoot, pszSubKey);
+		delete[] pszRetVal;
+		return NULL;
+	}
+	return pszRetVal;
 }
 
 // Writes the given text to the Clipboard
@@ -601,13 +722,10 @@ void InitAdvancedApi()
 		g_Log.Write(_T("System folder is %s"), pszSystemFolder);
 
 		// Remove any terminating backslash:
-		int cch = (int)_tcslen(pszSystemFolder);
-		if (cch > 1)
-			if (pszSystemFolder[cch - 1] == _TCHAR('\\'))
-				pszSystemFolder[cch - 1] = 0;
+		RemoveTrailingBackslashes(pszSystemFolder);
 
 		// Generate full path of Advapi32.dll:
-		_TCHAR * pszAdvapi32Dll = new_sprintf(_T("%s\\Advapi32.dll"), pszSystemFolder);
+		_TCHAR * pszAdvapi32Dll = MakePath(pszSystemFolder, _T("Advapi32.dll"));
 
 		// Release memory used to hold path to System32 folder:
 		delete[] pszSystemFolder;
@@ -623,59 +741,59 @@ void InitAdvancedApi()
 
 			_CheckTokenMembership = (CheckTokenMembershipFn)GetProcAddress(hmodAdvapi32,
 				"CheckTokenMembership");
-			g_Log.Write(_T("Address of CheckTokenMembership: %s"), _CheckTokenMembership? "found" : "NULL");
+			g_Log.Write(_T("Address of CheckTokenMembership: %s"), (_CheckTokenMembership? _T("found") : _T("NULL")));
 
 			_CreateWellKnownSid = (CreateWellKnownSidFn)GetProcAddress(hmodAdvapi32,
 				"CreateWellKnownSid");
-			g_Log.Write(_T("Address of CreateWellKnownSid: %s"), _CreateWellKnownSid? "found" : "NULL");
+			g_Log.Write(_T("Address of CreateWellKnownSid: %s"), (_CreateWellKnownSid?  _T("found") : _T("NULL")));
 
 			_QueryServiceStatusEx = (QueryServiceStatusExFn)GetProcAddress(hmodAdvapi32,
 				"QueryServiceStatusEx");
-			g_Log.Write(_T("Address of QueryServiceStatusEx: %s"), _QueryServiceStatusEx? "found" : "NULL");
+			g_Log.Write(_T("Address of QueryServiceStatusEx: %s"), (_QueryServiceStatusEx?  _T("found") : _T("NULL")));
 
 
 			// The following functions have different versions for ANSI and Unicode:
 #ifdef UNICODE
 			_ConvertStringSidToSid = (ConvertStringSidToSidFn)GetProcAddress(hmodAdvapi32,
 				"ConvertStringSidToSidW");
-			g_Log.Write(_T("Address of ConvertStringSidToSidW: %s"), _ConvertStringSidToSid? "found" : "NULL");
+			g_Log.Write(_T("Address of ConvertStringSidToSidW: %s"), (_ConvertStringSidToSid?  _T("found") : _T("NULL")));
 
 			_GetNamedSecurityInfo = (GetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
 				"GetNamedSecurityInfoW");
-			g_Log.Write(_T("Address of GetNamedSecurityInfoW: %s"), _GetNamedSecurityInfo? "found" : "NULL");
+			g_Log.Write(_T("Address of GetNamedSecurityInfoW: %s"), (_GetNamedSecurityInfo?  _T("found") : _T("NULL")));
 
 			_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvapi32,
 				"LookupAccountSidW");
-			g_Log.Write(_T("Address of LookupAccountSidW: %s"), _LookupAccountSid? "found" : "NULL");
+			g_Log.Write(_T("Address of LookupAccountSidW: %s"), (_LookupAccountSid?  _T("found") : _T("NULL")));
 
 			_SetEntriesInAcl = (SetEntriesInAclFn)GetProcAddress(hmodAdvapi32,
 				"SetEntriesInAclW");
-			g_Log.Write(_T("Address of SetEntriesInAclW: %s"), _SetEntriesInAcl? "found" : "NULL");
+			g_Log.Write(_T("Address of SetEntriesInAclW: %s"), (_SetEntriesInAcl?  _T("found") : _T("NULL")));
 
 			_SetNamedSecurityInfo = (SetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
 				"SetNamedSecurityInfoW");
-			g_Log.Write(_T("Address of SetNamedSecurityInfoW: %s"), _SetNamedSecurityInfo? "found" : "NULL");
+			g_Log.Write(_T("Address of SetNamedSecurityInfoW: %s"), (_SetNamedSecurityInfo?  _T("found") : _T("NULL")));
 
 #else
 			_ConvertStringSidToSid = (ConvertStringSidToSidFn)GetProcAddress(hmodAdvapi32,
 				"ConvertStringSidToSidA");
-			g_Log.Write(_T("Address of ConvertStringSidToSidA: %s"), _ConvertStringSidToSid? "found" : "NULL");
+			g_Log.Write(_T("Address of ConvertStringSidToSidA: %s"), (_ConvertStringSidToSid?  _T("found") : _T("NULL")));
 
 			_GetNamedSecurityInfo = (GetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
 				"GetNamedSecurityInfoA");
-			g_Log.Write(_T("Address of GetNamedSecurityInfoA: %s"), _GetNamedSecurityInfo? "found" : "NULL");
+			g_Log.Write(_T("Address of GetNamedSecurityInfoA: %s"), (_GetNamedSecurityInfo?  _T("found") : _T("NULL")));
 
 			_LookupAccountSid = (LookupAccountSidFn)GetProcAddress(hmodAdvapi32,
 				"LookupAccountSidA");
-			g_Log.Write(_T("Address of LookupAccountSidA: %s"), _LookupAccountSid? "found" : "NULL");
+			g_Log.Write(_T("Address of LookupAccountSidA: %s"), (_LookupAccountSid?  _T("found") : _T("NULL")));
 
 			_SetEntriesInAcl = (SetEntriesInAclFn)GetProcAddress(hmodAdvapi32,
 				"SetEntriesInAclA");
-			g_Log.Write(_T("Address of CheckTokenMembership: %s"), _SetEntriesInAcl? "found" : "NULL");
+			g_Log.Write(_T("Address of CheckTokenMembership: %s"), (_SetEntriesInAcl?  _T("found") : _T("NULL")));
 
 			_SetNamedSecurityInfo = (SetNamedSecurityInfoFn)GetProcAddress(hmodAdvapi32,
 				"SetNamedSecurityInfoA");
-			g_Log.Write(_T("Address of SetNamedSecurityInfoA: %s"), _SetNamedSecurityInfo? "found" : "NULL");
+			g_Log.Write(_T("Address of SetNamedSecurityInfoA: %s"), (_SetNamedSecurityInfo?  _T("found") : _T("NULL")));
 
 #endif
 		}

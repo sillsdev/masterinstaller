@@ -19,6 +19,10 @@ int APIENTRY WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/,
 	g_OSversion.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 	::GetVersionEx((LPOSVERSIONINFO)(&g_OSversion));
 
+	g_Log.Write(_T("OS version = %d.%d SP %d.%d"), g_OSversion.dwMajorVersion,
+		g_OSversion.dwMinorVersion, g_OSversion.wServicePackMajor,
+		g_OSversion.wServicePackMinor);
+
 	_TCHAR * pszCmdLine;
 #ifdef UNICODE
 	int cch = 1 + (int)strlen(lpCmdLine);

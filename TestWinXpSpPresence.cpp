@@ -5,7 +5,7 @@
 // Tests for presence of given Service Pack on Windows XP.
 // If current operating system is not even Windows XP, returns true anyway.
 bool TestWinXpSpPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
-						 const TCHAR * /*pszCriticalFile*/)
+						 SoftwareProduct * /*Product*/)
 {
 	OSVERSIONINFOEX osvi;
 

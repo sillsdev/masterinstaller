@@ -5,7 +5,7 @@
 // Tests for presence of given Service Pack on Windows Vista.
 // If current operating system is not even Windows Vista, returns true anyway.
 bool TestWinVistaSpPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
-						 const TCHAR * /*pszCriticalFile*/)
+						 SoftwareProduct * /*Product*/)
 {
 	OSVERSIONINFOEX osvi;
 

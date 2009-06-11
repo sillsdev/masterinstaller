@@ -98,7 +98,7 @@ void DoFW40UninstallFix()
 	
 	if (pszSystemFolderPath)
 	{
-		_TCHAR * pszInprocServer32 = new_sprintf(_T("%s\\ole32.dll"), pszSystemFolderPath);
+		_TCHAR * pszInprocServer32 = MakePath(pszSystemFolderPath, _T("ole32.dll"));
 
 		delete[] pszSystemFolderPath;
 		pszSystemFolderPath = NULL;

@@ -5,8 +5,8 @@
 // Tests for presence of Microsoft Text Services Framework.
 // This does not seem to have any version number records.
 // In addition, uninstalling on Windows 2000 appears to leave all components intact!
-bool TestTsfPresence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMaxVersion*/,
-					 const TCHAR * /*pszCriticalFile*/)
+bool TestTsfPresence(const _TCHAR * /*pszMinVersion*/, const _TCHAR * /*pszMaxVersion*/,
+					 SoftwareProduct * /*Product*/)
 {
 	LONG lResult;
 	HKEY hKey = NULL;

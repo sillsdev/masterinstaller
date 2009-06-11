@@ -150,9 +150,7 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 		if (nWinDirRet > 0 && nWinDirRet < MAX_PATH)
 		{
 			// Don't allow the path to end with a backslash:
-			int cchLen = (int)_tcslen(pszWindowsDirectory);
-			if (pszWindowsDirectory[cchLen - 1] == '\\')
-				pszWindowsDirectory[cchLen - 1] = 0;
+			RemoveTrailingBackslashes(pszWindowsDirectory);
 
 			// Construct our command string:
 			const _TCHAR * pszHelpCmd = _T("WinHlp32.exe");

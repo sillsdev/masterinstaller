@@ -9,8 +9,8 @@
 // It is possible to have multuple versions installed, but only one (maximum) can have the file
 // association set up.
 // This function will merely test for the existence of any version within the given range.
-bool TestAcrobatReaderPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
-							   const TCHAR * /*pszCriticalFile*/)
+bool TestAcrobatReaderPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
+							   SoftwareProduct * /*Product*/)
 {
 	bool fResult = false;
 	LONG lResult;
@@ -22,7 +22,7 @@ bool TestAcrobatReaderPresence(const TCHAR * pszMinVersion, const TCHAR * pszMax
 	if (ERROR_SUCCESS == lResult)
 	{
 		const int knVersionBufSize = 20;
-		TCHAR szVersion[knVersionBufSize];
+		_TCHAR szVersion[knVersionBufSize];
 		DWORD iKey = 0;
 		DWORD cbData = knVersionBufSize;
 		while (ERROR_SUCCESS == RegEnumKeyEx(hKey, iKey++, szVersion, &cbData, NULL, NULL, NULL,

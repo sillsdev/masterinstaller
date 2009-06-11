@@ -24,28 +24,28 @@ project to make an executable master installer.
 		<xsl:if test="not(@Type='External')">
 			<xsl:text>extern bool </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion, const _TCHAR * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion, SoftwareProduct * Product);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:for-each select="MasterInstaller/Products/Product/Preinstall">
 		<xsl:if test="not(@Type='External') and not(@IgnoreError='true')">
 			<xsl:text>extern int </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(const _TCHAR * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(SoftwareProduct * Product);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:for-each select="MasterInstaller/Products/Product/Install">
 		<xsl:if test="@Type='Internal'">
 			<xsl:text>extern DWORD </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(bool fFlag, const _TCHAR * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(bool fFlag, SoftwareProduct * Product);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:for-each select="MasterInstaller/Products/Product/PostInstall">
 		<xsl:if test="not(@Type='External')">
 			<xsl:text>extern int </xsl:text>
 			<xsl:value-of select="."/>
-			<xsl:text>(const _TCHAR * pszCriticalFile);&#13;</xsl:text>
+			<xsl:text>(SoftwareProduct * Product);&#13;</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	<xsl:text>&#13;</xsl:text>
@@ -210,6 +210,7 @@ project to make an executable master installer.
 			<xsl:text>&#09;&#09;NULL, // No Install Cmd for true condition&#13;</xsl:text>
 			<xsl:text>&#09;&#09;NULL, // No Install Cmd for false condition&#13;</xsl:text>
 			<xsl:text>&#09;&#09;NULL, // No MsiFlags&#13;</xsl:text>
+			<xsl:text>&#09;&#09;false, // Don't test ANSI conversion&#13;</xsl:text>
 			<xsl:text>&#09;&#09;NULL, // No MsiVersion&#13;</xsl:text>
 			<xsl:text>&#09;&#09;NULL, // No MsiUpgrade&#13;</xsl:text>
 			<xsl:text>&#09;&#09;</xsl:text>
@@ -452,7 +453,18 @@ project to make an executable master installer.
 					</xsl:if>
 
 					<!-- There is no FailMsg in prerequisites -->
-					<xsl:text>, NULL</xsl:text>
+					<xsl:text>, NULL, </xsl:text>
+
+					<xsl:call-template name="QuotedStrOrNullIfEmpty">
+						<xsl:with-param name="str" select="@MinOS"/>
+					</xsl:call-template>
+
+					<xsl:text>, </xsl:text>
+
+					<xsl:call-template name="QuotedStrOrNullIfEmpty">
+						<xsl:with-param name="str" select="@MaxOS"/>
+					</xsl:call-template>
+
 					<xsl:text> },&#13;</xsl:text>
 
 				</xsl:for-each>
@@ -508,7 +520,17 @@ project to make an executable master installer.
 					</xsl:if>
 					<xsl:text>, _T("</xsl:text>
 					<xsl:value-of select="@FailMsg"/>
-					<xsl:text>")</xsl:text>
+					<xsl:text>"), </xsl:text>
+
+					<xsl:call-template name="QuotedStrOrNullIfEmpty">
+						<xsl:with-param name="str" select="@MinOS"/>
+					</xsl:call-template>
+
+					<xsl:text>, </xsl:text>
+
+					<xsl:call-template name="QuotedStrOrNullIfEmpty">
+						<xsl:with-param name="str" select="@MaxOS"/>
+					</xsl:call-template>
 
 					<xsl:text> },&#13;</xsl:text>
 				</xsl:for-each>
@@ -546,7 +568,17 @@ project to make an executable master installer.
 						</xsl:if>
 						<xsl:text>, _T("</xsl:text>
 						<xsl:value-of select="@FailMsg"/>
-						<xsl:text>")</xsl:text>
+						<xsl:text>"), </xsl:text>
+
+						<xsl:call-template name="QuotedStrOrNullIfEmpty">
+							<xsl:with-param name="str" select="@MinOS"/>
+						</xsl:call-template>
+
+						<xsl:text>, </xsl:text>
+
+						<xsl:call-template name="QuotedStrOrNullIfEmpty">
+							<xsl:with-param name="str" select="@MaxOS"/>
+						</xsl:call-template>
 
 						<xsl:text> },&#13;</xsl:text>
 					</xsl:for-each>	

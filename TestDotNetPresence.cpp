@@ -3,8 +3,8 @@
 #include <tchar.h>
 
 // Tests for presence of .NET runtime
-bool TestDotNetPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
-						const TCHAR * /*pszCriticalFile*/)
+bool TestDotNetPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
+						SoftwareProduct * /*Product*/)
 {
 	// Simple test: Look for the major and minor version number in the registry.
 	// This ignores the build number, and doesn't check that any relavant files or folders are

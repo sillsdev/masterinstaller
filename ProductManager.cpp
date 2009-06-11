@@ -15,16 +15,78 @@
 #include "PersistantProgress.h"
 
 
-#include "SoftwareProductTypes.h"
+// Forward declaration:
+class SoftwareProduct;
+
+//	SoftwareProductTypes
+//	These are the types needed in the SoftwareProduct Class.
+typedef bool (* pfnAuxTestPresence)(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion, SoftwareProduct * Product);
+typedef int (* pfnPreInstallation)(SoftwareProduct * Product);
+typedef DWORD (* pfnInstall)(bool fFlag, SoftwareProduct * Product);
+typedef int (* pfnPostInstallation)(SoftwareProduct * Product);
+
 
 // Declaration of information about any software product on our CD:
 class SoftwareProduct
 {
 public:
-#include "SoftwareProductMembers.h"
+	//	These are the members that are initialized automatically by the processed XML file (in
+	// ConfigProducts.cpp):
+	const _TCHAR * m_kpszInternalName;
+	const _TCHAR * m_kpszNiceName;
+	const _TCHAR * m_kpszMsiProductCode;
+	const _TCHAR * m_kpszMsiFeature;
+	const _TCHAR * m_kpszVersionInKey;
+	int m_nKeyId;
+	bool m_kfOneOfOurs;
+	bool * m_fCriticalFileFlag;
+	const _TCHAR * m_pszCriticalFileFlagTrue;
+	const _TCHAR * m_pszCriticalFileFlagFalse;
+	int m_iCd;
+	bool m_fMustHaveWin2kOrBetter;
+	bool m_fMustBeAdmin;
 
-	IndexList_t m_rgiPrerequisites;
-	IndexList_t m_rgiRequirements;
+	bool m_fFlushPendingReboot;
+	bool m_fRebootTestRegPending;
+	bool m_fRebootWininit;
+
+	bool m_fMustKillHangingWindows;
+
+	pfnPreInstallation m_pfnPreInstallation;
+	const _TCHAR * m_kpszPreInstallation;
+	bool m_fIngnorePreInstallationErrors;
+
+	bool * m_pfInstallerFlag;
+	const _TCHAR * m_kpszInstallerFlagTrue;
+	const _TCHAR * m_kpszInstallerFlagFalse;
+	const _TCHAR * m_kpszMsiFlags;
+	bool m_fTestAnsiConversion;
+	const _TCHAR * m_kpszMsiVersion;
+	const _TCHAR * m_kpszMsiUpgrade;
+	pfnInstall m_pfnInstall;
+	DWORD dwSuccessCodeOverride;
+
+	bool m_fMustNotDelayReboot;
+
+	const _TCHAR * m_kpszDownloadUrl;
+
+	const _TCHAR * m_kpszCommentary;
+	const _TCHAR * m_kpszStatusWindowControl;
+	bool m_fStatusPauseWin98;
+
+	pfnAuxTestPresence m_pfnAuxTestPresence;
+	const _TCHAR * m_kpszAuxTestPresence;
+	const _TCHAR * m_kpszTestPresenceVersion;
+
+	pfnPostInstallation m_pfnPostInstallation;
+	const _TCHAR * m_kpszPostInstallation;
+
+	const _TCHAR * m_kpszHelpTag;
+	bool m_fInternalHelpFile;
+	// End of members that are initialized automatically by the processed XML file.
+
+	IndexList_t m_rgiPrerequisiteMappings;
+	IndexList_t m_rgiRequirementMappings;
 
 	enum v_Installation
 	{
@@ -296,19 +358,8 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 			else if (_tcscmp(pszRegKey, _T("HKEY_DYN_DATA")) == 0 || _tcscmp(pszRegKey, _T("HKDD")) == 0)
 				hKeyRoot = HKEY_DYN_DATA;
 
-			HKEY hKey;
-			LONG lResult = RegOpenKeyEx(hKeyRoot, pszRegSubKey, 0, KEY_READ, &hKey);
-			const int cchKeyData = 32767;
-			_TCHAR szKeyData[cchKeyData];
-			if (ERROR_SUCCESS == lResult)
-			{
-				DWORD cbData = sizeof(szKeyData);
-				
-				lResult = RegQueryValueEx(hKey, pszValue, NULL, NULL, (LPBYTE)szKeyData,
-					&cbData);
-				RegCloseKey(hKey);
-			}
-			if (ERROR_SUCCESS != lResult)
+			_TCHAR * pszKeyData = NewRegString(hKeyRoot, pszRegSubKey, pszValue);
+			if (!pszKeyData)
 			{
 				_TCHAR * pszMsg = new_sprintf(_T("A request to evaluate Registry Data \"%s\"")
 					_T(" failed."), pszRegKeyCopy);
@@ -322,8 +373,11 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 			pszRegKeyCopy = NULL;
 
 			// Got the value, so perform the substitution:
-			_TCHAR * pszIntermediate = new_sprintf(_T("%s%s%s"), pszTemplateCopy, szKeyData,
+			_TCHAR * pszIntermediate = new_sprintf(_T("%s%s%s"), pszTemplateCopy, pszKeyData,
 				(pszCloseBracket + 1));
+
+			delete[] pszKeyData;
+			pszKeyData = NULL;
 
 			// Now recurse, to see if any more text needs interpretting:
 			pszResult = new_InterpretString(pszIntermediate);
@@ -373,7 +427,7 @@ bool SoftwareProduct::TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * 
 	if (m_pfnAuxTestPresence || m_kpszAuxTestPresence)
 	{
 		if (m_pfnAuxTestPresence)
-			fPresent = m_pfnAuxTestPresence(pszMinVersion, pszMaxVersion, GetCriticalFile());
+			fPresent = m_pfnAuxTestPresence(pszMinVersion, pszMaxVersion, this);
 		if (m_kpszAuxTestPresence)
 			fPresent |= (0 != ExecCmd(m_kpszAuxTestPresence, _T(""), true));
 	}
@@ -494,9 +548,9 @@ DWORD SoftwareProduct::RunInstaller()
 	{
 		// We have to call an internal function:
 		if (m_pfInstallerFlag)
-			nResult = m_pfnInstall(*m_pfInstallerFlag, GetCriticalFile());
+			nResult = m_pfnInstall(*m_pfInstallerFlag, this);
 		else
-			nResult = m_pfnInstall(true, GetCriticalFile());
+			nResult = m_pfnInstall(true, this);
 	}
 	else
 	{
@@ -708,7 +762,7 @@ bool SoftwareProduct::Install()
 				{
 					g_Log.Write(_T("Calling pre-installation function..."));
 					g_Log.Indent();
-					nReturn = m_pfnPreInstallation(GetCriticalFile());
+					nReturn = m_pfnPreInstallation(this);
 					g_Log.Unindent();
 					g_Log.Write(_T("...Done. Pre-installation function returned %d"), nReturn);
 				}
@@ -862,7 +916,7 @@ bool SoftwareProduct::Install()
 	{
 		g_Log.Write(_T("Calling post-installation function..."));
 		g_Log.Indent();
-		int nReturn = m_pfnPostInstallation(GetCriticalFile());
+		int nReturn = m_pfnPostInstallation(this);
 		g_Log.Unindent();
 		g_Log.Write(_T("...Done. Post-installation function returned %d"), nReturn);
 	}
@@ -954,10 +1008,24 @@ static bool s_fSoftwareProductsInitialized = false;
 // Declaration of information about any software dependency:
 struct Mapping
 {
-#include "MappingMembers.h"
+	// All members are initialized automatically by the processed XML file (in 
+	// ConfigProducts.cpp).
+	const _TCHAR * m_kpszKeyProduct;
+	const _TCHAR * m_kpszDependentProduct;
+	const _TCHAR * m_kpszMinVersion;
+	const _TCHAR * m_kpszMaxVersion;
+	const _TCHAR * m_kpszFailureMessage;
+	const _TCHAR * m_kpszMinOs;
+	const _TCHAR * m_kpszMaxOs;
 };
 
-// Include file auto-generated from XML specification:
+// Forward declaration for ConfigFunctions.cpp:
+bool GetFileVersion(const _TCHAR * pszFilePath, __int64 & nVersion);
+
+// Include functions file auto-generated from XML specification:
+#include "ConfigFunctions.cpp"
+
+// Include products file auto-generated from XML specification:
 #include "ConfigProducts.cpp"
 
 // Work out Product array size (known at compile time):
@@ -1019,8 +1087,6 @@ public:
 	virtual bool IsInstallable(int iProduct) const;
 	virtual bool InstallProduct(int iProduct);
 	virtual _TCHAR * GenReport(int iReportType, IndexList_t * prgiProducts = NULL) const;
-	virtual bool GetDependencyMinMaxVersions(int iDependType, int iProduct1, int iProduct2,
-		const _TCHAR *& pszMinVersion, const _TCHAR *& pszMaxVersion) const;
 	virtual void ShowReport(const _TCHAR * pszTitle, const _TCHAR * pszIntro,
 		const _TCHAR * pszOkButtonText, bool fConfirmQuit, bool fQuitIsError, int nType,
 		bool fCanToggleType, IndexList_t * rgiProducts = NULL) const;
@@ -1156,6 +1222,9 @@ bool ProductManager_t::GetRebootWininitFlag(int iProduct) const
 // account later.
 void ProductManager_t::EstablishOverallDependencies()
 {
+	g_Log.Write(_T("Populating dependency lists in each product..."));
+	g_Log.Indent();
+
 	int iMapping;
 	int iDependType;
 	for (iDependType = 0; iDependType < depTotal; iDependType++)
@@ -1174,12 +1243,21 @@ void ProductManager_t::EstablishOverallDependencies()
 			if (iKey != -1 && iDependent != -1)
 			{
 				if (iDependType == depPrerequisite)
-					Products[iKey].m_rgiPrerequisites.Add(iDependent);
+				{
+					g_Log.Write(_T("%s must have %s pre-installed"), kpszKeyProduct, kpszDependentProduct);
+					Products[iKey].m_rgiPrerequisiteMappings.Add(iMapping);
+				}
 				if (iDependType == depRequirement)
-					Products[iKey].m_rgiRequirements.Add(iDependent);
+				{
+					g_Log.Write(_T("%s needs %s in order to run"), kpszKeyProduct, kpszDependentProduct);
+					Products[iKey].m_rgiRequirementMappings.Add(iMapping);
+				}
 			}
 		} // Next mapping
 	} // Next type
+
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done."));
 }
 
 // Returns the index into the mapping array for the given combination of products.
@@ -1203,24 +1281,6 @@ int ProductManager_t::GetMappingIndex(int iDependType, int iProduct1, int iProdu
 	}
 	return -1;
 }
-
-// Assigns the minimum and maximum version numbers of a required/prerequisite product for
-// the given dependency relationship.
-// Returns true if the versions could be determined.
-bool ProductManager_t::GetDependencyMinMaxVersions(int iDependType, int iProduct1,
-												   int iProduct2, const _TCHAR *& pszMinVersion,
-												   const _TCHAR *& pszMaxVersion) const
-{
-	int iMapping = GetMappingIndex(iDependType, iProduct1, iProduct2);
-	if (iMapping == -1)
-		return false;
-
-	pszMinVersion = s_DependecyMaps[iDependType][iMapping].m_kpszMinVersion;
-	pszMaxVersion = s_DependecyMaps[iDependType][iMapping].m_kpszMaxVersion;
-
-	return true;
-}
-
 
 bool ProductManager_t::PossibleToTestPresence(int iProduct) const
 {
@@ -1422,9 +1482,15 @@ void ProductManager_t::AutoSelectAllPermittedMainProducts(IndexList_t & rgiProdu
 // installed.
 bool ProductManager_t::PrerequisitesNeeded(const IndexList_t & rgiProducts) const
 {
+	g_Log.Write(_T("Generating list of active prerequisites, just to see if any are still needed..."));
+	g_Log.Indent();
+
 	// Create a list of needed prerequisites:
 	IndexList_t rgiNeeded;
 	GetActivePrerequisites(rgiProducts, rgiNeeded, true);
+
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done. Number of active prerequisites = %d"), rgiNeeded.GetCount());
 
 	// See if any are needed:
 	return (rgiNeeded.GetCount() > 0);
@@ -1433,7 +1499,7 @@ bool ProductManager_t::PrerequisitesNeeded(const IndexList_t & rgiProducts) cons
 // Determine if any required products are still needing to be installed.
 bool ProductManager_t::RequirementsNeeded() const
 {
-	g_Log.Write(_T("Generating list of active requirements..."));
+	g_Log.Write(_T("Generating list of active requirements, just to see if any are still needed..."));
 	g_Log.Indent();
 
 	// Create a list of needed prerequisites:
@@ -1451,103 +1517,245 @@ bool ProductManager_t::RequirementsNeeded() const
 // products indexed in prgiProducts.
 // If fRecurse is true, the non-installed prerequisites of those required products are included,
 // recursively.
-void ProductManager_t::GetActivePrerequisites(const IndexList_t & prgiProducts,
+void ProductManager_t::GetActivePrerequisites(const IndexList_t & rgiProducts,
 											  IndexList_t & rgiOutputList, bool fRecurse) const
 {
+	g_Log.Write(_T("Getting active prerequisite list for list of %d products, %srecursing..."),
+		rgiProducts.GetCount(), (fRecurse? _T("") : _T("not ")));
+	g_Log.Indent();
+
 	// Iterate through every product in the given list:
-	for (int i = 0; i < prgiProducts.GetCount(); i++)
+	for (int i = 0; i < rgiProducts.GetCount(); i++)
 	{
-		// Get the current product's list of prerequisites:
-		int iProduct = prgiProducts[i];
-		IndexList_t & rgiPrereqs = Products[iProduct].m_rgiPrerequisites;
-		IndexList_t rgiActivePrereqs;
+		// Get current product:
+		int iProduct = rgiProducts[i];
+
+		// Get the current product's list of prerequisite mappings:
+		IndexList_t & rgiPrereqMaps = Products[iProduct].m_rgiPrerequisiteMappings;
+		IndexList_t rgiActivePrereqProducts;
+
+		g_Log.Write(_T("Product %d (%s) has %d prerequisite mappings:"), (i + 1),
+			Products[iProduct].m_kpszNiceName, rgiPrereqMaps.GetCount());
+		g_Log.Indent();
 
 		// Iterate through each prerequisite product:
-		for (int i2 = 0; i2 < rgiPrereqs.GetCount(); i2++)
+		for (int i2 = 0; i2 < rgiPrereqMaps.GetCount(); i2++)
 		{
-			// If the output list already contains this prerequisite, then go on to the next:
-			int iPreReq = rgiPrereqs[i2];
-			if (rgiOutputList.Contains(iPreReq))
-				continue;
+			// Find index of dependent product:
+			int iMapping = rgiPrereqMaps[i2];
+			const _TCHAR * kpszDependentProduct = s_DependecyMaps[depPrerequisite][iMapping].m_kpszDependentProduct;
+			int iPreReq = GetSoftwareProductIndex(kpszDependentProduct);
 
-			// See if the required version of the prerequisite is present already:
-			const _TCHAR * pszMinVersion;
-			const _TCHAR * pszMaxVersion;
-			if (GetDependencyMinMaxVersions(depPrerequisite, iProduct, iPreReq, pszMinVersion,
-				pszMaxVersion))
+			// If the output list already contains this prerequisite, then go on to the next:
+			if (rgiOutputList.Contains(iPreReq))
 			{
-				if (!Products[iPreReq].TestPresence(pszMinVersion, pszMaxVersion))
+				g_Log.Write(_T("%s (which we've already dealt with, so we will ignore it this time)"), kpszDependentProduct);
+				continue;
+			}
+
+			// See if an OS version test is required on the dependency:
+			bool fConditionalPassed = true;
+			const _TCHAR * pszMinOs = s_DependecyMaps[depPrerequisite][iMapping].m_kpszMinOs;
+			const _TCHAR * pszMaxOs = s_DependecyMaps[depPrerequisite][iMapping].m_kpszMaxOs;
+			if (pszMinOs || pszMaxOs)
+			{
+				_TCHAR * pszRealOs = new_sprintf(_T("%d.%d.%d.%d"), g_OSversion.dwMajorVersion,
+					g_OSversion.dwMinorVersion, g_OSversion.wServicePackMajor,
+					g_OSversion.wServicePackMinor);
+
+				if (!VersionInRange(pszRealOs, pszMinOs, pszMaxOs))
+					fConditionalPassed = false;
+
+				delete[] pszRealOs;
+				pszRealOs = NULL;
+			}
+
+			if (fConditionalPassed)
+			{
+				// See if the required version of the prerequisite is present already:
+				const _TCHAR * pszMinVersion = s_DependecyMaps[depPrerequisite][iMapping].m_kpszMinVersion;
+				const _TCHAR * pszMaxVersion = s_DependecyMaps[depPrerequisite][iMapping].m_kpszMaxVersion;
+				g_Log.Indent();
+				bool fProductPresent = Products[iPreReq].TestPresence(pszMinVersion, pszMaxVersion);
+				g_Log.Unindent();
+				if (!fProductPresent)
 				{
+					if (pszMinOs || pszMaxOs)
+					{
+						g_Log.Write(_T("%s which is missing and needed on OS versions %s through %s, so we will record this dependency"),
+							kpszDependentProduct, (pszMinOs? pszMinOs : _T("any")), (pszMaxOs? pszMaxOs : _T("any")));
+					}
+					else
+						g_Log.Write(_T("%s which is missing, so we will record this dependency"), kpszDependentProduct);
+
 					rgiOutputList.Add(iPreReq);
-					rgiActivePrereqs.Add(iPreReq);
+					rgiActivePrereqProducts.Add(iPreReq);
 				}
+				else
+					g_Log.Write(_T("%s which is already installed, so we will ignore this dependency"), kpszDependentProduct);
+			}
+			else
+			{
+				g_Log.Write(_T("%s (which only applies for OS versions %s through %s, so doesn't matter here)"), 
+					kpszDependentProduct, (pszMinOs? pszMinOs : _T("any")), (pszMaxOs? pszMaxOs : _T("any")));
 			}
 		}
-		if (fRecurse)
+		g_Log.Unindent();
+
+		if (fRecurse && rgiActivePrereqProducts.GetCount() > 0)
 		{
+			g_Log.Write(_T("Recursing the active prerequisites of those prerequisites..."));
+			g_Log.Indent();
+
 			// Recursively add the prerequisites of the current active prerequisites:
-			GetActivePrerequisites(rgiActivePrereqs, rgiOutputList, true);
+			GetActivePrerequisites(rgiActivePrereqProducts, rgiOutputList, true);
+
+			g_Log.Unindent();
+			g_Log.Write(_T("...Done recursing active prerequisites."));
 		}
 	}
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done getting active prerequisite list."));
 }
 
 // Add into rgiOutputList the indexes of products that are non-installed requirements of the
-// products indexed in prgiProducts.
+// products indexed in rgiProducts.
 // If fRecursePrerequisites is true, the non-installed prerequisites of those required
 // products are included, recursively.
-// If fRecurseRequirements is true, the non-installed requirments of those required
+// If fRecurseRequirements is true, the non-installed requirements of those required
 // products are included, recursively.
 void ProductManager_t::GetActiveRequirements(const IndexList_t & rgiProducts,
 											 IndexList_t & rgiOutputList,
 											 bool fRecursePrerequisites,
 											 bool fRecurseRequirements) const
 {
+	g_Log.Write(_T("Getting active requirement list for list of %d products, %srecursing prerequisites, %srecursing requirements..."),
+		rgiProducts.GetCount(), (fRecursePrerequisites? _T("") : _T("not ")), (fRecurseRequirements? _T("") : _T("not ")));
+	g_Log.Indent();
+
 	// Iterate through every product in the given list:
 	for (int i = 0; i < rgiProducts.GetCount(); i++)
 	{
-		// Get the current product's list of requirements:
+		// Get current product:
 		int iProduct = rgiProducts[i];
-		IndexList_t & rgiRequirements = Products[iProduct].m_rgiRequirements;
 
-		if (fRecursePrerequisites)
+		// Get the current product's list of requirement mappings:
+		IndexList_t & rgiReqMaps = Products[iProduct].m_rgiRequirementMappings;
+
+		g_Log.Write(_T("Product %d (%s) has %d requirement mappings:"), (i + 1),
+			Products[iProduct].m_kpszNiceName, rgiReqMaps.GetCount());
+		g_Log.Indent();
+
+		// Form a list of the current required products:
+		IndexList_t rgiRequiredProducts;
+		for (int ip = 0; ip < rgiReqMaps.GetCount(); ip++)
 		{
+			int iMapping = rgiReqMaps[ip];
+			const _TCHAR * kpszDepProd = s_DependecyMaps[depRequirement][iMapping].m_kpszDependentProduct;
+			int iReq = GetSoftwareProductIndex(kpszDepProd);
+			rgiRequiredProducts.Add(iReq);
+		}
+
+		if (fRecursePrerequisites && rgiRequiredProducts.GetCount() > 0)
+		{
+			g_Log.Write(_T("Getting active prerequisites of those required products..."));
+			g_Log.Indent();
+
 			// Recursively add the prerequisites of the current required products:
-			GetActivePrerequisites(rgiRequirements, rgiOutputList, true);
+			GetActivePrerequisites(rgiRequiredProducts, rgiOutputList, true);
+
+			g_Log.Unindent();
+			g_Log.Write(_T("...Done getting active prerequisites of required products."));
 		}
 
 		// Iterate through each required product:
-		for (int i2 = 0; i2 < rgiRequirements.GetCount(); i2++)
+		for (int i2 = 0; i2 < rgiReqMaps.GetCount(); i2++)
 		{
-			// If the output list already contains this requirement, then go on to the next:
-			int iReq = rgiRequirements[i2];
-			if (rgiOutputList.Contains(iReq))
-				continue;
+			// Find index of dependent product:
+			int iMapping = rgiReqMaps[i2];
+			const _TCHAR * kpszDependentProduct = s_DependecyMaps[depRequirement][iMapping].m_kpszDependentProduct;
+			int iReq = GetSoftwareProductIndex(kpszDependentProduct);
 
-			// See if the required version of the required product is present already:
-			const _TCHAR * pszMinVersion;
-			const _TCHAR * pszMaxVersion;
-			if (GetDependencyMinMaxVersions(depRequirement, iProduct, iReq, pszMinVersion,
-				pszMaxVersion))
+			// If the output list already contains this requirement, then go on to the next:
+			if (rgiOutputList.Contains(iReq))
 			{
-				if (!Products[iReq].TestPresence(pszMinVersion, pszMaxVersion))
+				g_Log.Write(_T("%s (which we've already dealt with, so we will ignore it this time)"), kpszDependentProduct);
+				continue;
+			}
+
+			// See if an OS version test is required on the dependency:
+			bool fConditionalPassed = true;
+			const _TCHAR * pszMinOs = s_DependecyMaps[depRequirement][iMapping].m_kpszMinOs;
+			const _TCHAR * pszMaxOs = s_DependecyMaps[depRequirement][iMapping].m_kpszMaxOs;
+			if (pszMinOs || pszMaxOs)
+			{
+				_TCHAR * pszRealOs = new_sprintf(_T("%d.%d.%d.%d"), g_OSversion.dwMajorVersion,
+					g_OSversion.dwMinorVersion, g_OSversion.wServicePackMajor,
+					g_OSversion.wServicePackMinor);
+
+				if (!VersionInRange(pszRealOs, pszMinOs, pszMaxOs))
+					fConditionalPassed = false;
+
+				delete[] pszRealOs;
+				pszRealOs = NULL;
+			}
+
+			if (fConditionalPassed)
+			{
+				// See if the required version of the required product is present already:
+				const _TCHAR * pszMinVersion = s_DependecyMaps[depRequirement][iMapping].m_kpszMinVersion;
+				const _TCHAR * pszMaxVersion = s_DependecyMaps[depRequirement][iMapping].m_kpszMaxVersion;
+
+				g_Log.Indent();
+				bool fProductPresent = Products[iReq].TestPresence(pszMinVersion, pszMaxVersion);
+				g_Log.Unindent();
+				if (!fProductPresent)
 				{
+					if (pszMinOs || pszMaxOs)
+					{
+						g_Log.Write(_T("%s which is missing and needed on OS versions %s through %s, so we will record this dependency"),
+							kpszDependentProduct, (pszMinOs? pszMinOs : _T("any")), (pszMaxOs? pszMaxOs : _T("any")));
+					}
+					else
+						g_Log.Write(_T("%s which is missing, so we will record this dependency"), kpszDependentProduct);
+
 					rgiOutputList.Add(iReq);
 				}
+				else
+					g_Log.Write(_T("%s which is already installed, so we will ignore this dependency"), kpszDependentProduct);
+			}
+			else
+			{
+				g_Log.Write(_T("%s (which only applies for OS versions %s through %s, so doesn't matter here)"), 
+					kpszDependentProduct, (pszMinOs? pszMinOs : _T("any")), (pszMaxOs? pszMaxOs : _T("any")));
 			}
 		}
-		if (fRecurseRequirements)
+		g_Log.Unindent();
+
+		if (fRecurseRequirements && rgiRequiredProducts.GetCount() > 0)
 		{
+			g_Log.Write(_T("Recursing the active requirements of those required products..."));
+			g_Log.Indent();
+
 			// Recursively add the requirements of the current required products:
-			GetActiveRequirements(rgiRequirements, rgiOutputList, fRecursePrerequisites,
+			GetActiveRequirements(rgiRequiredProducts, rgiOutputList, fRecursePrerequisites,
 				true);
+
+			g_Log.Unindent();
+			g_Log.Write(_T("...Done recursing active requirements of required products."));
 		}
 	}
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done getting active requirement list."));
 }
 
 // Add into rgiOutputList the indexes of all products that are required (at any nested level)
 // by any installed product. Includes any prerequisites of the required products.
 void ProductManager_t::GetActiveRequirements(IndexList_t & rgiOutputList) const
 {
+	g_Log.Write(_T("About to get active requirement list for all installed products. Getting list:"));
+	g_Log.Indent();
+
 	// Make a list of installed main products:
 	IndexList_t rgiMainInstalledProducts;
 
@@ -1555,13 +1763,24 @@ void ProductManager_t::GetActiveRequirements(IndexList_t & rgiOutputList) const
 	for (int iProduct = 0; iProduct < kctSoftwareProducts; iProduct++)
 	{
 		// Only deal with this product if it is installed:
-		if (!Products[iProduct].TestPresence())
+		g_Log.Indent();
+		bool fInstalled = Products[iProduct].TestPresence();
+		g_Log.Unindent();
+		if (!fInstalled)
+		{
+			g_Log.Write(_T("[%s is not installed]"), Products[iProduct].m_kpszNiceName);
 			continue;
+		}
+
+		g_Log.Write(_T("%s is installed"), Products[iProduct].m_kpszNiceName);
 
 		rgiMainInstalledProducts.Add(iProduct);
 	}
 
 	GetActiveRequirements(rgiMainInstalledProducts, rgiOutputList, true, true);
+
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done."));
 }
 
 bool ProductManager_t::PriorInstallationFailed(int iProduct) const
@@ -1874,7 +2093,7 @@ _TCHAR * ProductManager_t::GenInstallFailureReport(IndexList_t & rgiCandidatePro
 // given product being installed, and the consequences now that it is missing.
 // Caller must delete[] the returned text.
 _TCHAR * ProductManager_t::GenMissingRequirementConsequencesReport(int iProduct,
-																 int nIndent) const
+																   int nIndent) const
 {
 	CheckProductIndex(iProduct);
 
@@ -1885,18 +2104,25 @@ _TCHAR * ProductManager_t::GenMissingRequirementConsequencesReport(int iProduct,
 	_TCHAR * pszReport = NULL;
 	_TCHAR * pszWksp;
 
+	g_Log.Write(_T("Forming report on consequences of %s having failed to install..."), Products[iProduct].m_kpszNiceName);
+	g_Log.Indent();
+
 	// Iterate through all products:
 	for (int i = 0; i < kctSoftwareProducts; i++)
 	{
-		// See if the current product is installed:
-		if (Products[i].TestPresence())
+		// Get handy reference to the current product's requirement mappings:
+		IndexList_t & rgiReqMaps = Products[i].m_rgiRequirementMappings;
+
+		// See if the current product required the given product:
+		for (int ip = 0; ip < rgiReqMaps.GetCount(); ip++)
 		{
-			// See if the current product required the given product:
-			if (Products[i].m_rgiRequirements.Contains(iProduct))
+			int iMapping = rgiReqMaps[ip];
+			const _TCHAR * kpszDepProd = s_DependecyMaps[depRequirement][iMapping].m_kpszDependentProduct;
+			int iReq = GetSoftwareProductIndex(kpszDepProd);
+			if (iReq == iProduct)
 			{
-				// Get the original dependency mapping:
-				int iMapping = GetMappingIndex(depRequirement, i, iProduct);
-				if (iMapping >= 0)
+				// See if the current product is missing:
+				if (Products[i].TestPresence())
 				{
 					// Report the consequences:
 					pszWksp = new_ind_sprintf(nIndent, _T("%s: %s"), GetName(i),
@@ -1904,10 +2130,14 @@ _TCHAR * ProductManager_t::GenMissingRequirementConsequencesReport(int iProduct,
 					new_sprintf_concat(pszReport, 1, pszWksp);
 					delete[] pszWksp;
 					pszWksp = NULL;
-				}
-			} // End if given product was required by current product
+				} // End if given product was required by current product
+			} // Next mapping
 		} // End if current product was installed
 	} // Next product
+
+	g_Log.Unindent();
+	g_Log.Write(_T("...Done forming consequences report."));
+
 	return pszReport;
 }
 

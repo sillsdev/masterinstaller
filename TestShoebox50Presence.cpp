@@ -7,8 +7,8 @@
 // the registry, or in the .exe file. So we check the presence of this registry key:
 // HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\MenuOrder\Start Menu\Programs\Shoebox 5.0
 
-bool TestShoebox50Presence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMaxVersion*/,
-						   const TCHAR * /*pszCriticalFile*/)
+bool TestShoebox50Presence(const _TCHAR * /*pszMinVersion*/, const _TCHAR * /*pszMaxVersion*/,
+						   SoftwareProduct * /*Product*/)
 {
 	bool fResult = false;
 

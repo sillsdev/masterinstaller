@@ -4,7 +4,7 @@
 
 // Check if the WW installation of the first alhpa release of LexText is present,
 // and remove it if so.
-int RemoveFirstLexTextAlpha(const _TCHAR * /*pszCriticalFile*/)
+int RemoveFirstLexTextAlpha(SoftwareProduct * /*Product*/)
 {
 	int dwResult = 0;
 

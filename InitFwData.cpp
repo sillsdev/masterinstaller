@@ -12,52 +12,27 @@ int InitSQLServerForFW()
 	DisplayStatusText(0, _T("Initializing FieldWorks data in SQL Server."));
 	DisplayStatusText(1, _T(""));
 
-	const _TCHAR * pszDbAccessDll = _T("DbAccess.dll");
-	LONG lResult;
-	HKEY hKey;
-
 	// Look up the FieldWorks code directory in the registry:
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL\\FieldWorks"), 0, KEY_READ, &hKey);
-	if (ERROR_SUCCESS != lResult)
-	{
-		g_Log.Write(_T("Could not find registry key HKEY_LOCAL_MACHINE\\SOFTWARE\\SIL\\FieldWorks"));
-		return -1;
-	}
+	_TCHAR * pszRootCodeDir = NewRegString(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\SIL\\FieldWorks"), _T("RootCodeDir"));
 
-	DWORD cbData = 0;
-
-	// Fetch required buffer size:
-	lResult = RegQueryValueEx(hKey, _T("RootCodeDir"), NULL, NULL, NULL, &cbData);
-	if (cbData == 0)
-	{
-		g_Log.Write(_T("Could not find registry value RootCodeDir"));
-		return -2;
-	}
-
-	int cchDbAccessDllPath = cbData + 1 + _tcslen(pszDbAccessDll);
-	_TCHAR * pszDbAccessDllPath = new _TCHAR [cchDbAccessDllPath];
-
-	lResult = RegQueryValueEx(hKey, _T("RootCodeDir"), NULL, NULL, LPBYTE(pszDbAccessDllPath), &cbData);
-
-	RegCloseKey(hKey);
-	hKey = NULL;
-
-	if (ERROR_SUCCESS != lResult)
+	if (!pszRootCodeDir)
 	{
 		g_Log.Write(_T("Could not read registry value RootCodeDir"));
 		return -3;
 	}
 
 	// Form full path to DbAccess.dll:
-	if (pszDbAccessDllPath[cbData - 1] != '\\')
-		_tcscat_s(pszDbAccessDllPath, cchDbAccessDllPath, _T("\\"));
-	_tcscat_s(pszDbAccessDllPath, cchDbAccessDllPath, pszDbAccessDll);
+	_TCHAR * pszDbAccessDllPath = MakePath(pszRootCodeDir, _T("DbAccess.dll"));
+	delete[] pszRootCodeDir;
+	pszRootCodeDir = NULL;
 
 	// Load the DbAccess.dll:
 	HMODULE hmodDbAccess = LoadLibrary(pszDbAccessDllPath);
 	if (!hmodDbAccess)
 	{
 		g_Log.Write(_T("Could not load library %s"), pszDbAccessDllPath);
+		delete[] pszDbAccessDllPath;
 		return -4;
 	}
 
@@ -70,8 +45,11 @@ int InitSQLServerForFW()
 	{
 		FreeLibrary(hmodDbAccess);
 		g_Log.Write(_T("Could not find function ExtInitMSDE() in %s"), pszDbAccessDllPath);
+		delete[] pszDbAccessDllPath;
 		return -5;
 	}
+	delete[] pszDbAccessDllPath;
+	pszDbAccessDllPath = NULL;
 
 	_ExtInitMSDE(NULL, NULL, "force", SW_SHOW);
 
@@ -93,91 +71,54 @@ void CopyOldFwData()
 
 	// Remove any trailing backslash from pszFormerFwInstallationFolder, or else the MoveData
 	// utility will garble its command line arguments:
-	if (pszFormerFwInstallationFolder[_tcslen(pszFormerFwInstallationFolder) - 1] == '\\')
-		pszFormerFwInstallationFolder[_tcslen(pszFormerFwInstallationFolder) - 1] = 0;
+	RemoveTrailingBackslashes(pszFormerFwInstallationFolder);
 
 	g_Log.Write(_T("Preparing to move data from %s - looking up new data folder..."),
 		pszFormerFwInstallationFolder);
 
 	// Look up new data location:
-	_TCHAR * pszFwDataFolder = NULL;
-	LONG lResult;
-	HKEY hKey;
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL\\FieldWorks"), NULL, KEY_READ,
-		&hKey);
-	if (ERROR_SUCCESS != lResult)
-		g_Log.Write(_T("...HKEY_LOCAL_MACHINE\\SOFTWARE\\SIL\\FieldWorks cannot be opened."));
+	_TCHAR * pszFwDataFolder = NewRegString(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL\\FieldWorks"),
+		_T("RootDataDir"));
+
+	if (!pszFwDataFolder)
+		g_Log.Write(_T("...RootDataDir could not be read."));
 	else
 	{
-		DWORD cbData = 0;
-		// Get required buffer size:
-		lResult = RegQueryValueEx(hKey, _T("RootDataDir"), NULL, NULL, NULL, &cbData);
+		// Remove any trailing backslash, or else the MoveData utility will garble
+		// its command line arguments:
+		RemoveTrailingBackslashes(pszFwDataFolder);
 
-		if (ERROR_SUCCESS != lResult)
-			g_Log.Write(_T("...Cannot get required buffer size."));
+		g_Log.Write(_T("...FW data folder = '%s'."), pszFwDataFolder);
+
+		// Look up new code location:
+		g_Log.Write(_T("Looking up new code folder..."));
+
+		_TCHAR * pszFwCodeFolder = NewRegString(HKEY_LOCAL_MACHINE,
+			_T("SOFTWARE\\SIL\\FieldWorks"), _T("RootCodeDir"));
+
+		if (!pszFwCodeFolder)
+			g_Log.Write(_T("...RootCodeDir could not be read."));
 		else
 		{
-			pszFwDataFolder = new _TCHAR [cbData];
+			g_Log.Write(_T("...FW code folder = '%s'."), pszFwCodeFolder);
 
-			// Retrieve folder path:
-			lResult = RegQueryValueEx(hKey, _T("RootDataDir"), NULL, NULL,
-				(LPBYTE)pszFwDataFolder, &cbData);
+			// Remove any trailing backslash:
+			RemoveTrailingBackslashes(pszFwCodeFolder);
 
-			if (ERROR_SUCCESS != lResult)
-				g_Log.Write(_T("...RootDataDir could not be read."));
-			else
-			{
-				// Remove any trailing backslash, or else the MoveData utility will garble
-				// its command line arguments:
-				if (pszFwDataFolder[_tcslen(pszFwDataFolder) - 1] == '\\')
-					pszFwDataFolder[_tcslen(pszFwDataFolder) - 1] = 0;
+			// Make command line from code folder and utility name, with new and
+			// old data folders as arguments:
+			_TCHAR * pszCmd = new_sprintf(_T("\"%s\\MoveData.exe\" \"%s\" \"%s\""),
+				pszFwCodeFolder, pszFwDataFolder, pszFormerFwInstallationFolder);
 
-				g_Log.Write(_T("...FW data folder = '%s'."), pszFwDataFolder);
+			// Run utility to move files:
+			ExecCmd(pszCmd, NULL, true, _T("FieldWorks data file transfer"),
+				_T("show"));
 
-				// Look up new code location:
-				g_Log.Write(_T("Looking up new code folder..."));
-				_TCHAR * pszFwCodeFolder = NULL;
-				cbData = 0;
-				// Get required buffer size:
-				lResult = RegQueryValueEx(hKey, _T("RootCodeDir"), NULL, NULL, NULL,
-					&cbData);
-				if (ERROR_SUCCESS != lResult)
-					g_Log.Write(_T("...Cannot get required buffer size."));
-				else
-				{
-					pszFwCodeFolder = new _TCHAR [cbData];
-
-					// Retrieve folder path:
-					lResult = RegQueryValueEx(hKey, _T("RootCodeDir"), NULL, NULL,
-						(LPBYTE)pszFwCodeFolder, &cbData);
-
-					if (ERROR_SUCCESS != lResult)
-						g_Log.Write(_T("...RootCodeDir could not be read."));
-					else
-					{
-						g_Log.Write(_T("...FW code folder = '%s'."), pszFwCodeFolder);
-
-						// Remove any trailing backslash:
-						if (pszFwCodeFolder[_tcslen(pszFwCodeFolder) - 1] == '\\')
-							pszFwCodeFolder[_tcslen(pszFwCodeFolder) - 1] = 0;
-
-						// Make command line from code folder and utility name, with new and
-						// old data folders as arguments:
-						_TCHAR * pszCmd = new_sprintf(_T("\"%s\\MoveData.exe\" \"%s\" \"%s\""),
-							pszFwCodeFolder, pszFwDataFolder, pszFormerFwInstallationFolder);
-
-						// Run utility to move files:
-						ExecCmd(pszCmd, NULL, true, _T("FieldWorks data file transfer"),
-							_T("show"));
-					}
-				}
-				delete[] pszFwCodeFolder;
-				pszFwCodeFolder = NULL;
-			}
-			delete[] pszFwDataFolder;
-			pszFwDataFolder = NULL;
+			delete[] pszFwCodeFolder;
+			pszFwCodeFolder = NULL;
 		}
-		RegCloseKey(hKey);
+		delete[] pszFwDataFolder;
+		pszFwDataFolder = NULL;
 	}
 	delete[] pszFormerFwInstallationFolder;
 	pszFormerFwInstallationFolder = NULL;

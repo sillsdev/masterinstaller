@@ -5,15 +5,15 @@
 #include "TestAdaptitGenericPresence.cpp"
 
 // Perform necessary admin prior to installing a version of Adapt It.
-int AdaptItPreinstall(const TCHAR * /*pszCriticalFile*/)
+int AdaptItPreinstall(SoftwareProduct * /*Product*/)
 {
 	// If there is a previously-existing installation of Adapt It, we must remove its
 	// Books.xml file:
 	g_Log.Write(_T("Attempting to locate previous Adapt It installations to remove books.xml..."));
-	TCHAR * pszPreviousPath = MakePathToAdaptIt(false);
+	_TCHAR * pszPreviousPath = MakePathToAdaptIt(false);
 	if (pszPreviousPath)
 	{
-		TCHAR * pszPreviousBooksXml = new_sprintf(_T("%s\\books.xml"), pszPreviousPath);
+		_TCHAR * pszPreviousBooksXml = MakePath(pszPreviousPath, _T("books.xml"));
 		delete[] pszPreviousPath;
 		pszPreviousPath = NULL;
 		g_Log.Write(_T("Attempting delete %s"), pszPreviousBooksXml);
@@ -25,7 +25,7 @@ int AdaptItPreinstall(const TCHAR * /*pszCriticalFile*/)
 	pszPreviousPath = MakePathToAdaptIt(true);
 	if (pszPreviousPath)
 	{
-		TCHAR * pszPreviousBooksXml = new_sprintf(_T("%s\\books.xml"), pszPreviousPath);
+		TCHAR * pszPreviousBooksXml = MakePath(pszPreviousPath, _T("books.xml"));
 		delete[] pszPreviousPath;
 		pszPreviousPath = NULL;
 		g_Log.Write(_T("Attempting delete %s"), pszPreviousBooksXml);

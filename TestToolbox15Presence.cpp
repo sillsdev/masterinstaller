@@ -3,46 +3,26 @@
 #include <tchar.h>
 
 // Crude test of Toolbox 1.5.1 installation
-bool TestToolbox15Presence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMaxVersion*/,
-						   const TCHAR * /*pszCriticalFile*/)
+bool TestToolbox15Presence(const _TCHAR * /*pszMinVersion*/, const _TCHAR * /*pszMaxVersion*/,
+						   SoftwareProduct * /*Product*/)
 {
 	bool fResult = false;
-	LONG lResult;
-	HKEY hKey = NULL;
-	const TCHAR * pszTemplateDisplayName = _T("Toolbox 1.5.1");
 
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+	_TCHAR * pszDisplayName = NewRegString(HKEY_LOCAL_MACHINE,
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Toolbox_is1"),
-		NULL, KEY_READ, &hKey);
+		_T("DisplayName"));
 
-	// Read display name:
-	if (ERROR_SUCCESS == lResult)
+	if (pszDisplayName)
 	{
-		_TCHAR * pszDisplayName = NULL;
-		DWORD cbData = 0;
+		const TCHAR * pszTemplateDisplayName = _T("Toolbox 1.5.1");
 
-		// Find out how much space we need to hold display name:
-		lResult = RegQueryValueEx(hKey, _T("DisplayName"), NULL, NULL, NULL, &cbData);
-		if (ERROR_SUCCESS == lResult)
-		{
-			pszDisplayName = new TCHAR [cbData];
-
-			if (ERROR_SUCCESS == RegQueryValueEx(hKey, _T("DisplayName"), NULL, NULL,
-				(LPBYTE)pszDisplayName, &cbData))
-			{
-				if (_tcsnicmp(pszDisplayName, pszTemplateDisplayName,
+		if (_tcsnicmp(pszDisplayName, pszTemplateDisplayName,
 					_tcslen(pszTemplateDisplayName)) == 0)
-				{
-					fResult = true;
-				}
-			}
-
-			delete[] pszDisplayName;
-			pszDisplayName = NULL;
+		{
+			fResult = true;
 		}
+		delete[] pszDisplayName;
+		pszDisplayName = NULL;
 	}
-
-	RegCloseKey(hKey);
-
 	return fResult;
 }

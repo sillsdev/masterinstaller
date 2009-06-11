@@ -3,35 +3,25 @@
 #include <tchar.h>
 
 // Test for DirectX
-bool TestDirectXPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
-						 const TCHAR * /*pszCriticalFile*/)
+bool TestDirectXPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
+						 SoftwareProduct * /*Product*/)
 {
 	bool fResult = false;
 
 	// Test for presence of a version number within range:
-	LONG lResult;
-	HKEY hKey = NULL;
+	_TCHAR * pszVer = NewRegString(HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\DirectX"),
+		_T("Version"));
 
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\DirectX"), NULL,
-		KEY_READ, &hKey);
-
-	if (ERROR_SUCCESS == lResult)
+	if (pszVer)
 	{
-		const int knVerSize = 128;
-		TCHAR szVer[knVerSize];
-		DWORD cbData = knVerSize;
-
-		lResult = RegQueryValueEx(hKey, _T("Version"), NULL, NULL, (LPBYTE)szVer, &cbData);
-		RegCloseKey(hKey);
-
-		if (ERROR_SUCCESS == lResult)
-		{
 #if !defined NOLOGGING
-			g_Log.Write(_T("Found DirectX version %s"), szVer);
+		g_Log.Write(_T("Found DirectX version %s"), pszVer);
 #endif
-			if (VersionInRange(szVer, pszMinVersion, pszMaxVersion))
-				fResult = true;
-		}
+		if (VersionInRange(pszVer, pszMinVersion, pszMaxVersion))
+			fResult = true;
 	}
+	delete[] pszVer;
+	pszVer = NULL;
+
 	return fResult;
 }

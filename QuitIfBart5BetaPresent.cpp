@@ -4,7 +4,7 @@
 
 // Checks if an earlier BART 5 is present, and warns user to uninstall it if so, halting
 // this installation of a later BART 5.
-int QuitIfBart5BetaPresent(const TCHAR * /*pszCriticalFile*/)
+int QuitIfBart5BetaPresent(SoftwareProduct * /*Product*/)
 {
 	g_Log.Write(_T("Checking for BART 5 Beta..."));
 	bool fInstalled = false;

@@ -66,11 +66,8 @@ bool TestKeyman7Presence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVers
 					int cch = (int)_tcslen(szRootPath);
 					if (cch < 2)
 						break;
-					_TCHAR * ch = &szRootPath[cch - 1];
-					if (*ch == '\\')
-						*ch  = 0;
 
-					_TCHAR * pszKeymanFilePath = new_sprintf(_T("%s\\keyman32.dll"), szRootPath);
+					_TCHAR * pszKeymanFilePath = MakePath(szRootPath, _T("keyman32.dll"));
 
 #if !defined NOLOGGING
 					g_Log.Write(_T("Attempting to locate %s"), pszKeymanFilePath);

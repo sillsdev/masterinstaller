@@ -10,15 +10,13 @@
 _TCHAR * MakePathToAdaptIt(bool fUnicode)
 {
 	bool fResult = false;
-	LONG lResult;
-	HKEY hKey = NULL;
 	_TCHAR * pszKeyPath;
-	const _TCHAR * pszRegRoot = _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\");
+	const _TCHAR * pszRegRoot = _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall");
 
 	if (fUnicode)
 	{
 		// See if Unicode version is present:
-		pszKeyPath = new_sprintf(_T("%sAdapt It WX Unicode"), pszRegRoot);
+		pszKeyPath = MakePath(pszRegRoot, _T("Adapt It WX Unicode"));
 #if !defined NOLOGGING
 		g_Log.Write(_T("Looking for Adapt It Unicode path in HKEY_LOCAL_MACHINE\\%s..."), pszKeyPath);
 #endif
@@ -26,40 +24,28 @@ _TCHAR * MakePathToAdaptIt(bool fUnicode)
 	else
 	{
 		// See if non-Unicode version is present:
-		pszKeyPath = new_sprintf(_T("%sAdapt It WX"), pszRegRoot);
+		pszKeyPath = MakePath(pszRegRoot, _T("Adapt It WX"));
 #if !defined NOLOGGING
 		g_Log.Write(_T("Looking for Adapt It path in HKEY_LOCAL_MACHINE\\%s..."), pszKeyPath);
 #endif
 	}
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, pszKeyPath, NULL, KEY_READ, &hKey);
+
+	_TCHAR * pszPath = NewRegString(HKEY_LOCAL_MACHINE, pszKeyPath, _T("UninstallString"));
+
 	delete[] pszKeyPath;
 	pszKeyPath = NULL;
 
-	if (lResult == ERROR_SUCCESS)
+	if (pszPath)
 	{
-		// Get size of buffer needed:
-		DWORD cbData = 0;
-		lResult = RegQueryValueEx(hKey, _T("UninstallString"), NULL, NULL, NULL, &cbData);
+		// Truncate the uninstall.exe bit at the end of the string:
+		RemoveLastPathSection(pszPath);
 
-		// Get path to uninstall program:
-		_TCHAR * pszPath = new _TCHAR [cbData];
-		lResult = RegQueryValueEx(hKey, _T("UninstallString"), NULL, NULL, (LPBYTE)pszPath,
-			&cbData);
-		RegCloseKey(hKey);
-
-		if (ERROR_SUCCESS == lResult)
-		{
-			// Truncate the uninstall.exe bit at the end of the string:
-			_TCHAR * ch = _tcsrchr(pszPath, (_TCHAR)('\\'));
-			if (ch)
-				*ch = 0;
 #if !defined NOLOGGING
-			g_Log.Write(_T("...Found at %s"), pszPath);
+		g_Log.Write(_T("...Found at %s"), pszPath);
 #endif
-			return pszPath;
-		}
-		delete[] pszPath;
+		return pszPath;
 	}
+
 #if !defined NOLOGGING
 	g_Log.Write(_T("...Not found"));
 #endif
@@ -76,7 +62,7 @@ bool TestAdaptitGenericPresence(bool fUnicode, const _TCHAR * pszMinVersion,
 	_TCHAR * pszAdaptItFolder = MakePathToAdaptIt(fUnicode);
 	if (!pszAdaptItFolder)
 		return false;
-	_TCHAR * pszAdaptItChanges = new_sprintf(_T("%s\\Adapt It changes.txt"), pszAdaptItFolder);
+	_TCHAR * pszAdaptItChanges = MakePath(pszAdaptItFolder, _T("Adapt It changes.txt"));
 	delete[] pszAdaptItFolder;
 	pszAdaptItFolder = NULL;
 

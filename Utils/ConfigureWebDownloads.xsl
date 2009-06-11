@@ -1044,7 +1044,6 @@ function PrepareCppRspFile(RspFilePath, CppFilePath, CompilationFolder)
 	tso.WriteLine('"' + CppFilePath + '\\WIWrapper.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UsefulStuff.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UniversalFixes.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\ThirdPartySoftware.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\ProductManager.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\ProductKeys.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\PersistantProgress.cpp"');
@@ -1073,7 +1072,6 @@ function PrepareObjRspFile(RspFilePath, CompilationFolder, SetupExePath)
 	tso.WriteLine('"' + CompilationFolder + '\\PersistantProgress.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\ProductKeys.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\ProductManager.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\ThirdPartySoftware.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\UniversalFixes.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\UsefulStuff.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\WIWrapper.obj"');

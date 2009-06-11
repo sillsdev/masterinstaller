@@ -7,51 +7,34 @@
 
 
 // Import the Surface Area settings
-int ImportSACSettings(const _TCHAR * pszCriticalFile)
+int ImportSACSettings(SoftwareProduct * Product)
 {
-	// Locate the surface area settings file, should be in the same folder as the critical file:
-	_TCHAR * pszCriticalFileCopy = my_strdup(pszCriticalFile);
-	_TCHAR * pch = _tcsrchr(pszCriticalFileCopy, '\\');
-	if (pch)
-		pch++;
-	else
-		pch = pszCriticalFileCopy;
-	*pch = 0;
+	// The surface area settings file should be in the same folder as the critical file:
+	_TCHAR * pszCriticalFileFolderPath = my_strdup(Product->GetCriticalFile());
+	// Get folder path of critical file:
+	RemoveLastPathSection(pszCriticalFileFolderPath);
 
 	// Build full path by getting root path of current process:
-	const int knLen = MAX_PATH;
-	_TCHAR szRootPath[knLen];
-	GetModuleFileName(NULL, szRootPath, knLen);
-	pch = _tcsrchr(szRootPath, '\\');
-	if (pch)
-		pch++;
-	else
-		pch = szRootPath;
-	*pch = 0;
+	_TCHAR * pszRootPath = NewGetExeFolder();
+	_TCHAR * pszTemp = MakePath(pszRootPath, pszCriticalFileFolderPath);
+	_TCHAR * pszSACFile = MakePath(pszTemp, _T("Surface Area Settings.xml"));
 
-	_TCHAR * pszSACFile;
-	const _TCHAR * kpszSACFileName = _T("Surface Area Settings.xml");
+	// Delete temporary strings:
+	delete[] pszRootPath;
+	pszRootPath = NULL;
+	delete[] pszCriticalFileFolderPath;
+	pszCriticalFileFolderPath = NULL;
+	delete[] pszTemp;
+	pszTemp = NULL;
 
-	if (_tcslen(szRootPath) > 0 && _tcslen(pszCriticalFileCopy) > 0)
-		pszSACFile = new_sprintf(_T("%s%s%s"), szRootPath, pszCriticalFileCopy, kpszSACFileName);
-	else
-	{
-		if (_tcslen(szRootPath) > 0)
-			pszSACFile = new_sprintf(_T("%s%s"), szRootPath, kpszSACFileName);
-		else if (_tcslen(pszCriticalFileCopy) > 0)
-			pszSACFile = new_sprintf(_T("%s%s"), pszCriticalFileCopy, kpszSACFileName);
-		else
-			pszSACFile = new_sprintf(_T("%s"), kpszSACFileName);
-	}
-	delete[] pszCriticalFileCopy;
-	pszCriticalFileCopy = NULL;
-
-	// Check existence of file:
+	// Check existence of SAC settings file by trying to open it for reading:
 	FILE * f;
 	if (_tfopen_s(&f, pszSACFile, _T("r")) != 0)
 	{
 		MessageBox(NULL, _T("Error: Cannot find Surface Area Settings.xml. SQL Server 2005 will be configured with default settings. Some features may not work."), g_pszTitle, MB_ICONSTOP | MB_OK);
 		g_Log.Write(_T("Cannot find SAC file '%s'"), pszSACFile);
+		delete[] pszSACFile;
+		pszSACFile = NULL;
 		return -1;
 	}
 	fclose(f);
@@ -59,25 +42,13 @@ int ImportSACSettings(const _TCHAR * pszCriticalFile)
 
 	// Check existence of SAC.exe utility:
 	_TCHAR * pszSacPath = NULL;
-	const _TCHAR * pszToolsKey = _T("SOFTWARE\\Microsoft\\Microsoft SQL Server\\90\\Tools\\ClientSetup");
-	LONG lResult;
-	HKEY hKey = NULL;
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, pszToolsKey, NULL, KEY_READ, &hKey);
-	if (lResult == ERROR_SUCCESS)
+	_TCHAR * pszSacFolderPath = NewRegString(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\Microsoft\\Microsoft SQL Server\\90\\Tools\\ClientSetup"),
+		_T("SQLBinRoot"));
+
+	if (pszSacFolderPath)
 	{
-		// Get size of buffer needed:
-		DWORD cbData = 0;
-		lResult = RegQueryValueEx(hKey, _T("SQLBinRoot"), NULL, NULL, NULL, &cbData);
-
-		// Get path to SAC.exe program:
-		_TCHAR * pszSacFolderPath = new _TCHAR [cbData];
-		lResult = RegQueryValueEx(hKey, _T("SQLBinRoot"), NULL, NULL, (LPBYTE)pszSacFolderPath,
-			&cbData);
-		RegCloseKey(hKey);
-		hKey = NULL;
-
-		if (ERROR_SUCCESS == lResult)
-			pszSacPath = new_sprintf(_T("%sSAC.exe"), pszSacFolderPath);
+		pszSacPath = MakePath(pszSacFolderPath, _T("SAC.exe"));
 
 		delete[] pszSacFolderPath;
 		pszSacFolderPath = NULL;
@@ -86,6 +57,8 @@ int ImportSACSettings(const _TCHAR * pszCriticalFile)
 	{
 		MessageBox(NULL, _T("Error: Cannot find Surface Area Configuration tool. SQL Server 2005 will be configured with default settings. Some features may not work."), g_pszTitle, MB_ICONSTOP | MB_OK);
 		g_Log.Write(_T("Cannot find SAC utility."));
+		delete[] pszSACFile;
+		pszSACFile = NULL;
 		return -2;
 	}
 
@@ -99,16 +72,24 @@ int ImportSACSettings(const _TCHAR * pszCriticalFile)
 	{
 		MessageBox(NULL, _T("Error: Cannot start SQL Server 2005. It will be left with default settings. Some features may not work."), g_pszTitle, MB_ICONSTOP | MB_OK);
 		g_Log.Write(_T("Cannot start SQL Server 2005."));
+
+		delete[] pszSACFile;
+		pszSACFile = NULL;
+		delete[] pszSacPath;
+		pszSacPath = NULL;
+
 		return -3;
 	}
 
 	// Import SAC settings to the SILFW instance:
 	// Note the capital 'I's in this command are required for Turkish Windows to work.
 	_TCHAR * pszCmd = new_sprintf(_T("\"%s\" -ISILFW IN \"%s\""), pszSacPath, pszSACFile);
+
 	delete[] pszSACFile;
 	pszSACFile = NULL;
 	delete[] pszSacPath;
 	pszSacPath = NULL;
+
 	DisplayStatusText(0, _T("Configuring SQL Server: Importing settings."));
 	g_Log.Write(_T("Importing Surface Area Configuration settings for SQL Server."));
 
@@ -140,11 +121,11 @@ int ImportSACSettings(const _TCHAR * pszCriticalFile)
 	return 0;
 }
 
-int SqlServer2005PostInstall(const _TCHAR * pszCriticalFile)
+int SqlServer2005PostInstall(SoftwareProduct * Product)
 {
 	g_Log.Write(_T("Importing SQL Server surface area settings..."));
 	g_Log.Indent();
-	int ImportSACSettingsRet = ImportSACSettings(pszCriticalFile);
+	int ImportSACSettingsRet = ImportSACSettings(Product);
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done. ImportSACSettings() returned %d"), ImportSACSettingsRet);
 

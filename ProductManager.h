@@ -71,8 +71,6 @@ public:
 	virtual bool IsInstallable(int iProduct) const = 0;
 	virtual bool InstallProduct(int iProduct) = 0;
 	virtual _TCHAR * GenReport(int iReportType, IndexList_t * prgiProducts = NULL) const = 0;
-	virtual bool GetDependencyMinMaxVersions(int iDependType, int iProduct1, int iProduct2,
-		const _TCHAR *& pszMinVersion, const _TCHAR *& pszMaxVersion) const = 0;
 	virtual void ShowReport(const _TCHAR * pszTitle, const _TCHAR * pszIntro,
 		const _TCHAR * pszOkButtonText, bool fConfirmQuit, bool fQuitIsError, int nType,
 		bool fCanToggleType, IndexList_t * rgiProducts = NULL) const = 0;

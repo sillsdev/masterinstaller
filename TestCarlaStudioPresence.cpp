@@ -4,74 +4,57 @@
 
 // Test for Carla Studio installation. Uses the path in the registry for product uninstallation
 // to get the version of the main .exe file
-bool TestCarlaStudioPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
-							 const TCHAR * /*pszCriticalFile*/)
+bool TestCarlaStudioPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
+							 SoftwareProduct * /*Product*/)
 {
 	bool fResult = false;
 	HKEY hKey = NULL;
 
-	if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+	// Get the uninstall string:
+	_TCHAR * pszUninstallString = NewRegString(HKEY_LOCAL_MACHINE,
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudioUnicode"),
-		NULL, KEY_READ, &hKey))
+		_T("UninstallString"));
+
+	if (pszUninstallString)
 	{
-		// Get the uninstall string:
-		DWORD cchUninstallString = 0;
-		TCHAR * pszUninstallString = NULL;
-		const TCHAR * pszUninstallStringValue = _T("UninstallString");
-
-		if (ERROR_SUCCESS == RegQueryValueEx(hKey, pszUninstallStringValue, NULL, NULL, NULL,
-			&cchUninstallString))
+		// Parse the UninstallString to get the installation path. It typically looks like this:
+		// C:\WINDOWS\IsUninst.exe -f"C:\Program Files\SIL\CarlaStudioUnicode\Uninst.isu"
+		const _TCHAR * pszFlag = _T("-f");
+		_TCHAR * pchFlagStart = _tcsstr(pszUninstallString, pszFlag);
+		if (pchFlagStart)
 		{
-			pszUninstallString = new TCHAR [cchUninstallString];
-			if (ERROR_SUCCESS == RegQueryValueEx(hKey, pszUninstallStringValue, NULL, NULL,
-				(LPBYTE)pszUninstallString, &cchUninstallString))
+			_TCHAR * pszInstallPath = pchFlagStart + _tcslen(pszFlag);
+			// Check for a quoted string - bypass quote marks if present:
+			if (_tcsnccmp(pszInstallPath, _T("\""), 1) == 0)
 			{
-				// Parse the UninstallString to get the installation path. It typically looks like this:
-				// C:\WINDOWS\IsUninst.exe -f"C:\Program Files\SIL\CarlaStudioUnicode\Uninst.isu"
-				const TCHAR * pszFlag = _T("-f");
-				TCHAR * pchFlagStart = _tcsstr(pszUninstallString, pszFlag);
-				if (pchFlagStart)
-				{
-					TCHAR * pszInstallPath = pchFlagStart + _tcslen(pszFlag);
-					// Check for a quoted string - bypass quote marks if present:
-					if (_tcsnccmp(pszInstallPath, _T("\""), 1) == 0)
-					{
-						pszInstallPath++;
-						size_t cch = _tcslen(pszInstallPath) - 1;
-						if (_tcscmp(&pszInstallPath[cch], _T("\"")) == 0)
-							pszInstallPath[cch] = 0;
-					}
-					// Now find main .exe file and get its version:
-					TCHAR * pchLastBackslash = _tcsrchr(pszInstallPath, '\\');
-					if (pchLastBackslash)
-					{
-						*pchLastBackslash = 0;
-						TCHAR * pszMainExePath = new_sprintf(_T("%s\\CStudioU.exe"), pszInstallPath);
-
-						// See if the file exists and what version it is:
-						__int64 nVersion;
-						bool fFound = GetFileVersion(pszMainExePath, nVersion);
-						delete[] pszMainExePath;
-						pszMainExePath = NULL;
-
-						if (fFound)
-						{
-#if !defined NOLOGGING
-							TCHAR * pszVersion = GenVersionText(nVersion);
-							g_Log.Write(_T("Found Carla Studio version %s"), pszVersion);
-							delete[] pszVersion;
-							pszVersion = NULL;
-#endif
-
-							fResult = VersionInRange(nVersion, pszMinVersion, pszMaxVersion);
-						}
-					}
-				}
+				pszInstallPath++;
+				size_t cch = _tcslen(pszInstallPath) - 1;
+				if (_tcscmp(&pszInstallPath[cch], _T("\"")) == 0)
+					pszInstallPath[cch] = 0;
 			}
-			delete[] pszUninstallString;
-			pszUninstallString = NULL;
+			// Now find main .exe file and get its version:
+			RemoveLastPathSection(pszInstallPath);
+			_TCHAR * pszMainExePath = MakePath(pszInstallPath, _T("CStudioU.exe"));
+
+			// See if the file exists and what version it is:
+			__int64 nVersion;
+			bool fFound = GetFileVersion(pszMainExePath, nVersion);
+			delete[] pszMainExePath;
+			pszMainExePath = NULL;
+
+			if (fFound)
+			{
+#if !defined NOLOGGING
+				_TCHAR * pszVersion = GenVersionText(nVersion);
+				g_Log.Write(_T("Found Carla Studio version %s"), pszVersion);
+				delete[] pszVersion;
+				pszVersion = NULL;
+#endif
+				fResult = VersionInRange(nVersion, pszMinVersion, pszMaxVersion);
+			}
 		}
-		RegCloseKey(hKey);
+		delete[] pszUninstallString;
+		pszUninstallString = NULL;
 	}
 
 	return (fResult);

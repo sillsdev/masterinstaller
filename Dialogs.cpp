@@ -823,20 +823,21 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 		case IDC_BUTTON_TERMS:
 			{
 				// Build path to file:
-				const int knLen = MAX_PATH;
-				_TCHAR szPath[knLen];
-				GetModuleFileName(NULL, szPath, knLen);
-				_TCHAR * ch = _tcsrchr(szPath, '\\');
-				if (ch)
-					ch++;
-				else
-					ch = szPath;
-				*ch = 0;
+				_TCHAR * pszExeFolder = NewGetExeFolder();
+				_TCHAR * pszHelpPath;
 				if (LOWORD(wParam) == IDC_BUTTON_MAIN_HELP)
-					_tcscat_s(szPath, MAX_PATH, g_pszExternalHelpFile);
+					pszHelpPath = MakePath(pszExeFolder, g_pszExternalHelpFile);
 				else
-					_tcscat_s(szPath, MAX_PATH, g_pszTermsOfUseFile);
-				ShellExecute(hwnd, _T("open"), szPath, NULL, _T("."), SW_SHOW);
+					pszHelpPath = MakePath(pszExeFolder, g_pszTermsOfUseFile);
+
+				delete[] pszExeFolder;
+				pszExeFolder = NULL;
+
+				ShellExecute(hwnd, _T("open"), pszHelpPath, NULL, _T("."), SW_SHOW);
+				
+				delete[] pszHelpPath;
+				pszHelpPath = NULL;
+				
 				break;
 			}
 		case IDC_BUTTON_REENTER_KEY:
@@ -866,6 +867,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 							// Open file:
 							ShellExecute(NULL, NULL, pszFilePath, NULL, _T("."), SW_SHOW);
 							delete[] pszFilePath;
+							pszFilePath = NULL;
 						}
 						else // Use InstallerHelp2.dll
 							pHelpLauncher->LaunchHelp(pszHelpTag);

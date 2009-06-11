@@ -5,7 +5,7 @@
 #include "Uninstall.cpp"
 
 // Deals with things that we need to do to clear the way for Speech Analyzer.
-int SAPreInstall(const TCHAR * pszCriticalFile)
+int SAPreInstall(SoftwareProduct * /*Product*/)
 {
 	int nResult = 0;
 

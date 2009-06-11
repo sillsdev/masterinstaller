@@ -5,7 +5,7 @@
 #include "InitEC.cpp"
 
 
-int SAPostInstall(const _TCHAR * /*pszCriticalFile*/)
+int SAPostInstall(SoftwareProduct * /*Product*/)
 {
 	InitEC();
 	return 0;

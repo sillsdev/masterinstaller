@@ -83,7 +83,7 @@ BOOL CTestPresenceCtrl::CTestPresenceCtrlFactory::UpdateRegistry(BOOL bRegister)
 
 // Definition of a TestPresence function:
 typedef bool (* pfnAuxTestPresence)(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
-									const _TCHAR * pszCriticalFile);
+									const void * Product);
 // Definition of the data structure holding essential data to test the presence of any
 // product:
 typedef struct

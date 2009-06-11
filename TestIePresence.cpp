@@ -3,30 +3,28 @@
 #include <tchar.h>
 
 // Tests for the presence of Internet Explorer.
-bool TestIePresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
-					const TCHAR * /*pszCriticalFile*/)
+bool TestIePresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
+					SoftwareProduct * /*Product*/)
 {
-	LONG lResult;
-	HKEY hKey = NULL;
+	_TCHAR * pszVersion = NewRegString(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\Microsoft\\Internet Explorer"), _T("Version"));
 
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Internet Explorer"), NULL,
-		KEY_READ, &hKey);
-
-	if (ERROR_SUCCESS == lResult)
+	if (pszVersion)
 	{
-		const int knVersionLen = 256;
-		TCHAR szVersion[knVersionLen];
-		DWORD cbData = knVersionLen;
-
-		lResult = RegQueryValueEx(hKey, _T("Version"), NULL, NULL, (LPBYTE)szVersion, &cbData);
-		RegCloseKey(hKey);
-
 #if !defined NOLOGGING
-		g_Log.Write(_T("Found Internet Explorer version %s"), szVersion);
+		g_Log.Write(_T("Found Internet Explorer version %s"), pszVersion);
+#endif
+		bool fResult = VersionInRange(pszVersion, pszMinVersion, pszMaxVersion);
+
+		delete[] pszVersion;
+		pszVersion = NULL;
+
+		return fResult;
+	}
+#if !defined NOLOGGING
+	else
+		g_Log.Write(_T("Internet Explorer not found"));
 #endif
 
-		if (ERROR_SUCCESS == lResult)
-			return VersionInRange(szVersion, pszMinVersion, pszMaxVersion);
-	}
 	return false;
 }

@@ -7,49 +7,25 @@
 #include "SearchOtherUsersInstallations.cpp"
 
 // Remove any existing version of Encoding Converters
-int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
+int RemovePreviousECs(SoftwareProduct * /*Product*/)
 {
 	int nResult = 0;
 
 	// Search for Bob Eaton's uninstall batch file:
 	g_Log.Write(_T("Looking in registry for Bob's uninstall batch file path..."));
 	g_Log.Indent();
-	TCHAR * pszUninstallFolder = NULL;
-	HKEY hKey;
-	const TCHAR * pszKeyPath = _T("SOFTWARE\\SIL\\SilEncConverters22\\Installer");
-	const TCHAR * pszKeyValue = _T("InstallerPath");
-	LONG lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, 
-		pszKeyPath, 0, KEY_READ, &hKey);
-	if (ERROR_SUCCESS == lResult)
-	{
-		g_Log.Write(_T("Opened reg key."));
-		DWORD cbData = 0;		
-		lResult = RegQueryValueEx(hKey, pszKeyValue, NULL, NULL, NULL, &cbData);
-		if (ERROR_SUCCESS == lResult)
-		{
-			g_Log.Write(_T("Read required buffer size."));
-			cbData++;
-			pszUninstallFolder = new TCHAR [cbData];
-			lResult = RegQueryValueEx(hKey, pszKeyValue, NULL, NULL, (LPBYTE)pszUninstallFolder,
-				&cbData);
-			if (ERROR_SUCCESS == lResult)
-				g_Log.Write(_T("Got path: '%s'."), pszUninstallFolder);
-			else
-			{
-				g_Log.Write(_T("Could not read path."));
-				delete[] pszUninstallFolder;
-				pszUninstallFolder = NULL;
-			}
-		}
-		RegCloseKey(hKey);
-	}
 
-	// If Bob Eaton's uninstall link exists, run it:
-	if (pszUninstallFolder)
+	_TCHAR * pszUninstallFolder = NewRegString(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\SIL\\SilEncConverters22\\Installer"), _T("InstallerPath"));
+
+	if (!pszUninstallFolder)
+		g_Log.Write(_T("Could not read path."));
+	else
 	{
+		g_Log.Write(_T("Got path: '%s'."), pszUninstallFolder);
+
 		// Form full path to uninstall batch file:
-		const TCHAR * pszBatchFile = _T("UninstallSC.bat");
-		TCHAR * pszApplication = new_sprintf(_T("%s\\%s"), pszUninstallFolder, pszBatchFile);
+		_TCHAR * pszApplication = MakePath(pszUninstallFolder, _T("UninstallSC.bat"));
 
 		// If the batch file is not there, we will assume the EC installation is version 2.5 or later,
 		// so we will only proceed if it is there:
@@ -129,8 +105,6 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 		delete[] pszUninstallFolder;
 		pszUninstallFolder = NULL;
 	}
-	else
-		g_Log.Write(_T("Did not read uninstall batch file folder."));
 
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done looking for Bob's uninstall batch file path."));
@@ -177,39 +151,39 @@ int RemovePreviousECs(const TCHAR * /*pszCriticalFile*/)
 	g_Log.Indent();
 	TCHAR * pszStartMenuProgramsStartupPath = GetFolderPathNew(CSIDL_STARTUP);
 
-	if (pszStartMenuProgramsStartupPath)
-	{
-		g_Log.Write(_T("Initial folder is '%s'"), pszStartMenuProgramsStartupPath);
-	
-		// Chop off the last folder component:
-		TCHAR * ch = _tcsrchr(pszStartMenuProgramsStartupPath, '\\');
-		if (ch)
-			*ch = 0;
+	g_Log.Write(_T("Initial folder is '%s'"), pszStartMenuProgramsStartupPath);
 
-		// Add the rest of the path:
-		new_sprintf_concat(pszStartMenuProgramsStartupPath, 0, _T("\\SIL Converters"));
-		g_Log.Write(_T("Deleting *.* in '%s'"), pszStartMenuProgramsStartupPath);
+	// Chop off the last folder component:
+	RemoveLastPathSection(pszStartMenuProgramsStartupPath);
 
-		// Prepare the search string, with an extra zero on the end, formed first with an '@'
-		// then changed:
-		new_sprintf_concat(pszStartMenuProgramsStartupPath, 0, _T("\\*.*@"));
-		ch = _tcsrchr(pszStartMenuProgramsStartupPath, '@');
-		if (ch)
-			*ch = 0;
-
-		SHFILEOPSTRUCT sfos;
-		sfos.hwnd = NULL;
-		sfos.wFunc = FO_DELETE;
-		sfos.pFrom = pszStartMenuProgramsStartupPath;
-		sfos.pTo = NULL;
-		sfos.fFlags = FOF_FILESONLY | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT;
-		SHFileOperation(&sfos);
-	}
-	else
-		g_Log.Write(_T("Could not retrieve Startup folder path"));
-
+	// Add the rest of the path:
+	_TCHAR * pszStartMenuProgramsPath = MakePath(pszStartMenuProgramsStartupPath,
+		_T("SIL Converters"));
 	delete[] pszStartMenuProgramsStartupPath;
 	pszStartMenuProgramsStartupPath = NULL;
+	g_Log.Write(_T("Deleting *.* in '%s'"), pszStartMenuProgramsPath);
+
+	// Prepare the search string, with an extra zero on the end, formed first with an '@'
+	// then changed:
+	_TCHAR * pszSearchPattern = MakePath(pszStartMenuProgramsPath, _T("*.*@"));
+
+	delete[] pszStartMenuProgramsPath;
+	pszStartMenuProgramsPath = NULL;
+
+	TCHAR * ch = _tcsrchr(pszSearchPattern, '@');
+	if (ch)
+		*ch = 0;
+
+	SHFILEOPSTRUCT sfos;
+	sfos.hwnd = NULL;
+	sfos.wFunc = FO_DELETE;
+	sfos.pFrom = pszSearchPattern;
+	sfos.pTo = NULL;
+	sfos.fFlags = FOF_FILESONLY | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT;
+	SHFileOperation(&sfos);
+
+	delete[] pszSearchPattern;
+	pszSearchPattern = NULL;
 
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done"));

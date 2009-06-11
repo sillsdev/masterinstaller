@@ -7,7 +7,7 @@
 #include "UniversalFixes.h"
 
 // Remove any existing version of FieldWorks:
-int RemovePreviousFWs(const TCHAR * /*pszCriticalFile*/)
+int RemovePreviousFWs(SoftwareProduct * /*Product*/)
 {
 	int nResult = 0;
 

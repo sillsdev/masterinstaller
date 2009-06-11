@@ -8,7 +8,7 @@
 // Removes the registry settings that show MSXML 6.0 SP2 is installed, as if the
 // Windows Installer Cleanup utility had been used, which is the Microsoft recommended
 // fix for the SQL Server 2005 installer error.
-int MSXML6SP2Killer(const TCHAR * /*pszCriticalFile*/)
+int MSXML6SP2Killer(SoftwareProduct * Product)
 {
 #if !defined NOLOGGING
 	g_Log.Write(_T("Started KB968749 fix."));
@@ -58,12 +58,12 @@ int MSXML6SP2Killer(const TCHAR * /*pszCriticalFile*/)
 		_TCHAR * pszSystemFolderPath = GetFolderPathNew(CSIDL_SYSTEM);
 		if (pszSystemFolderPath)
 		{
-			_TCHAR * pszVal1 = new_sprintf(_T("%s\\msxml6.dll"), pszSystemFolderPath);
+			_TCHAR * pszVal1 = MakePath(pszSystemFolderPath, _T("msxml6.dll"));
 			RegDeleteValue(hKey, pszVal1);
 			delete[] pszVal1;
 			pszVal1 = NULL;
 
-			_TCHAR * pszVal2 = new_sprintf(_T("%s\\msxml6r.dll"), pszSystemFolderPath);
+			_TCHAR * pszVal2 = MakePath(pszSystemFolderPath, _T("msxml6r.dll"));
 			RegDeleteValue(hKey, pszVal2);
 			delete[] pszVal2;
 			pszVal2 = NULL;

@@ -6,34 +6,23 @@
 
 // Internal method called indirectly:
 bool TestSqlSILFWPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
-						  const _TCHAR * /*pszCriticalFile*/)
+						  SoftwareProduct * /*Product*/)
 {
-	LONG lResult;
-	HKEY hKey = NULL;
+	_TCHAR * pszCurrentVersion = NewRegString(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\Microsoft\\Microsoft SQL Server\\SILFW\\MSSQLServer\\CurrentVersion"),
+		_T("CurrentVersion"));
 
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		_T("SOFTWARE\\Microsoft\\Microsoft SQL Server\\SILFW\\MSSQLServer\\CurrentVersion"), NULL,
-		KEY_READ, &hKey);
-
-	// We don't proceed unless the call above succeeds:
-	if (ERROR_SUCCESS != lResult)
+	if (!pszCurrentVersion)
 		return false;
 
-	const int knCurrentVersionLen = 128;
-	_TCHAR szCurrentVersion[knCurrentVersionLen];
-	DWORD cbData = knCurrentVersionLen;
-
-	lResult = RegQueryValueEx(hKey, _T("CurrentVersion"), NULL, NULL, (LPBYTE)szCurrentVersion,
-		&cbData);
-
-	if (ERROR_SUCCESS != lResult)
-	{
-		RegCloseKey(hKey);
-		return false;
-	}
 #if !defined NOLOGGING
-	g_Log.Write(_T("Found SQL Server::SILFW version %s"), szCurrentVersion);
+	g_Log.Write(_T("Found SQL Server::SILFW version %s"), pszCurrentVersion);
 #endif
 
-	return VersionInRange(szCurrentVersion, pszMinVersion, pszMaxVersion);
+	bool fResult =  VersionInRange(pszCurrentVersion, pszMinVersion, pszMaxVersion);
+
+	delete[] pszCurrentVersion;
+	pszCurrentVersion = NULL;
+
+	return fResult;
 }

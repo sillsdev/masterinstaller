@@ -4,8 +4,8 @@
 
 // Tests for presence of given Service Pack on Windows 2000.
 // If current operating system is not even Windows 2000, returns true anyway.
-bool TestWin2kSpPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
-						 const TCHAR * /*pszCriticalFile*/)
+bool TestWin2kSpPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
+						 SoftwareProduct * /*Product*/)
 {
 	OSVERSIONINFOEX osvi;
 

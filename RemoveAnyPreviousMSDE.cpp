@@ -3,7 +3,7 @@
 #include <tchar.h>
 
 // Check if any version of MSDE (SILFW) is present. Remove if so.
-int RemoveAnyPreviousMSDE(const TCHAR * /*pszCriticalFile*/)
+int RemoveAnyPreviousMSDE(SoftwareProduct * /*Product*/)
 {
 	g_Log.Write(_T("MSDE Pre-install function."));
 

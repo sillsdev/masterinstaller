@@ -3,8 +3,8 @@
 #include <tchar.h>
 
 // Tests for presence of Service Packs for Microsoft .NET 1.1
-bool TestDotNet1point1SPPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
-								 const TCHAR * /*pszCriticalFile*/)
+bool TestDotNet1point1SPPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
+								 SoftwareProduct * /*Product*/)
 {
 	// First of all, if .NET 2.0 or higher is present, this SP is irrelevant:
 	if (TestDotNetPresence(_T("2.0"), NULL, NULL))

@@ -4,23 +4,23 @@
 
 // Tests for the presence of Windows Installer. Here, pszMinVersion is treated as the
 // minimum acceptable version number, and pszMaxVersion is ignored.
-bool TestWinInstallerPresence(const TCHAR * pszMinVersion, const TCHAR * /*pszMaxVersion*/,
-							  const TCHAR * /*pszCriticalFile*/)
+bool TestWinInstallerPresence(const _TCHAR * pszMinVersion, const _TCHAR * /*pszMaxVersion*/,
+							  SoftwareProduct * /*Product*/)
 {
 	// See if we can detect where the Windows Installer .exe file is:
-	TCHAR * szLoc = GetInstallerLocation();
-	if (!szLoc)
+	_TCHAR * pszLoc = GetInstallerLocation();
+	if (!pszLoc)
 		return false; // Couldn't find it.
 
 	bool fResult = false;
 
 	// Now add file name to path:
-	TCHAR * szLocation = new_sprintf(_T("%s\\msiexec.exe"), szLoc);
-	delete[] szLoc;
-	szLoc = NULL;
+	_TCHAR * pszLocation = MakePath(pszLoc, _T("msiexec.exe"));
+	delete[] pszLoc;
+	pszLoc = NULL;
 
 	__int64 nVersion;
-	if (GetFileVersion(szLocation, nVersion))
+	if (GetFileVersion(pszLocation, nVersion))
 	{
 #if !defined NOLOGGING
 		TCHAR * pszVersion = GenVersionText(nVersion);
@@ -32,8 +32,8 @@ bool TestWinInstallerPresence(const TCHAR * pszMinVersion, const TCHAR * /*pszMa
 		fResult = VersionInRange(nVersion, pszMinVersion, NULL);
 	}
 
-	delete[] szLocation;
-	szLocation = NULL;
+	delete[] pszLocation;
+	pszLocation = NULL;
 
 	return fResult;
 }

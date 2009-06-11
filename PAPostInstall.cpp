@@ -5,7 +5,7 @@
 #include "InitEC.cpp"
 
 
-int PAPostInstall(const _TCHAR * /*pszCriticalFile*/)
+int PAPostInstall(SoftwareProduct * /*Product*/)
 {
 	InitEC();
 	return 0;

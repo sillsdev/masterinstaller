@@ -57,7 +57,7 @@ bool AmendFilesPermissions(_TCHAR * pszFolder, _TCHAR * pszSearchPattern, int Si
 
 	// Search for all files matching specified pattern:
 	WIN32_FIND_DATA wfd;
-	_TCHAR * pszSearch = new_sprintf(_T("%s\\%s"), pszFolder, pszSearchPattern);
+	_TCHAR * pszSearch = MakePath(pszFolder, pszSearchPattern);
 	HANDLE hFind = FindFirstFile(pszSearch, &wfd);
 	if (hFind != INVALID_HANDLE_VALUE)
 	{
@@ -67,7 +67,7 @@ bool AmendFilesPermissions(_TCHAR * pszFolder, _TCHAR * pszSearchPattern, int Si
 			{
 				g_Log.Write(_T("Found %s."), wfd.cFileName);
 
-				_TCHAR * pszFilePath = new_sprintf(_T("%s\\%s"), pszFolder, wfd.cFileName);
+				_TCHAR * pszFilePath = MakePath(pszFolder, wfd.cFileName);
 
 				// Get existing permissions:
 				PACL pOldDACL = NULL;
@@ -135,8 +135,8 @@ void FixRepositoryAndMapsFilesACLs()
 
 	// Form paths to the required folders, via the APPDATA folder:
 	_TCHAR * pszAppDataFolder = GetFolderPathNew(CSIDL_COMMON_APPDATA);
-	_TCHAR * pszRepositoryFolder = new_sprintf(_T("%s\\SIL\\Repository"), pszAppDataFolder);
-	_TCHAR * pszMapsTablesFolder = new_sprintf(_T("%s\\SIL\\MapsTables"), pszAppDataFolder);
+	_TCHAR * pszRepositoryFolder = MakePath(pszAppDataFolder, _T("SIL\\Repository"));
+	_TCHAR * pszMapsTablesFolder = MakePath(pszAppDataFolder, _T("SIL\\MapsTables"));
 	delete[] pszAppDataFolder;
 	pszAppDataFolder = NULL;
 

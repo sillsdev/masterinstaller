@@ -4,7 +4,7 @@
 
 // To prepare for Keyman installation, we have to close down any instance that is already
 // running.
-int PrepareForKeymanInstallation(const TCHAR * /*pszCriticalFile*/)
+int PrepareForKeymanInstallation(SoftwareProduct * /*Product*/)
 {
 	// Close down any instance that is already running:
 	HWND hwnd = FindWindow(_T("Keyman50"), _T("Keyman50"));

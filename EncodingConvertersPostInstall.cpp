@@ -25,64 +25,32 @@ void RunKB908002Fix()
 	else
 	{
 		// Test if a registry key was left telling us where the Fix can be found:
-		TCHAR * pszCmd = NULL;
-		TCHAR * pszExtensibilityPath = NULL;
-		const TCHAR * pszKeyPath = _T("SOFTWARE\\SIL\\Installer\\EC\\MS KB908002 Fix");
-		const TCHAR * pszKeyValueRun = _T("Run");
-		const TCHAR * pszKeyValueDelete = _T("Delete");
-		lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, pszKeyPath, 0, KEY_READ, &hKey);
-		if (ERROR_SUCCESS == lResult)
+		const _TCHAR * pszKeyPath = _T("SOFTWARE\\SIL\\Installer\\EC\\MS KB908002 Fix");
+		const _TCHAR * pszKeyValueRun = _T("Run");
+		const _TCHAR * pszKeyValueDelete = _T("Delete");
+
+		g_Log.Write(_T("Looking for temporary Extensibility.dll."));
+
+		_TCHAR * pszExtensibilityPath = NewRegString(HKEY_LOCAL_MACHINE, pszKeyPath,
+			pszKeyValueDelete);
+
+		if (pszExtensibilityPath)
 		{
-			g_Log.Write(_T("Opened reg key."));
-			DWORD cbData = 0;		
-			lResult = RegQueryValueEx(hKey, pszKeyValueRun, NULL, NULL, NULL, &cbData);
-			if (ERROR_SUCCESS == lResult)
+			g_Log.Write(_T("Deleting Extensibility.dll path: '%s'."), pszExtensibilityPath);
+			if (0 == DeleteFile(pszExtensibilityPath))
 			{
-				g_Log.Write(_T("Got required buffer size for 'run' file."));
-				cbData++;
-				pszCmd = new TCHAR [cbData];
-				lResult = RegQueryValueEx(hKey, pszKeyValueRun, NULL, NULL, (LPBYTE)pszCmd,
-					&cbData);
-				if (ERROR_SUCCESS == lResult)
-					g_Log.Write(_T("Got executable path: '%s'."), pszCmd);
-				else
-				{
-					g_Log.Write(_T("Could not read path."));
-					delete[] pszCmd;
-					pszCmd = NULL;
-				}
+				int err = GetLastError();
+				g_Log.Write(_T("'%s' was not deleted [error %d]."), pszExtensibilityPath, err);
 			}
-
-			g_Log.Write(_T("Looking for temporary Extensibility.dll."));
-			cbData = 0;		
-			lResult = RegQueryValueEx(hKey, pszKeyValueDelete, NULL, NULL, NULL, &cbData);
-			if (ERROR_SUCCESS == lResult)
-			{
-				g_Log.Write(_T("Got required buffer size."));
-				cbData++;
-				pszExtensibilityPath = new TCHAR [cbData];
-				lResult = RegQueryValueEx(hKey, pszKeyValueDelete, NULL, NULL, (LPBYTE)pszExtensibilityPath,
-					&cbData);
-				if (ERROR_SUCCESS == lResult)
-				{
-					g_Log.Write(_T("Deleting Extensibility.dll path: '%s'."), pszExtensibilityPath);
-					if (0 == DeleteFile(pszExtensibilityPath))
-					{
-						int err = GetLastError();
-						g_Log.Write(_T("'%s' was not deleted [error %d]."), pszExtensibilityPath, err);
-					}
-					g_Log.Write(_T("'%s' deleted successfully."), pszExtensibilityPath);
-				}
-				else
-				{
-					g_Log.Write(_T("Could not read path."));
-					delete[] pszExtensibilityPath;
-					pszExtensibilityPath = NULL;
-				}
-			}
-			RegCloseKey(hKey);
+			g_Log.Write(_T("'%s' deleted successfully."), pszExtensibilityPath);
 		}
+		else
+			g_Log.Write(_T("Could not read path."));
 
+		delete[] pszExtensibilityPath;
+		pszExtensibilityPath = NULL;
+
+		_TCHAR * pszCmd = NewRegString(HKEY_LOCAL_MACHINE, pszKeyPath, pszKeyValueRun);
 		if (pszCmd)
 		{
 			g_Log.Write(_T("About to launch '%s'."), pszCmd);
@@ -92,6 +60,8 @@ void RunKB908002Fix()
 
 			ExecCmd(pszCmd, NULL, true);
 		}
+		else
+			g_Log.Write(_T("Could not read 'Run' Command."));
 	}
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done."));
@@ -99,7 +69,7 @@ void RunKB908002Fix()
 
 // Detect if any converters were installed to the machine, and if so,
 // run the installer to put them in the repository.
-int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
+int SetupInstalledConverters(SoftwareProduct * /*Product*/)
 {
 	g_Log.Write(_T("Looking for installed converters..."));
 	g_Log.Indent();
@@ -154,26 +124,8 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 
 	g_Log.Write(_T("Looking for path of SetupSC.exe."));
 
-	_TCHAR * pszPath = NULL;
-	LONG lResult;
-	HKEY hKey = NULL;
-
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		_T("SOFTWARE\\SIL\\SilEncConverters30\\Installer"), NULL, KEY_READ, &hKey);
-
-	// We don't proceed unless the call above succeeds:
-	if (ERROR_SUCCESS == lResult)
-	{
-		DWORD cbData = 0;
-
-		// Find out how much space we need to hold path string:
-		lResult = RegQueryValueEx(hKey, _T("InstallerPath"), NULL, NULL, NULL, &cbData);
-		if (ERROR_SUCCESS == lResult)
-		{
-			pszPath = new TCHAR [cbData];
-			RegQueryValueEx(hKey, _T("InstallerPath"), NULL, NULL, (LPBYTE)pszPath, &cbData);
-		}
-	}
+	_TCHAR * pszPath = NewRegString(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\SIL\\SilEncConverters30\\Installer"), _T("InstallerPath"));
 
 	if (!pszPath)
 	{
@@ -183,19 +135,15 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 		return 0;
 	}
 
-	TCHAR * pszSetupSC = NULL;
-	new_sprintf_concat(pszSetupSC, 0, _T("%s\\SetupSC.exe"), pszPath);
+	ShowStatusDialog();
+	DisplayStatusText(0, _T("Installing converters to repository"));
+	DisplayStatusText(1, _T("Please follow instructions in dialog"));
 
-	DWORD dwExitCode = 0;
+	TCHAR * pszSetupSC = MakePath(pszPath, _T("SetupSC.exe"));
+	DWORD dwExitCode = ExecCmd(pszSetupSC, NULL, true);
 
-	if (pszSetupSC)
-	{
-		ShowStatusDialog();
-		DisplayStatusText(0, _T("Installing converters to repository"));
-		DisplayStatusText(1, _T("Please follow instructions in dialog"));
-
-		dwExitCode = ExecCmd(pszSetupSC, NULL, true);
-	}
+	delete[] pszSetupSC;
+	pszSetupSC = NULL;
 
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done."));
@@ -204,9 +152,9 @@ int SetupInstalledConverters(const TCHAR * /*pszCriticalFile*/)
 }
 
 // Call RunKB908002Fix and SetupInstalledConverters
-int EncodingConvertersPostInstall(const TCHAR * pszCriticalFile)
+int EncodingConvertersPostInstall(SoftwareProduct * Product)
 {
 	InitEC();
 	RunKB908002Fix();
-	return SetupInstalledConverters(pszCriticalFile);
+	return SetupInstalledConverters(Product);
 }

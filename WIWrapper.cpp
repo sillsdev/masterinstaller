@@ -24,36 +24,9 @@ WindowsInstallerWrapper WindowsInstaller;
 // Caller must delete[] the returned string.
 _TCHAR * GetInstallerLocation()
 {
-	LONG lResult;
-	HKEY hKey = NULL;
-
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"), NULL, KEY_READ, &hKey);
-
-	// we don't proceed unless the call above succeeds
-	if (lResult != ERROR_SUCCESS)
-		return NULL;
-
-	// Get length of required buffer:
-	DWORD dwBufLen = 0;
-	lResult = RegQueryValueEx(hKey, _T("InstallerLocation"), NULL, NULL, NULL, &dwBufLen);
-	if (dwBufLen == 0)
-		return NULL;
-
-	_TCHAR * pszLocation = new _TCHAR [dwBufLen];
-	lResult = RegQueryValueEx(hKey, _T("InstallerLocation"), NULL, NULL, (LPBYTE)pszLocation,
-			&dwBufLen);
-	RegCloseKey(hKey);
-	hKey = NULL;
-
-	// If we receive an error, quit:
-	if (lResult != ERROR_SUCCESS)
-	{
-		delete[] pszLocation;
-		return NULL;
-	}
-
-	return pszLocation;
+	return NewRegString(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"),
+		_T("InstallerLocation"));
 }
 
 WindowsInstallerWrapper::WindowsInstallerWrapper()
@@ -81,7 +54,7 @@ bool WindowsInstallerWrapper::Init()
 		return false; // Windows Installer not present.
 
 	// Form the full path to the DLL we want:
-	_TCHAR * pszLibraryPath = new_sprintf(_T("%s\\msi.dll"), pszInstallerLocation);
+	_TCHAR * pszLibraryPath = MakePath(pszInstallerLocation, _T("msi.dll"));
 	delete[] pszInstallerLocation;
 	pszInstallerLocation = NULL;
 

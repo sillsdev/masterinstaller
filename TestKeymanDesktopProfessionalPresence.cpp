@@ -5,8 +5,9 @@
 #include "TestKeyman7Presence.cpp"
 
 // Tests for the presence of Tavultesoft's Keyman Standard flavor.
-bool TestKeymanDesktopProfessionalPresence(const TCHAR * pszMinVersion, const TCHAR * pszMaxVersion,
-							const TCHAR * /*pszCriticalFile*/)
+bool TestKeymanDesktopProfessionalPresence(const _TCHAR * pszMinVersion,
+										   const _TCHAR * pszMaxVersion,
+										   SoftwareProduct * /*Product*/)
 {
 	return TestKeyman7Presence(pszMinVersion, pszMaxVersion, _T("desktop_pro"));
 }

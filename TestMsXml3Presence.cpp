@@ -5,7 +5,7 @@
 
 // Tests for presence of Microsoft XML parser 3.
 bool TestMsXml3Presence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
-						const _TCHAR * /*pszCriticalFile*/)
+						SoftwareProduct * /*Product*/)
 {
 	// Get path to main DLL, typically C:\Windows\System32\MSXML3.dll:
 	_TCHAR * pszSystemFolderPath = GetFolderPathNew(CSIDL_SYSTEM);

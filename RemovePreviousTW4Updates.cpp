@@ -5,33 +5,26 @@
 #include "Uninstall.cpp"
 
 // Remove any existing updates of TW4
-int RemovePreviousTW4Updates(const TCHAR * /*pszCriticalFile*/)
+int RemovePreviousTW4Updates(SoftwareProduct * /*Product*/)
 {
 	int nResult = 0;
 
 	// First check that TW4 is installed:
-	LONG lResult;
-	HKEY hKey = NULL;
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+	_TCHAR * pszTW4 = NewRegString(HKEY_LOCAL_MACHINE,
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Translator's Workplace 4"),
-		NULL, KEY_ALL_ACCESS, &hKey);
+		_T("TW4Folder"));
 
-	if (ERROR_SUCCESS != lResult)
-		nResult = -2;
-	else
+	if (pszTW4)
 	{
-		DWORD cbData = 0;
-		// Get requirement for buffer length:
-		lResult = RegQueryValueEx(hKey, _T("TW4Folder"), NULL, NULL, NULL, &cbData);
-		if (ERROR_SUCCESS != lResult || cbData <= 0)
-			nResult = -2;
+		delete[] pszTW4;
+		pszTW4 = NULL;
 	}
-	if (nResult != 0)
+	else
 	{
 		MessageBox(NULL,
 			_T("Translator's Workplace 4 cannot be located on this system, therefore the Update will not be installed."),
 			g_pszTitle, MB_OK | MB_ICONSTOP);
-		return nResult;
+		return -2;
 	}
 
 	// List of all previous FW product codes:

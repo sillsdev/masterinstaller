@@ -43,7 +43,7 @@ LogFile::~LogFile()
 void LogFile::SetActiveWriting(const _TCHAR * pszFilePath)
 {
 	if (!pszFilePath)
-		pszFilePath = _T("C:\\SIL Installer.log");
+		pszFilePath = _T("C:\\SIL_Installer.log");
 	if (pszFilePath[0] != 0)
 		m_pszFilePath = my_strdup(pszFilePath);
 

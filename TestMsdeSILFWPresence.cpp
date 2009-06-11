@@ -8,7 +8,7 @@ bool g_fExistingMsdeNeedsUpgrade = false;
 
 // Internal method called indirectly:
 bool TestMsdeSILFWPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
-						   const _TCHAR * /*pszCriticalFile*/)
+						   SoftwareProduct * /*Product*/)
 {
 	LONG lResult;
 	HKEY hKey = NULL;

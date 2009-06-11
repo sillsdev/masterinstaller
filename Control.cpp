@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <tchar.h>
+#include <shlobj.h>
 
 #include "Control.h"
 #include "ErrorHandler.h"
@@ -88,21 +89,20 @@ void MasterInstaller_t::Run()
 		{
 			// Because the API function GetSystemDefaultUILanguage does not exist
 			// on Windows 98 or lower, we must not assume it is present. Instead,
-			// we must interrogate the Kernel32.dll:
-			const int kcchSystemFolder = 1024;
-			_TCHAR pszSystemFolder[kcchSystemFolder];
+			// we must interrogate the Kernel32.dll.
 			// Get Windows system folder path:
-			if (GetSystemDirectory(pszSystemFolder, kcchSystemFolder) <= kcchSystemFolder)
+			_TCHAR * pszSystemFolder = GetFolderPathNew(CSIDL_SYSTEM);
+			if (pszSystemFolder)
 			{
-				// Remove any terminating backslash:
-				int cch = (int)_tcslen(pszSystemFolder);
-				if (cch > 1)
-					if (pszSystemFolder[cch - 1] == _TCHAR('\\'))
-						pszSystemFolder[cch - 1] = 0;
 				// Generate full path of Kernel32.dll:
-				_TCHAR * pszKernel32Dll = new_sprintf(_T("%s\\Kernel32.dll"), pszSystemFolder);
+				_TCHAR * pszKernel32Dll = MakePath(pszSystemFolder, _T("Kernel32.dll"));
+
 				// Get a handle to the DLL:
 				HMODULE hmodKernel32 = LoadLibrary(pszKernel32Dll);
+
+				// Delete garbage:
+				delete[] pszSystemFolder;
+				pszSystemFolder = NULL;
 				delete[] pszKernel32Dll;
 				pszKernel32Dll = NULL;
 
@@ -521,6 +521,18 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 		g_Log.Unindent();
 		g_Log.Write(_T("...Done."));
 
+		if (rgiNeededProducts.GetCount() > 0)
+		{
+			g_Log.Write(_T("Checking if any of the %d dependencies of %s have a language restriction we can't honor..."),
+				rgiNeededProducts.GetCount(), m_ppmProductManager->GetName(iCurrentProduct));
+			g_Log.Indent();
+		}
+		else
+		{
+			g_Log.Write(_T("%s has no dependencies. No need to check languge restrictions."),
+				m_ppmProductManager->GetName(iCurrentProduct));
+		}
+
 		// See if any have a language restriction we can't honor:
 		IndexList_t rgiFailures;
 		for (int i = 0; i < rgiNeededProducts.GetCount(); i++)
@@ -566,7 +578,16 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 			rgiProducts.RemoveNthItem(iList);
 			iList--;
 		} // End if there were any conflicts
-		g_Log.Unindent();
+			g_Log.Unindent();
+			g_Log.Write(_T("...Done checking if any dependencies of %s have a language restriction we can't honor..."),
+				m_ppmProductManager->GetName(iCurrentProduct));
+
+		if (rgiNeededProducts.GetCount() > 0)
+		{
+			g_Log.Unindent();
+			g_Log.Write(_T("Done checking prerequisites and requirements for %s."),
+				m_ppmProductManager->GetName(iCurrentProduct));
+		}
 	} // Next item in given list
 	g_Log.Unindent();
 	g_Log.Write(_T("End of testing for language compatibility issues."));
@@ -870,29 +891,26 @@ void MasterInstaller_t::TestAndPerformPendingReboot(int iProduct)
 	}
 	if (!fRebootPending && fTestWininit)
 	{
-		// We need to test if the file Wininit.ini is present:
-		_TCHAR szWininitPath[MAX_PATH];
+		// We need to test if the file Wininit.ini is present.
 		// Find out where Windows is located:
-		if (GetWindowsDirectory(szWininitPath, MAX_PATH))
+		_TCHAR * pszWinPath = GetFolderPathNew(CSIDL_WINDOWS);
+		if (pszWinPath)
 		{
-			int cch = (int)_tcslen(szWininitPath);
-			if (cch > 0)
+			// Add the file name:
+			_TCHAR * pszWininitPath = MakePath(pszWinPath, _T("Wininit.ini"));
+
+			delete[] pszWinPath;
+			pszWinPath = NULL;
+
+			// See if the file exists:
+			FILE * f;
+			if (_tfopen_s(&f, pszWininitPath, _T("r")) == 0)
 			{
-				// Make sure we don't end the path with a backslash:
-				if (szWininitPath[cch - 1] == _TCHAR('\\'))
-					szWininitPath[cch - 1] = 0;
-
-				// Add the file name:
-				_tcscat_s(szWininitPath, MAX_PATH, _T("\\Wininit.ini"));
-
-				// See if the file exists:
-				FILE * f;
-				if (_tfopen_s(&f, szWininitPath, _T("r")) == 0)
-				{
-					fclose(f);
-					fRebootPending = true;
-				}
+				fclose(f);
+				fRebootPending = true;
 			}
+			delete[] pszWininitPath;
+			pszWininitPath = NULL;
 		}
 	}
 

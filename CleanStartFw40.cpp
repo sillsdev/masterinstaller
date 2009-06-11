@@ -9,7 +9,7 @@
 _TCHAR * pszFormerFwInstallationFolder = NULL;
 
 // Deals with a bunch of things that we need to do to clear the way for FieldWorks 4.0
-int CleanStartFw40(const TCHAR * pszCriticalFile)
+int CleanStartFw40(SoftwareProduct * Product)
 {
 	int nResult = 0;
 
@@ -19,43 +19,21 @@ int CleanStartFw40(const TCHAR * pszCriticalFile)
 	// Prepare to move data from FW 4.2 or earlier by noting where FW is installed,
 	// using the RootDir reg setting from those earlier versions. We will write this
 	// value into the RoodDataDir reg value:
-	LONG lResult;
-	HKEY hKey = NULL;
-
 	PreserveWordFormingCharOverrides();
 
 	g_Log.Write(_T("Looking up FW installation folder (4.2 or earlier)..."));
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL\\FieldWorks"), NULL, KEY_READ,
-		&hKey);
-	if (ERROR_SUCCESS == lResult)
-	{
-		DWORD cbData = 0;
-		// Get required buffer size:
-		lResult = RegQueryValueEx(hKey, _T("RootDir"), NULL, NULL, NULL, &cbData);
 
-		if (ERROR_SUCCESS != lResult)
-			g_Log.Write(_T("...Cannot get required buffer size."));
-		else
-		{
-			pszFormerFwInstallationFolder = new _TCHAR [cbData];
+	pszFormerFwInstallationFolder = NewRegString(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\SIL\\FieldWorks"), _T("RootDir"));
 
-			// Retrieve folder path:
-			lResult = RegQueryValueEx(hKey, _T("RootDir"), NULL, NULL,
-				(LPBYTE)pszFormerFwInstallationFolder, &cbData);
-
-			if (ERROR_SUCCESS == lResult)
-				g_Log.Write(_T("...Previous FW installation folder = '%s'."), pszFormerFwInstallationFolder);
-			else
-				g_Log.Write(_T("...RootDir could not be read."));
-		}
-		RegCloseKey(hKey);
-	}
+	if (pszFormerFwInstallationFolder)
+		g_Log.Write(_T("...Previous FW installation folder = '%s'."), pszFormerFwInstallationFolder);
 	else
-		g_Log.Write(_T("...RootDir not found."));
+		g_Log.Write(_T("...RootDir could not be read."));
 
 	g_Log.Write(_T("Removing previous versions of FW..."));
 	g_Log.Indent();
-	nResult = RemovePreviousFWs(pszCriticalFile);
+	nResult = RemovePreviousFWs(Product);
 	g_Log.Unindent();
 
 	if (nResult == 0)

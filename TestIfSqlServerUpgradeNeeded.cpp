@@ -7,7 +7,7 @@ bool g_fSqlServerUpgradeNeeded = false;
 
 // If a current version exists and is 9.00.2047.00 (SQL Server 2005 SP1) or lower, then an
 // upgrade will be needed:
-int TestIfSqlServerUpgradeNeeded(const TCHAR * /*pszCriticalFile*/)
+int TestIfSqlServerUpgradeNeeded(SoftwareProduct * /*Product*/)
 {
 	if (TestSqlSILFWPresence(NULL, _T("9.00.2047.00"), NULL))
 	{

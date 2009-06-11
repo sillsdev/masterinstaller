@@ -1,48 +1,36 @@
 #pragma once
 
-#include <TCHAR.h>
+#include <tchar.h>
 
 // If fTestOnly is true, tests to see if the keyman keyboards in pszKeyboardsPath are installed.
 // If fTestOnly is false, installs the keyman keyboards from pszKeyboardsPath.
-DWORD KeymanFunction(bool fTestOnly, const TCHAR * pszKeyboardsPath)
+DWORD KeymanFunction(bool fTestOnly, SoftwareProduct * Product)
 {
-	const TCHAR * pszTitle = _T("Keyman Keyboard Installer");
-	const TCHAR * pszErrReg = _T("Cannot find Keyman shell. Keyboards will not be installed.");
-	const TCHAR * pszErrNoFiles = _T("No Keyman files found in specified folder.");
-	const TCHAR * pszErrLaunchKeyman = _T("Could not run Keyman to install keyboards.");
+	const _TCHAR * pszTitle = _T("Keyman Keyboard Installer");
+	const _TCHAR * pszErrReg = _T("Cannot find Keyman shell. Keyboards will not be installed.");
+	const _TCHAR * pszErrNoFiles = _T("No Keyman files found in specified folder.");
+	const _TCHAR * pszErrLaunchKeyman = _T("Could not run Keyman to install keyboards.");
 
-	HKEY hKey;
-	const int ctchShellCmd = 300;
-	TCHAR pszShellCmd[ctchShellCmd];
+	_TCHAR * pszShellCmd = NULL;
 
 	if (!fTestOnly)
 	{
-		// Locate Keyman Shell:
-		LONG lResult = RegOpenKeyEx(HKEY_CLASSES_ROOT,
-			_T("Keyman.File.Package\\Shell\\open\\Command"), 0, KEY_READ, &hKey);
+		pszShellCmd = NewRegString(HKEY_CLASSES_ROOT,
+			_T("Keyman.File.Package\\Shell\\open\\Command"));
 
-		if (ERROR_SUCCESS != lResult)
-		{
-			MessageBox(NULL, pszErrReg, pszTitle, MB_ICONSTOP | MB_OK);
-			return 0;
-		}
-
-		// Read the Keyman shell command line:
-		DWORD cbData = ctchShellCmd;
-		lResult = RegQueryValueEx(hKey, NULL, NULL, NULL, (LPBYTE)pszShellCmd, &cbData);
-		RegCloseKey(hKey);
-		hKey = NULL;
-		if (ERROR_SUCCESS != lResult)
+		if (!pszShellCmd)
 		{
 			MessageBox(NULL, pszErrReg, pszTitle, MB_ICONSTOP | MB_OK);
 			return 0;
 		}
 
 		// Look for the "-i" part of the shell command:
-		TCHAR *ch = _tcsstr(pszShellCmd, _T("-i"));
+		_TCHAR *ch = _tcsstr(pszShellCmd, _T("-i"));
 		if (!ch)
 		{
 			MessageBox(NULL, pszErrReg, pszTitle, MB_ICONSTOP | MB_OK);
+			delete[] pszShellCmd;
+			pszShellCmd = NULL;
 			return 0;
 		}
 
@@ -53,23 +41,27 @@ DWORD KeymanFunction(bool fTestOnly, const TCHAR * pszKeyboardsPath)
 
 	// Using path of .exe  plus pszKeyboardsPath as the source path, find
 	// (and install if !fTestOnly) all .kmx files:
-	const int knLen = MAX_PATH + 20;
-	TCHAR pszSearch[knLen];
-	TCHAR pszFolder[knLen];
-	GetModuleFileName(NULL, pszSearch, knLen);
-	TCHAR * pszFolderEnd = _tcsrchr(pszSearch, _TCHAR('\\'));
-	if (pszFolderEnd)
-		*pszFolderEnd = 0;
-	_tcscat_s(pszSearch, knLen, _T("\\"));
-	_tcscat_s(pszSearch, knLen, pszKeyboardsPath);
-	_tcscpy_s(pszFolder, knLen, pszSearch);
-	_tcscat_s(pszSearch, knLen, _T("\\*.kmx"));
+	_TCHAR * pszTemp = NewGetExeFolder();
+	_TCHAR * pszFolder = MakePath(pszTemp, Product->GetCriticalFile());
+
+	delete[] pszTemp;
+	pszTemp = NULL;
+
+	_TCHAR * pszSearch = MakePath(pszFolder,  _T("*.kmx"));
 
 	WIN32_FIND_DATA wfd;
 	HANDLE hFind = FindFirstFile(pszSearch, &wfd);
+
+	delete[] pszSearch;
+	pszSearch = NULL;
+
 	if (hFind == INVALID_HANDLE_VALUE)
 	{
 		MessageBox(NULL, pszErrNoFiles, pszTitle, MB_ICONSTOP | MB_OK);
+		delete[] pszFolder;
+		pszFolder = NULL;
+		delete[] pszShellCmd;
+		pszShellCmd = NULL;
 		return 0;
 	}
 	do
@@ -77,11 +69,11 @@ DWORD KeymanFunction(bool fTestOnly, const TCHAR * pszKeyboardsPath)
 		// See if Keyboard is already installed:
 		bool fKeyboardExists = false;
 		const int kcchReg = 1000;
-		TCHAR pszRegKey[kcchReg];
+		_TCHAR pszRegKey[kcchReg];
 		_tcscpy_s(pszRegKey, kcchReg, _T("Software\\Tavultesoft\\Keyman\\6.0\\Active Keyboards\\"));
 		_tcscat_s(pszRegKey, kcchReg, wfd.cFileName);
 		// Remove file extension:
-		TCHAR * ch = _tcsrchr(pszRegKey, _TCHAR('.'));
+		_TCHAR * ch = _tcsrchr(pszRegKey, _TCHAR('.'));
 		if (ch)
 			*ch = 0;
 		HKEY hKeyTemp;
@@ -97,6 +89,10 @@ DWORD KeymanFunction(bool fTestOnly, const TCHAR * pszKeyboardsPath)
 			if (fTestOnly)
 			{
 				FindClose(hFind);
+				delete[] pszFolder;
+				pszFolder = NULL;
+				delete[] pszShellCmd;
+				pszShellCmd = NULL;
 				return -1; // At least one keyboard is not installed.
 			}
 
@@ -104,6 +100,11 @@ DWORD KeymanFunction(bool fTestOnly, const TCHAR * pszKeyboardsPath)
 			const int cchBuf = 1000;
 			_TCHAR pszCmd[cchBuf];
 			_stprintf_s(pszCmd, cchBuf, _T("%s -s \"%s\\%s\""), pszShellCmd, pszFolder, wfd.cFileName);
+
+			delete[] pszShellCmd;
+			pszShellCmd = NULL;
+			delete[] pszFolder;
+			pszFolder = NULL;
 
 			// Execute command:
 			BOOL bReturnVal = false;
@@ -137,7 +138,7 @@ DWORD KeymanFunction(bool fTestOnly, const TCHAR * pszKeyboardsPath)
 	return 0;
 }
 
-bool TestKeymanKeyboardsPresence(const TCHAR * /*pszMinVersion*/, const TCHAR * /*pszMaxVersion*/, const TCHAR * pszCriticalFile)
+bool TestKeymanKeyboardsPresence(const _TCHAR * /*pszMinVersion*/, const _TCHAR * /*pszMaxVersion*/, SoftwareProduct * Product)
 {
-	return (0 == KeymanFunction(true, pszCriticalFile));
+	return (0 == KeymanFunction(true, Product));
 }

@@ -21,7 +21,8 @@ void InitMshtml()
 	_TCHAR * pszProgramFilesPath = GetFolderPathNew(CSIDL_PROGRAM_FILES);
 	
 	// Form the full path to where the DLL should be:
-	_TCHAR * pszMshtmlPath = new_sprintf(_T("%s\\Microsoft.NET\\Primary Interop Assemblies\\Microsoft.mshtml.dll"), pszProgramFilesPath);
+	_TCHAR * pszMshtmlPath = MakePath(pszProgramFilesPath,
+		_T("Microsoft.NET\\Primary Interop Assemblies\\Microsoft.mshtml.dll"));
 	delete[] pszProgramFilesPath;
 	pszProgramFilesPath = NULL;
 
@@ -44,7 +45,7 @@ void InitMshtml()
 		_TCHAR * pszCommonPath = GetFolderPathNew(CSIDL_PROGRAM_FILES_COMMON);
 
 		// Form path to .exe file:
-		_TCHAR * pszVs_piaredistPath = new_sprintf(_T("%s\\SIL\\vs_piaredist.exe"), pszCommonPath);
+		_TCHAR * pszVs_piaredistPath = MakePath(pszCommonPath, _T("SIL\\vs_piaredist.exe"));
 		delete[] pszCommonPath;
 		pszCommonPath = NULL;
 
@@ -68,48 +69,20 @@ int InitInstallLanguage()
 	DisplayStatusText(0, _T("Initializing FieldWorks Install Language utility."));
 	DisplayStatusText(1, _T(""));
 
-	LONG lResult;
-	HKEY hKey;
+	_TCHAR * pszRootCodeDir = NewRegString(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL\\FieldWorks"),
+		_T("RootCodeDir"));
 
-	// Look up the FieldWorks code directory in the registry:
-	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL\\FieldWorks"), 0, KEY_READ, &hKey);
-	if (ERROR_SUCCESS != lResult)
-	{
-		g_Log.Write(_T("Could not find registry key HKEY_LOCAL_MACHINE\\SOFTWARE\\SIL\\FieldWorks"));
-		return -1;
-	}
-
-	DWORD cbData = 0;
-
-	// Fetch required buffer size:
-	lResult = RegQueryValueEx(hKey, _T("RootCodeDir"), NULL, NULL, NULL, &cbData);
-	if (cbData == 0)
-	{
-		g_Log.Write(_T("Could not find registry value RootCodeDir"));
-		return -2;
-	}
-
-	_TCHAR * pszRootCodeDir = new _TCHAR [cbData];
-
-	lResult = RegQueryValueEx(hKey, _T("RootCodeDir"), NULL, NULL,
-		LPBYTE(pszRootCodeDir), &cbData);
-
-	RegCloseKey(hKey);
-	hKey = NULL;
-
-	if (ERROR_SUCCESS != lResult)
+	if (!pszRootCodeDir)
 	{
 		g_Log.Write(_T("Could not read registry value RootCodeDir"));
 		return -3;
 	}
 
 	// Remove any trailing backslash from the root code folder:
-	if (pszRootCodeDir[_tcslen(pszRootCodeDir) - 1] == '\\')
-		pszRootCodeDir[_tcslen(pszRootCodeDir) - 1] = 0;
+	RemoveTrailingBackslashes(pszRootCodeDir);
 
 	// Form command line including full path to InstallLanguage.exe:
-	_TCHAR * pszInstallLanguageCmd = new_sprintf(_T("%s\\InstallLanguage.exe -o"),
-		pszRootCodeDir);
+	_TCHAR * pszInstallLanguageCmd = MakePath(pszRootCodeDir, _T("InstallLanguage.exe -o"));
 
 	// Now add the ICU DLL folder path to the PATH environment variable, so that 
 	// when we call InstallLanguage, it can access the DLLs. This PATH setting will
@@ -123,7 +96,7 @@ int InitInstallLanguage()
 	_TCHAR * pszCommonPath = GetFolderPathNew(CSIDL_PROGRAM_FILES_COMMON);
 
 	// Form full path to ICU DLLs by adding "SIL":
-	_TCHAR * pszIcuDllfolder = new_sprintf(_T("%s\\SIL"), pszCommonPath);
+	_TCHAR * pszIcuDllfolder = MakePath(pszCommonPath, _T("SIL"));
 	delete[] pszCommonPath;
 	pszCommonPath = NULL;
 
@@ -150,6 +123,7 @@ int InitInstallLanguage()
 			g_Log.Write(_T("InstallLanguage returned error code -999, but we don't mind."));
 
 		// Reset the InitIcu registry flag:
+		HKEY hKey;
 		lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL"), 0, KEY_WRITE, &hKey);
 		if (ERROR_SUCCESS == lResult)
 		{
@@ -181,7 +155,7 @@ int InitInstallLanguage()
 
 
 
-int WpPostInstall(const _TCHAR * /*pszCriticalFile*/)
+int WpPostInstall(SoftwareProduct * /*Product*/)
 {
 //	ReinstantiateWordFormingCharOverrides();
 

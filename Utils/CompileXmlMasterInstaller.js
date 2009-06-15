@@ -30,6 +30,13 @@ if (WScript.Arguments.Length < 1)
 	tso.WriteLine('[HKEY_CLASSES_ROOT\\xmlfile\\shell\\CompileMasterInstaller\\command]');
 	// OK, deep breath, now:
 	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CompileXmlMasterInstaller.js\\" \\"%1\\"\"');
+
+	tso.WriteLine('[HKEY_CLASSES_ROOT\\xmlfile\\shell\\CompileMasterInstallerEx]');
+	tso.WriteLine('@="Compile Master Installer with Easter Eggs from this XML file"');
+	tso.WriteLine('[HKEY_CLASSES_ROOT\\xmlfile\\shell\\CompileMasterInstallerEx\\command]');
+	// OK, deep breath, now:
+	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CompileXmlMasterInstaller.js\\" \\"%1\\" -E\"');
+
 	tso.Close();
 	
 	// Run Regedit with the new file:
@@ -44,7 +51,11 @@ if (WScript.Arguments.Length < 1)
 
 var XmlFileName = WScript.Arguments.Item(0);
 var CppFilePath = "F:\\CD Builder\\Master Installer";
-
+var EasterEggs = false;
+if (WScript.Arguments.Length > 1)
+	if (WScript.Arguments.Item(1) == "-E")
+		EasterEggs = true;
+	
 // Check that the input file is an XML file:
 if (XmlFileName.slice(-4).toLowerCase() != ".xml")
 {
@@ -85,7 +96,7 @@ var CompileCmd = 'cl.exe @"' + CppRspFilePath + '" /nologo';
 shellObj.Run(CompileCmd, 7, true);
 
 // Compile resource file:
-var ResourceCmd = 'rc.exe /fo"' + NewCompilationFolder + '/resources.res" "' + CppFilePath + '\\resources.rc"';
+var ResourceCmd = 'rc.exe ' + (EasterEggs? '/D "EASTER_EGGS" ' : '') + '/fo"' + NewCompilationFolder + '/resources.res" "' + CppFilePath + '\\resources.rc"';
 shellObj.Run(ResourceCmd, 7, true);
 
 // Prepare the file containing all the linker settings:
@@ -195,7 +206,7 @@ function PrepareCppRspFile(RspFilePath, CppFilePath, CompilationFolder)
 {
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "UNICODE" /GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Zi /TP');
+	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "UNICODE" ' + (EasterEggs? '/D "EASTER_EGGS" ' : '') + '/GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Zi /TP');
 	tso.WriteLine('"' + CppFilePath + '\\WIWrapper.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UsefulStuff.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UniversalFixes.cpp"');

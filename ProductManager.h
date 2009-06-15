@@ -49,7 +49,10 @@ public:
 	virtual const _TCHAR * GetHelpTag(int iProduct) const = 0;
 	virtual bool GetHelpTagInternalFlag(int iProduct) const = 0;
 	virtual const _TCHAR * GetTestPresenceVersion(int iProduct) const = 0;
-	virtual bool GetMustHaveWin2kOrBetterFlag(int iProduct) const = 0;
+	virtual bool IsOsHighEnough(int iProduct) const = 0;
+	virtual bool IsOsLowEnough(int iProduct) const = 0;
+	virtual const _TCHAR * GetMinOsRequirement(int iProduct) const = 0;
+	virtual const _TCHAR * GetMaxOsRequirement(int iProduct) const = 0;
 	virtual bool GetMustBeAdminFlag(int iProduct) const = 0;
 	virtual int GetNumProtectedMainProducts() const = 0;
 	virtual void DetermineAvailableMainProducts(ProductKeyHandler_t & ProductKeyHandler,

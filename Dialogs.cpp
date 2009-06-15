@@ -593,11 +593,38 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 							fFoundInstalledProduct = true;
 						}
 					}
-					// See if product should be disabled because user needs Windows 2000 or better:
-					if (g_fLessThanWin2k && pProductManager->GetMustHaveWin2kOrBetterFlag(iProduct))
+					// See if product should be disabled because user needs better OS:
+					if (!pProductManager->IsOsHighEnough(iProduct))
 					{
-						new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
-							FetchString(IDC_MESSAGE_NEED_WIN2K));
+						_TCHAR * pszMinOS = g_OSVersion.MakeGeneralDescription(
+							pProductManager->GetMinOsRequirement(iProduct));
+
+						new_sprintf_concat(pszCheckBox, 0, 
+							FetchString(IDC_MESSAGE_NEED_BETTER_OS), pszMinOS);
+
+						delete[] pszMinOS;
+						pszMinOS = NULL;
+
+						g_Log.Write(_T("Product %s will be disabled because it needs a minimum of Windows %s"),
+							pProductManager->GetName(iProduct), pProductManager->GetMinOsRequirement(iProduct));
+
+						fOnlyVisible = true;
+					}
+					// See if product should be disabled because user has too good an OS:
+					if (!pProductManager->IsOsLowEnough(iProduct))
+					{
+						_TCHAR * pszMaxOS = g_OSVersion.MakeGeneralDescription(
+							pProductManager->GetMaxOsRequirement(iProduct));
+
+						new_sprintf_concat(pszCheckBox, 0,
+							FetchString(IDC_MESSAGE_NEED_WORSE_OS), pszMaxOS);
+
+						delete[] pszMaxOS;
+						pszMaxOS = NULL;
+
+						g_Log.Write(_T("Product %s will be disabled because it only works up to Windows %s"),
+							pProductManager->GetName(iProduct), pProductManager->GetMaxOsRequirement(iProduct));
+
 						fOnlyVisible = true;
 					}
 					// See if product should be disabled because user needs Admin Privileges:
@@ -1179,6 +1206,11 @@ void HideStatusDialog()
 {
 	if (!hwndStatusDialog)
 		return; // Dialog already absent.
+
+#ifdef EASTER_EGGS
+	if (JukeBox.IsActive())
+		return;
+#endif
 
 	// It is possible for the Status Dialog to be shown and hidden via another thread.
 	// We don't want other threads interfering with this destruction, so we'll use a mutex:

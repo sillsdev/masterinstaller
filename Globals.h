@@ -1,8 +1,33 @@
 #pragma once
 
-extern OSVERSIONINFOEX g_OSversion;
+class OSVersion_t
+{
+public:
+	OSVersion_t();
+	~OSVersion_t();
+
+	_TCHAR * MakeGeneralDescription(const _TCHAR * pszOsNum);
+	_TCHAR * MakeDescription();
+	_TCHAR * Numeric();
+	bool WithinRange(const _TCHAR * pszMin, const _TCHAR * pszMax);
+	bool operator == (const _TCHAR * pszVer);
+	bool operator != (const _TCHAR * pszVer);
+	bool operator <= (const _TCHAR * pszVer);
+	bool operator >= (const _TCHAR * pszVer);
+	bool operator < (const _TCHAR * pszVer);
+	bool operator > (const _TCHAR * pszVer);
+
+	static _TCHAR * Win2k;
+	static _TCHAR * XP;
+	static _TCHAR * Vista;
+	static _TCHAR * kpszOperatorError;
+
+protected:
+	OSVERSIONINFOEX m_OSversion;
+	_TCHAR * m_pszVersion;
+};
+extern OSVersion_t g_OSVersion;
 extern bool g_fStopRequested;
-extern bool g_fLessThanWin2k;
 extern DWORD g_langidWindowsLanguage;
 extern bool g_fAdministrator;
 extern bool g_fRebootPending;

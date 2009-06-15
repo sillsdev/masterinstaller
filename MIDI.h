@@ -316,6 +316,7 @@ public:
 	~MidiJukeBox();
 	void PlayNextSong(bool Auto = false);
 	void TogglePause();
+	bool IsActive() { return (m_pMidi != NULL); }
 
 protected:
 	bool m_fQuitting;

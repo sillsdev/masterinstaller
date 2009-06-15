@@ -15,14 +15,6 @@
 int APIENTRY WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, 
 					 LPSTR lpCmdLine, int /*nCmdShow*/)
 {
-	// Get details of the version of Windows we're running on:
-	g_OSversion.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-	::GetVersionEx((LPOSVERSIONINFO)(&g_OSversion));
-
-	g_Log.Write(_T("OS version = %d.%d SP %d.%d"), g_OSversion.dwMajorVersion,
-		g_OSversion.dwMinorVersion, g_OSversion.wServicePackMajor,
-		g_OSversion.wServicePackMinor);
-
 	_TCHAR * pszCmdLine;
 #ifdef UNICODE
 	int cch = 1 + (int)strlen(lpCmdLine);
@@ -59,6 +51,9 @@ int APIENTRY WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/,
 // Global instantiation of log file mechanism:
 #include "LogFile.h"
 LogFile g_Log;
+
+// Global instantiation of OS Version object:
+OSVersion_t g_OSVersion;
 
 // Global instantiation of disk manager:
 #include "DiskManager.h"

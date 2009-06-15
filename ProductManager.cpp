@@ -43,7 +43,8 @@ public:
 	const _TCHAR * m_pszCriticalFileFlagTrue;
 	const _TCHAR * m_pszCriticalFileFlagFalse;
 	int m_iCd;
-	bool m_fMustHaveWin2kOrBetter;
+	const _TCHAR * m_pszMinOS;
+	const _TCHAR * m_pszMaxOS;
 	bool m_fMustBeAdmin;
 
 	bool m_fFlushPendingReboot;
@@ -85,6 +86,7 @@ public:
 	bool m_fInternalHelpFile;
 	// End of members that are initialized automatically by the processed XML file.
 
+public:
 	IndexList_t m_rgiPrerequisiteMappings;
 	IndexList_t m_rgiRequirementMappings;
 
@@ -95,7 +97,8 @@ public:
 		InstallFailed,
 		InstallFailedInterrupted,
 		InstallFailedUserAbandoned,
-		InstallFailedNeededWin2KOrMore,
+		InstallFailedNeededBetterOS,
+		InstallFailedNeededWorseOS,
 		InstallFailedNeededAdmin,
 		InstallFailedFileNotFound,
 	};
@@ -116,6 +119,8 @@ public:
 	DWORD RunInstaller();
 	bool Install();
 	void KillHangingWindows();
+	const _TCHAR * EffectiveMinOS();
+	const _TCHAR * EffectiveMaxOS();
 };
 
 
@@ -640,7 +645,7 @@ DWORD SoftwareProduct::RunInstaller()
 							DisplayStatusText(2, FetchString(IDC_MESSAGE_SET_LANGUAGE2));
 
 							DWORD dwResult;
-							if (g_OSversion.dwMajorVersion >= 6)
+							if (g_OSVersion >= OSVersion_t::Vista)
 							{
 								// For Vista, there is an extra tab on the Language settings dialog:
 								dwResult = ExecCmd(
@@ -679,7 +684,7 @@ DWORD SoftwareProduct::RunInstaller()
 
 				// See if we need to get the user to press continue after the installer
 				// has run (because we cannot detect it ourselves):
-				if (m_fStatusPauseWin98 && g_fLessThanWin2k)
+				if (m_fStatusPauseWin98 && g_OSVersion < OSVersion_t::Win2k)
 				{
 					PauseOnStatusDialog(IDC_MESSAGE_MUST_WAIT);
 					// Fiddle the installer's exit code:
@@ -706,12 +711,30 @@ bool SoftwareProduct::Install()
 			return false;
 
 		// Check if the circumstances are OK for installing this product:
-		if (m_fMustHaveWin2kOrBetter && g_fLessThanWin2k)
+		g_Log.Write(_T("Testing Min OS needed (%s) against actual OS version (%s)..."),
+			EffectiveMinOS(), g_OSVersion.Numeric());
+		if (g_OSVersion < EffectiveMinOS())
 		{
-			HandleError(kNonFatal, false, IDC_ERROR_NEED_WIN2K_OR_BETTER, m_kpszNiceName);
-			m_InstallStatus = InstallFailedNeededWin2KOrMore;
+			_TCHAR * pszMinOS = g_OSVersion.MakeGeneralDescription(EffectiveMinOS());
+			HandleError(kNonFatal, false, IDC_ERROR_NEED_BETTER_OS, m_kpszNiceName, pszMinOS);
+			delete[] pszMinOS;
+			pszMinOS = NULL;
+			m_InstallStatus = InstallFailedNeededBetterOS;
 			return false;
 		}
+		g_Log.Write(_T("...Done. Min OS requirement is satisfied."));
+		g_Log.Write(_T("Testing Max OS allowed (%s) against actual OS version (%s)..."),
+			EffectiveMaxOS(), g_OSVersion.Numeric());
+		if (g_OSVersion > EffectiveMaxOS())
+		{
+			_TCHAR * pszMaxOS = g_OSVersion.MakeGeneralDescription(EffectiveMaxOS());
+			HandleError(kNonFatal, false, IDC_ERROR_NEED_WORSE_OS, m_kpszNiceName, pszMaxOS);
+			delete[] pszMaxOS;
+			pszMaxOS = NULL;
+			m_InstallStatus = InstallFailedNeededWorseOS;
+			return false;
+		}
+		g_Log.Write(_T("...Done. Max OS requirement is satisfied."));
 		if (m_fMustBeAdmin && !g_fAdministrator)
 		{
 			HandleError(kNonFatal, false, IDC_ERROR_NEED_ADMIN_ACCESS, m_kpszNiceName);
@@ -1003,6 +1026,22 @@ void SoftwareProduct::KillHangingWindows()
 	} // End while(fTestHanging)
 }
 
+const _TCHAR * SoftwareProduct::EffectiveMinOS()
+{
+	if (m_pszMinOS)
+		return m_pszMinOS;
+
+	return _T("0.0.0.0");
+}
+
+const _TCHAR * SoftwareProduct::EffectiveMaxOS()
+{
+	if (m_pszMaxOS)
+		return m_pszMaxOS;
+
+	return _T("32767.32767.32767.32767");
+}
+
 static bool s_fSoftwareProductsInitialized = false;
 
 // Declaration of information about any software dependency:
@@ -1066,7 +1105,10 @@ public:
 	virtual const _TCHAR * GetHelpTag(int iProduct) const;
 	virtual bool GetHelpTagInternalFlag(int iProduct) const;
 	virtual const _TCHAR * GetTestPresenceVersion(int iProduct) const;
-	virtual bool GetMustHaveWin2kOrBetterFlag(int iProduct) const;
+	virtual bool IsOsHighEnough(int iProduct) const;
+	virtual bool IsOsLowEnough(int iProduct) const;
+	virtual const _TCHAR * GetMinOsRequirement(int iProduct) const;
+	virtual const _TCHAR * GetMaxOsRequirement(int iProduct) const;
 	virtual bool GetMustBeAdminFlag(int iProduct) const;
 	virtual int GetNumProtectedMainProducts() const;
 	virtual void DetermineAvailableMainProducts(ProductKeyHandler_t & ProductKeyHandler,
@@ -1365,10 +1407,28 @@ const _TCHAR * ProductManager_t::GetTestPresenceVersion(int iProduct) const
 	return Products[iProduct].m_kpszTestPresenceVersion;
 }
 
-bool ProductManager_t::GetMustHaveWin2kOrBetterFlag(int iProduct) const
+bool ProductManager_t::IsOsHighEnough(int iProduct) const
 {
 	CheckProductIndex(iProduct);
-	return Products[iProduct].m_fMustHaveWin2kOrBetter;
+	return g_OSVersion >= Products[iProduct].EffectiveMinOS();
+}
+
+bool ProductManager_t::IsOsLowEnough(int iProduct) const
+{
+	CheckProductIndex(iProduct);
+	return g_OSVersion <= Products[iProduct].EffectiveMaxOS();
+}
+
+const _TCHAR * ProductManager_t::GetMinOsRequirement(int iProduct) const
+{
+	CheckProductIndex(iProduct);
+	return Products[iProduct].EffectiveMinOS();
+}
+
+const _TCHAR * ProductManager_t::GetMaxOsRequirement(int iProduct) const
+{
+	CheckProductIndex(iProduct);
+	return Products[iProduct].EffectiveMaxOS();
 }
 
 bool ProductManager_t::GetMustBeAdminFlag(int iProduct) const
@@ -1559,15 +1619,8 @@ void ProductManager_t::GetActivePrerequisites(const IndexList_t & rgiProducts,
 			const _TCHAR * pszMaxOs = s_DependecyMaps[depPrerequisite][iMapping].m_kpszMaxOs;
 			if (pszMinOs || pszMaxOs)
 			{
-				_TCHAR * pszRealOs = new_sprintf(_T("%d.%d.%d.%d"), g_OSversion.dwMajorVersion,
-					g_OSversion.dwMinorVersion, g_OSversion.wServicePackMajor,
-					g_OSversion.wServicePackMinor);
-
-				if (!VersionInRange(pszRealOs, pszMinOs, pszMaxOs))
+				if (!VersionInRange(g_OSVersion.Numeric(), pszMinOs, pszMaxOs))
 					fConditionalPassed = false;
-
-				delete[] pszRealOs;
-				pszRealOs = NULL;
 			}
 
 			if (fConditionalPassed)
@@ -1689,15 +1742,8 @@ void ProductManager_t::GetActiveRequirements(const IndexList_t & rgiProducts,
 			const _TCHAR * pszMaxOs = s_DependecyMaps[depRequirement][iMapping].m_kpszMaxOs;
 			if (pszMinOs || pszMaxOs)
 			{
-				_TCHAR * pszRealOs = new_sprintf(_T("%d.%d.%d.%d"), g_OSversion.dwMajorVersion,
-					g_OSversion.dwMinorVersion, g_OSversion.wServicePackMajor,
-					g_OSversion.wServicePackMinor);
-
-				if (!VersionInRange(pszRealOs, pszMinOs, pszMaxOs))
+				if (!VersionInRange(g_OSVersion.Numeric(), pszMinOs, pszMaxOs))
 					fConditionalPassed = false;
-
-				delete[] pszRealOs;
-				pszRealOs = NULL;
 			}
 
 			if (fConditionalPassed)
@@ -1998,8 +2044,11 @@ _TCHAR * ProductManager_t::GenInstallFailureReport(int iProduct, int nIndent) co
 	case SoftwareProduct::InstallFailedUserAbandoned:
 		ridReason = IDC_ERROR_INSTALL_USER_SKIP;
 		break;
-	case SoftwareProduct::InstallFailedNeededWin2KOrMore:
-		ridReason = IDC_ERROR_INSTALL_NEED_WIN2K;
+	case SoftwareProduct::InstallFailedNeededBetterOS:
+		ridReason = IDC_ERROR_INSTALL_NEED_BETTER_OS;
+		break;
+	case SoftwareProduct::InstallFailedNeededWorseOS:
+		ridReason = IDC_ERROR_INSTALL_NEED_WORSE_OS;
 		break;
 	case SoftwareProduct::InstallFailedNeededAdmin:
 		ridReason = IDC_ERROR_INSTALL_NEED_ADMIN;

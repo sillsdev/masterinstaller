@@ -344,6 +344,14 @@
 	<td><input id="TermsButtonText" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Text on Terms of Use button" onchange="InvalidateCompiledFiles();"/></td>
 	<script type="text/javascript">document.getElementById("TermsButtonText").value="<xsl:value-of select="TermsButtonText"/>"</script>
 	</tr>
+	<tr>
+	<td align="right">
+	<b>Include Easter Eggs</b>
+	</td>
+	<td>
+	<input id="IncludeEasterEggs" type="checkbox" title="Let's have some fun!"/>
+	</td>
+	</tr>
 	</table>
 </xsl:template>
 
@@ -2185,7 +2193,7 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 			// Compile resource file:
 			if (fDisplayCommentary)
 				AddCommentary(0, "Compiling resource file...", true);
-			shellObj.Run('rc.exe /fo"' + NewCompilationFolder + '/resources.res" "' + CppFilePath + '\\resources.rc"', 7, true);
+			shellObj.Run('rc.exe /fo"' + NewCompilationFolder + '/resources.res" ' + (document.getElementById("IncludeEasterEggs").checked? '/D "EASTER_EGGS" ' : '') + '"' + CppFilePath + '\\resources.rc"', 7, true);
 			if (fDisplayCommentary)
 				AddCommentary(1, "Done.", false);
 
@@ -2485,7 +2493,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 	var CppRspFilePath = NewCompilationFolder + "\\" + ProjectName + "Cpp.rsp";
 
 	var tsoCpp = fso.OpenTextFile(CppRspFilePath, 2, true);
-	tsoCpp.WriteLine('/O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "INSTALLERHELP2_EXPORTS" /D "_VC80_UPGRADE=0x0710" /D "_WINDLL" /D "_MBCS" /FD /EHsc /MT /GS /W3 /c /Zi /TP /Fo"' + NewCompilationFolder + '\\InstallerHelp2.obj"');
+	tsoCpp.WriteLine('/O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "INSTALLERHELP2_EXPORTS" /D "_VC80_UPGRADE=0x0710" /D "_WINDLL" /D "_UNICODE" /D "UNICODE" /FD /EHsc /MT /GS /W3 /c /Zi /TP /Fo"' + NewCompilationFolder + '\\InstallerHelp2.obj"');
 	tsoCpp.WriteLine('"' + CppPath + '\\InstallerHelp2.cpp"');
 	tsoCpp.Close();
 
@@ -2837,7 +2845,7 @@ function PrepareCppRspFile(RspFilePath, CppFilePath, CompilationFolder)
 {
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "UNICODE" /GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Zi /TP');
+	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "UNICODE" ' + (document.getElementById("IncludeEasterEggs").checked? '/D "EASTER_EGGS" ' : '') + '/GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Zi /TP');
 	tso.WriteLine('"' + CppFilePath + '\\WIWrapper.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UsefulStuff.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UniversalFixes.cpp"');

@@ -15,8 +15,7 @@ int MSXML6SP2Killer(SoftwareProduct * Product)
 #endif
 
 	// This fix is only needed in Windows XP SP3, so test for that:
-	if (g_OSversion.dwMajorVersion != 5 || g_OSversion.dwMinorVersion != 1 ||
-		g_OSversion.wServicePackMajor != 3)
+	if (g_OSVersion != _T("5.1.3"))
 	{
 #if !defined NOLOGGING
 		g_Log.Write(_T("Not using Windows XP SP3, so quitting KB968749 fix."));

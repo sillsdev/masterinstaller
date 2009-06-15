@@ -254,8 +254,10 @@ STRINGTABLE
 BEGIN
     IDC_ERROR_NEED_ADMIN_ACCESS 
                             "You do not have administrator access on this machine. %s can only be installed if the user logged on has administrator access."
-    IDC_ERROR_NEED_WIN2K_OR_BETTER 
-                            "Your version of the Windows operating system will not allow installation of %s. You must have Windows 2000 or better."
+    IDC_ERROR_NEED_BETTER_OS
+                            "Your version of the Windows operating system will not allow installation of %s. You must have %s or better."
+    IDC_ERROR_NEED_WORSE_OS
+                            "Your version of the Windows operating system will not allow installation of %s. You can only install it on %s or earlier."
     IDC_ERROR_CORRUPT_RECORD 
                             "Information recorded last time this program was run is corrupt. Installation process will now restart."
     IDC_ERROR_USER_ABORT    "Installation terminated by user."
@@ -278,8 +280,10 @@ END
 STRINGTABLE 
 BEGIN
     IDC_ERROR_INSTALL_USER_SKIP "You chose to skip this product."
-    IDC_ERROR_INSTALL_NEED_WIN2K 
-                            "This product requires Windows 2000 or better."
+    IDC_ERROR_INSTALL_NEED_BETTER_OS 
+                            "This product requires a later edition of Windows."
+    IDC_ERROR_INSTALL_NEED_WORSE_OS 
+                            "This product requires an earlier edition of Windows."
     IDC_ERROR_INSTALL_NEED_ADMIN 
                             "You need administrator privileges to install this product."
     IDC_ERROR_INSTALL_FILE_NOT_FOUND 
@@ -375,7 +379,8 @@ BEGIN
     IDC_MESSAGE_MORE_REQUIREMENTS 
                             "The above products have requirements of their own:"
     IDC_MESSAGE_CONSEQUENCES "These are the consequences:"
-    IDC_MESSAGE_NEED_WIN2K  "- needs Windows 2000 or better"
+    IDC_MESSAGE_NEED_BETTER_OS  "- needs %s or better"
+    IDC_MESSAGE_NEED_WORSE_OS  "- needs %s or earlier"
     IDC_MESSAGE_NEED_ADMIN_PRIV "- needs administrator rights"
     IDC_MESSAGE_MUST_WAIT   "Please press Continue when this installation has finished."
 	IDC_MESSAGE_ANSI_ERROR	"The current installer cannot be run because its command line will not convert correctly from Unicode to ANSI.\n\nThe language setting for non-Unicode programs is probably different from the main Windows language.\n\nPress OK if you think you can correct this, whereupon the relevant dialog box will be displayed automatically. You will probably need to reboot your machine after this, but installation should resume automatically after that.\n\nPress Cancel to skip installation of this product."

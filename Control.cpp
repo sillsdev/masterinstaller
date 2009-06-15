@@ -84,8 +84,7 @@ void MasterInstaller_t::Run()
 
 		DoUniversalFixes();
 
-		g_fLessThanWin2k = !IsWindows2000OrBetter();
-		if (!g_fLessThanWin2k)
+		if (g_OSVersion >= OSVersion_t::Win2k)
 		{
 			// Because the API function GetSystemDefaultUILanguage does not exist
 			// on Windows 98 or lower, we must not assume it is present. Instead,
@@ -121,15 +120,15 @@ void MasterInstaller_t::Run()
 						g_langidWindowsLanguage = _GetSystemDefaultUILanguage();
 
 					// While we have the handle to Kernel32.dll open, we'll do some
-					// other tests to see if the g_OSversion is accurate, or whether
+					// other tests to see if the g_OSVersion is accurate, or whether
 					// it was duped because of the program being run in a different
-					// compatibility mode, which can happen to a naive user on Vista:
-					if (g_OSversion.dwMajorVersion < 6 && 
+					// compatibility mode, which can happen to a naïve user on Vista:
+					if (g_OSVersion < OSVersion_t::Vista && 
 						NULL != GetProcAddress(hmodKernel32, "GetLocaleInfoEx"))
 					{
-						// OS is really Vista, but we're duped into thinking it's less:
-						g_Log.Write(_T("OS version is reported as %d.%d, yet GetLocaleInfoEx function exists in Kernel32.dll, indicating version 6.0 (Vista) or higher."),
-							g_OSversion.dwMajorVersion, g_OSversion.dwMinorVersion);
+						// OS is really Vista or higher, but we're duped into thinking it's less:
+						g_Log.Write(_T("OS version is reported as %s, yet GetLocaleInfoEx function exists in Kernel32.dll, indicating version 6.0 (Vista) or higher."),
+							g_OSVersion.Numeric());
 						HandleError(kFatal, false, IDC_ERROR_OS_VERSION_LIE_VISTA);
 					}
 
@@ -138,8 +137,6 @@ void MasterInstaller_t::Run()
 				}
 			}
 		}
-		g_Log.Write(_T("Windows 2000 or better: %s."), (g_fLessThanWin2k ? _T("false") : _T("true")));
-
 		g_fAdministrator = IsCurrentUserLocalAdministrator();
 		g_Log.Write(_T("Admin privileges: %s."), (g_fAdministrator? _T("true") : _T("false")));
 
@@ -615,14 +612,6 @@ bool MasterInstaller_t::CreateMutex()
 	return true;
 }
 
-bool MasterInstaller_t::IsWindows2000OrBetter()
-{
-	// See if we're running on less than Windows 2000:
-	if (g_OSversion.dwMajorVersion < 5)
-		return false;
-	return true;
-}
-
 // Returns true if the caller's process is a member of the Administrators local group.
 // Caller is NOT expected to be impersonating anyone and is expected to be able to
 // open its own process and process token.
@@ -634,7 +623,7 @@ bool MasterInstaller_t::IsWindows2000OrBetter()
 bool MasterInstaller_t::IsCurrentUserLocalAdministrator()
 {
 	// First check if we are running Windows 98 or earlier. If so, we are an administrator:
-	if (g_fLessThanWin2k)
+	if (g_OSVersion < OSVersion_t::Win2k)
 		return true;
 
 	if (!_CheckTokenMembership)
@@ -742,10 +731,11 @@ RestartEnterKey:
 		}
 
 		// Deal with the case where the user has an inappropriate OS:
-		if (m_ppmProductManager->GetMustHaveWin2kOrBetterFlag(iOnlyProduct) && g_fLessThanWin2k)
+		if (!m_ppmProductManager->IsOsHighEnough(iOnlyProduct)
+			|| !m_ppmProductManager->IsOsLowEnough(iOnlyProduct))
 		{
 			fAutoSelectionDone = false; // Cancel auto selection
-			g_Log.Write(_T("Product needs better OS, so user will get selection dialog."));
+			g_Log.Write(_T("Product outside suitable OS range, so user will get selection dialog."));
 		}
 
 		// Deal with the case where the user needs admin privileges but doesn't have them:

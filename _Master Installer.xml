@@ -51,7 +51,7 @@
 			</AutoConfigure>
 			<Title>SIL FieldWorks 6.0 BTE</Title>
 			<Tag>FW60BTE</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
@@ -117,7 +117,7 @@
 			</AutoConfigure>
 			<Title>SIL FieldWorks 6.0 SE</Title>
 			<Tag>FW60SE</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
@@ -175,7 +175,7 @@
 			</AutoConfigure>
 			<Title>SIL FieldWorks 6.0 BTE</Title>
 			<Tag>FW60BTEnoM</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
@@ -240,7 +240,7 @@
 			</AutoConfigure>
 			<Title>SIL FieldWorks 6.0 SE</Title>
 			<Tag>FW60SEnoM</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
@@ -300,7 +300,7 @@
 			</AutoConfigure>
 			<Title>SIL FieldWorks 5.5 BTE (Trunk build)</Title>
 			<Tag>FW55BTE</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
@@ -366,7 +366,6 @@
 			</AutoConfigure>
 			<Title>Translator's Workplace 5.0</Title>
 			<Tag>TW5</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>TW5\SetupTW.msi</CriticalFile>
 			<Install/>
@@ -392,7 +391,7 @@
 			</AutoConfigure>
 			<Title>BART 5.3</Title>
 			<Tag>BART5</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>QuitIfBart5BetaPresent</Preinstall>
 			<CriticalFile>BART5\SetupBart.msi</CriticalFile>
@@ -411,7 +410,7 @@
 			<Title>Optional Hebrew and Greek Keyman keyboards for BART</Title>
 			<Version>5.0</Version>
 			<Tag>BartKBs</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Keyman60\Keyboards\</CriticalFile>
 			<Install Type="Internal">KeymanKeyboardsInstaller</Install>
@@ -427,7 +426,7 @@
 			</AutoConfigure>
 			<Title>Phonology Assistant 3.0.1</Title>
 			<Tag>PA3</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Phonology Assistant\Phonology Assistant.msi</CriticalFile>
 			<Install/>
@@ -446,7 +445,7 @@
 			</AutoConfigure>
 			<Title>Speech Analyzer 3.0.1</Title>
 			<Tag>SA301</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Speech Analyzer\Speech Analyzer.msi</CriticalFile>
 			<Install/>
@@ -466,7 +465,7 @@
 			</AutoConfigure>
 			<Title>IPA Help 2.1</Title>
 			<Tag>IPA3</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>IPA Help\IPA Help.msi</CriticalFile>
 			<Install/>
@@ -485,7 +484,6 @@
 			</AutoConfigure>
 			<Title>Adapt It WX 4.1.4</Title>
 			<Tag>Adaptit</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\Adapt_It_WX_4_1_4_Regular.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
@@ -503,7 +501,7 @@
 			</AutoConfigure>
 			<Title>Adapt It WX 4.1.4 Unicode</Title>
 			<Tag>AdaptitU</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\Adapt_It_WX_4_1_4_Unicode.exe</CriticalFile>
 			<Preinstall>AdaptItPreinstall</Preinstall>
@@ -522,7 +520,7 @@
 			</AutoConfigure>
 			<Title>PAWS Starter Kit 0.6.1 Beta</Title>
 			<Tag>PAWS</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>PawsPreinstall</Preinstall>
 			<CriticalFile>PAWS Starter Kit\PAWSSKInstaller.msi</CriticalFile>
@@ -543,7 +541,7 @@
 			</AutoConfigure>
 			<Title>Carla Studio Unicode 2.9.2</Title>
 			<Tag>CarlaStudio 2.9.2</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>false</MustBeAdmin>
 			<CriticalFile>CarlaStudio\Setup.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
@@ -561,7 +559,6 @@
 			</AutoConfigure>
 			<Title>Lexique Pro 3.2 (with demo db)</Title>
 			<Tag>Lexique</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
 			<CriticalFile>Lexique Pro\Lexique Pro 3.2 - Setup (with demo db).exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
@@ -579,7 +576,6 @@
 			</AutoConfigure>
 			<Title>PalmSurv 1.6</Title>
 			<Tag>PalmSurv</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
 			<Preinstall Type="External" IgnoreError="true">msiexec.exe /qn /i {4B7F9BA4-F7F4-4607-B2BF-5A3D102B943B} REMOVE=PalmSurv</Preinstall>
 			<CriticalFile>PalmSurv\PalmSurv.msi</CriticalFile>
@@ -596,7 +592,7 @@
 			</AutoConfigure>
 			<Title>PalmSurv Converter 1.6</Title>
 			<Tag>PalmSurvConverter</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>false</MustBeAdmin>
 			<Preinstall Type="External" IgnoreError="true">msiexec.exe /qn /i {4B7F9BA4-F7F4-4607-B2BF-5A3D102B943B} REMOVE=PalmSurv</Preinstall>
 			<CriticalFile>PalmSurv\PalmSurv Converter.msi</CriticalFile>
@@ -615,7 +611,7 @@
 			</AutoConfigure>
 			<Title>SF Converter 2.3</Title>
 			<Tag>SFConv</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MaxOS>5.0.32767</MaxOS>
 			<MustBeAdmin>false</MustBeAdmin>
 			<CriticalFile>SF Converter\Setup.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
@@ -632,7 +628,6 @@
 			</AutoConfigure>
 			<Title>Shoebox 5.0</Title>
 			<Tag>Shoebox</Tag>
-			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
 			<MustBeAdmin>false</MustBeAdmin>
 			<CriticalFile>Shoebox\ShSetup.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
@@ -650,7 +645,7 @@
 			</AutoConfigure>
 			<Title>Toolbox 1.5.1</Title>
 			<Tag>Toolbox</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>false</MustBeAdmin>
 			<CriticalFile>Toolbox\InstallToolbox151.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
@@ -668,7 +663,7 @@
 			</AutoConfigure>
 			<Title>Graphite Compiler 2.4</Title>
 			<Tag>GrComp</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Graphite Compiler\grcompiler_setup_2_4.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
@@ -685,7 +680,7 @@
 			</AutoConfigure>
 			<Title>Vocabulary Manager 5.8.2</Title>
 			<Tag>Vocab</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>false</MustBeAdmin>
 			<CriticalFile>Vocabulary Manager\VMSetup.msi</CriticalFile>
 			<Install/>
@@ -704,7 +699,7 @@
 			</AutoConfigure>
 			<Title>WordSurv 6.0.2</Title>
 			<Tag>WordSurv</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>WordSurv\WordSurv 6.0.2.msi</CriticalFile>
 			<Install/>
@@ -735,7 +730,7 @@
 			<Title>Keyman Desktop Light 7.1 (30 day evaluation)</Title>
 			<Tag>KeymanL</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<CriticalFile>Utilities\Keyman71\keymandesktoplight-7.1.265.0.exe</CriticalFile>
 <!--			<Help>Utilities\Keyman70\KeymanLight.rtf</Help>-->
 			<Install SuccessReturns="1">$CriticalFile$</Install>
@@ -757,7 +752,7 @@
 			<Title>Keyman Desktop Professional 7.1 (30 day evaluation)</Title>
 			<Tag>KeymanP</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<CriticalFile>Utilities\Keyman71\keymandesktoppro-7.1.265.0.exe</CriticalFile>
 <!--			<Help>Utilities\Keyman71\KeymanProfessional.rtf</Help>-->
 			<Install SuccessReturns="1">$CriticalFile$</Install>
@@ -779,7 +774,7 @@
 			<Title>Keyman Developer 7.1 (30 day evaluation)</Title>
 			<Tag>KeymanD</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<CriticalFile>Utilities\Keyman71\keymandeveloper-7.1.265.0.exe</CriticalFile>
 <!--			<Help>Utilities\Keyman70\KeymanDeveloper.rtf</Help>-->
 			<Install SuccessReturns="1">$CriticalFile$</Install>
@@ -799,7 +794,7 @@
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 3.1</Title>
 			<Tag>EncCvtrs_3_1</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
 			<CriticalFile>SIL Converters\SetupEC.msi</CriticalFile>
@@ -816,7 +811,7 @@
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 3.0</Title>
 			<Tag>EncCvtrs_3_0_Web</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
 			<CriticalFile>http://downloads.sil.org/EncodingConverters/3.0/WebSetupEC.msi</CriticalFile>
@@ -835,7 +830,7 @@
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 3.0</Title>
 			<Tag>EncCvtrs_3_0</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
 			<CriticalFile>SIL Converters\SetupEC.msi</CriticalFile>
@@ -854,7 +849,7 @@
 			</AutoConfigure>
 			<Title>Microsoft Visual C++ 2005 Redistributable Package</Title>
 			<Tag>VC2005_REDIST</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\VC++ 2005 Redist\vcredist_x86.exe</CriticalFile>
 			<Install>$CriticalFile$ /q:a</Install>
@@ -875,7 +870,7 @@
 			</AutoConfigure>
 			<Title>Microsoft SQL Server 2005 Express SP2</Title>
 			<Tag>SQL2005_64</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
@@ -903,7 +898,7 @@
 			</AutoConfigure>
 			<Title>Microsoft SQL Server 2005 Express SP2</Title>
 			<Tag>SQL2005</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
@@ -930,7 +925,7 @@
 			</AutoConfigure>
 			<Title>Microsoft SQL Server Desktop Engine Service Pack 4 (MSDE 2000 SP4)</Title>
 			<Tag>MSDE</Tag>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\MSDE\setup.exe</CriticalFile>
 			<KillHangingWindows>true</KillHangingWindows>
@@ -1149,7 +1144,7 @@
 			<Title>Security Update for Windows 2000 (KB835732)</Title>
 			<Tag>KB835732</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<CriticalFile>Utilities\KB835732\Windows2000-KB835732-x86-ENU.EXE</CriticalFile>
 			<Install>$CriticalFile$ /q</Install>
 			<TestPresence>TestKB835732Presence</TestPresence>
@@ -1255,7 +1250,7 @@
 			<Title>Flash Player 9</Title>
 			<Tag>Flash9</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<CriticalFile>Utilities\Flash Player\install_flash_player_active_x.msi</CriticalFile>
 			<Install />
 			<ProductCode>{786547F9-59BB-4FA3-B2D8-327FF1F14870}</ProductCode>
@@ -1272,7 +1267,7 @@
 			<Title>Microsoft Word Viewer 2003</Title>
 			<Tag>WordViewer2003</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<CriticalFile>Utilities\WordViewer\wdviewer.exe</CriticalFile>
 			<Install>$CriticalFile$ /Q /C:"setup.exe /qb"</Install>
 			<ProductCode>{90850409-6000-11D3-8CFE-0150048383C9}</ProductCode>
@@ -1307,7 +1302,7 @@
 			<Title>Windows Installer 3.1</Title>
 			<Tag>WI31</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MinOS>5.0</MinOS>
 			<CriticalFile>Utilities\MSInstall\WindowsInstaller-KB893803-v2-x86.exe</CriticalFile>
 			<Install>$CriticalFile$ /quiet /norestart</Install>
 			<TestPresence Version="3.1">TestWinInstallerPresence</TestPresence>

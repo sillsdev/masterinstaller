@@ -390,7 +390,7 @@ bool Reboot()
 
 	try
 	{
-		if (!g_fLessThanWin2k)
+		if (g_OSVersion >= OSVersion_t::Win2k)
 		{
 			// Get the current process token handle so we can get shutdown privilege.
 			if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY,

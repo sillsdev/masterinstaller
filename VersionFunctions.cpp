@@ -41,6 +41,7 @@ _TCHAR * GenVersionText(__int64 nHugeVersion)
 // If pszMinVersion is NULL, any range up to (and including) pszMaxVersion will do.
 // If pszMaxVersion is NULL, any range above (and including) pszMinVersion will do.
 // If pszMinVersion is NULL and pszMaxVersion is NULL, any version will do.
+// Uses inclusive test: candidate version is allowed to equal range extemities.
 bool VersionInRange(__int64 nVersion, const _TCHAR * pszMinVersion, 
 					const _TCHAR * pszMaxVersion)
 {
@@ -66,6 +67,7 @@ bool VersionInRange(__int64 nVersion, const _TCHAR * pszMinVersion,
 // If pszMinVersion is NULL, any range up to (and including) pszMaxVersion will do.
 // If pszMaxVersion is NULL, any range above (and including) pszMinVersion will do.
 // If pszMinVersion is NULL and pszMaxVersion is NULL, any version will do.
+// Uses inclusive test: candidate version is allowed to equal range extemities.
 bool VersionInRange(const _TCHAR * pszVersion, const _TCHAR * pszMinVersion, 
 					const _TCHAR * pszMaxVersion)
 {
@@ -76,6 +78,49 @@ bool VersionInRange(const _TCHAR * pszVersion, const _TCHAR * pszMinVersion,
 	__int64 nVersion = GetHugeVersion(pszVersion);
 
 	return VersionInRange(nVersion, pszMinVersion, pszMaxVersion);
+}
+
+// Returns true if the given version number is within the given range.
+// If pszMinVersion is NULL, any range up to (and including) pszMaxVersion will do.
+// If pszMaxVersion is NULL, any range above (and including) pszMinVersion will do.
+// If pszMinVersion is NULL and pszMaxVersion is NULL, any version will do.
+// Uses exclusive test: candidate version is not allowed to equal range extemities.
+bool VersionInRangeEx(__int64 nVersion, const _TCHAR * pszMinVersion, 
+					const _TCHAR * pszMaxVersion)
+{
+	// Create 64-bit numbers from the min and max arguments:
+	__int64 nMinVersion;
+	__int64 nMaxVersion;
+
+	if (pszMinVersion)
+		nMinVersion = GetHugeVersion(pszMinVersion);
+	else
+		nMinVersion = 0;
+
+	if (pszMaxVersion)
+		nMaxVersion = GetHugeVersion(pszMaxVersion);
+	else
+		nMaxVersion = 0x7FFFFFFFFFFFFFFF;
+
+	// See if the discovered version is within range:
+	return (nVersion > nMinVersion && nVersion < nMaxVersion);
+}
+
+// Returns true if the given version number is within the given range.
+// If pszMinVersion is NULL, any range up to (and including) pszMaxVersion will do.
+// If pszMaxVersion is NULL, any range above (and including) pszMinVersion will do.
+// If pszMinVersion is NULL and pszMaxVersion is NULL, any version will do.
+// Uses exclusive test: candidate version is not allowed to equal range extemities.
+bool VersionInRangeEx(const _TCHAR * pszVersion, const _TCHAR * pszMinVersion, 
+					const _TCHAR * pszMaxVersion)
+{
+	if (!pszVersion)
+		return false;
+
+	// Create 64-bit number from the pszVersion argument:
+	__int64 nVersion = GetHugeVersion(pszVersion);
+
+	return VersionInRangeEx(nVersion, pszMinVersion, pszMaxVersion);
 }
 
 // Gets the version of the given file.

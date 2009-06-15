@@ -137,12 +137,19 @@ project to make an executable master installer.
 		<xsl:value-of select="CD"/>
 		<xsl:text>, // CD index (zero-based)&#13;</xsl:text>
 
-		<!-- Flag to say if user needs Windows 2000 or better, in order to install this product -->
+		<!-- Flag to indicate minimum OS version requirement, in order to install this product -->
 		<xsl:text>&#09;&#09;</xsl:text>
-		<xsl:call-template name="StrOrFalseIfEmpty">
-			<xsl:with-param name="str" select="MustHaveWin2kOrBetter"/>
+		<xsl:call-template name="QuotedStrOrNullIfEmpty">
+			<xsl:with-param name="str" select="MinOS"/>
 		</xsl:call-template>
-		<xsl:text>, // MustHaveWin2kOrBetter&#13;</xsl:text>
+		<xsl:text>, // MinOS&#13;</xsl:text>
+
+		<!-- Flag to indicate maximum OS version requirement, in order to install this product -->
+		<xsl:text>&#09;&#09;</xsl:text>
+		<xsl:call-template name="QuotedStrOrNullIfEmpty">
+			<xsl:with-param name="str" select="MaxOS"/>
+		</xsl:call-template>
+		<xsl:text>, // MaxOS&#13;</xsl:text>
 
 		<!-- Flag to say if user needs admin rights, in order to install this product -->
 		<xsl:text>&#09;&#09;</xsl:text>

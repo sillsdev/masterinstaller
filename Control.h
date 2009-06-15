@@ -63,7 +63,6 @@ protected:
 
 	void ReRun();
 	bool CreateMutex();
-	bool IsWindows2000OrBetter();
 	bool IsCurrentUserLocalAdministrator();
 	void SelectMainProducts();
 	void GetProductKey(_TCHAR szKey[100]);

@@ -22,7 +22,7 @@ static const int kctDiskDetails = sizeof(DiskDetails) / sizeof(DiskDetails[0]);
 DiskManager_t::DiskManager_t()
 {
 	// Get current drive root:
-	GetModuleFileName(NULL, m_szCurrentDriveRoot, 3);
+	GetModuleFileName(NULL, m_szCurrentDriveRoot, MAX_PATH);
 	m_szCurrentDriveRoot[3] = 0;
 	g_Log.Write(_T("Current drive root: %s"), m_szCurrentDriveRoot);
 

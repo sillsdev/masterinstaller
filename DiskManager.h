@@ -25,7 +25,7 @@ public:
 	_TCHAR * NewFullPath(const _TCHAR * pszRelativePath);
 
 protected:
-	_TCHAR m_szCurrentDriveRoot[4];
+	_TCHAR m_szCurrentDriveRoot[MAX_PATH];
 	_TCHAR * m_szCurrentPath;
 
 	int CurrentCd();

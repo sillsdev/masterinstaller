@@ -614,6 +614,7 @@
 			<MaxOS>5.0.32767</MaxOS>
 			<MustBeAdmin>false</MustBeAdmin>
 			<CriticalFile>SF Converter\Setup.exe</CriticalFile>
+			<Preinstall>SfConverterPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow StatusPauseWin98="true">Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>

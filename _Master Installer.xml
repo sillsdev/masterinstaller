@@ -58,7 +58,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite MinOS="6.0.0" MaxOs="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
@@ -124,7 +124,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite MinOS="6.0.0" MaxOs="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
@@ -182,7 +182,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite MinOS="6.0.0" MaxOs="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
@@ -247,7 +247,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite MinOS="6.0.0" MaxOs="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
@@ -307,7 +307,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{5A789B25-5206-49e2-968B-88C17835B80A}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite MinOS="6.0.0" MaxOs="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
@@ -707,7 +707,7 @@
 			<ProductCode>{C572BBAD-6E76-41A9-B575-A7CB666EA545}</ProductCode>
 			<Help>WordSurv\SetupWS.rtf</Help>
 			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
-			<Requires Tag="MDAC2.8SP1" MinVersion="2.60" FailMsg="The program will not run correctly."/>
+			<Requires MaxOS="5.0.32767" Tag="MDAC2.8SP1" MinVersion="2.60" FailMsg="The program will not run correctly."/>
 		</Product>		
 		<Product>
 			<AutoConfigure>
@@ -876,7 +876,7 @@
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
 			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="4"/>
 			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP2" MinVersion="2"/>
-			<Prerequisite Tag="MDAC2.8SP1" MinVersion="2.81.1117.6"/>
+			<Prerequisite MaxOS="5.0.32767" Tag="MDAC2.8SP1" MinVersion="2.81.1117.6"/>
 			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR.EXE</CriticalFile>
 			<Preinstall>SQLServer2005Preinstall</Preinstall>
 			<Install Flag="g_fSqlServerUpgradeNeeded" TestAnsiConversion="true">
@@ -904,7 +904,7 @@
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
 			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="4"/>
 			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP2" MinVersion="2"/>
-			<Prerequisite Tag="MDAC2.8SP1" MinVersion="2.81.1117.6"/>
+			<Prerequisite MaxOS="5.0.32767" Tag="MDAC2.8SP1" MinVersion="2.81.1117.6"/>
 			<CriticalFile>Utilities\SQL Server 2005 Express\SQLEXPR32.EXE</CriticalFile>
 			<Preinstall>TestIfSqlServerUpgradeNeeded</Preinstall>
 			<Install Flag="g_fSqlServerUpgradeNeeded">
@@ -1217,6 +1217,7 @@
 			</AutoConfigure>
 			<Title>Microsoft Data Access Components 2.8 SP1</Title>
 			<Tag>MDAC2.8SP1</Tag>
+			<MaxOS>5.0.32767</MaxOS>
 			<CriticalFile>Utilities\MDAC 2.8\MDAC_TYP.EXE</CriticalFile>
 			<Install>Utilities\MDAC 2.8\MDAC_TYP.EXE</Install>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?familyid=78CAC895-EFC2-4F8E-A9E0-3A1AFBD5922E&amp;displaylang=en#Overview</DownloadURL>

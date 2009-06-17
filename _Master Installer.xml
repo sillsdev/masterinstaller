@@ -66,7 +66,8 @@
 				<Title>FieldWorks Data Notebook 2.12</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
@@ -74,14 +75,16 @@
 				<Title>FieldWorks Language Explorer 2.4</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.12</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
@@ -89,7 +92,8 @@
 				<Title>FieldWorks Translation Editor 2.4</Title>
 				<Tag>TE_TC</Tag>
 				<MsiFeature>TE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
@@ -132,7 +136,8 @@
 				<Title>FieldWorks Data Notebook 2.12</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
@@ -140,14 +145,16 @@
 				<Title>FieldWorks Language Explorer 2.4</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.12</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
@@ -190,7 +197,8 @@
 				<Title>FieldWorks Data Notebook 2.12</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
@@ -198,14 +206,16 @@
 				<Title>FieldWorks Language Explorer 2.4</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.12</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
@@ -213,7 +223,8 @@
 				<Title>FieldWorks Translation Editor 2.4</Title>
 				<Tag>TE_TC</Tag>
 				<MsiFeature>TE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
@@ -255,7 +266,8 @@
 				<Title>FieldWorks Data Notebook 2.12</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
@@ -263,14 +275,16 @@
 				<Title>FieldWorks Language Explorer 2.4</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
 				<Title>FieldWorks Topics List Editor 2.12</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
+				<Requires MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
@@ -861,6 +875,34 @@
 			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="3"/>
 			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP2" MinVersion="2"/>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=32BC1BEE-A3F9-4C13-9C99-220B62A191EE&amp;displaylang=en</DownloadURL>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Microsoft SQL Server 2005 Express SP3 (32 and 64 bit)</Title>
+				<Source>3rd Party\SQL Server 2005 Express SP3\SQLEXPR.EXE</Source>
+				<Source>3rd Party\SQL Server 2005 Express SP3\Surface Area Settings.xml</Source>
+				<Destination>Utilities\SQL Server 2005 Express SP3</Destination>
+			</AutoConfigure>
+			<Title>Microsoft SQL Server 2005 Express SP3</Title>
+			<Tag>SQL2005SP3_64</Tag>
+			<MinOS>5.0</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
+			<Prerequisite Tag="WI31" MinVersion="3.1"/>
+			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="4"/>
+			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP2" MinVersion="2"/>
+			<Prerequisite MaxOS="5.0.32767" Tag="MDAC2.8SP1" MinVersion="2.81.1117.6"/>
+			<CriticalFile>Utilities\SQL Server 2005 Express SP3\SQLEXPR.EXE</CriticalFile>
+			<Preinstall>TestIfSqlServerUpgradeNeeded</Preinstall>
+			<Install Flag="g_fSqlServerUpgradeNeeded" TestAnsiConversion="true">
+				<True>$CriticalFile$ INSTANCENAME=SILFW UPGRADE=SQL_Engine SAPWD=inscrutable SQLACCOUNT="$SID$22$" SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /qb</True>
+				<False>$CriticalFile$ INSTANCENAME=SILFW ADDLOCAL=All SAPWD=inscrutable SECURITYMODE=SQL SQLACCOUNT="$SID$22$" DISABLENETWORKPROTOCOLS=0 SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /qb</False>
+			</Install>
+			<StatusWindow>Monitor 10000</StatusWindow>
+			<Commentary>Please wait while SQL Server installs and then is configured.</Commentary>
+			<TestPresence Version="9.0.4035.0">TestSqlSILFWPresence</TestPresence>
+			<PostInstall>SqlServer2005PostInstall</PostInstall>
+			<DownloadURL></DownloadURL>
 		</Product>
 		<Product>
 			<AutoConfigure>

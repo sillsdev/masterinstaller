@@ -3,35 +3,37 @@
 <title>Software Download Evaluator.</title>
 <script language="javascript">
 
+
 var SelectableProducts;
 var MasterNeedsList;
-var Win2kOrBetterNeeded;
 var ControlElement;
 var ReportIsFull;
+var OsVersion; // Numeric array of OS version number
 
 function Go()
 {
 	// Works on IE 5.5 or later. Does not work on Firefox.
-	var RunningWin2KOrBetter;
 	
 	// Test if control is working:
 	try
 	{
 		ControlElement = document.getElementById("TestPresenceWebControl1");
-		RunningWin2KOrBetter = ControlElement.RunningWin2KOrBetter();
+		// Get OS Version as a string:
+		OsVersion = ControlElement.GetOsVersionString();
+		// Turn it into a numeric array:
+		OsVersion = OsVersion.split('.');
 	}
 	catch(err)
 	{
 		showPage("Testing", false);
 		showPage("Report", true);
-		var Report = "The ActiveX control has failed to load. This utility cannot run.<br>";
+		var Report = "The ActiveX control has failed to load. This utility cannot run.<br>" + err.message;
 		var ReportElement = document.getElementById("Report");
 		ReportElement.innerHTML = Report;
 		return;
 	}
 	MasterNeedsList = new Array();
 	SelectableProducts = new Array();
-	Win2kOrBetterNeeded = false;
 
 	// Try to get some version of the MSXML FreeThreadedDOMDocument object:
 	var GlobalXmlDoc = null;
@@ -74,9 +76,6 @@ function Go()
 	MasterNeedsList.sort(sortRank);
 	SelectableProducts.sort(sortRank);
 	
-	if (Win2kOrBetterNeeded)
-		Win2kOrBetterNeeded = !RunningWin2KOrBetter;
-
 	ReportIsFull = false;
 	ShowReport();	
 }
@@ -103,12 +102,6 @@ function ShowReport()
 function CreateReport()
 {
 	var Report;
-	
-	if (Win2kOrBetterNeeded)
-	{
-		Report = "This computer cannot install the software - Windows 2000, XP or later is required."
-		return Report;
-	}
 	
 	var NumFlavors = MasterNeedsList.length;
 
@@ -167,6 +160,8 @@ function CreateReport()
 		{
 			Report += 'The recommended download for this computer is';
 			Report += ' "' + MasterNeedsList[iSmallestComplete].FlavorName + '".';
+			if (MasterNeedsList[iSmallestComplete].FlavorURL)
+				Report += '</h1><h2>Click <a href="' + MasterNeedsList[iSmallestComplete].FlavorURL + '" target="_blank">here</a> to download it.</h2><h1>';
 		}
 		else
 			Report += 'This download has everything needed for a complete installation on this computer.';
@@ -240,7 +235,11 @@ function CreateReport()
 	for (f = 0; f < NumFlavors; f++)
 	{
 		Report += '<h4>';
-		Report += 'Option ' + (f+1) + ': "' + MasterNeedsList[f].FlavorName + '"';
+		Report += 'Option ' + (f+1) + ': ';
+		if (MasterNeedsList[f].FlavorURL)
+			Report += '<a href="' + MasterNeedsList[f].FlavorURL + '" target="_blank">' + MasterNeedsList[f].FlavorName + '</a>';
+		else
+			Report += '"' + MasterNeedsList[f].FlavorName + '"';
 		if (f == iSmallestComplete || f == iLargestNoSuperfluity)
 		{
 			Report += ' (';
@@ -258,6 +257,7 @@ function CreateReport()
 			Report += ')';
 		}
 		Report += '</h4>';
+
 		var NeedsList = MasterNeedsList[f].NeedsList;
 		var SuperfluousList = MasterNeedsList[f].SuperfluousList;
 		var SelProducts = SelectableProducts[f].ProductsList;
@@ -426,7 +426,11 @@ function TestAllFiles(FlavorNode)
 	// Get name and rank of this flavor:
 	var FlavorName = FlavorNode.getAttribute("Flavor");
 	var FlavorRank = FlavorNode.getAttribute("Rank");
-	
+	var URLnode =  FlavorNode.selectSingleNode('DownloadURL');
+	var FlavorURL = null;
+	if ( URLnode)
+		FlavorURL = URLnode.text;
+
 	// Get list of all products in our flavor:
 	var ProductNodeList = FlavorNode.selectNodes('MasterInstaller/Products/Product');
 	NumProducts = ProductNodeList.length;
@@ -482,6 +486,7 @@ function TestAllFiles(FlavorNode)
 	MasterNeedsData.FlavorName = FlavorName;
 	MasterNeedsData.FlavorNode = FlavorNode;
 	MasterNeedsData.Rank = FlavorRank;
+	MasterNeedsData.FlavorURL = FlavorURL;
 	MasterNeedsData.NeedsList = FlavorNeedsList;
 	MasterNeedsData.SuperfluousList = FlavorSuperfluousList;
 	MasterNeedsList.push(MasterNeedsData);
@@ -498,14 +503,6 @@ function TestAllFiles(FlavorNode)
 function AddDependenciesOfProductNode(ProductNode, DependenciesAndPrerequisites, FlavorNode,
 									  FlavorNeedsList, FlavorSuperfluousList)
 {
-	// First determine on a global level whether the user needs Windows 2000 or better:
-	if (!Win2kOrBetterNeeded)
-	{
-		var Win2kNode = ProductNode.selectSingleNode("MustHaveWin2kOrBetter");
-		if (Win2kNode)
-			if (Win2kNode.text == "true")
-				Win2kOrBetterNeeded = true;
-	}
 	var PrerequisitesList = ProductNode.selectNodes('Prerequisite');
 	if (PrerequisitesList != null)
 	{
@@ -533,7 +530,7 @@ function FindAndAddDependentProducts(List, DependenciesAndPrerequisites, FlavorN
 		var DependencyNode = List[iProductDep];
 		var Tag = DependencyNode.getAttribute("Tag");
 		var InDownloadPackage = false;
-		
+
 		// Get the product node for the current tag (assume no duplicate tags within flavor):
 		var TagProducts = FindProductsByTag(Tag, FlavorNode, true);
 		var TagProduct = TagProducts[0];
@@ -548,50 +545,98 @@ function FindAndAddDependentProducts(List, DependenciesAndPrerequisites, FlavorN
 				InDownloadPackage = true;
 			}
 		}
-		
-		var MinVersion = DependencyNode.getAttribute("MinVersion");
-		var MaxVersion = DependencyNode.getAttribute("MaxVersion");
-		var Version = DependencyNode.getAttribute("Version");
-		if (Version != null)
-		{
-			MinVersion = Version;
-			MaxVersion = Version;
-		}
-		else
-		{
-			if (MinVersion == null)
-				MinVersion = "0.0.0.0";
-			if (MaxVersion == null)
-				MaxVersion = "32767.32767.32767.32767";
-		}
 
-		// Test if the product is on this machine:		
-		if (!ControlElement.TestPresence(Tag, MinVersion, MaxVersion))
+		// Test if the dependency specifies a minimum or maximum OS:
+		var MinOS = DependencyNode.getAttribute("MinOS");
+		if (MinOS == null)
+			MinOS = "0.0.0.0";
+		var MaxOS = DependencyNode.getAttribute("MaxOS");
+		if (MaxOS == null)
+			MaxOS = "32767.32767.32767.32767";
+
+		// If the OS is in range, then go ahead and test if the dependent product is present.
+		// Otherwise, the dependent product must remain in the superfluous list:
+		if (OsInRange(MinOS, MaxOS))
 		{
-			// Product is not on this machine, so it can't be superfluous, so remove it from the
-			// superfluous list (if it exists there):
-			ArrayRemoveProduct(FlavorSuperfluousList, TagProduct);
-			
-			// The given product does not exist on this machine. Test if we've already put it
-			// in the needs list for this flavor:
-			if (!ArrayContainsProduct(FlavorNeedsList, TagProduct))
+			var MinVersion = DependencyNode.getAttribute("MinVersion");
+			var MaxVersion = DependencyNode.getAttribute("MaxVersion");
+			var Version = DependencyNode.getAttribute("Version");
+			if (Version != null)
 			{
-				// If it's not in the download package, record it in the Needs List for this Flavor:
-				if (!InDownloadPackage)
-					FlavorNeedsList.push(TagProduct);
+				MinVersion = Version;
+				MaxVersion = Version;
 			}
-			// Also record it in the Needs List for the current parent product:
-			if (!ArrayContainsProduct(DependenciesAndPrerequisites.NeedsList, TagProduct))
+			else
 			{
-				if (!InDownloadPackage)
-					DependenciesAndPrerequisites.NeedsList.push(TagProduct);
-					
-				// Recurse to discover dependencies of this dependency:
-				AddDependenciesOfProductNode(TagProduct, DependenciesAndPrerequisites,
-					FlavorNode, FlavorNeedsList, FlavorSuperfluousList);
+				if (MinVersion == null)
+					MinVersion = "0.0.0.0";
+				if (MaxVersion == null)
+					MaxVersion = "32767.32767.32767.32767";
+			}
+
+			// Test if the product is on this machine:
+			if (!ControlElement.TestPresence(Tag, MinVersion, MaxVersion))
+			{
+				// Product is not on this machine, so it can't be superfluous, so remove it from the
+				// superfluous list (if it exists there):
+				ArrayRemoveProduct(FlavorSuperfluousList, TagProduct);
+				
+				// The given product does not exist on this machine. Test if we've already put it
+				// in the needs list for this flavor:
+				if (!ArrayContainsProduct(FlavorNeedsList, TagProduct))
+				{
+					// If it's not in the download package, record it in the Needs List for this Flavor:
+					if (!InDownloadPackage)
+						FlavorNeedsList.push(TagProduct);
+				}
+				// Also record it in the Needs List for the current parent product:
+				if (!ArrayContainsProduct(DependenciesAndPrerequisites.NeedsList, TagProduct))
+				{
+					if (!InDownloadPackage)
+						DependenciesAndPrerequisites.NeedsList.push(TagProduct);
+						
+					// Recurse to discover dependencies of this dependency:
+					AddDependenciesOfProductNode(TagProduct, DependenciesAndPrerequisites,
+						FlavorNode, FlavorNeedsList, FlavorSuperfluousList);
+				}
 			}
 		}
 	}
+}
+
+// Compares 2 arrays of numbers, where each number is more significant than the next.
+// Returns true if the First array is less than the Second.
+function VersionArrayLessThan(First, Second)
+{
+	var len = ((First.length < Second.length) ? First.length : Second.length);
+	for (i = 0; i < len; i++)
+	{
+		if (parseInt(First[i]) < parseInt(Second[i]))
+			return true;
+
+		if (parseInt(First[i]) > parseInt(Second[i]))
+			return false;
+	}
+	return false;
+}
+
+// Returns true if global variable OsVersion is between the given in and max values.
+// This is an inclusive test: if OsVersion equals either value, the return value is true.
+function OsInRange(MinOS, MaxOS)
+{
+	// First see if OsVersion is less than MinOS:
+	var MinOsArray = MinOS.split('.');
+
+	if (VersionArrayLessThan(OsVersion, MinOsArray))
+		return false;
+
+	// Now see if OsVersion is greater than MaxOS:
+	var MaxOsArray = MaxOS.split('.');
+	
+	if (VersionArrayLessThan(MaxOsArray, OsVersion))
+		return false;
+
+	return true;
 }
 
 // Returns an array of indexes of products within the given Flavor having the given Tag.
@@ -648,8 +693,8 @@ function ArrayRemoveProduct(array, product)
 </head>
 <body onload="Go();">
 <object ID="TestPresenceWebControl1" WIDTH="0" HEIGHT="0"
-CODEBASE="http://downloads.sil.org/FieldWorks/Corporate Release/5.0/TestPresence.cab#version=1.2.0.0"
-	CLASSID="CLSID:5B4F948B-DDB7-47f3-A21B-6BF3C76C3FCD" VIEWASTEXT>
+CODEBASE="http://downloads.sil.org/ActiveX/TestPresece/1.5/TestPresence.cab#version=1.5.0.0"
+	CLASSID="CLSID:3BF3E3EB-97DB-40d4-937E-4E548D1FCE90" VIEWASTEXT>
 	<param NAME="_Version" VALUE="65536"/>
 	<param NAME="_ExtentX" VALUE="2646"/>
 	<param NAME="_ExtentY" VALUE="1323"/>

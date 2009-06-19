@@ -1263,7 +1263,7 @@
 			<MaxOS>5.0.32767</MaxOS>
 			<CriticalFile>Utilities\MDAC 2.8\MDAC_TYP.EXE</CriticalFile>
 			<Install>Utilities\MDAC 2.8\MDAC_TYP.EXE</Install>
-			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?familyid=78CAC895-EFC2-4F8E-A9E0-3A1AFBD5922E&amp;displaylang=en#Overview</DownloadURL>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?familyid=78CAC895-EFC2-4F8E-A9E0-3A1AFBD5922E&amp;displaylang=en</DownloadURL>
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Monitor</StatusWindow>
 			<TestPresence Version="2.81.1117.6">TestMDACPresence</TestPresence>

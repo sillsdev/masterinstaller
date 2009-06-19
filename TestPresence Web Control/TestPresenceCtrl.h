@@ -21,10 +21,10 @@ protected:
 // Dispatch IDs
 public:
 	enum {
-		dispidRunningWin2KOrBetter = 2L,
+		dispidGetOsVersionString = 2L,
 		dispidTestPresence = 1L
 	};
 protected:
 	VARIANT_BOOL TestPresence(LPCTSTR Tag, LPCTSTR MinVersion, LPCTSTR MaxVersion);
-	VARIANT_BOOL RunningWin2KOrBetter(void);
+	BSTR GetOsVersionString(void);
 };

@@ -8,7 +8,7 @@ bool TestXml2Presence(const _TCHAR * /*pszMinVersion*/, const _TCHAR * /*pszMaxV
 					  SoftwareProduct * /*Product*/)
 {
 	// We test for presence of MSXML2 by seeing if its CLSID is registered:
-	_TCHAR * pszGuid = NewRegString(HKEY_CLASSES_ROOT, _T("Msxml2\\CLSID"))
+	_TCHAR * pszGuid = NewRegString(HKEY_CLASSES_ROOT, _T("Msxml2\\CLSID"));
 
 	if (pszGuid)
 	{

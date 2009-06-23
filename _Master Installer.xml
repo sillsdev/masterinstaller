@@ -433,6 +433,24 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>WeSay 0.5.2000</Title>
+				<Source>Installers\WeSay</Source>
+				<SetupHelp>Documents\WeSay\SetupWeSay.rtf</SetupHelp>
+				<Destination>WeSay</Destination>
+			</AutoConfigure>
+			<Title>WeSay 0.5.2000</Title>
+			<Tag>WeSay</Tag>
+			<MinOS>5.0</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>WeSay\WeSayInstaller.0.5.2000.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Help>WeSay\SetupWeSay.rtf</Help>
+			<ProductCode>{1F237F7D-7009-436A-A977-BA40588485F3}</ProductCode>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Phonology Assistant 3.0.1</Title>
 				<Source>Installers\Phonology Assistant</Source>
 				<SetupHelp>Documents\Phonology Assistant\SetupPA.rtf</SetupHelp>

@@ -63,7 +63,7 @@
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
-				<Title>FieldWorks Data Notebook 2.12</Title>
+				<Title>FieldWorks Data Notebook 2.14</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -72,7 +72,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Language Explorer 2.4</Title>
+				<Title>FieldWorks Language Explorer 3.0</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -80,7 +80,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Topics List Editor 2.12</Title>
+				<Title>FieldWorks Topics List Editor 2.14</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -89,7 +89,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Translation Editor 2.4</Title>
+				<Title>FieldWorks Translation Editor 3.0</Title>
 				<Tag>TE_TC</Tag>
 				<MsiFeature>TE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -98,7 +98,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks WorldPad 2.12</Title>
+				<Title>FieldWorks WorldPad 2.14</Title>
 				<Tag>WP_TC</Tag>
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -133,7 +133,7 @@
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
-				<Title>FieldWorks Data Notebook 2.12</Title>
+				<Title>FieldWorks Data Notebook 2.14</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -142,7 +142,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Language Explorer 2.4</Title>
+				<Title>FieldWorks Language Explorer 3.0</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -150,7 +150,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Topics List Editor 2.12</Title>
+				<Title>FieldWorks Topics List Editor 2.14</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -159,7 +159,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks WorldPad 2.12</Title>
+				<Title>FieldWorks WorldPad 2.14</Title>
 				<Tag>WP_TC</Tag>
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -194,7 +194,7 @@
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
-				<Title>FieldWorks Data Notebook 2.12</Title>
+				<Title>FieldWorks Data Notebook 2.14</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -203,7 +203,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Language Explorer 2.4</Title>
+				<Title>FieldWorks Language Explorer 3.0</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -211,7 +211,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Topics List Editor 2.12</Title>
+				<Title>FieldWorks Topics List Editor 2.14</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -220,7 +220,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Translation Editor 2.4</Title>
+				<Title>FieldWorks Translation Editor 3.0</Title>
 				<Tag>TE_TC</Tag>
 				<MsiFeature>TE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -229,7 +229,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks WorldPad 2.12</Title>
+				<Title>FieldWorks WorldPad 2.14</Title>
 				<Tag>WP_TC</Tag>
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -263,7 +263,7 @@
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
-				<Title>FieldWorks Data Notebook 2.12</Title>
+				<Title>FieldWorks Data Notebook 2.14</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -272,7 +272,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Language Explorer 2.4</Title>
+				<Title>FieldWorks Language Explorer 3.0</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -280,7 +280,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Topics List Editor 2.12</Title>
+				<Title>FieldWorks Topics List Editor 2.14</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -289,7 +289,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks WorldPad 2.12</Title>
+				<Title>FieldWorks WorldPad 2.14</Title>
 				<Tag>WP_TC</Tag>
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -326,7 +326,7 @@
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
-				<Title>FieldWorks Data Notebook 2.12</Title>
+				<Title>FieldWorks Data Notebook 2.13999</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
 				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -334,14 +334,14 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Language Explorer 2.4</Title>
+				<Title>FieldWorks Language Explorer 2.999</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Topics List Editor 2.12</Title>
+				<Title>FieldWorks Topics List Editor 2.13999</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
 				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -349,7 +349,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Translation Editor 2.4</Title>
+				<Title>FieldWorks Translation Editor 2.999</Title>
 				<Tag>TE_TC</Tag>
 				<MsiFeature>TE</MsiFeature>
 				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -357,7 +357,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks WorldPad 2.12</Title>
+				<Title>FieldWorks WorldPad 2.13999</Title>
 				<Tag>WP_TC</Tag>
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>

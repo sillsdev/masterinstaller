@@ -433,6 +433,24 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>Publishing Solutions 1.0.39</Title>
+				<Source>Installers\Publishing Solutions</Source>
+				<SetupHelp>Documents\Publishing Solutions\SetupPS.rtf</SetupHelp>
+				<Destination>Publishing Solutions</Destination>
+			</AutoConfigure>
+			<Title>Publishing Solutions 1.0.39</Title>
+			<Tag>PubSol</Tag>
+			<MinOS>5.0</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Publishing Solutions\SetupPs-1.0.39.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Help>Publishing Solutions\SetupPS.rtf</Help>
+			<ProductCode>{68A7D17F-C81F-4456-983C-ACDF0B19BC03}</ProductCode>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>WeSay 0.5.2000</Title>
 				<Source>Installers\WeSay</Source>
 				<SetupHelp>Documents\WeSay\SetupWeSay.rtf</SetupHelp>

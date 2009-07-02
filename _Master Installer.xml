@@ -103,6 +103,11 @@
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -164,6 +169,11 @@
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -234,6 +244,11 @@
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -294,6 +309,11 @@
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -362,6 +382,11 @@
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product KeyId="2" Version="5.0">
 			<AutoConfigure>
@@ -388,6 +413,11 @@
 			<ProductCode>{E98FADB8-031E-42E3-B581-268B126C81B6}</ProductCode>
 			<Help>TW5\ReadMe.rtf</Help>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
+			<Contact>
+				<FirstName>Jim</FirstName>
+				<LastName>DeVries</LastName>
+				<Email>jim_devries@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product KeyId="1" Version="5.3">
 			<AutoConfigure>
@@ -414,6 +444,11 @@
 			<Help>BART5\SetupBART.rtf</Help>
 			<ProductCode>{574CC5E0-54C0-4A8E-9F96-7F16734DCF35}</ProductCode>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
+			<Contact>
+				<FirstName>???</FirstName>
+				<LastName></LastName>
+				<Email></Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -430,6 +465,11 @@
 			<Install Type="Internal">KeymanKeyboardsInstaller</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<TestPresence>TestKeymanKeyboardsPresence</TestPresence>
+			<Contact>
+				<FirstName>???</FirstName>
+				<LastName></LastName>
+				<Email></Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -448,6 +488,13 @@
 			<Help>Publishing Solutions\SetupPS.rtf</Help>
 			<ProductCode>{68A7D17F-C81F-4456-983C-ACDF0B19BC03}</ProductCode>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
+			<Contact>
+				<FirstName>Greg</FirstName>
+				<LastName>Trihus</LastName>
+				<Email>greg_trihus@sil.org</Email>
+				<ExternalSource>http://typeset-dictionary.googlecode.com/files/SetupPs-1.0.39.msi</ExternalSource>
+				<VersionInfo>http://code.google.com/p/typeset-dictionary/downloads/list</VersionInfo>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -466,6 +513,13 @@
 			<Help>WeSay\SetupWeSay.rtf</Help>
 			<ProductCode>{1F237F7D-7009-436A-A977-BA40588485F3}</ProductCode>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
+			<Contact>
+				<FirstName>John</FirstName>
+				<LastName>Hatton</LastName>
+				<Email>john_hatton@sil.org</Email>
+				<ExternalSource>http://www.wesay.org/downloads/WeSayInstaller.0.5.2000.msi</ExternalSource>
+				<VersionInfo>http://www.wesay.org/downloads</VersionInfo>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -484,6 +538,11 @@
 			<Help>Phonology Assistant\SetupPA.rtf</Help>
 			<ProductCode>{81584AC8-1718-4B20-8189-8A9F149C5CCD}</ProductCode>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
+			<Contact>
+				<FirstName>Dave</FirstName>
+				<LastName>Olson</LastName>
+				<Email>david_olson@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -505,6 +564,11 @@
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>SAPreInstall</Preinstall>
 			<PostInstall>SAPostInstall</PostInstall>
+			<Contact>
+				<FirstName>John</FirstName>
+				<LastName>Wickberg</LastName>
+				<Email>john_wickberg@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -524,6 +588,11 @@
 			<ProductCode>{D9388CA9-E056-446C-8E13-111DA0F3A704}</ProductCode>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Requires Tag="IE" MinVersion="5.5" FailMsg="The Word Lists feature will not run correctly."/>
+			<Contact>
+				<FirstName>John</FirstName>
+				<LastName>Wickberg</LastName>
+				<Email>john_wickberg@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -542,6 +611,13 @@
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<TestPresence Version="4.1.4">TestAdaptitPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
+			<Contact>
+				<FirstName>Bill</FirstName>
+				<LastName>Martin</LastName>
+				<Email>bill_martin@sil.org</Email>
+				<ExternalSource>http://adapt-it.org/Adapt_It_WX_4_1_5_Regular.exe</ExternalSource>
+				<VersionInfo>http://www.adapt-it.org</VersionInfo>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -560,6 +636,13 @@
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<TestPresence Version="4.1.4">TestAdaptitUPresence</TestPresence>
 			<Help>Adapt It\Adapt It.rtf</Help>
+			<Contact>
+				<FirstName>Bill</FirstName>
+				<LastName>Martin</LastName>
+				<Email>bill_martin@sil.org</Email>
+				<ExternalSource>http://adapt-it.org/Adapt_It_WX_4_1_5_Unicode.exe</ExternalSource>
+				<VersionInfo>http://www.adapt-it.org</VersionInfo>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -581,24 +664,63 @@
 			<Requires Tag="IE" MinVersion="6.0" FailMsg="The program may not run correctly."/>
 			<Requires Tag="MSXML4" FailMsg="The program may not run correctly."/>
 			<Help>PAWS Starter Kit\PAWS starter kit.rtf</Help>
+			<Contact>
+				<FirstName>Andy</FirstName>
+				<LastName>Black</LastName>
+				<Email>andy_black@sil.org</Email>
+				<ExternalSource>http://carla.sil.org/Corporate_Release/PAWSStarterKit/PAWSSKInstall/PAWSSKInstaller.zip</ExternalSource>
+				<VersionInfo>http://carla.sil.org/paws.htm#Installation</VersionInfo>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
 				<Title>Carla Studio Unicode 2.9.2</Title>
-				<Source>Installers\CarlaStudio</Source>
+				<Source>Installers\CarlaStudioUnicode</Source>
 				<SetupHelp>Documents\CarlaStudio\CarlaStudio.rtf</SetupHelp>
-				<Destination>CarlaStudio</Destination>
+				<Destination>CarlaStudioUnicode</Destination>
 			</AutoConfigure>
 			<Title>Carla Studio Unicode 2.9.2</Title>
-			<Tag>CarlaStudio 2.9.2</Tag>
+			<Tag>CarlaStudioU 2.9.2</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>CarlaStudio\Setup.exe</CriticalFile>
+			<CriticalFile>CarlaStudioUnicode\Setup.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow StatusPauseWin98="true">Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="2.9.2.0">TestCarlaStudioPresence</TestPresence>
-			<Help>CarlaStudio\CarlaStudio.rtf</Help>
+			<TestPresence Version="2.9.2.0">TestCarlaStudioUnicodePresence</TestPresence>
+			<Help>CarlaStudioUnicode\CarlaStudio.rtf</Help>
+			<Contact>
+				<FirstName>Andy</FirstName>
+				<LastName>Black</LastName>
+				<Email>andy_black@sil.org</Email>
+				<ExternalSource>http://carla.sil.org/Corporate_Release/CARLAStudio/Unicode/CarlaStudioUnicodeInstall.zip</ExternalSource>
+				<VersionInfo>http://carla.sil.org/CARLAStudioUnicode.htm</VersionInfo>
+			</Contact>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Carla Studio Regular 2.9.2</Title>
+				<Source>Installers\CarlaStudioRegular</Source>
+				<SetupHelp>Documents\CarlaStudio\CarlaStudio.rtf</SetupHelp>
+				<Destination>CarlaStudioRegular</Destination>
+			</AutoConfigure>
+			<Title>Carla Studio Regular 2.9.2</Title>
+			<Tag>CarlaStudioR 2.9.2</Tag>
+			<MinOS>5.0</MinOS>
+			<MustBeAdmin>false</MustBeAdmin>
+			<CriticalFile>CarlaStudioRegular\Setup.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow StatusPauseWin98="true">Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions in installer.</Commentary>
+			<TestPresence Version="2.9.2.0">TestCarlaStudioRegularPresence</TestPresence>
+			<Help>CarlaStudioRegular\CarlaStudio.rtf</Help>
+			<Contact>
+				<FirstName>Andy</FirstName>
+				<LastName>Black</LastName>
+				<Email>andy_black@sil.org</Email>
+				<ExternalSource>http://carla.sil.org/Corporate_Release/CARLAStudio/CarlaStudioRegularInstall.zip</ExternalSource>
+				<VersionInfo>http://carla.sil.org/CARLAStudioRegular.htm</VersionInfo>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -616,6 +738,13 @@
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<TestPresence>TestLexiquePresence</TestPresence>
 			<Help>Lexique Pro\Lexique Pro.rtf</Help>
+			<Contact>
+				<FirstName>Richard</FirstName>
+				<LastName>Margetts</LastName>
+				<Email>richard_margetts@sil.org</Email>
+				<ExternalSource>http://www.lexiquepro.com/download/Lexique%20Pro%203.2.3%20-%20Setup%20(with%20demo%20db).exe</ExternalSource>
+				<VersionInfo>http://www.lexiquepro.com/download.htm</VersionInfo>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -633,6 +762,13 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{BFC16536-B1DC-4192-B3A5-2564A240A91F}</ProductCode>
 			<Help>PalmSurv\SetupPS.rtf</Help>
+			<Contact>
+				<FirstName>PalmSurv Contact Person</FirstName>
+				<LastName></LastName>
+				<Email>webmaster@palmsurv.cyboreal.com</Email>
+				<ExternalSource>http://sourceforge.net/project/showfiles.php?group_id=130530&amp;package_id=148690&amp;release_id=376811</ExternalSource>
+				<VersionInfo>http://palmsurv.sourceforge.net/download.html</VersionInfo>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -651,6 +787,11 @@
 			<ProductCode>{839DC33E-4F29-4A7A-983D-FAA9441AD703}</ProductCode>
 			<Help>PalmSurv\SetupPS.rtf</Help>
 			<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+			<Contact>
+				<FirstName>???</FirstName>
+				<LastName></LastName>
+				<Email></Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -669,6 +810,11 @@
 			<StatusWindow StatusPauseWin98="true">Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<Help>SF Converter\SF Converter.rtf</Help>
+			<Contact>
+				<FirstName>Bryan</FirstName>
+				<LastName>Wussow</LastName>
+				<Email>bryan_wussow@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -686,6 +832,11 @@
 			<Commentary>Please follow instructions on installer dialogs.</Commentary>
 <!-- test is unreliable			<TestPresence>TestShoebox50Presence</TestPresence> -->
 			<Help>Shoebox\Shoebox.rtf</Help>
+			<Contact>
+				<FirstName>???</FirstName>
+				<LastName></LastName>
+				<Email></Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -704,6 +855,11 @@
 			<Commentary>Please follow instructions on installer dialogs.</Commentary>
 			<TestPresence>TestToolbox15Presence</TestPresence>
 			<Help>Toolbox\Toolbox.rtf</Help>
+			<Contact>
+				<FirstName>???</FirstName>
+				<LastName></LastName>
+				<Email></Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -721,6 +877,11 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<Help>Graphite Compiler\GrCompiler_setup.rtf</Help>
+			<Contact>
+				<FirstName>Sharon</FirstName>
+				<LastName>Correll</LastName>
+				<Email>sharon_correll@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -740,6 +901,11 @@
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Prerequisite Tag="DirectX" MinVersion="4.8.1"/>
 			<Help>Vocabulary Manager\Vocabulary Manager.rtf</Help>
+			<Contact>
+				<FirstName>Bob</FirstName>
+				<LastName>Eaton</LastName>
+				<Email>bob_eaton@sall.com</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -759,7 +925,14 @@
 			<Help>WordSurv\SetupWS.rtf</Help>
 			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
 			<Requires MaxOS="5.0.32767" Tag="MDAC2.8SP1" MinVersion="2.60" FailMsg="The program will not run correctly."/>
-		</Product>		
+			<Contact>
+				<FirstName>Art</FirstName>
+				<LastName>White</LastName>
+				<Email>arwhite@taylor.edu</Email>
+				<ExternalSource>http://wordsurv.cse.taylor.edu/files/WordSurv%20602.zip</ExternalSource>
+				<VersionInfo>http://wordsurv.cse.taylor.edu/downloads.php</VersionInfo>
+			</Contact>
+		</Product>
 		<Product>
 			<AutoConfigure>
 				<Title>NRSI Resources</Title>
@@ -770,6 +943,11 @@
 			<Title>Resources on this CD</Title>
 			<Tag>Resources</Tag>
 			<Help>Resources\ReadMe - Resources.rtf</Help>
+			<Contact>
+				<FirstName>Lorna</FirstName>
+				<LastName>Priest</LastName>
+				<Email>lorna_priest@sil.org</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -792,6 +970,13 @@
 			<Prerequisite Tag="IE" MinVersion="6.0"/>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Requires Tag="MSXML3" MinVersion="8.70.1104.0" FailMsg="Some features will not work."/>
+			<Contact>
+				<FirstName>Marc</FirstName>
+				<LastName>Durdin</LastName>
+				<Email>marc.durdin@tavultesoft.com</Email>
+				<ExternalSource>http://www.tavultesoft.com/70/getstarted/?DownloadFileID=1072</ExternalSource>
+				<VersionInfo>http://www.tavultesoft.com/keyman</VersionInfo>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -814,6 +999,13 @@
 			<Prerequisite Tag="IE" MinVersion="6.0"/>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Requires Tag="MSXML3" MinVersion="8.70.1104.0" FailMsg="Some features will not work."/>
+			<Contact>
+				<FirstName>Marc</FirstName>
+				<LastName>Durdin</LastName>
+				<Email>marc.durdin@tavultesoft.com</Email>
+				<ExternalSource>http://www.tavultesoft.com/70/getstarted/?DownloadFileID=1073</ExternalSource>
+				<VersionInfo>http://www.tavultesoft.com/keyman</VersionInfo>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -836,6 +1028,13 @@
 			<Prerequisite Tag="IE" MinVersion="6.0"/>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Requires Tag="MSXML3" MinVersion="8.70.1104.0" FailMsg="Some features will not work."/>
+			<Contact>
+				<FirstName>Marc</FirstName>
+				<LastName>Durdin</LastName>
+				<Email>marc.durdin@tavultesoft.com</Email>
+				<ExternalSource>http://www.tavultesoft.com/70/downloadfile.php?DownloadFileID=1074</ExternalSource>
+				<VersionInfo>http://www.tavultesoft.com/keyman</VersionInfo>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -855,6 +1054,11 @@
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
+			<Contact>
+				<FirstName>Bob</FirstName>
+				<LastName>Eaton</LastName>
+				<Email>bob_eaton@sall.com</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -872,6 +1076,11 @@
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
+			<Contact>
+				<FirstName>Bob</FirstName>
+				<LastName>Eaton</LastName>
+				<Email>bob_eaton@sall.com</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -891,6 +1100,11 @@
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
+			<Contact>
+				<FirstName>Bob</FirstName>
+				<LastName>Eaton</LastName>
+				<Email>bob_eaton@sall.com</Email>
+			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
@@ -1303,23 +1517,6 @@
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Monitor</StatusWindow>
 			<TestPresence Version="2.81.1117.6">TestMDACPresence</TestPresence>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Adobe Acrobat Reader 5.0</Title>
-				<Source>3rd Party\Adobe Reader 5.0</Source>
-				<Destination>Utilities\Acrobat Reader</Destination>
-			</AutoConfigure>
-			<Title>Adobe Acrobat Reader 5.0</Title>
-			<Tag>Acrobat</Tag>
-			<CriticalFile>Utilities\Acrobat Reader\rp505enu.exe</CriticalFile>
-			<Install>Utilities\Acrobat Reader\rp505enu.exe</Install>
-			<DownloadURL>http://www.adobe.com/products/acrobat/readstep2.html</DownloadURL>
-			<Commentary>Follow instructions in installer wizard.</Commentary>
-			<StatusWindow>Monitor</StatusWindow>
-			<TestPresence Version="5.0">TestAcrobatReaderPresence</TestPresence>
-			<FlushReboot>true</FlushReboot>
-			<RebootTestRegPending>true</RebootTestRegPending>
 		</Product>
 		<Product>
 			<AutoConfigure>

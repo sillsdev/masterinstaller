@@ -4,15 +4,26 @@
 
 // Test for Carla Studio installation. Uses the path in the registry for product uninstallation
 // to get the version of the main .exe file
-bool TestCarlaStudioPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion,
-							 SoftwareProduct * /*Product*/)
+bool TestCarlaStudioPresence(bool fUnicode, const _TCHAR * pszMinVersion,
+							 const _TCHAR * pszMaxVersion, SoftwareProduct * /*Product*/)
 {
 	bool fResult = false;
 	HKEY hKey = NULL;
+	_TCHAR * pszRegPath;
+	_TCHAR * pszExePath;
+	if (fUnicode)
+	{
+		pszRegPath = _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudioUnicode")
+		pszExePath = _T("CStudioU.exe")
+	}
+	else
+	{
+		pszRegPath = _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudio")
+		pszExePath = _T("CStudio.exe")
+	}
 
 	// Get the uninstall string:
-	_TCHAR * pszUninstallString = NewRegString(HKEY_LOCAL_MACHINE,
-		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudioUnicode"),
+	_TCHAR * pszUninstallString = NewRegString(HKEY_LOCAL_MACHINE, pszRegPath,
 		_T("UninstallString"));
 
 	if (pszUninstallString)
@@ -34,7 +45,7 @@ bool TestCarlaStudioPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMax
 			}
 			// Now find main .exe file and get its version:
 			RemoveLastPathSection(pszInstallPath);
-			_TCHAR * pszMainExePath = MakePath(pszInstallPath, _T("CStudioU.exe"));
+			_TCHAR * pszMainExePath = MakePath(pszInstallPath, pszExePath);
 
 			// See if the file exists and what version it is:
 			__int64 nVersion;
@@ -46,7 +57,7 @@ bool TestCarlaStudioPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMax
 			{
 #if !defined NOLOGGING
 				_TCHAR * pszVersion = GenVersionText(nVersion);
-				g_Log.Write(_T("Found Carla Studio version %s"), pszVersion);
+				g_Log.Write(_T("Found Carla Studio %s version %s"), (fUnicode ? _T("Unicode") : _T("Regular")), pszVersion);
 				delete[] pszVersion;
 				pszVersion = NULL;
 #endif

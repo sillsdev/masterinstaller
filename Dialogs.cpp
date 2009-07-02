@@ -1146,6 +1146,21 @@ void ShowStatusDialog()
 	hMutex = NULL;
 }
 
+BOOL my_OpenClipboard(bool * fCloseStatusDialog)
+{
+	if (!fCloseStatusDialog)
+		return FALSE;
+
+	*fCloseStatusDialog = false;
+
+	if (!hwndStatusDialog)
+	{
+		ShowStatusDialog();
+		*fCloseStatusDialog = true;
+	}
+	return OpenClipboard(hwndStatusDialog);
+}
+
 // Put formatted message into the status dialog at the given position.
 // Caller must NOT delete[] return value.
 const _TCHAR * DisplayStatusText(int iPosition, const _TCHAR * pszText, ...)

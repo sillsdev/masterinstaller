@@ -12,7 +12,7 @@ public:
 	LogFile();
 	~LogFile();
 
-	void SetActiveWriting(const _TCHAR * pszFilePath);
+	void SetActiveWriting(const _TCHAR * pszFilePath = NULL);
 	void Start();
 	void Indent();
 	void Unindent();
@@ -25,6 +25,9 @@ protected:
 	_TCHAR * m_pszLog;
 	_TCHAR * m_pszPendingMessages;
 	int m_cIndent;
+	bool m_fLocked;
+
+	_TCHAR * NewTempFolderLogPath();
 };
 
 extern LogFile g_Log;

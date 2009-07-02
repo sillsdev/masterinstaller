@@ -48,6 +48,7 @@ INT_PTR CALLBACK DlgProcRebootCountdown(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 INT_PTR CALLBACK DlgProcProductKey(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 extern void ShowStatusDialog();
+extern BOOL my_OpenClipboard(bool * fCloseStatusDialog);
 extern const _TCHAR * DisplayStatusText(int iPosition, const _TCHAR * pszText, ...);
 extern void PauseOnStatusDialog(int ridStatusText);
 extern void HideStatusDialog();

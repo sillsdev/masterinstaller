@@ -29,6 +29,8 @@ int APIENTRY WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/,
 	_TCHAR * pszLog = _tcsstr(pszCmdLine, _T("-log:"));
 	if (pszLog)
 		g_Log.SetActiveWriting(&(pszLog[5]));
+	else
+		g_Log.SetActiveWriting(); // Force log file anyway, in Temp folder
 
 	// See if user is requesting access to all third-party software:
 	if (_tcsstr(pszCmdLine, _T("-manual")) != NULL)

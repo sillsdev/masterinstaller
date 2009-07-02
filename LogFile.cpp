@@ -13,13 +13,14 @@
 #include "dialogs.h"
 #include "ErrorHandler.h"
 #include "Resource.h"
-
+#include "globals.h"
 
 /*----------------------------------------------------------------------------------------------
 	Constructor.
 ----------------------------------------------------------------------------------------------*/
 LogFile::LogFile()
 {
+	m_fLocked = false;
 	m_pszFilePath = NULL;
 	m_pszLog = NULL;
 	m_pszPendingMessages = NULL;
@@ -42,9 +43,14 @@ LogFile::~LogFile()
 ----------------------------------------------------------------------------------------------*/
 void LogFile::SetActiveWriting(const _TCHAR * pszFilePath)
 {
+	bool fUsingTempFolder = false;
+
 	if (!pszFilePath)
-		pszFilePath = _T("C:\\SIL_Installer.log");
-	if (pszFilePath[0] != 0)
+	{
+		m_pszFilePath = NewTempFolderLogPath();
+		fUsingTempFolder = true;
+	}
+	else if (pszFilePath[0] != 0)
 		m_pszFilePath = my_strdup(pszFilePath);
 
 	// Check that the log file is writable:
@@ -56,8 +62,16 @@ void LogFile::SetActiveWriting(const _TCHAR * pszFilePath)
 #else
 		if (_tfopen_s(&file, m_pszFilePath, _T("a")) == 0)
 #endif
+		{
+			// We can open the file:
 			fclose(file);
-		else
+		}
+		else if (fUsingTempFolder)
+		{
+			delete[] m_pszFilePath;
+			m_pszFilePath = NULL;
+		}
+		else // Can't open file, and not using Temp folder:
 			HandleError(kNonFatal, false, IDC_ERROR_LOG_FILE_INVALID, m_pszFilePath);
 	}
 }
@@ -92,6 +106,9 @@ void LogFile::Unindent()
 ----------------------------------------------------------------------------------------------*/
 void LogFile::Write(const _TCHAR * szText, ...)
 {
+	if (m_fLocked)
+		return;
+
 	// Always start with a time-stamp:
 	SYSTEMTIME syst;
 	GetLocalTime(&syst);
@@ -187,7 +204,12 @@ void LogFile::Write(const _TCHAR * szText, ...)
 ----------------------------------------------------------------------------------------------*/
 bool LogFile::WriteClipboard()
 {
-	return WriteClipboardText(m_pszLog);
+	if (m_fLocked)
+		return false;
+	m_fLocked = true;
+	bool fRet = WriteClipboardText(m_pszLog);
+	m_fLocked = false;
+	return m_fLocked;
 }
 
 
@@ -199,4 +221,33 @@ void LogFile::Terminate()
 	Write(_T("Installation ended.\n"));
 	delete[] m_pszFilePath;
 	m_pszFilePath = NULL;
+}
+
+/*----------------------------------------------------------------------------------------------
+	Creates a path for the log file in the TEMP folder.
+----------------------------------------------------------------------------------------------*/
+_TCHAR * LogFile::NewTempFolderLogPath()
+{
+	// Get Temp folder:
+	int cchTempFolder = 1 + GetTempPath(0, NULL);
+	_TCHAR * pszTempFolder = new _TCHAR [cchTempFolder];
+	GetTempPath(cchTempFolder, pszTempFolder);
+
+	// Form file name root:
+	_TCHAR * pszLogFileRoot = MakePath(pszTempFolder, g_pszTitle);
+	delete[] pszTempFolder;
+	pszTempFolder = NULL;
+
+	// Append Title, current date and time:
+	SYSTEMTIME syst;
+	GetLocalTime(&syst);
+
+	_TCHAR * pszLogPath = new_sprintf(_T("%s %04d-%02d-%02d %02d-%02d-%02d.log"),
+		pszLogFileRoot, syst.wYear, syst.wMonth, syst.wDay, syst.wHour,
+		syst.wMinute, syst.wSecond);
+
+	delete[] pszLogFileRoot;
+	pszLogFileRoot = NULL;
+
+	return pszLogPath;
 }

@@ -425,26 +425,31 @@ _TCHAR * NewGetExeFolder()
 // Writes the given text to the Clipboard
 bool WriteClipboardText(const _TCHAR * pszText)
 {
-	int nLen = 1 + (int)_tcslen(pszText);
+	int cbyte = (1 + (int)_tcslen(pszText)) * sizeof(_TCHAR);
 	int nRet;
 
-	// Open clipboard for our use:
-	if (!OpenClipboard(NULL))
+	// Open clipboard for our use. Note this requires us to show the status dialog if it is not
+	// already shown, so we can pass a window handle to the API function:
+	bool fCloseStatusDialog;
+	BOOL fClipBoardOpened = my_OpenClipboard(&fCloseStatusDialog);
+	if (!fClipBoardOpened)
 		return false;
 	nRet = GetLastError();
 	EmptyClipboard();
 	nRet = GetLastError();
 
-	HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, nLen);
+	HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, cbyte);
 	if (hglbCopy == NULL)
 	{
 		CloseClipboard();
+		if (fCloseStatusDialog)
+			HideStatusDialog();
 		return false;
 	}
 
 	// Lock the handle and copy the text to the buffer.
 	LPVOID lptstrCopy = GlobalLock(hglbCopy);
-	memcpy(lptstrCopy, pszText, nLen);
+	memcpy(lptstrCopy, pszText, cbyte);
 	GlobalUnlock(hglbCopy);
 
 	// Place the handle on the clipboard.
@@ -456,6 +461,9 @@ bool WriteClipboardText(const _TCHAR * pszText)
 	nRet = GetLastError();
 	CloseClipboard();
 	nRet = GetLastError();
+
+	if (fCloseStatusDialog)
+		HideStatusDialog();
 
 	return true;
 }

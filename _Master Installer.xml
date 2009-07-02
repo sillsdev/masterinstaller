@@ -445,9 +445,9 @@
 			<ProductCode>{574CC5E0-54C0-4A8E-9F96-7F16734DCF35}</ProductCode>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Contact>
-				<FirstName>???</FirstName>
-				<LastName></LastName>
-				<Email></Email>
+				<FirstName>Paul</FirstName>
+				<LastName>O'Rear</LastName>
+				<Email>paorear@microsoft.com</Email>
 			</Contact>
 		</Product>
 		<Product>
@@ -466,9 +466,9 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<TestPresence>TestKeymanKeyboardsPresence</TestPresence>
 			<Contact>
-				<FirstName>???</FirstName>
-				<LastName></LastName>
-				<Email></Email>
+				<FirstName>Lorna</FirstName>
+				<LastName>Priest</LastName>
+				<Email>lorna_priest@sil.org</Email>
 			</Contact>
 		</Product>
 		<Product>
@@ -788,9 +788,9 @@
 			<Help>PalmSurv\SetupPS.rtf</Help>
 			<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
 			<Contact>
-				<FirstName>???</FirstName>
+				<FirstName>PalmSurv Contact Person</FirstName>
 				<LastName></LastName>
-				<Email></Email>
+				<Email>webmaster@palmsurv.cyboreal.com</Email>
 			</Contact>
 		</Product>
 		<Product>
@@ -818,28 +818,6 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Shoebox 5.0</Title>
-				<Source>Installers\Shoebox</Source>
-				<SetupHelp>Documents\Shoebox\Shoebox.rtf</SetupHelp>
-				<Destination>Shoebox</Destination>
-			</AutoConfigure>
-			<Title>Shoebox 5.0</Title>
-			<Tag>Shoebox</Tag>
-			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Shoebox\ShSetup.exe</CriticalFile>
-			<Install>$CriticalFile$</Install>
-			<StatusWindow>Monitor 4000</StatusWindow>
-			<Commentary>Please follow instructions on installer dialogs.</Commentary>
-<!-- test is unreliable			<TestPresence>TestShoebox50Presence</TestPresence> -->
-			<Help>Shoebox\Shoebox.rtf</Help>
-			<Contact>
-				<FirstName>???</FirstName>
-				<LastName></LastName>
-				<Email></Email>
-			</Contact>
-		</Product>
-		<Product>
-			<AutoConfigure>
 				<Title>Toolbox 1.5.1</Title>
 				<Source>Installers\ToolBox</Source>
 				<SetupHelp>Documents\ToolBox\ToolBox.rtf</SetupHelp>
@@ -856,9 +834,11 @@
 			<TestPresence>TestToolbox15Presence</TestPresence>
 			<Help>Toolbox\Toolbox.rtf</Help>
 			<Contact>
-				<FirstName>???</FirstName>
-				<LastName></LastName>
-				<Email></Email>
+				<FirstName>Steve</FirstName>
+				<LastName>Smith</LastName>
+				<Email>steve_smith@sall.com</Email>
+				<ExternalSource>http://www.sil.org/computing/toolbox/InstallToolbox155.exe</ExternalSource>
+				<VersionInfo>http://www.sil.org/computing/toolbox/downloads.htm</VersionInfo>
 			</Contact>
 		</Product>
 		<Product>
@@ -905,6 +885,8 @@
 				<FirstName>Bob</FirstName>
 				<LastName>Eaton</LastName>
 				<Email>bob_eaton@sall.com</Email>
+				<ExternalSource>ftp://ftp.sil.org/software/win/VMSetup.zip</ExternalSource>
+				<VersionInfo>http://www.sil.org/computing/catalog/show_software.asp?id=96</VersionInfo>
 			</Contact>
 		</Product>
 		<Product>

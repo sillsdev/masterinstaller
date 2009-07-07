@@ -676,7 +676,7 @@
 			<AutoConfigure>
 				<Title>Carla Studio Unicode 2.9.2</Title>
 				<Source>Installers\CarlaStudioUnicode</Source>
-				<SetupHelp>Documents\CarlaStudio\CarlaStudio.rtf</SetupHelp>
+				<SetupHelp>Documents\CarlaStudio\CarlaStudioUnicode.rtf</SetupHelp>
 				<Destination>CarlaStudioUnicode</Destination>
 			</AutoConfigure>
 			<Title>Carla Studio Unicode 2.9.2</Title>
@@ -701,7 +701,7 @@
 			<AutoConfigure>
 				<Title>Carla Studio Regular 2.9.2</Title>
 				<Source>Installers\CarlaStudioRegular</Source>
-				<SetupHelp>Documents\CarlaStudio\CarlaStudio.rtf</SetupHelp>
+				<SetupHelp>Documents\CarlaStudio\CarlaStudioRegular.rtf</SetupHelp>
 				<Destination>CarlaStudioRegular</Destination>
 			</AutoConfigure>
 			<Title>Carla Studio Regular 2.9.2</Title>

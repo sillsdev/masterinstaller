@@ -15,7 +15,10 @@ void DoUniversalFixes()
 	g_Log.Write(_T("Doing universal fixes..."));
 	g_Log.Indent();
 	
-	DoFW40UninstallFix();
+	if (g_OSVersion < OSVersion_t::Vista)
+		DoFW40UninstallFix();
+	else
+		g_Log.Write(_T("Skipping FW 4.0 uninstall fix, as we are running Vista or higher."));
 
 	g_Log.Unindent();
 	g_Log.Write(_T("...done universal fixes."));

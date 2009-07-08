@@ -523,6 +523,31 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>Solid 0.9.323</Title>
+				<Source>Installers\Solid</Source>
+				<SetupHelp>Documents\Solid\SetupSolid.rtf</SetupHelp>
+				<Destination>Solid</Destination>
+			</AutoConfigure>
+			<Title>Solid 0.9.323</Title>
+			<Tag>Solid</Tag>
+			<MinOS>5.0</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Solid\SolidSetupLatest.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Help>Solid\SetupSolid.rtf</Help>
+			<TestPresence Version="0.9.323">TestSolidPresence</TestPresence>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
+			<Contact>
+				<FirstName>Cambell</FirstName>
+				<LastName>Prince</LastName>
+				<Email>cambell_prince@sil.org</Email>
+				<ExternalSource>http://palaso.org/software/SolidSetupLatest.exe</ExternalSource>
+				<VersionInfo>http://palaso.org/solid</VersionInfo>
+			</Contact>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Phonology Assistant 3.0.1</Title>
 				<Source>Installers\Phonology Assistant</Source>
 				<SetupHelp>Documents\Phonology Assistant\SetupPA.rtf</SetupHelp>

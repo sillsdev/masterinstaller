@@ -8,7 +8,6 @@ bool TestCarlaStudioPresence(bool fUnicode, const _TCHAR * pszMinVersion,
 							 const _TCHAR * pszMaxVersion, SoftwareProduct * /*Product*/)
 {
 	bool fResult = false;
-	HKEY hKey = NULL;
 	_TCHAR * pszRegPath;
 	_TCHAR * pszExePath;
 	if (fUnicode)

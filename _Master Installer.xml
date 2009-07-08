@@ -630,7 +630,6 @@
 			<Tag>Adaptit</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\Adapt_It_WX_4_1_4_Regular.exe</CriticalFile>
-			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
@@ -655,7 +654,6 @@
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Adapt It\Adapt_It_WX_4_1_4_Unicode.exe</CriticalFile>
-			<Preinstall>AdaptItPreinstall</Preinstall>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>

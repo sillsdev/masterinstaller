@@ -89,12 +89,19 @@ void PersistantProgress::WriteRunOnce()
 	const int knLen = MAX_PATH + 20;
 	_TCHAR szPath[knLen];
 	GetModuleFileName(NULL, szPath, knLen);
-	_TCHAR * pszRunOnce = new_sprintf(_T("\"%s\" %s"), szPath, m_pszCmdLine);
+
+	_TCHAR * pszRunOnce;
+
+	if (m_pszCmdLine[0] == 0)
+		pszRunOnce = new_sprintf(_T("\"%s\""), szPath);
+	else
+		pszRunOnce = new_sprintf(_T("\"%s\" %s"), szPath, m_pszCmdLine);
 
 	g_Log.Write(_T("Writing data '%s' to value '%s'"), pszRunOnce, m_kpszRegValueRunOnce);
 
 	lResult = RegSetValueEx(hKey, m_kpszRegValueRunOnce, 0, REG_SZ, (LPBYTE)pszRunOnce,
 		(DWORD)((1 + _tcslen(pszRunOnce)) * sizeof(_TCHAR)));
+	
 	delete[] pszRunOnce;
 	pszRunOnce = NULL;
 

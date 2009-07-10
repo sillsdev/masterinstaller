@@ -747,15 +747,15 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Lexique Pro 3.2 (with demo db)</Title>
+				<Title>Lexique Pro 3.2.3 (with demo db)</Title>
 				<Source>Installers\Lexique Pro</Source>
 				<SetupHelp>Documents\Lexique Pro\Lexique Pro.rtf</SetupHelp>
 				<Destination>Lexique Pro</Destination>
 			</AutoConfigure>
-			<Title>Lexique Pro 3.2 (with demo db)</Title>
+			<Title>Lexique Pro 3.2.3 (with demo db)</Title>
 			<Tag>Lexique</Tag>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Lexique Pro\Lexique Pro 3.2 - Setup (with demo db).exe</CriticalFile>
+			<CriticalFile>Lexique Pro\Lexique Pro 3.2.3 - Setup (with demo db).exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>

@@ -2,7 +2,7 @@
 
 #include <tchar.h>
 
-// Crude test of Lexique Pro installation - currently only recognizes Lexique Pro 3.2
+// Crude test of Lexique Pro installation - currently only recognizes Lexique Pro 3.2.3
 bool TestLexiquePresence(const _TCHAR * /*pszMinVersion*/, const _TCHAR * /*pszMaxVersion*/,
 						 SoftwareProduct * /*Product*/)
 {
@@ -14,7 +14,7 @@ bool TestLexiquePresence(const _TCHAR * /*pszMinVersion*/, const _TCHAR * /*pszM
 
 	if (pszAppName)
 	{
-		if (_tcscmp(pszAppName, _T("Lexique Pro 3.2")) == 0)
+		if (_tcscmp(pszAppName, _T("Lexique Pro 3.2.3")) == 0)
 			fResult = true;
 
 		delete[] pszAppName;

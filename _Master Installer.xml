@@ -7,7 +7,7 @@
 		<CDsPath ParallelCDsFolder="true"></CDsPath>
 		<ExternalHelpSource>Documents\SILSoftwareSupport</ExternalHelpSource>
 		<ExternalHelpDestination>SILSoftwareSupport</ExternalHelpDestination>
-		<TermsOfUseSource>Documents\TermsOfUse\License SIL Freeware.rtf</TermsOfUseSource>
+		<TermsOfUseSource>Documents\TermsOfUse\License SIL Lang Dev SW.rtf</TermsOfUseSource>
 		<TermsOfUseDestination></TermsOfUseDestination>
 		<CdImagePath>NewCd</CdImagePath>
 		<CdSize>700</CdSize>
@@ -28,7 +28,7 @@
 		<InitialText/>
 		<ExternalHelpFile>SILSoftwareSupport\Index.htm</ExternalHelpFile>
 		<HelpButtonText>Software Support...</HelpButtonText>
-		<TermsOfUseFile>License SIL Freeware.rtf</TermsOfUseFile>
+		<TermsOfUseFile>License SIL Lang Dev SW.rtf</TermsOfUseFile>
 		<TermsButtonText>Terms of Use...</TermsButtonText>
 	</General>
 	<Products>

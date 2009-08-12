@@ -72,7 +72,7 @@ void InitMshtml()
 // once done.
 int InitInstallLanguage()
 {
-	DisplayStatusText(0, _T("Initializing FieldWorks Install Language utility."));
+	DisplayStatusText(0, _T("Initializing FieldWorks writing systems."));
 	DisplayStatusText(1, _T(""));
 
 	_TCHAR * pszRootCodeDir = NewRegString(HKEY_LOCAL_MACHINE,

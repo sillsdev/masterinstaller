@@ -56,7 +56,7 @@
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
+			<ProductCode>{3B831BB9-756E-49be-BFEC-83097C11EDB9}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
@@ -131,7 +131,7 @@
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
+			<ProductCode>{3B831BB9-756E-49be-BFEC-83097C11EDB9}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
@@ -197,7 +197,7 @@
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
+			<ProductCode>{3B831BB9-756E-49be-BFEC-83097C11EDB9}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
@@ -271,7 +271,7 @@
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}</ProductCode>
+			<ProductCode>{3B831BB9-756E-49be-BFEC-83097C11EDB9}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>

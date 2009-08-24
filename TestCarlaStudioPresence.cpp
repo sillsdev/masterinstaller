@@ -12,13 +12,13 @@ bool TestCarlaStudioPresence(bool fUnicode, const _TCHAR * pszMinVersion,
 	_TCHAR * pszExePath;
 	if (fUnicode)
 	{
-		pszRegPath = _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudioUnicode")
-		pszExePath = _T("CStudioU.exe")
+		pszRegPath = _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudioUnicode");
+		pszExePath = _T("CStudioU.exe");
 	}
 	else
 	{
-		pszRegPath = _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudio")
-		pszExePath = _T("CStudio.exe")
+		pszRegPath = _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CarlaStudio");
+		pszExePath = _T("CStudio.exe");
 	}
 
 	// Get the uninstall string:

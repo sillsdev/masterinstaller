@@ -866,6 +866,31 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>Shoebox Utilities 2007-05-24</Title>
+				<Source>Installers\Shoebox Utilities</Source>
+				<SetupHelp>Documents\Shoebox Utilities\SetupShUtils.rtf</SetupHelp>
+				<Destination>Shoebox Utilities</Destination>
+			</AutoConfigure>
+			<Title>Shoebox Utilities</Title>
+			<Tag>ShUtils</Tag>
+			<MinOS>5.0</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Shoebox Utilities\SHUtils_1_37.exe</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>Please follow instructions on installer dialogs.</Commentary>
+			<TestPresence>TestShoeboxUtilsPresence</TestPresence>
+			<Help>Shoebox Utilities\SetupShUtils.rtf</Help>
+			<Contact>
+				<FirstName>Martin</FirstName>
+				<LastName>Hosken</LastName>
+				<Email>martin_hosken@sil.org</Email>
+				<ExternalSource>http://scripts.sil.org/cms/scripts/render_download.php?site_id=nrsi&amp;format=file&amp;media_id=MH_SHUtils&amp;filename=SHUtils_1_37.exe</ExternalSource>
+				<VersionInfo>http://scripts.sil.org/SHUtils-manual</VersionInfo>
+			</Contact>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Graphite Compiler 2.4</Title>
 				<Source>Installers\Graphite Compiler\grcompiler_setup_2_4.exe</Source>
 				<SetupHelp>Documents\Graphite Compiler\GrCompiler_setup.rtf</SetupHelp>

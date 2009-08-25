@@ -478,7 +478,7 @@
 				<SetupHelp>Documents\Publishing Solutions\SetupPS.rtf</SetupHelp>
 				<Destination>Publishing Solutions</Destination>
 			</AutoConfigure>
-			<Title>Publishing Solutions 1.0.53</Title>
+			<Title>Publishing Solutions 1.0.53 [Experimental]</Title>
 			<Tag>PubSol</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -503,7 +503,7 @@
 				<SetupHelp>Documents\WeSay\SetupWeSay.rtf</SetupHelp>
 				<Destination>WeSay</Destination>
 			</AutoConfigure>
-			<Title>WeSay 0.6.2086</Title>
+			<Title>WeSay 0.6.2086 [Experimental]</Title>
 			<Tag>WeSay</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -528,7 +528,7 @@
 				<SetupHelp>Documents\Solid\SetupSolid.pdf</SetupHelp>
 				<Destination>Solid</Destination>
 			</AutoConfigure>
-			<Title>Solid 0.9.338</Title>
+			<Title>Solid 0.9.338 [Experimental]</Title>
 			<Tag>Solid</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>

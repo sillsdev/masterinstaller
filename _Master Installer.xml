@@ -473,16 +473,16 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Publishing Solutions 1.0.39</Title>
+				<Title>Publishing Solutions 1.0.53</Title>
 				<Source>Installers\Publishing Solutions</Source>
 				<SetupHelp>Documents\Publishing Solutions\SetupPS.rtf</SetupHelp>
 				<Destination>Publishing Solutions</Destination>
 			</AutoConfigure>
-			<Title>Publishing Solutions 1.0.39</Title>
+			<Title>Publishing Solutions 1.0.53</Title>
 			<Tag>PubSol</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Publishing Solutions\SetupPs-1.0.39.msi</CriticalFile>
+			<CriticalFile>Publishing Solutions\SetupPs-1.0.53.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>Publishing Solutions\SetupPS.rtf</Help>
@@ -498,37 +498,37 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>WeSay 0.5.2000</Title>
+				<Title>WeSay 0.6.2086</Title>
 				<Source>Installers\WeSay</Source>
 				<SetupHelp>Documents\WeSay\SetupWeSay.rtf</SetupHelp>
 				<Destination>WeSay</Destination>
 			</AutoConfigure>
-			<Title>WeSay 0.5.2000</Title>
+			<Title>WeSay 0.6.2086</Title>
 			<Tag>WeSay</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>WeSay\WeSayInstaller.0.5.2000.msi</CriticalFile>
+			<CriticalFile>WeSay\WeSayInstaller.0.6.2086.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>WeSay\SetupWeSay.rtf</Help>
-			<ProductCode>{1F237F7D-7009-436A-A977-BA40588485F3}</ProductCode>
+			<ProductCode>{00929EEF-9CE4-4069-8007-523FA731419D}</ProductCode>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Contact>
 				<FirstName>John</FirstName>
 				<LastName>Hatton</LastName>
 				<Email>john_hatton@sil.org</Email>
-				<ExternalSource>http://www.wesay.org/downloads/WeSayInstaller.0.5.2000.msi</ExternalSource>
+				<ExternalSource>http://www.wesay.org/downloads/WeSayInstaller.0.6.2086.msi</ExternalSource>
 				<VersionInfo>http://www.wesay.org/downloads</VersionInfo>
 			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Solid 0.9.323</Title>
+				<Title>Solid 0.9.338</Title>
 				<Source>Installers\Solid</Source>
 				<SetupHelp>Documents\Solid\SetupSolid.rtf</SetupHelp>
 				<Destination>Solid</Destination>
 			</AutoConfigure>
-			<Title>Solid 0.9.323</Title>
+			<Title>Solid 0.9.338</Title>
 			<Tag>Solid</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -536,7 +536,7 @@
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>Solid\SetupSolid.rtf</Help>
-			<TestPresence Version="0.9.323">TestSolidPresence</TestPresence>
+			<TestPresence Version="0.9.338">TestSolidPresence</TestPresence>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Contact>
 				<FirstName>Cambell</FirstName>
@@ -621,49 +621,49 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It WX 4.1.4</Title>
-				<Source>Installers\Adapt It\Adapt_It_WX_4_1_4_Regular.exe</Source>
+				<Title>Adapt It WX 5.1.0</Title>
+				<Source>Installers\Adapt It\Adapt_It_WX_5_1_0_Regular.msi</Source>
 				<SetupHelp>Documents\Adapt It\Adapt It.rtf</SetupHelp>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It WX 4.1.4</Title>
+			<Title>Adapt It WX 5.1.0</Title>
 			<Tag>Adaptit</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\Adapt_It_WX_4_1_4_Regular.exe</CriticalFile>
-			<Install>$CriticalFile$</Install>
+			<CriticalFile>Adapt It\Adapt_It_WX_5_1_0_Regular.msi</CriticalFile>
+			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="4.1.4">TestAdaptitPresence</TestPresence>
+			<ProductCode>{9995F195-66FF-4D85-9728-5280D878EC5C}</ProductCode>
 			<Help>Adapt It\Adapt It.rtf</Help>
 			<Contact>
 				<FirstName>Bill</FirstName>
 				<LastName>Martin</LastName>
 				<Email>bill_martin@sil.org</Email>
-				<ExternalSource>http://adapt-it.org/Adapt_It_WX_4_1_5_Regular.exe</ExternalSource>
+				<ExternalSource>http://www.adapt-it.org/Adapt_It_WX_5_1_0_Regular.msi</ExternalSource>
 				<VersionInfo>http://www.adapt-it.org</VersionInfo>
 			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It WX 4.1.4 Unicode</Title>
-				<Source>Installers\Adapt It\Adapt_It_WX_4_1_4_Unicode.exe</Source>
+				<Title>Adapt It WX 5.1.0 Unicode</Title>
+				<Source>Installers\Adapt It\Adapt_It_WX_5_1_0_Unicode.msi</Source>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It WX 4.1.4 Unicode</Title>
+			<Title>Adapt It WX 5.1.0 Unicode</Title>
 			<Tag>AdaptitU</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\Adapt_It_WX_4_1_4_Unicode.exe</CriticalFile>
-			<Install>$CriticalFile$</Install>
+			<CriticalFile>Adapt It\Adapt_It_WX_5_1_0_Unicode.msi</CriticalFile>
+			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
-			<TestPresence Version="4.1.4">TestAdaptitUPresence</TestPresence>
+			<ProductCode>{8816BF80-0AA1-411F-9FDF-BC6D224031A1}</ProductCode>
 			<Help>Adapt It\Adapt It.rtf</Help>
 			<Contact>
 				<FirstName>Bill</FirstName>
 				<LastName>Martin</LastName>
 				<Email>bill_martin@sil.org</Email>
-				<ExternalSource>http://adapt-it.org/Adapt_It_WX_4_1_5_Unicode.exe</ExternalSource>
+				<ExternalSource>http://www.adapt-it.org/Adapt_It_WX_5_1_0_Unicode.msi</ExternalSource>
 				<VersionInfo>http://www.adapt-it.org</VersionInfo>
 			</Contact>
 		</Product>
@@ -841,16 +841,16 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Toolbox 1.5.1</Title>
+				<Title>Toolbox 1.5.5</Title>
 				<Source>Installers\ToolBox</Source>
 				<SetupHelp>Documents\ToolBox\ToolBox.rtf</SetupHelp>
 				<Destination>ToolBox</Destination>
 			</AutoConfigure>
-			<Title>Toolbox 1.5.1</Title>
+			<Title>Toolbox 1.5.5</Title>
 			<Tag>Toolbox</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>false</MustBeAdmin>
-			<CriticalFile>Toolbox\InstallToolbox151.exe</CriticalFile>
+			<CriticalFile>Toolbox\InstallToolbox155.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions on installer dialogs.</Commentary>

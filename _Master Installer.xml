@@ -525,7 +525,7 @@
 			<AutoConfigure>
 				<Title>Solid 0.9.338</Title>
 				<Source>Installers\Solid</Source>
-				<SetupHelp>Documents\Solid\SetupSolid.rtf</SetupHelp>
+				<SetupHelp>Documents\Solid\SetupSolid.pdf</SetupHelp>
 				<Destination>Solid</Destination>
 			</AutoConfigure>
 			<Title>Solid 0.9.338</Title>
@@ -535,7 +535,7 @@
 			<CriticalFile>Solid\SolidSetupLatest.exe</CriticalFile>
 			<Install>$CriticalFile$</Install>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<Help>Solid\SetupSolid.rtf</Help>
+			<Help>Solid\SetupSolid.pdf</Help>
 			<TestPresence Version="0.9.338">TestSolidPresence</TestPresence>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Contact>

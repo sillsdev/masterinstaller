@@ -125,7 +125,7 @@ int SetupInstalledConverters(SoftwareProduct * /*Product*/)
 	g_Log.Write(_T("Looking for path of SetupSC.exe."));
 
 	_TCHAR * pszPath = NewRegString(HKEY_LOCAL_MACHINE,
-		_T("SOFTWARE\\SIL\\SilEncConverters30\\Installer"), _T("InstallerPath"));
+		_T("SOFTWARE\\SIL\\SilEncConverters31\\Installer"), _T("InstallerPath"));
 
 	if (!pszPath)
 	{

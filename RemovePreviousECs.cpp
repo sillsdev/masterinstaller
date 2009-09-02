@@ -145,45 +145,47 @@ int RemovePreviousECs(SoftwareProduct * /*Product*/)
 	// The previous uninstaller did not remove a couple of items from the Start menu in folder
 	// C:\Documents and Settings\<user name>\Start Menu\Programs\SIL Converters, so we must remove
 	// them ourselves.
-	// Unfortunately, there is no CSIDL for C:\Documents and Settings\<user name>\Start Menu\Programs,
-	// so we must go one deeper, then chop off back to the backslash:
 	g_Log.Write(_T("Looking for unremoved shortcuts in Start Menu..."));
 	g_Log.Indent();
-	TCHAR * pszStartMenuProgramsStartupPath = GetFolderPathNew(CSIDL_STARTUP);
+	TCHAR * pszStartMenuProgramsPath = GetFolderPathNew(CSIDL_PROGRAMS);
 
-	g_Log.Write(_T("Initial folder is '%s'"), pszStartMenuProgramsStartupPath);
+	g_Log.Write(_T("Initial folder is '%s'"), pszStartMenuProgramsPath);
 
-	// Chop off the last folder component:
-	RemoveLastPathSection(pszStartMenuProgramsStartupPath);
+	if (pszStartMenuProgramsPath)
+	{
+		// Add the rest of the path:
+		_TCHAR * pszStartMenuProgramsSilConvertersPath = MakePath(pszStartMenuProgramsPath,
+			_T("SIL Converters"));
+		delete[] pszStartMenuProgramsPath;
+		pszStartMenuProgramsPath = NULL;
+		g_Log.Write(_T("Deleting *.* in '%s'"), pszStartMenuProgramsSilConvertersPath);
 
-	// Add the rest of the path:
-	_TCHAR * pszStartMenuProgramsPath = MakePath(pszStartMenuProgramsStartupPath,
-		_T("SIL Converters"));
-	delete[] pszStartMenuProgramsStartupPath;
-	pszStartMenuProgramsStartupPath = NULL;
-	g_Log.Write(_T("Deleting *.* in '%s'"), pszStartMenuProgramsPath);
+		// Prepare the search string, with an extra zero on the end, formed first with an '@'
+		// then changed:
+		_TCHAR * pszSearchPattern = MakePath(pszStartMenuProgramsSilConvertersPath, _T("*.*@"));
 
-	// Prepare the search string, with an extra zero on the end, formed first with an '@'
-	// then changed:
-	_TCHAR * pszSearchPattern = MakePath(pszStartMenuProgramsPath, _T("*.*@"));
+		delete[] pszStartMenuProgramsSilConvertersPath;
+		pszStartMenuProgramsSilConvertersPath = NULL;
 
-	delete[] pszStartMenuProgramsPath;
-	pszStartMenuProgramsPath = NULL;
+		TCHAR * ch = _tcsrchr(pszSearchPattern, '@');
+		if (ch)
+			*ch = 0;
 
-	TCHAR * ch = _tcsrchr(pszSearchPattern, '@');
-	if (ch)
-		*ch = 0;
+		SHFILEOPSTRUCT sfos;
+		sfos.hwnd = NULL;
+		sfos.wFunc = FO_DELETE;
+		sfos.pFrom = pszSearchPattern;
+		sfos.pTo = NULL;
+		sfos.fFlags = FOF_FILESONLY | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT;
+		SHFileOperation(&sfos);
 
-	SHFILEOPSTRUCT sfos;
-	sfos.hwnd = NULL;
-	sfos.wFunc = FO_DELETE;
-	sfos.pFrom = pszSearchPattern;
-	sfos.pTo = NULL;
-	sfos.fFlags = FOF_FILESONLY | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT;
-	SHFileOperation(&sfos);
-
-	delete[] pszSearchPattern;
-	pszSearchPattern = NULL;
+		delete[] pszSearchPattern;
+		pszSearchPattern = NULL;
+	}
+	else
+	{
+		g_Log.Write(_T("Could not retrieve Start Menu\\Programs folder."));
+	}
 
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done"));

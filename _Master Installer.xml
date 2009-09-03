@@ -1077,7 +1077,7 @@
 			</AutoConfigure>
 			<Title>SIL Converters and Repository 3.1</Title>
 			<Tag>EncCvtrs_3_1</Tag>
-			<MinOS>5.0</MinOS>
+			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Help>SIL Converters\SetupEC.rtf</Help>
 			<Preinstall>RemovePreviousECs</Preinstall>

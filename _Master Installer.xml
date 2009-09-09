@@ -621,15 +621,15 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It WX 5.1.0</Title>
-				<Source>Installers\Adapt It\Adapt_It_WX_5_1_0_Regular.msi</Source>
+				<Title>Adapt It WX 5.1.4</Title>
+				<Source>Installers\Adapt It\Adapt_It_WX_5_1_4_Regular.msi</Source>
 				<SetupHelp>Documents\Adapt It\Adapt It.rtf</SetupHelp>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It WX 5.1.0</Title>
+			<Title>Adapt It WX 5.1.4</Title>
 			<Tag>Adaptit</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\Adapt_It_WX_5_1_0_Regular.msi</CriticalFile>
+			<CriticalFile>Adapt It\Adapt_It_WX_5_1_4_Regular.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
@@ -639,21 +639,21 @@
 				<FirstName>Bill</FirstName>
 				<LastName>Martin</LastName>
 				<Email>bill_martin@sil.org</Email>
-				<ExternalSource>http://www.adapt-it.org/Adapt_It_WX_5_1_0_Regular.msi</ExternalSource>
+				<ExternalSource>http://www.adapt-it.org/Adapt_It_WX_5_1_4_Regular.msi</ExternalSource>
 				<VersionInfo>http://www.adapt-it.org</VersionInfo>
 			</Contact>
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Adapt It WX 5.1.0 Unicode</Title>
-				<Source>Installers\Adapt It\Adapt_It_WX_5_1_0_Unicode.msi</Source>
+				<Title>Adapt It WX 5.1.4 Unicode</Title>
+				<Source>Installers\Adapt It\Adapt_It_WX_5_1_4_Unicode.msi</Source>
 				<Destination>Adapt It</Destination>
 			</AutoConfigure>
-			<Title>Adapt It WX 5.1.0 Unicode</Title>
+			<Title>Adapt It WX 5.1.4 Unicode</Title>
 			<Tag>AdaptitU</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Adapt It\Adapt_It_WX_5_1_0_Unicode.msi</CriticalFile>
+			<CriticalFile>Adapt It\Adapt_It_WX_5_1_4_Unicode.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>Please follow instructions in installer.</Commentary>
@@ -663,7 +663,7 @@
 				<FirstName>Bill</FirstName>
 				<LastName>Martin</LastName>
 				<Email>bill_martin@sil.org</Email>
-				<ExternalSource>http://www.adapt-it.org/Adapt_It_WX_5_1_0_Unicode.msi</ExternalSource>
+				<ExternalSource>http://www.adapt-it.org/Adapt_It_WX_5_1_4_Unicode.msi</ExternalSource>
 				<VersionInfo>http://www.adapt-it.org</VersionInfo>
 			</Contact>
 		</Product>

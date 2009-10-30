@@ -14,7 +14,7 @@ bool TestShoeboxUtilsPresence(const _TCHAR * /*pszMinVersion*/, const _TCHAR * /
 
 	if (pszDisplayName)
 	{
-		const TCHAR * pszTemplateDisplayName = _T("SIL Shoebox Utilities_is1");
+		const TCHAR * pszTemplateDisplayName = _T("SIL Shoebox Utilities");
 
 		if (_tcsnicmp(pszDisplayName, pszTemplateDisplayName,
 					_tcslen(pszTemplateDisplayName)) == 0)

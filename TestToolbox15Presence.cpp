@@ -14,7 +14,7 @@ bool TestToolbox15Presence(const _TCHAR * /*pszMinVersion*/, const _TCHAR * /*ps
 
 	if (pszDisplayName)
 	{
-		const TCHAR * pszTemplateDisplayName = _T("Toolbox 1.5.1");
+		const TCHAR * pszTemplateDisplayName = _T("Toolbox 1.5.5");
 
 		if (_tcsnicmp(pszDisplayName, pszTemplateDisplayName,
 					_tcslen(pszTemplateDisplayName)) == 0)

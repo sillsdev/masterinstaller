@@ -482,7 +482,7 @@
 			<Tag>PubSol</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>Publishing Solutions\SetupPs-1.0.53.msi</CriticalFile>
+			<CriticalFile>Publishing Solutions\SetupPs-1.0.53-2009-08-17.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>Publishing Solutions\SetupPS.rtf</Help>

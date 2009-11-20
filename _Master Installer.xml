@@ -34,6 +34,31 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
+				<Title>FW (Rearchitected) (from C:\FW_Rearchitect\Installer)</Title>
+				<Source>C:\FW_Rearchitect\Installer\SetupFW.msi</Source>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks (Rearchitected)</Title>
+			<Tag>FW60BTE</Tag>
+			<MinOS>5.1.2</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{256A50FA-761A-488b-B282-3543C1DDAE76}</ProductCode>
+			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
+			<Preinstall>CleanStartFw40</Preinstall>
+			<PostInstall>FwPostInstall</PostInstall>
+			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>FW 6.0 BTE with movies (from \\cana\LSDev\Installers\FW6.0\BTE\FieldWorks)</Title>
 				<Source>\\cana\LSDev\Installers\FW6.0\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>\\cana\LSDev\Installers\FW6.0\BTE\FieldWorks\TE_M.cab</Source>
@@ -1524,6 +1549,44 @@
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
 			<Prerequisite MinOS="5.0.0" MaxOS="5.0.32767" Tag="Win 2K SP4" MinVersion="4"/>
 			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP2" MinVersion="2"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>.NET Framework 3.5 SP1</Title>
+				<Source>3rd Party\DotNet 3.5 SP1\dotnetfx35.exe</Source>
+				<Destination>Utilities\DotNet 3.5 SP1</Destination>
+			</AutoConfigure>
+			<Title>Microsoft .NET Framework version 3.5 SP1</Title>
+			<Tag>.NET3.5SP1</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<MinOS>5.1</MinOS>
+			<CriticalFile>Utilities\DotNet 3.5 SP1\dotnetfx35.exe</CriticalFile>
+			<Install>$CriticalFile$ /q</Install>
+			<TestPresence Version="3.5.1">TestDotNetPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=AB99342F-5D1A-413D-8319-81DA479AB0D7&amp;displaylang=en</DownloadURL>
+			<Commentary>This installation may take several minutes, without visible sign of progress.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<Prerequisite Tag="WI31" MinVersion="3.1"/>
+			<Requires Tag="KB958484" FailMsg="Important fixes to the .NET Framework 3.5 SP1 will be missing."/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Microsoft .NET Framework 3.5 SP1 Compatibility Update (KB958484)</Title>
+				<Source>3rd Party\DotNet 3.5 SP1\NDP35SP1-KB958484-x86.exe</Source>
+				<Destination>Utilities\DotNet 3.5 SP1</Destination>
+			</AutoConfigure>
+			<Title>Microsoft .NET Framework 3.5 SP1 Compatibility Update (KB958484)</Title>
+			<Tag>KB958484</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\DotNet 3.5 SP1\NDP35SP1-KB958484-x86.exe</CriticalFile>
+			<Install>$CriticalFile$ /q</Install>
+			<TestPresence>TestKB958484Presence</TestPresence>
+			<DownloadURL>http://support.microsoft.com/kb/959209</DownloadURL>
+			<Commentary>Please wait while this silently installs. Your computer will probably reboot afterwards.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
 		</Product>
 		<Product>
 			<AutoConfigure>

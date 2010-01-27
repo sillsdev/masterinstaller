@@ -659,8 +659,7 @@ DWORD SoftwareProduct::RunInstaller()
 								NULL);
 							}
 
-							if (dwResult == ERROR_SUCCESS_REBOOT_REQUIRED
-								|| dwResult == ERROR_SUCCESS_RESTART_REQUIRED)
+							if (TestResultForRebootRequest(dwResult))
 							{
 								g_Log.Write(_T("Regional and Language Options dialog requested a reboot."), m_kpszNiceName);
 								g_fRebootPending = true;
@@ -840,8 +839,7 @@ bool SoftwareProduct::Install()
 				dwSuccess = dwSuccessCodeOverride;
 			}
 
-			if (dwResult == ERROR_SUCCESS_REBOOT_REQUIRED
-				|| dwResult == ERROR_SUCCESS_RESTART_REQUIRED)
+			if (TestResultForRebootRequest(dwResult))
 			{
 				// Product installed and requested a reboot:
 				g_Log.Write(_T("%s installed and requested a reboot."), m_kpszNiceName);

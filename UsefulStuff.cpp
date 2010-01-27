@@ -212,7 +212,7 @@ DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit,
 }
 
 // Sets a new PATH environment variable made up of the pre-existing one plus the
-// specified path.
+// specified path. This only affects our own process.
 void AddToPathEnvVar(_TCHAR * pszExtraPath)
 {
 	// Fetch the current PATH environment variable:
@@ -381,6 +381,16 @@ void FriendlyReboot()
 	Reboot();
 }
 
+bool TestResultForRebootRequest(DWORD dwResult)
+{
+	if (dwResult == ERROR_SUCCESS_REBOOT_REQUIRED
+		|| dwResult == ERROR_SUCCESS_RESTART_REQUIRED
+		|| dwResult == 0x80070BC2)
+	{
+		return true;
+	}
+	return false;
+}
 
 // Fetches string resource. Returns string if OK, empty string if error.
 _TCHAR * FetchString(int stid)

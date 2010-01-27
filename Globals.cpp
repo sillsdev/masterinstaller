@@ -256,6 +256,7 @@ bool OSVersion_t::operator > (const _TCHAR * pszVer)
 _TCHAR * OSVersion_t::Win2k = _T("5.0");
 _TCHAR * OSVersion_t::XP = _T("5.1");
 _TCHAR * OSVersion_t::Vista = _T("6.0");
+_TCHAR * OSVersion_t::W7 = _T("6.1");
 _TCHAR * OSVersion_t::kpszOperatorError = _T("Null value supplied to OSVersion_t comparison operator");
 
 #ifdef EASTER_EGGS

@@ -1568,12 +1568,14 @@
 			<StatusWindow>Show</StatusWindow>
 			<FlushReboot>true</FlushReboot>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
-			<Requires Tag="KB958484" FailMsg="Important fixes to the .NET Framework 3.5 SP1 will be missing."/>
+			<Requires Tag="KB958484" MaxOS="6.0.32767" FailMsg="Important fixes to the .NET Framework 3.5 SP1 will be missing."/>
 		</Product>
 		<Product>
 			<AutoConfigure>
 				<Title>Microsoft .NET Framework 3.5 SP1 Compatibility Update (KB958484)</Title>
 				<Source>3rd Party\DotNet 3.5 SP1\NDP35SP1-KB958484-x86.exe</Source>
+        <Source>3rd Party\DotNet 3.5 SP1\Windows6.0-KB958481-x86.msu</Source>
+        <Source>3rd Party\DotNet 3.5 SP1\Windows6.0-KB958483-x86.msu</Source>
 				<Destination>Utilities\DotNet 3.5 SP1</Destination>
 			</AutoConfigure>
 			<Title>Microsoft .NET Framework 3.5 SP1 Compatibility Update (KB958484)</Title>
@@ -1582,13 +1584,47 @@
 			<CriticalFile>Utilities\DotNet 3.5 SP1\NDP35SP1-KB958484-x86.exe</CriticalFile>
 			<Install>$CriticalFile$ /q</Install>
 			<TestPresence>TestKB958484Presence</TestPresence>
+      <Preinstall>VistaKB958481andKB958483</Preinstall>
 			<DownloadURL>http://support.microsoft.com/kb/959209</DownloadURL>
 			<Commentary>Please wait while this silently installs. Your computer will probably reboot afterwards.</Commentary>
 			<StatusWindow>Show</StatusWindow>
-			<FlushReboot>true</FlushReboot>
 			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
-		</Product>
-		<Product>
+      <Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="KB958481_XP"/>
+      <Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="KB958483_XP"/>
+    </Product>
+    <Product>
+      <AutoConfigure>
+        <Title>Microsoft KB958481 Update for XP</Title>
+        <Source>3rd Party\DotNet 3.5 SP1\NDP20SP2-KB958481-x86.exe</Source>
+        <Destination>Utilities\DotNet 3.5 SP1</Destination>
+      </AutoConfigure>
+      <Title>Microsoft KB958481 Update for XP</Title>
+      <Tag>KB958481_XP</Tag>
+      <MustBeAdmin>true</MustBeAdmin>
+      <CriticalFile>Utilities\DotNet 3.5 SP1\NDP20SP2-KB958481-x86.exe</CriticalFile>
+      <Install>$CriticalFile$ /q</Install>
+      <TestPresence>TestKB958481_XPPresence</TestPresence>
+      <DownloadURL>http://www.microsoft.com/downloads/details.aspx?familyid=6c095bba-6100-4ec9-9c54-6450b0212565</DownloadURL>
+      <Commentary>Please wait while this silently installs.</Commentary>
+      <StatusWindow>Show</StatusWindow>
+    </Product>
+    <Product>
+      <AutoConfigure>
+        <Title>Microsoft KB958483 Update for XP</Title>
+        <Source>3rd Party\DotNet 3.5 SP1\NDP30SP2-KB958483-x86.exe</Source>
+        <Destination>Utilities\DotNet 3.5 SP1</Destination>
+      </AutoConfigure>
+      <Title>Microsoft KB958483 Update for XP</Title>
+      <Tag>KB958483_XP</Tag>
+      <MustBeAdmin>true</MustBeAdmin>
+      <CriticalFile>Utilities\DotNet 3.5 SP1\NDP30SP2-KB958483-x86.exe</CriticalFile>
+      <Install>$CriticalFile$ /q</Install>
+      <TestPresence>TestKB958483_XPPresence</TestPresence>
+      <DownloadURL>http://www.microsoft.com/downloads/details.aspx?familyid=6c095bba-6100-4ec9-9c54-6450b0212565</DownloadURL>
+      <Commentary>Please wait while this silently installs.</Commentary>
+      <StatusWindow>Show</StatusWindow>
+    </Product>
+    <Product>
 			<AutoConfigure>
 				<Title>Internet Explorer 6.0 SP1 (English)</Title>
 				<Source>3rd Party\IE60</Source>

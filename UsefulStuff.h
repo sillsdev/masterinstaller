@@ -19,6 +19,7 @@ extern void AddToPathEnvVar(_TCHAR * pszExtraPath);
 extern _TCHAR * GetFolderPathNew(int csidlFolder);
 extern bool Reboot();
 extern void FriendlyReboot();
+extern bool TestResultForRebootRequest(DWORD dwResult);
 extern HRESULT GetFileVersion (LPTSTR filename, VS_FIXEDFILEINFO *pvsf);
 extern _TCHAR * new_sprintf(const _TCHAR * pszFormat, ...);
 extern _TCHAR * new_vsprintf(const _TCHAR * pszFormat, const va_list arglist);

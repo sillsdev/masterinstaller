@@ -20,6 +20,7 @@ public:
 	static _TCHAR * Win2k;
 	static _TCHAR * XP;
 	static _TCHAR * Vista;
+	static _TCHAR * W7;
 	static _TCHAR * kpszOperatorError;
 
 protected:

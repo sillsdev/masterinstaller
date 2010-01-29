@@ -5,6 +5,9 @@
 // Caller must delete[] the result when finished.
 _TCHAR * my_strdup(const _TCHAR * pszOriginal)
 {
+	if (!pszOriginal)
+		return my_strdup(_T(""));
+
 	int cch = (int)_tcslen(pszOriginal);
 	_TCHAR * pszResult = new _TCHAR [1 + cch];
 	_tcscpy_s(pszResult, 1 + cch, pszOriginal);
@@ -16,6 +19,9 @@ _TCHAR * my_strdup(const _TCHAR * pszOriginal)
 // Caller must delete[] the return value.
 _TCHAR * new_vsprintf(const _TCHAR * pszFormat, const va_list arglist)
 {
+	if (!pszFormat)
+		return my_strdup(_T(""));
+
 	int cchWksp = 100; // First guess at size needed.
 	_TCHAR * szWksp = new _TCHAR [1 + cchWksp];
 
@@ -38,6 +44,9 @@ _TCHAR * new_vsprintf(const _TCHAR * pszFormat, const va_list arglist)
 // Caller must delete[] the return value.
 _TCHAR * new_sprintf(const _TCHAR * pszFormat, ...)
 {
+	if (!pszFormat)
+		return my_strdup(_T(""));
+
 	// We will be passing on the variable arguments to the new_vsprintf() function:
 	va_list arglist;
 	va_start(arglist, pszFormat);
@@ -51,6 +60,9 @@ _TCHAR * new_sprintf(const _TCHAR * pszFormat, ...)
 void new_vsprintf_concat(_TCHAR *& rpszMain, int ctInsertNewline, const _TCHAR * pszAddendumFmt,
 						 const va_list arglist)
 {
+	if (!pszAddendumFmt)
+		return;
+
 	_TCHAR * pszWksp;
 
 	for (int n = 0; n < ctInsertNewline; n++)

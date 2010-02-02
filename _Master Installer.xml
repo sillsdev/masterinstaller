@@ -834,7 +834,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{839DC33E-4F29-4A7A-983D-FAA9441AD703}</ProductCode>
 			<Help>PalmSurv\SetupPS.rtf</Help>
-			<Requires Tag=".NET" Version="1.1.4322.0" FailMsg="The program will crash on startup."/>
+			<Requires Tag=".NET" MinVersion="1.1.0" MaxVersion="1.1.1" FailMsg="The program will crash on startup."/>
 			<Contact>
 				<FirstName>PalmSurv Contact Person</FirstName>
 				<LastName></LastName>
@@ -978,7 +978,7 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{C572BBAD-6E76-41A9-B575-A7CB666EA545}</ProductCode>
 			<Help>WordSurv\SetupWS.rtf</Help>
-			<Prerequisite Tag=".NET" Version="1.1.4322.0"/>
+			<Prerequisite Tag=".NET" MinVersion="1.1.0" MaxVersion="1.1.1"/>
 			<Requires MaxOS="5.0.32767" Tag="MDAC2.8SP1" MinVersion="2.60" FailMsg="The program will not run correctly."/>
 			<Contact>
 				<FirstName>Art</FirstName>
@@ -1439,7 +1439,7 @@
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>Utilities\DotNet\dotnetfx.exe</CriticalFile>
 			<Install>$CriticalFile$ /q:a /c:"install /l /q"</Install>
-			<TestPresence Version="1.1.4322.0">TestDotNetPresence</TestPresence>
+			<TestPresence Version="1.1.0">TestDotNetPresence</TestPresence>
 			<DownloadURL>http://msdn.microsoft.com/netframework/downloads/framework1_1</DownloadURL>
 			<Commentary>This installation may take a few minutes, without visible sign of progress.</Commentary>
 			<StatusWindow>Show</StatusWindow>
@@ -1464,7 +1464,7 @@
 			<Commentary>Please follow instructions on installer dialogs.</Commentary>
 			<StatusWindow>Monitor 5000</StatusWindow>
 			<FlushReboot>true</FlushReboot>
-			<Prerequisite Tag=".NET" Version="1.1.4322"/>
+			<Prerequisite Tag=".NET" Version="1.1.0"/>
 		</Product>
 		<Product>
 			<AutoConfigure>

@@ -84,10 +84,10 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 6.0.1 BTE with movies (from \\cana\LSDev\Installers\FW6.0.1\BTE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.1\BTE\FieldWorks\SetupFW.msi</Source>
-				<Source>\\cana\LSDev\Installers\FW6.0.1\BTE\FieldWorks\TE_M.cab</Source>
-				<Source>\\cana\LSDev\Installers\FW6.0.1\BTE\FieldWorks\Flex_M.cab</Source>
+				<Title>FW 6.0.2 BTE with movies (from \\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks\SetupFW.msi</Source>
+				<Source>\\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks\TE_M.cab</Source>
+				<Source>\\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks\Flex_M.cab</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -99,14 +99,14 @@
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 6.0.1 BTE</Title>
-			<Tag>FW601BTE</Tag>
+			<Title>SIL FieldWorks 6.0.2 BTE</Title>
+			<Tag>FW602BTE</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{A403C1D2-7ABD-4a53-981D-C6C0F6EF6AA4}</ProductCode>
+			<ProductCode>{A7FD1340-2DFC-4072-B130-3363AB0B0A57}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
@@ -161,9 +161,9 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 6.0.1 SE with movies (from \\cana\LSDev\Installers\FW6.0.1\SE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.1\SE\FieldWorks\SetupFW.msi</Source>
-				<Source>\\cana\LSDev\Installers\FW6.0.1\SE\FieldWorks\Flex_M.cab</Source>
+				<Title>FW 6.0.2 SE with movies (from \\cana\LSDev\Installers\FW6.0.2\SE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW6.0.2\SE\FieldWorks\SetupFW.msi</Source>
+				<Source>\\cana\LSDev\Installers\FW6.0.2\SE\FieldWorks\Flex_M.cab</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -174,14 +174,14 @@
 				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 6.0.1 SE</Title>
-			<Tag>FW601SE</Tag>
+			<Title>SIL FieldWorks 6.0.2 SE</Title>
+			<Tag>FW602SE</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{A403C1D2-7ABD-4a53-981D-C6C0F6EF6AA4}</ProductCode>
+			<ProductCode>{A7FD1340-2DFC-4072-B130-3363AB0B0A57}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
@@ -227,8 +227,8 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 6.0.1 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW6.0.1\BTE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.1\BTE\FieldWorks\SetupFW.msi</Source>
+				<Title>FW 6.0.2 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -240,14 +240,14 @@
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 6.0.1 BTE</Title>
-			<Tag>FW601BTEnoM</Tag>
+			<Title>SIL FieldWorks 6.0.2 BTE</Title>
+			<Tag>FW602BTEnoM</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{A403C1D2-7ABD-4a53-981D-C6C0F6EF6AA4}</ProductCode>
+			<ProductCode>{A7FD1340-2DFC-4072-B130-3363AB0B0A57}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
@@ -302,8 +302,8 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 6.0.1 SE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW6.0.1\SE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.1\SE\FieldWorks\SetupFW.msi</Source>
+				<Title>FW 6.0.2 SE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW6.0.2\SE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW6.0.2\SE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -314,14 +314,14 @@
 				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 6.0.1 SE</Title>
-			<Tag>FW601SEnoM</Tag>
+			<Title>SIL FieldWorks 6.0.2 SE</Title>
+			<Tag>FW602SEnoM</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{A403C1D2-7ABD-4a53-981D-C6C0F6EF6AA4}</ProductCode>
+			<ProductCode>{A7FD1340-2DFC-4072-B130-3363AB0B0A57}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>

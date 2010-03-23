@@ -36,7 +36,8 @@ int RemovePreviousFWs(SoftwareProduct * /*Product*/)
 		_T("{FE9E1F44-3A41-40f3-8FB8-450A2FAECBC2}"), // FW 5.5 Beta version of 6.0
 		_T("{3B831BB9-756E-49be-BFEC-83097C11EDB9}"), // FW 6.0
 		_T("{A403C1D2-7ABD-4a53-981D-C6C0F6EF6AA4}"), // FW 6.0.1
-		//_T("{A7FD1340-2DFC-4072-B130-3363AB0B0A57}"), // FW 6.0.2
+		_T("{A7FD1340-2DFC-4072-B130-3363AB0B0A57}"), // FW 6.0.2
+		//_T("{8F8C0439-8E0F-4f74-BED6-DBD7FB05731C}"), // FW 6.0.3
 	};
 	for (int i = 0; i < (sizeof(pszProductCode) / sizeof(pszProductCode[0])); i++)
 	{

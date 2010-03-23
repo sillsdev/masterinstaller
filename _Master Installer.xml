@@ -84,10 +84,10 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 6.0.2 BTE with movies (from \\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks\SetupFW.msi</Source>
-				<Source>\\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks\TE_M.cab</Source>
-				<Source>\\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks\Flex_M.cab</Source>
+				<Title>FW 6.0.3 BTE with movies (from \\cana\LSDev\Installers\FW6.0.3\BTE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW6.0.3\BTE\FieldWorks\SetupFW.msi</Source>
+				<Source>\\cana\LSDev\Installers\FW6.0.3\BTE\FieldWorks\TE_M.cab</Source>
+				<Source>\\cana\LSDev\Installers\FW6.0.3\BTE\FieldWorks\Flex_M.cab</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -99,21 +99,21 @@
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 6.0.2 BTE</Title>
-			<Tag>FW602BTE</Tag>
+			<Title>SIL FieldWorks 6.0.3 BTE</Title>
+			<Tag>FW603BTE</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{A7FD1340-2DFC-4072-B130-3363AB0B0A57}</ProductCode>
+			<ProductCode>{8F8C0439-8E0F-4f74-BED6-DBD7FB05731C}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
-				<Title>FieldWorks Data Notebook 2.14</Title>
+				<Title>FieldWorks Data Notebook 2.14.3</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -122,7 +122,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Language Explorer 3.0</Title>
+				<Title>FieldWorks Language Explorer 3.0.3</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -130,7 +130,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Topics List Editor 2.14</Title>
+				<Title>FieldWorks Topics List Editor 2.14.3</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -139,7 +139,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Translation Editor 3.0</Title>
+				<Title>FieldWorks Translation Editor 3.0.3</Title>
 				<Tag>TE_TC</Tag>
 				<MsiFeature>TE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -148,7 +148,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks WorldPad 2.14</Title>
+				<Title>FieldWorks WorldPad 2.14.3</Title>
 				<Tag>WP_TC</Tag>
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -161,9 +161,9 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 6.0.2 SE with movies (from \\cana\LSDev\Installers\FW6.0.2\SE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.2\SE\FieldWorks\SetupFW.msi</Source>
-				<Source>\\cana\LSDev\Installers\FW6.0.2\SE\FieldWorks\Flex_M.cab</Source>
+				<Title>FW 6.0.3 SE with movies (from \\cana\LSDev\Installers\FW6.0.3\SE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW6.0.3\SE\FieldWorks\SetupFW.msi</Source>
+				<Source>\\cana\LSDev\Installers\FW6.0.3\SE\FieldWorks\Flex_M.cab</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -174,21 +174,21 @@
 				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 6.0.2 SE</Title>
-			<Tag>FW602SE</Tag>
+			<Title>SIL FieldWorks 6.0.3 SE</Title>
+			<Tag>FW603SE</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{A7FD1340-2DFC-4072-B130-3363AB0B0A57}</ProductCode>
+			<ProductCode>{8F8C0439-8E0F-4f74-BED6-DBD7FB05731C}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
-				<Title>FieldWorks Data Notebook 2.14</Title>
+				<Title>FieldWorks Data Notebook 2.14.3</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -197,7 +197,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Language Explorer 3.0</Title>
+				<Title>FieldWorks Language Explorer 3.0.3</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -205,7 +205,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Topics List Editor 2.14</Title>
+				<Title>FieldWorks Topics List Editor 2.14.3</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -214,7 +214,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks WorldPad 2.14</Title>
+				<Title>FieldWorks WorldPad 2.14.3</Title>
 				<Tag>WP_TC</Tag>
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -227,8 +227,8 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 6.0.2 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.2\BTE\FieldWorks\SetupFW.msi</Source>
+				<Title>FW 6.0.3 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW6.0.3\BTE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW6.0.3\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -240,21 +240,21 @@
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 6.0.2 BTE</Title>
-			<Tag>FW602BTEnoM</Tag>
+			<Title>SIL FieldWorks 6.0.3 BTE</Title>
+			<Tag>FW603BTEnoM</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{A7FD1340-2DFC-4072-B130-3363AB0B0A57}</ProductCode>
+			<ProductCode>{8F8C0439-8E0F-4f74-BED6-DBD7FB05731C}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
-				<Title>FieldWorks Data Notebook 2.14</Title>
+				<Title>FieldWorks Data Notebook 2.14.3</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -263,7 +263,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Language Explorer 3.0</Title>
+				<Title>FieldWorks Language Explorer 3.0.3</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -271,7 +271,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Topics List Editor 2.14</Title>
+				<Title>FieldWorks Topics List Editor 2.14.3</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -280,7 +280,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Translation Editor 3.0</Title>
+				<Title>FieldWorks Translation Editor 3.0.3</Title>
 				<Tag>TE_TC</Tag>
 				<MsiFeature>TE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -289,7 +289,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks WorldPad 2.14</Title>
+				<Title>FieldWorks WorldPad 2.14.3</Title>
 				<Tag>WP_TC</Tag>
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -302,8 +302,8 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 6.0.2 SE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW6.0.2\SE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.2\SE\FieldWorks\SetupFW.msi</Source>
+				<Title>FW 6.0.3 SE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW6.0.3\SE\FieldWorks)</Title>
+				<Source>\\cana\LSDev\Installers\FW6.0.3\SE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -314,21 +314,21 @@
 				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 6.0.2 SE</Title>
-			<Tag>FW602SEnoM</Tag>
+			<Title>SIL FieldWorks 6.0.3 SE</Title>
+			<Tag>FW603SEnoM</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{A7FD1340-2DFC-4072-B130-3363AB0B0A57}</ProductCode>
+			<ProductCode>{8F8C0439-8E0F-4f74-BED6-DBD7FB05731C}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
 			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Feature>
-				<Title>FieldWorks Data Notebook 2.14</Title>
+				<Title>FieldWorks Data Notebook 2.14.3</Title>
 				<Tag>DN_TC</Tag>
 				<MsiFeature>DN</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -337,7 +337,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Language Explorer 3.0</Title>
+				<Title>FieldWorks Language Explorer 3.0.3</Title>
 				<Tag>LT_TC</Tag>
 				<MsiFeature>FLEX</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -345,7 +345,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks Topics List Editor 2.14</Title>
+				<Title>FieldWorks Topics List Editor 2.14.3</Title>
 				<Tag>TLE_TC</Tag>
 				<MsiFeature>TLE</MsiFeature>
 				<Requires MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
@@ -354,7 +354,7 @@
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			</Feature>
 			<Feature>
-				<Title>FieldWorks WorldPad 2.14</Title>
+				<Title>FieldWorks WorldPad 2.14.3</Title>
 				<Tag>WP_TC</Tag>
 				<MsiFeature>WP</MsiFeature>
 				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>

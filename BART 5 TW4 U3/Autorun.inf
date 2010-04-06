@@ -1,0 +1,6 @@
+[autorun]
+icon=setup.exe
+open=setup.exe -autorun
+shellsetup=&Install BART 5 and Translator's Workplace 4 Update 3 Installation
+shellsetupcommand=setup.exe
+label=BART 5 and Translator's Workplace 4 Update 3 Installation

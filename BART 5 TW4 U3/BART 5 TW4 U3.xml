@@ -1,0 +1,122 @@
+﻿<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="ConfigureMasterInstaller.xsl" ?>
+<MasterInstaller>
+	<AutoConfigure>
+		<CppFilePath>F:\CD Builder\Master Installer</CppFilePath>
+		<ProductsPath>F:\CD Builder\Products</ProductsPath>
+		<CDsPath>F:\CD Builder\CDs</CDsPath>
+		<ExternalHelpSource>Documents\SILSoftwareSupport</ExternalHelpSource>
+		<ExternalHelpDestination>SILSoftwareSupport</ExternalHelpDestination>
+		<CdImagePath>F:\CD Builder\CDs\BART 5 and TW4 Update 3</CdImagePath>
+		<CdSize>700</CdSize>
+		<MinFileSize>2048</MinFileSize>
+	</AutoConfigure>
+	<General>
+		<Title>Translator's Workplace 4 Update 3 and BART 5.2 Installation</Title>
+		<ListSubtitle>   © 2007 SIL International</ListSubtitle>
+		<ListBackground/>
+		<ListEvenOneProduct>true</ListEvenOneProduct>
+		<ListSpacingAdjust>10</ListSpacingAdjust>
+		<InfoButtonAdjust>3</InfoButtonAdjust>
+		<StartFromAnyCD>false</StartFromAnyCD>
+		<KeyPromptNeedsShiftCtrl>false</KeyPromptNeedsShiftCtrl>
+		<GetKeyTitle>SIL Software Product Key</GetKeyTitle>
+		<ExternalHelpFile>SILSoftwareSupport\Index.htm</ExternalHelpFile>
+		<HelpButtonText>Software Support...</HelpButtonText>
+	</General>
+	<Products>
+		<Product KeyId="2" Version="4.2" List="true">
+			<AutoConfigure>
+				<Title>TW4 Update 3 (From source control repository)</Title>
+				<Source NameWhenLocked="setup.msi">Installers\Translator's Workplace 4 Update 3\TW4 Update 3.msi</Source>
+				<SetupHelp>Documents\Translator's Workplace 4 Update 3\SetupTW.rtf</SetupHelp>
+				<Destination>TW4</Destination>
+				<WhenLocked>
+					<Destination>2</Destination>
+					<Substitutions>
+						<CriticalFile>2\setup.msi</CriticalFile>
+						<Install>MsiExec.exe /i 2\setup.msi</Install>
+						<Help Internal="true">SetupTW.rtf</Help>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>Translator's Workplace 4.0 Update 3</Title>
+			<Tag>TW4U3</Tag>
+			<MustHaveWin2kOrBetter>false</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>2\setup.msi</CriticalFile>
+			<Install>MsiExec.exe /i 2\setup.msi</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Commentary>This installer may take a few minutes to start from the CD.</Commentary>
+			<ProductCode>{838FEC91-1CDB-4F69-9FE1-E194D03FB144}</ProductCode>
+			<Help Internal="true">SetupTW.rtf</Help>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<CD>0</CD>
+		</Product>
+		<Product KeyId="1" Version="5.2" List="true">
+			<AutoConfigure>
+				<Title>BART 5.2 (From source control repository)</Title>
+				<Source NameWhenLocked="setup.msi">Installers\BART 5\SetupBart.msi</Source>
+				<SetupHelp>Documents\BART 5\SetupBART.rtf</SetupHelp>
+				<Destination>BART5</Destination>
+				<WhenLocked>
+					<Destination>3</Destination>
+					<Substitutions>
+						<CriticalFile>3\setup.msi</CriticalFile>
+						<Help Internal="true">SetupBART.rtf</Help>
+					</Substitutions>
+				</WhenLocked>
+			</AutoConfigure>
+			<Title>BART 5.2</Title>
+			<Tag>BART5</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<PreInstall>QuitIfBart5BetaPresent</PreInstall>
+			<CriticalFile>3\setup.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Help Internal="true">SetupBART.rtf</Help>
+			<ProductCode>{24D88271-9AA4-4B51-B54D-AC2E744C34B7}</ProductCode>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<CD>0</CD>
+		</Product>
+		<Product List="true">
+			<Title>Optional Hebrew and Greek Keyman keyboards for BART</Title>
+			<Version>5.0</Version>
+			<Tag>KBs</Tag>
+			<CD>0</CD>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Keyman60\Keyboards\</CriticalFile>
+			<Install Type="Internal">KeymanKeyboardsInstaller</Install>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<TestPresence>TestKeymanKeyboardsPresence</TestPresence>
+			<Prerequisite Tag="WI2" MinVersion="2.0"/>
+			<Prerequisite Tag="Keyman60" MinVersion="6.0"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows Installer 2.0 (Win 2K and up only)</Title>
+				<Source>3rd Party\Windows Installer 2 (Win 2K and up)</Source>
+				<Destination>Utilities\MSInstall</Destination>
+			</AutoConfigure>
+			<Title>Windows Installer 2.0</Title>
+			<Tag>WI2</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<CriticalFile>Utilities\MSInstall\instmsiw.exe</CriticalFile>
+			<Install>$CriticalFile$ /c:"msiinst.exe /delayrebootq"</Install>
+			<TestPresence Version="2.0">TestWinInstallerPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=4b6140f9-2d36-4977-8fa1-6f8a0f5dca8f&amp;DisplayLang=en</DownloadURL>
+			<Commentary>Please wait a few moments.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<CD>0</CD>
+		</Product>
+	</Products>
+	<CDs>
+		<CD>
+			<Title>Translator's Workplace 4 Update 3 and BART 5.2 Installation Disk</Title>
+			<VolumeLabel>TW43_BART52</VolumeLabel>
+		</CD>
+	</CDs>
+</MasterInstaller>

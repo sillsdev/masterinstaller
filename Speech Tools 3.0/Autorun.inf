@@ -1,0 +1,6 @@
+[autorun]
+icon=setup.exe
+open=setup.exe -autorun
+shellsetup=&Install Speech Tools Installer
+shellsetupcommand=setup.exe
+label=Speech Tools Installer

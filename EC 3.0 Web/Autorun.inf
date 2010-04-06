@@ -1,0 +1,6 @@
+[autorun]
+icon=setup.exe
+open=setup.exe -autorun
+shellsetup=&Install SIL Encoding Converters and Repository 3.0 Installation
+shellsetupcommand=setup.exe
+label=SIL Encoding Converters and Repository 3.0 Installation

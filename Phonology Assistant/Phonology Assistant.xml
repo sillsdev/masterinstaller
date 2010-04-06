@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="ConfigureMasterInstaller.xsl" ?>
+<MasterInstaller>
+	<AutoConfigure>
+		<CppFilePath>F:\CD Builder\Master Installer</CppFilePath>
+		<ProductsPath>F:\CD Builder\Products</ProductsPath>
+		<CDsPath>F:\CD Builder\CDs</CDsPath>
+		<ExternalHelpSource>Documents\SILSoftwareSupport</ExternalHelpSource>
+		<ExternalHelpDestination>SILSoftwareSupport</ExternalHelpDestination>
+		<TermsOfUseSource>Documents\TermsOfUse\License SIL Freeware.rtf</TermsOfUseSource>
+		<TermsOfUseDestination></TermsOfUseDestination>
+		<CdImagePath>C:\Work\Speech Tools 3.0\Installers\PA Package</CdImagePath>
+		<CdSize>700</CdSize>
+		<MinFileSize>2048</MinFileSize>
+	</AutoConfigure>
+	<General>
+		<Title>Phonology Assistant 3.0 Installer</Title>
+		<ListSubtitle>    (c) 2008 SIL International</ListSubtitle>
+		<ListBackground DefaultFolder="Bitmaps" Red="196" Green="206" Blue="44" OffsetX="" OffsetY="0" BlendLeft="100" BlendRight="100" BlendTop="100" BlendBottom="100">F:\CD Builder\Master Installer\Bitmaps\green.bmp</ListBackground>
+		<ListEvenOneProduct>true</ListEvenOneProduct>
+		<ListSpacingAdjust>3</ListSpacingAdjust>
+		<InfoButtonAdjust></InfoButtonAdjust>
+		<StartFromAnyCD>false</StartFromAnyCD>
+		<KeyPromptNeedsShiftCtrl>false</KeyPromptNeedsShiftCtrl>
+		<GetKeyTitle></GetKeyTitle>
+		<InitialText Align="left" LeftEdge="" RightEdge=""></InitialText>
+		<ExternalHelpFile></ExternalHelpFile>
+		<HelpButtonText></HelpButtonText>
+		<TermsOfUseFile>License SIL Freeware.rtf</TermsOfUseFile>
+		<TermsButtonText>Terms of Use...</TermsButtonText>
+	</General>
+	<Products>
+		<Product List="true">
+			<AutoConfigure>
+				<Title>Phonology Assistant 3.0</Title>
+				<Source>Installers\Phonology Assistant</Source>
+				<SetupHelp>Documents\Phonology Assistant\SetupPA.rtf</SetupHelp>
+				<Destination>Phonology Assistant</Destination>
+			</AutoConfigure>
+			<Title>Phonology Assistant 3.0</Title>
+			<Tag>PA3</Tag>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Phonology Assistant\Phonology Assistant.msi</CriticalFile>
+			<Install/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<Help>Phonology Assistant\SetupPA.rtf</Help>
+			<ProductCode>{81584AC8-1718-4B20-8189-8A9F149C5CCD}</ProductCode>
+			<Prerequisite Tag="WI31" MinVersion="3.0"/>
+			<Prerequisite Tag=".NET2.0" Version="2.0.50727"/>
+			<CD>0</CD>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows 2000 Service Pack 4</Title>
+				<Source>3rd Party\Win 2000 SP4</Source>
+				<Destination>Utilities\Win 2000 SP4</Destination>
+			</AutoConfigure>
+			<Title>Windows 2000 Service Pack 4</Title>
+			<Tag>Win 2K SP4</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>$LANG$09$Utilities\Win 2000 SP4\W2KSP4_EN.EXE</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<TestPresence Version="4">TestWin2kSpPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/windows2000/downloads/servicepacks/sp4/default.mspx</DownloadURL>
+			<Commentary>Follow instructions in installer wizard.</Commentary>
+			<StatusWindow>Monitor</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<CD>-1</CD>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows XP Service Pack 2</Title>
+				<Source>3rd Party\Win XP SP2</Source>
+				<Destination>Utilities\Win XP SP2</Destination>
+			</AutoConfigure>
+			<Title>Windows XP Service Pack 2</Title>
+			<Tag>Win XP SP2</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>$LANG$09$Utilities\Win XP SP2\XPSP2.EXE</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<TestPresence Version="2">TestWinXpSpPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/windowsxp/sp2/default.mspx</DownloadURL>
+			<Commentary>Follow instructions in installer wizard.</Commentary>
+			<StatusWindow>Monitor</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<MustNotDelayReboot>true</MustNotDelayReboot>
+			<CD>-1</CD>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>.NET Framework 2.0</Title>
+				<Source>3rd Party\DotNet 2.0</Source>
+				<Destination>Utilities\DotNet 2.0</Destination>
+			</AutoConfigure>
+			<Title>Microsoft .NET Framework version 2.0</Title>
+			<Tag>.NET2.0</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>Utilities\DotNet 2.0\dotnetfx.exe</CriticalFile>
+			<Install>$CriticalFile$ /q:a /c:"install /l /q"</Install>
+			<TestPresence Version="2.0">TestDotNetPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=0856EACB-4362-4B0D-8EDD-AAB15C5E04F5&amp;displaylang=en</DownloadURL>
+			<Commentary>This installation may take a few minutes, without visible sign of progress.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<Prerequisite Tag="IE" MinVersion="5.01"/>
+			<Prerequisite Tag="WI31" MinVersion="3.0"/>
+			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
+			<Prerequisite Tag="Win XP SP2" MinVersion="2"/>
+			<CD>0</CD>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Internet Explorer 6.0 SP1 (English)</Title>
+				<Source>3rd Party\IE60</Source>
+				<Destination>Utilities\IE60</Destination>
+			</AutoConfigure>
+			<Title>Microsoft Internet Explorer 6.0 SP1</Title>
+			<Tag>IE</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>$LANG$09$Utilities\IE60\ie6setup.exe</CriticalFile>
+			<DownloadURL>http://www.microsoft.com/windows/ie/default.mspx</DownloadURL>
+			<Install>$CriticalFile$</Install>
+			<Commentary>Please select default choices in dialogs.</Commentary>
+			<StatusWindow>Monitor</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<TestPresence Version="6.0.2800.1106">TestIePresence</TestPresence>
+			<CD>-1</CD>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>Windows Installer 3.1 (Win 2K and up only)</Title>
+				<Source>3rd Party\Windows Installer 3.1</Source>
+				<Destination>Utilities\MSInstall</Destination>
+			</AutoConfigure>
+			<Title>Windows Installer 3.1</Title>
+			<Tag>WI31</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<MustHaveWin2kOrBetter>true</MustHaveWin2kOrBetter>
+			<CriticalFile>Utilities\MSInstall\WindowsInstaller-KB893803-v2-x86.exe</CriticalFile>
+			<Install>$CriticalFile$ /quiet /norestart</Install>
+			<TestPresence Version="3.1">TestWinInstallerPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?familyid=889482fc-5f56-4a38-b838-de776fd4138c&amp;displaylang=en</DownloadURL>
+			<Commentary>Please wait a few moments.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<Prerequisite Tag="Win 2K SP4" MinVersion="3"/>
+			<CD>0</CD>
+		</Product>
+	</Products>
+	<CDs>
+		<CD>
+			<Title>Phonology Assistant 3.0 Installer Disk</Title>
+			<VolumeLabel>SIL_PA_30</VolumeLabel>
+		</CD>
+	</CDs>
+</MasterInstaller>

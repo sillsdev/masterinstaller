@@ -1,0 +1,6 @@
+[autorun]
+icon=setup.exe
+open=setup.exe -autorun
+shellsetup=&Install FW 5.4.1 BTE Installer
+shellsetupcommand=setup.exe
+label=FW 5.4.1 BTE Installer

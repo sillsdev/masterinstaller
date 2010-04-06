@@ -1,0 +1,6 @@
+[autorun]
+icon=setup.exe
+open=setup.exe -autorun
+shellsetup=&Install FieldWorks 6.0.2 SE Installation
+shellsetupcommand=setup.exe
+label=FieldWorks 6.0.2 SE Installation

@@ -1,0 +1,6 @@
+[autorun]
+icon=setup.exe
+open=setup.exe -autorun
+shellsetup=&Install WordSurv 6 Installer
+shellsetupcommand=setup.exe
+label=WordSurv 6 Installer

@@ -1,5 +1,6 @@
 #pragma once
 
+// Comprehensive functionality dealing with operating system versions:
 class OSVersion_t
 {
 public:
@@ -27,12 +28,46 @@ protected:
 	OSVERSIONINFOEX m_OSversion;
 	_TCHAR * m_pszVersion;
 };
+// Useful class for handling selections or other groups of products:
+class IndexList_t
+{
+	friend class PersistantProgress;
+
+public:
+	IndexList_t();
+	IndexList_t(IndexList_t &Copy);
+	~IndexList_t();
+
+	int operator [] (int i) const;
+	IndexList_t & operator = (const IndexList_t & Copy);
+	void CopyObject(const IndexList_t & Copy);
+	int GetCount() const;
+	bool Contains(int index) const;
+	void Add(int n, bool fIgnoreDuplicates = true);
+	void Add(const IndexList_t & List, bool fIgnoreDuplicates = true);
+	int RemoveNthItem(int n);
+	void Flush();
+	void ReplaceItem(int i, int nNew);
+
+protected:
+	int * m_pi;
+	int m_ct;
+};
+// Structure for returning from the main product selection dialog. Caller must delete it.
+struct MainSelectionReturn_t
+{
+	IndexList_t m_rgiChosen;
+	bool m_fInstallRequiredSoftware;
+	bool m_fReenterKey;
+};
 extern OSVersion_t g_OSVersion;
 extern bool g_fStopRequested;
 extern DWORD g_langidWindowsLanguage;
 extern bool g_fAdministrator;
 extern bool g_fRebootPending;
 extern bool g_fManualInstall;
+extern bool g_fSilent;
+extern struct MainSelectionReturn_t * g_pCmdLineProductSelection;
 class UserQuitException_t
 {
 };

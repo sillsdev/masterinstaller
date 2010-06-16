@@ -36,6 +36,34 @@ int APIENTRY WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/,
 	if (_tcsstr(pszCmdLine, _T("-manual")) != NULL)
 		g_fManualInstall = true;
 
+	// See if user is requesting unattended install:
+	if (_tcsstr(pszCmdLine, _T("-silent")) != NULL)
+	{
+		g_fSilent = true;
+		g_Log.Write(_T("Silent installation requested."));
+		g_pCmdLineProductSelection = new MainSelectionReturn_t;
+		g_pCmdLineProductSelection->m_fInstallRequiredSoftware = true;
+
+		// See if user has preselected which items to install:
+		_TCHAR * pszSelection = _tcsstr(pszCmdLine, _T("-select:"));
+		if (pszSelection)
+		{
+			while (pszSelection)
+			{
+				int iSelection = _tstoi(&(pszSelection[8]));
+				g_Log.Write(_T("Command line product selection index: %d."), iSelection);
+				g_pCmdLineProductSelection->m_rgiChosen.Add(iSelection);
+				pszSelection = _tcsstr(&(pszSelection[8]), _T("-select:"));
+			}
+		}
+		else
+		{
+			// Select the first main item by default:
+			g_pCmdLineProductSelection->m_rgiChosen.Add(0);
+			g_Log.Write(_T("No products selected on command line. Defaulting to selection of first product in implied list."));
+		}
+	}
+
 	g_ProgRecord.SetCmdLine(pszCmdLine);
 
 	// Initialize dynamically allocated functions:
@@ -46,6 +74,9 @@ int APIENTRY WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/,
 
 	// Release dynamically allocated functions:
 	DropAdvancedApi();
+
+	if (g_pCmdLineProductSelection)
+		delete g_pCmdLineProductSelection;
 
 	delete[] pszCmdLine;
 }

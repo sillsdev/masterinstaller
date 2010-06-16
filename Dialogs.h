@@ -35,17 +35,8 @@ struct ReportPackage_t
 		fCanToggleShortAndFull(false), prgiProducts(NULL) { }
 };
 
-// Structure for returning from the main product selection dialog. Caller must delete it.
-struct MainSelectionReturn_t
-{
-	IndexList_t m_rgiChosen;
-	bool m_fInstallRequiredSoftware;
-	bool m_fReenterKey;
-};
-
 INT_PTR CALLBACK DlgProcDisplayReport(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK DlgProcRebootCountdown(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-INT_PTR CALLBACK DlgProcProductKey(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 extern void ShowStatusDialog();
 extern BOOL my_OpenClipboard(bool * fCloseStatusDialog);

@@ -755,35 +755,45 @@ RestartEnterKey:
 			throw UserQuitException;
 		}
 
-		// Offer permitted products to user:
-		g_Log.Write(_T("Offering list of permitted products."));
-
-		DlgMainProductParams_t DlgMainProductParams;
-		DlgMainProductParams.pHelpLauncher = this;
-		DlgMainProductParams.pProductManager = m_ppmProductManager;
-		DlgMainProductParams.m_fReenterKeyAllowed = fAskUserForKey;
-
-		MainSelectionReturn_t * MainSelectionReturn =
-			reinterpret_cast<MainSelectionReturn_t *>(DialogBoxParam(GetModuleHandle(NULL),
-			MAKEINTRESOURCE(IDD_DIALOG_MAIN_PRODUCT_SELECT), NULL, DlgProcMainProductSelect,
-			(LPARAM)(&DlgMainProductParams)));
-
-		if (!MainSelectionReturn)
+		if (g_fSilent && g_pCmdLineProductSelection)
 		{
-			g_Log.Write(_T("User canceled."));
-			throw UserQuitException;
+			// Get product choices indicated in command line:
+			g_Log.Write(_T("Using product choices indicated in command line."));
+			m_rgiChosenMainProducts = g_pCmdLineProductSelection->m_rgiChosen;
+			m_fInstallRequiredProducts = g_pCmdLineProductSelection->m_fInstallRequiredSoftware;
 		}
-		if (MainSelectionReturn->m_fReenterKey)
+		else
 		{
-			// User pressed Re-enter Key button:
-			g_Log.Write(_T("User chose to re-enter key."));
-			goto RestartEnterKey;
-		}
-		m_rgiChosenMainProducts = MainSelectionReturn->m_rgiChosen;
-		m_fInstallRequiredProducts = MainSelectionReturn->m_fInstallRequiredSoftware;
+			// Offer permitted products to user:
+			g_Log.Write(_T("Offering list of permitted products."));
 
-		delete MainSelectionReturn;
-		MainSelectionReturn = NULL;
+			DlgMainProductParams_t DlgMainProductParams;
+			DlgMainProductParams.pHelpLauncher = this;
+			DlgMainProductParams.pProductManager = m_ppmProductManager;
+			DlgMainProductParams.m_fReenterKeyAllowed = fAskUserForKey;
+
+			MainSelectionReturn_t * MainSelectionReturn =
+				reinterpret_cast<MainSelectionReturn_t *>(DialogBoxParam(GetModuleHandle(NULL),
+				MAKEINTRESOURCE(IDD_DIALOG_MAIN_PRODUCT_SELECT), NULL, DlgProcMainProductSelect,
+				(LPARAM)(&DlgMainProductParams)));
+
+			if (!MainSelectionReturn)
+			{
+				g_Log.Write(_T("User canceled."));
+				throw UserQuitException;
+			}
+			if (MainSelectionReturn->m_fReenterKey)
+			{
+				// User pressed Re-enter Key button:
+				g_Log.Write(_T("User chose to re-enter key."));
+				goto RestartEnterKey;
+			}
+			m_rgiChosenMainProducts = MainSelectionReturn->m_rgiChosen;
+			m_fInstallRequiredProducts = MainSelectionReturn->m_fInstallRequiredSoftware;
+
+			delete MainSelectionReturn;
+			MainSelectionReturn = NULL;
+		}
 	} // End else more than one product is available
 }
 

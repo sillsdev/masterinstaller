@@ -371,11 +371,14 @@ void FriendlyReboot()
 {
 	HideStatusDialog();
 
-	if (DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_REBOOT_COUNTDOWN), NULL,
-		DlgProcRebootCountdown) == 0)
+	if (!g_fSilent)
 	{
-		g_Log.Write(_T("User chose to quit rather than reboot."));
-		throw UserQuitException;
+		if (DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_REBOOT_COUNTDOWN), NULL,
+			DlgProcRebootCountdown) == 0)
+		{
+			g_Log.Write(_T("User chose to quit rather than reboot."));
+			throw UserQuitException;
+		}
 	}
 	g_Log.Write(_T("Rebooting."));
 	Reboot();

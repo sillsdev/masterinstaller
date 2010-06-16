@@ -1,33 +1,8 @@
 #pragma once
 
+#include "Globals.h"
+
 class ProductKeyHandler_t;
-
-// Useful class for handling selections or other groups of products:
-class IndexList_t
-{
-	friend class PersistantProgress;
-
-public:
-	IndexList_t();
-	IndexList_t(IndexList_t &Copy);
-	~IndexList_t();
-
-	int operator [] (int i) const;
-	IndexList_t & operator = (const IndexList_t & Copy);
-	void CopyObject(const IndexList_t & Copy);
-	int GetCount() const;
-	bool Contains(int index) const;
-	void Add(int n, bool fIgnoreDuplicates = true);
-	void Add(const IndexList_t & List, bool fIgnoreDuplicates = true);
-	int RemoveNthItem(int n);
-	void Flush();
-	void ReplaceItem(int i, int nNew);
-
-protected:
-	int * m_pi;
-	int m_ct;
-};
-
 
 // Main interface for accessing the product details in the installation:
 class IProductManager

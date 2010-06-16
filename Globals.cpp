@@ -11,6 +11,8 @@ bool g_fAdministrator = false;
 bool g_fStopRequested = false;
 bool g_fRebootPending = false;
 bool g_fManualInstall = false;
+bool g_fSilent = false;
+struct MainSelectionReturn_t * g_pCmdLineProductSelection = NULL;
 UserQuitException_t UserQuitException;
 
 #include "ConfigGeneral.cpp"
@@ -258,6 +260,126 @@ _TCHAR * OSVersion_t::XP = _T("5.1");
 _TCHAR * OSVersion_t::Vista = _T("6.0");
 _TCHAR * OSVersion_t::W7 = _T("6.1");
 _TCHAR * OSVersion_t::kpszOperatorError = _T("Null value supplied to OSVersion_t comparison operator");
+
+
+// Useful class for handling selections or other groups of products:
+IndexList_t::IndexList_t()
+{
+	m_pi = NULL;
+	m_ct = 0;
+}
+
+// Copy constructor
+IndexList_t::IndexList_t(IndexList_t &Copy)
+{
+	m_pi = NULL;
+	m_ct = 0;
+	CopyObject(Copy);
+}
+
+// Destructor
+IndexList_t::~IndexList_t()
+{
+	Flush();
+}
+
+void IndexList_t::Flush()
+{
+	delete[] m_pi;
+	m_pi = NULL;
+	m_ct = 0;
+}
+
+// Index operator
+int IndexList_t::operator [] (int i) const
+{
+	if (i < 0 || i >= m_ct)
+	{
+		HandleError(kFatal, true, IDC_ERROR_INTERNAL,
+			_T("Invalid index passed to product index list."));
+	}
+	return m_pi[i];
+}
+
+void IndexList_t::CopyObject(const IndexList_t & Copy)
+{
+	Flush();
+	m_ct = Copy.m_ct;
+	m_pi = new int [m_ct];
+	for (int i = 0; i < m_ct; i++)
+		m_pi[i] = Copy.m_pi[i];
+}
+
+IndexList_t & IndexList_t::operator = (const IndexList_t & Copy)
+{
+	CopyObject(Copy);
+	return *this;
+}
+
+int IndexList_t::GetCount() const
+{
+	return m_ct;
+}
+
+// Returns tru if the list contains the given index:
+bool IndexList_t::Contains(int index) const
+{
+	for (int i = 0; i < m_ct; i++)
+		if (m_pi[i] == index)
+			return true;
+
+	return false;
+}
+
+// Add an item to the list
+void IndexList_t::Add(int n, bool fIgnoreDuplicates)
+{
+	if (fIgnoreDuplicates)
+		if (Contains(n))
+			return;
+
+	int * temp = new int [1 + m_ct];
+	for (int i = 0; i < m_ct; i++)
+		temp[i] = m_pi[i];
+	delete[] m_pi;
+	m_pi = temp;
+	m_pi[m_ct++] = n;
+}
+
+// Add items from another list to this one.
+void IndexList_t::Add(const IndexList_t & List, bool fIgnoreDuplicates)
+{
+	for (int i = 0; i < List.GetCount(); i++)
+		Add(List[i], fIgnoreDuplicates);
+}
+
+// Returns the nth item in the list, and removes it from the list
+int IndexList_t::RemoveNthItem(int n)
+{
+	if (n < 0 || n >= m_ct)
+	{
+		HandleError(kFatal, false, IDC_ERROR_INTERNAL,
+			_T("attempting to remove invalid-indexed item from list."));
+	}
+	int nResult = m_pi[n];
+
+	for (int i = n; i < m_ct - 1; i++)
+		m_pi[i] = m_pi[i + 1];
+
+	m_ct--;
+
+	return nResult;
+}
+
+void IndexList_t::ReplaceItem(int i, int nNew)
+{
+	if (i < 0 || i >= m_ct)
+	{
+		HandleError(kFatal, false, IDC_ERROR_INTERNAL,
+			_T("attempting to alter invalid-indexed item in list."));
+	}
+	m_pi[i] = nNew;
+}
 
 #ifdef EASTER_EGGS
 #include "midi.cpp"

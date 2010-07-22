@@ -34,11 +34,11 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
-				<Title>FW BTE (Rearchitected) (from C:\FW_Rearchitect\Installer)</Title>
+				<Title>FW BTE 7.0 Alpha (from C:\FW_Rearchitect\Installer)</Title>
 				<Source>C:\FW_Rearchitect\Installer\SetupFW.msi</Source>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks BTE (Rearchitected)</Title>
+			<Title>SIL FieldWorks 7.0 BTE Alpha</Title>
 			<Tag>FW70BTE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -59,11 +59,11 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW SE (Rearchitected) (from C:\FW_Rearchitect\Installer)</Title>
+				<Title>FW SE 7.0 Alpha (from C:\FW_Rearchitect\Installer)</Title>
 				<Source>C:\FW_Rearchitect\Installer\SetupFW_SE.msi</Source>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks SE (Rearchitected)</Title>
+			<Title>SIL FieldWorks 7.0 SE Alpha</Title>
 			<Tag>FW70SE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>

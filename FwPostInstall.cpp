@@ -4,7 +4,6 @@
 #include <shlobj.h>
 
 #include "InitEC.cpp"
-#include "PreserveWordFormingCharOverrides.cpp"
 
 
 // Since FW 5.3, we need to test for the presence of the Microsoft.mshtml.dll file on the user's
@@ -66,8 +65,6 @@ void InitMshtml()
 
 int FwPostInstall(SoftwareProduct * /*Product*/)
 {
-	ReinstantiateWordFormingCharOverrides();
-
 	InitMshtml();
 	InitEC();
 

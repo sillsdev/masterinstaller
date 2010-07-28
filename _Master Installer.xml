@@ -47,7 +47,6 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{256A50FA-761A-488b-B282-3543C1DDAE76}</ProductCode>
 			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
-			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
@@ -72,7 +71,6 @@
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{256A50FA-761A-488b-B282-3543C1DDAE76}</ProductCode>
 			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
-			<Preinstall>CleanStartFw40</Preinstall>
 			<PostInstall>FwPostInstall</PostInstall>
 			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>

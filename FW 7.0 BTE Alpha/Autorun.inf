@@ -1,0 +1,6 @@
+[autorun]
+icon=setup.exe
+open=setup.exe -autorun
+shellsetup=&Install FieldWorks 7.0 BTE Alpha
+shellsetupcommand=setup.exe
+label=FieldWorks 7.0 BTE Alpha Installer

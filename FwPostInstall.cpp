@@ -3,9 +3,6 @@
 #include <tchar.h>
 #include <shlobj.h>
 
-#include "InitEC.cpp"
-
-
 // Since FW 5.3, we need to test for the presence of the Microsoft.mshtml.dll file on the user's
 // machine, and if it is not present, install it by running vs_piaredist.exe, which we will
 // have installed to [CommonFilesFolder]\SIL\FieldWorks.
@@ -66,7 +63,6 @@ void InitMshtml()
 int FwPostInstall(SoftwareProduct * /*Product*/)
 {
 	InitMshtml();
-	InitEC();
 
 	return 0;
 }

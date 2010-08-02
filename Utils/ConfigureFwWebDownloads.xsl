@@ -1507,7 +1507,6 @@ function Compress(SourceFolder)
 	tsoConfig.WriteLine('Title="SIL FieldWorks Installation (' + RootFolder + ')"');
 	tsoConfig.WriteLine('HelpText="Double-click the file \'' + RootFolder + '.exe\' to extract the installation files and run the installer.\n"');
 	tsoConfig.WriteLine('InstallPath="%%S"');
-	tsoConfig.WriteLine('Delete="%%S\\' + RootFolder + '"');
 	tsoConfig.WriteLine('ExtractTitle="Extracting installation files"');
 	tsoConfig.WriteLine('ExtractDialogText="Preparing the \'' + RootFolder + '\' files for installation"');
 	tsoConfig.WriteLine('RunProgram="fm0:\\"' + RootFolder + '\\setup.exe\\""');

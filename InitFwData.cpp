@@ -2,7 +2,7 @@
 
 #include <tchar.h>
 
-extern _TCHAR * pszFormerFwInstallationFolder;
+_TCHAR * pszFormerFwInstallationFolder = NULL;
 
 // Utility to initialize FieldWorks access to SQL Server.
 // This used to be done by FieldWorks applications, but is now done at the end

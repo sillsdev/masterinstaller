@@ -46,6 +46,7 @@ public:
 		IndexList_t & rgiOutputList, bool fRecursePrerequisites, bool fRecurseRequirements)
 		const = 0;
 	virtual bool PriorInstallationFailed(int iProduct) const = 0;
+	virtual bool IsContainer(int iProduct) const = 0;
 	virtual bool IsInstallable(int iProduct) const = 0;
 	virtual bool InstallProduct(int iProduct) = 0;
 	virtual _TCHAR * GenReport(int iReportType, IndexList_t * prgiProducts = NULL) const = 0;

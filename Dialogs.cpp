@@ -578,7 +578,7 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 
 				_TCHAR * pszCheckBox = my_strdup(pProductManager->GetName(iProduct));
 
-				if (pProductManager->IsInstallable(iProduct))
+				if (pProductManager->IsInstallable(iProduct) || pProductManager->IsContainer(iProduct))
 				{
 					// See if product has been installed before:
 					if (pProductManager->PossibleToTestPresence(iProduct))

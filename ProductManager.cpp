@@ -38,6 +38,7 @@ public:
 	const _TCHAR * m_kpszVersionInKey;
 	int m_nKeyId;
 	bool m_kfOneOfOurs;
+	bool m_kfIsContainer;
 	bool * m_fCriticalFileFlag;
 	const _TCHAR * m_pszCriticalFileFlagTrue;
 	const _TCHAR * m_pszCriticalFileFlagFalse;
@@ -114,6 +115,7 @@ public:
 	bool TestPresence(const _TCHAR * pszVersion);
 	bool TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion);
 	const _TCHAR * GetCriticalFile();
+	bool IsContainer();
 	bool IsInstallable();
 	DWORD RunInstaller();
 	bool Install();
@@ -531,6 +533,13 @@ const _TCHAR * SoftwareProduct::GetCriticalFile()
 	}
 
 	return m_pszCriticalFile;
+}
+
+// Returns true if the product is a container, i.e. a dummy for forcing installation 
+// of prerequisites and/or requirements.
+bool SoftwareProduct::IsContainer()
+{
+	return m_kfIsContainer;
 }
 
 // Returns true if the product has an install method.
@@ -1123,6 +1132,7 @@ public:
 	void GetActiveRequirements(const IndexList_t & rgiProducts, IndexList_t & rgiOutputList,
 		bool fRecursePrerequisites, bool fRecurseRequirements) const;
 	virtual bool PriorInstallationFailed(int iProduct) const;
+	virtual bool IsContainer(int iProduct) const;
 	virtual bool IsInstallable(int iProduct) const;
 	virtual bool InstallProduct(int iProduct);
 	virtual _TCHAR * GenReport(int iReportType, IndexList_t * prgiProducts = NULL) const;
@@ -1831,6 +1841,12 @@ bool ProductManager_t::PriorInstallationFailed(int iProduct) const
 	CheckProductIndex(iProduct);
 
 	return (Products[iProduct].m_InstallStatus >= SoftwareProduct::InstallFailed);
+}
+
+bool ProductManager_t::IsContainer(int iProduct) const
+{
+	CheckProductIndex(iProduct);
+	return Products[iProduct].IsContainer();
 }
 
 bool ProductManager_t::IsInstallable(int iProduct) const

@@ -711,22 +711,27 @@ RestartEnterKey:
 			m_ppmProductManager->GetName(iOnlyProduct));
 		fAutoSelectionDone = true;
 
-		// Deal with the case where product cannot be detected:
-		if (!m_ppmProductManager->PossibleToTestPresence(iOnlyProduct))
+		// Unless the product is a container (dummy for other products), there are
+		// circumstances where we won't allow auto-selection:
+		if (!m_ppmProductManager->IsContainer(iOnlyProduct))
 		{
-			fAutoSelectionDone = false; // Cancel auto selection
-			g_Log.Write(_T("Cannot detect if product is already installed, so user will get selection dialog."));
-		}
-		else
-		{
-			// Deal with the case where product is already installed:
-			const _TCHAR * pszVersion = m_ppmProductManager->GetTestPresenceVersion(iOnlyProduct);
-			bool fInstalled = m_ppmProductManager->TestPresence(iOnlyProduct, pszVersion,
-				pszVersion);
-			if (fInstalled)
+			// Deal with the case where product cannot be detected:
+			if (!m_ppmProductManager->PossibleToTestPresence(iOnlyProduct))
 			{
 				fAutoSelectionDone = false; // Cancel auto selection
-				g_Log.Write(_T("Product is already installed, so user will get selection dialog."));
+				g_Log.Write(_T("Cannot detect if product is already installed, so user will get selection dialog."));
+			}
+			else
+			{
+				// Deal with the case where product is already installed:
+				const _TCHAR * pszVersion = m_ppmProductManager->GetTestPresenceVersion(iOnlyProduct);
+				bool fInstalled = m_ppmProductManager->TestPresence(iOnlyProduct, pszVersion,
+					pszVersion);
+				if (fInstalled)
+				{
+					fAutoSelectionDone = false; // Cancel auto selection
+					g_Log.Write(_T("Product is already installed, so user will get selection dialog."));
+				}
 			}
 		}
 

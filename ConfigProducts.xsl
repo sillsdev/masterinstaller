@@ -102,7 +102,14 @@ project to make an executable master installer.
 		<xsl:call-template name="StrOrFalseIfEmpty">
 			<xsl:with-param name="str" select="@List"/>
 		</xsl:call-template>
-		<xsl:text>, // Flag saying if product should be offered to user&#13;</xsl:text>
+		<xsl:text>, // Flag saying if product should be offered to user (m_kfOneOfOurs)&#13;</xsl:text>
+
+		<!-- Flag which dtermines if product is a container (m_kfIsContainer) -->
+		<xsl:text>&#09;&#09;</xsl:text>
+		<xsl:call-template name="StrOrFalseIfEmpty">
+			<xsl:with-param name="str" select="IsContainer"/>
+		</xsl:call-template>
+		<xsl:text>, // IsContainer&#13;</xsl:text>
 
 		<!-- Critical file, with optional condition flag -->
 		<xsl:text>&#09;&#09;</xsl:text>

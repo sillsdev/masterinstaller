@@ -37,15 +37,15 @@ if (WScript.Arguments.Length < 1)
 	}
 	
 	// Write registry settings:
-	var RegFile = fso.BuildPath(Path, "SilFwSfxSetup.reg");
+	var RegFile = fso.BuildPath(Path, "SilCustomSfxSetup.reg");
 	var tso = fso.OpenTextFile(RegFile, 2, true);
 	tso.WriteLine('Windows Registry Editor Version 5.00');
-	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\SilFwSfxSetup]');
+	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\SilCustomSfxSetup]');
 	tso.WriteLine('"EditFlags"=hex:01,00,00,00');
-	tso.WriteLine('@="Create SIL FieldWorks Software Package from this folder\'s contents"');
-	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\SilFwSfxSetup\\command]');
+	tso.WriteLine('@="Create Custom Software Package from this folder\'s contents"');
+	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\SilCustomSfxSetup\\command]');
 	// OK, deep breath, now:
-	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CreateSfxFwSetup.js\\" \\"%1\\"\"');
+	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CreateSfxCustomSetup.js\\" \\"%1\\"\"');
 	tso.Close();
 	
 	// Run Regedit with the new file:
@@ -76,6 +76,13 @@ var LocationDrive = SourceFolder.slice(0, iFirstBackslash);
 var BatchFile = SourceFolder + ".temp.bat";
 var ConfigFile = SourceFolder + ".Config.txt";
 var ListFile = SourceFolder + ".list.txt";
+
+// Make sure the config file exists:
+if (!fso.FileExists(ConfigFile))
+{
+	WScript.Echo("ERROR - 7-zip config file '" + ConfigFile + "' does not exist.");
+	WScript.Quit();
+}
 
 // Check that we can access the 7-zip tool:
 var SevenZipExeFile = ScriptPath + "\\7za.exe"
@@ -121,21 +128,6 @@ else
 	tso.WriteLine('"' + SevenZipExeFile + '" a "' + ZipFile + '" + "' + RootFolder + '\\*" -r -mx=9 -mmt=on');
 }
 
-// Create configuration file to bind to self-extracting archive:
-var tsoConfig = fso.OpenTextFile(ConfigFile, 2, true, 0); // Must be UTF-8; ASCII will do for us
-tsoConfig.WriteLine(';!@Install@!UTF-8!');
-tsoConfig.WriteLine('Title="SIL FieldWorks Installation (' + RootFolder + ')"');
-tsoConfig.WriteLine('HelpText="Double-click the file \'' + RootFolder + '.exe\' to extract the installation files and run the installer.\n"');
-tsoConfig.WriteLine('InstallPath="%%S"');
-tsoConfig.WriteLine('ExtractTitle="Extracting installation files"');
-tsoConfig.WriteLine('ExtractDialogText="Preparing the \'' + RootFolder + '\' files for installation"');
-tsoConfig.WriteLine('RunProgram="fm0:\\"' + RootFolder + '\\setup.exe\\""');
-tsoConfig.WriteLine('GUIFlags="6240"');
-tsoConfig.WriteLine('BeginPrompt="The FieldWorks installation files (' + RootFolder + ') will be extracted to the folder specified below, and then the installer will run.\nIMPORTANT: You will need to keep the FieldWorks installer in that folder if you wish to apply future patch upgrades."');
-tsoConfig.WriteLine('ExtractPathText="Select a folder to store the installation files:"');
-tsoConfig.WriteLine(';!@InstallEnd@!');
-tsoConfig.Close();
-
 // Add self-extracting module and configuration to launch setup.exe:
 tso.WriteLine('copy /b "' + ScriptPath + '\\7zSD_new.sfx" + "' + ConfigFile + '" + "' + ZipFile + '" "' + SfxFile + '"');
 tso.Close();
@@ -146,7 +138,6 @@ shellObj.Run(Cmd, 1, true);
 
 // Delete the temporary working files:
 fso.DeleteFile(BatchFile);
-fso.DeleteFile(ConfigFile);
 fso.DeleteFile(ZipFile);
 if (fso.FileExists(ListFile))
 	fso.DeleteFile(ListFile);

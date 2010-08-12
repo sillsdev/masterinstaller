@@ -1,0 +1,10 @@
+;!@Install@!UTF-8!
+Title="SQL Server for SIL FieldWorks Installation"
+HelpText="Double-click the file 'SQL4FW.exe' to extract the installation files and run the installer.
+"
+InstallPath="%%S"
+Delete="%%S\SQL4FW"
+ExtractTitle="Extracting installation files"
+ExtractDialogText="Preparing the SQL Server files for installation"
+RunProgram="fm0:\"SQL4FW\setup.exe\" -silent"
+;!@InstallEnd@!

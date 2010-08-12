@@ -759,9 +759,11 @@ bool SoftwareProduct::Install()
 	{
 		fRepeat = false;
 
-		// Make sure correct disk is inserted, unless critical file is on the Internet:
+		// Make sure correct disk is inserted, unless critical file is on the Internet or product is a container:
 		int nFileResult = DiskManager_t::knFileOmitted;
-		if (_tcsncmp(GetCriticalFile(), _T("http:"), 5) == 0)
+		if (IsContainer())
+			nFileResult = DiskManager_t::knCorrectCdAlready;
+		else if (_tcsncmp(GetCriticalFile(), _T("http:"), 5) == 0)
 		{
 			nFileResult = DiskManager_t::knFileOnInternet;
 			g_Log.Write(_T("Critical file on Internet: %s"), GetCriticalFile());

@@ -113,6 +113,11 @@ int DiskManager_t::CheckCdPresent(int iCd, bool fAllowNoCd, const _TCHAR * pszSk
 
 int DiskManager_t::EnsureCdForFile(const _TCHAR * pszFile, int iCd, const _TCHAR * pszSkipMsgProduct)
 {
+	if (!pszFile)
+		return knCorrectCdAlready;
+	if (*pszFile == 0)
+		return knCorrectCdAlready;
+
 	int iCurrentCd = CurrentCd();
 
 	// See if file can be found from current directory:

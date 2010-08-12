@@ -1232,6 +1232,19 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>Microsoft SQL Server 2005 Express SP2 and SP3 (32 and 64 bit) for FieldWorks</Title>
+			</AutoConfigure>
+			<Title>Microsoft SQL Server For FieldWorks</Title>
+			<Tag>SQL4FW</Tag>
+			<MinOS>5.1.2</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<IsContainer>true</IsContainer>
+			<Prerequisite MaxOS="5.1.2" Tag="SQL2005_64" MinVersion="9"/>
+			<Prerequisite MinOS="5.1.3" Tag="SQL2005SP3_64" MinVersion="9"/>
+			<DownloadURL></DownloadURL>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Microsoft SQL Server 2005 Express SP3 (32 and 64 bit)</Title>
 				<Source>3rd Party\SQL Server 2005 Express SP3\SQLEXPR.EXE</Source>
 				<Source>3rd Party\SQL Server 2005 Express SP3\Surface Area Settings.xml</Source>

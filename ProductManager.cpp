@@ -1,12 +1,12 @@
 #include <windows.h>
 #include <stdio.h>
 #include <tchar.h>
+#include <msi.h>
 
 #include "ProductManager.h"
 #include "ErrorHandler.h"
 #include "ProductKeys.h"
 #include "LogFile.h"
-#include "WIWrapper.h"
 #include "UsefulStuff.h"
 #include "Resource.h"
 #include "DiskManager.h"
@@ -444,14 +444,11 @@ bool SoftwareProduct::TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * 
 		INSTALLSTATE state = INSTALLSTATE_UNKNOWN;
 
 		if (m_kpszMsiFeature)
-		{
-			state = WindowsInstaller.MsiQueryFeatureState(m_kpszMsiProductCode,
-				m_kpszMsiFeature);
-		}
+			state = MsiQueryFeatureState(m_kpszMsiProductCode, m_kpszMsiFeature);
 		else
 		{
 			// No feature is specified, so check install state of product code:
-			state = WindowsInstaller.MsiQueryProductState(m_kpszMsiProductCode);
+			state = MsiQueryProductState(m_kpszMsiProductCode);
 		}
 		switch (state)
 		{
@@ -470,9 +467,8 @@ bool SoftwareProduct::TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * 
 					const int kcchVersion = 256;
 					_TCHAR szIntalledVersion[kcchVersion];
 					DWORD cch = kcchVersion;
-					if (WindowsInstaller.MsiGetProductInfo(m_kpszMsiProductCode,
-						INSTALLPROPERTY_VERSIONSTRING, szIntalledVersion, &cch)
-						== ERROR_SUCCESS)
+					if (MsiGetProductInfo(m_kpszMsiProductCode, INSTALLPROPERTY_VERSIONSTRING,
+						szIntalledVersion, &cch) == ERROR_SUCCESS)
 					{
 						if (!VersionInRange(szIntalledVersion, pszMinVersion,
 							pszMaxVersion))
@@ -586,8 +582,8 @@ DWORD SoftwareProduct::RunInstaller()
 				const int kcchVersion = 256;
 				_TCHAR szIntalledVersion[kcchVersion];
 				DWORD cch = kcchVersion;
-				if (WindowsInstaller.MsiGetProductInfo(m_kpszMsiProductCode,
-					INSTALLPROPERTY_VERSIONSTRING, szIntalledVersion, &cch)	== ERROR_SUCCESS)
+				if (MsiGetProductInfo(m_kpszMsiProductCode, INSTALLPROPERTY_VERSIONSTRING,
+					szIntalledVersion, &cch) == ERROR_SUCCESS)
 				{
 					g_Log.Write(_T("Version %s already installed."), szIntalledVersion);
 					// Another version is installed, so check if its version is less than ours:

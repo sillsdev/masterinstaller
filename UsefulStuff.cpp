@@ -18,7 +18,7 @@
 #include "Dialogs.h"
 #include "resource.h"
 #include "ErrorHandler.h"
-#include "WIWrapper.h"
+
 
 const int cchActiveProcessDescription = 100;
 _TCHAR g_rgchActiveProcessDescription[cchActiveProcessDescription] = _T("");
@@ -63,44 +63,6 @@ DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit,
 		}
 	}
 		
-	// Make copy of command:
-	_TCHAR * pszCmdCopy = my_strdup(pszCmd);
-
-	// If command contains "msiexec" then we will prefix this with the path to msiexec.exe:
-	_TCHAR * pszMsiExec = _tcsstr(pszCmdCopy, _T("msiexec"));
-	if (!pszMsiExec)
-		pszMsiExec = _tcsstr(pszCmdCopy, _T("MSIEXEC"));
-	if (!pszMsiExec)
-		pszMsiExec = _tcsstr(pszCmdCopy, _T("MsiExec"));
-	if (!pszMsiExec)
-		pszMsiExec = _tcsstr(pszCmdCopy, _T("MSIExec"));
-	if (pszMsiExec)
-	{
-		// Find location of installer from registry:
-		_TCHAR * szLoc = GetInstallerLocation();
-		if (szLoc)
-		{
-			_TCHAR ch = *pszMsiExec;
-			*pszMsiExec = 0;
-
-			_TCHAR * pszNew = new_sprintf(_T("%s%s"), pszCmdCopy, szLoc);
-
-			__int64 len = _tcslen(pszNew);
-			if (len > 1)
-				if (pszNew[len - 1] != _TCHAR('\\'))
-					new_sprintf_concat(pszNew, 0, _T("\\"));
-
-			*pszMsiExec = ch;
-
-			new_sprintf_concat(pszNew, 0, pszMsiExec);
-			delete[] pszCmdCopy;
-
-			pszCmdCopy = pszNew;
-		}
-		// If installer location cannot be found by this method, we will attempt to run the
-		// command anyway.
-	}
-
 	// Set up data for creating new process:
 	BOOL bReturnVal = false;
 	DWORD dwExitCode =  0;
@@ -111,12 +73,10 @@ DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit,
 	siBlank.cb = sizeof(siBlank);
 	STARTUPINFO * psiInUse = pStartupInfo ? pStartupInfo : &siBlank;
 
-	g_Log.Write(_T("Adjusted cmd to \"%s\""), pszCmdCopy);
-
 	// Launch new process. The CREATE_SEPARATE_WOW_VDM should be ignored for 32-bit programs,
 	// and also when running on Windows 98, but it is essential for 16-bit programs running on
 	// Windows 2000 or later, else we cannot easily monitor when termination occurs:
-	bReturnVal = CreateProcess(NULL, (LPTSTR)pszCmdCopy, NULL, NULL, false,
+	bReturnVal = CreateProcess(NULL, (LPTSTR)pszCmd, NULL, NULL, false,
 		CREATE_SEPARATE_WOW_VDM, (LPVOID)pszEnvironment, pszNewCurrentDir, psiInUse,
 		&process_info);
 
@@ -202,9 +162,6 @@ DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit,
 	{
 		return GetLastError();
 	}
-
-	delete[] pszCmdCopy;
-	pszCmdCopy = NULL;
 
 	g_Log.Write(_T("Exit code = %d"), dwExitCode);
 

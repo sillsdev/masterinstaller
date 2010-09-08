@@ -1,14 +1,15 @@
 #pragma once
 
 #include <tchar.h>
+#include <shlobj.h>
 
 // Tests for the presence of Windows Installer. Here, pszMinVersion is treated as the
 // minimum acceptable version number, and pszMaxVersion is ignored.
 bool TestWinInstallerPresence(const _TCHAR * pszMinVersion, const _TCHAR * /*pszMaxVersion*/,
 							  SoftwareProduct * /*Product*/)
 {
-	// See if we can detect where the Windows Installer .exe file is:
-	_TCHAR * pszLoc = GetInstallerLocation();
+	// The Windows Installer .exe file should be in the System32 directory:
+	_TCHAR * pszLoc = GetFolderPathNew(CSIDL_SYSTEM);
 	if (!pszLoc)
 		return false; // Couldn't find it.
 

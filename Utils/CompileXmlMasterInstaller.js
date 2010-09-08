@@ -207,7 +207,6 @@ function PrepareCppRspFile(RspFilePath, CppFilePath, CompilationFolder)
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	var tso = fso.OpenTextFile(RspFilePath, 2, true);
 	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "UNICODE" ' + (EasterEggs? '/D "EASTER_EGGS" ' : '') + '/GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Zi /TP');
-	tso.WriteLine('"' + CppFilePath + '\\WIWrapper.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UsefulStuff.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UniversalFixes.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\ProductManager.cpp"');
@@ -241,7 +240,6 @@ function PrepareObjRspFile(RspFilePath, CompilationFolder)
 	tso.WriteLine('"' + CompilationFolder + '\\ProductManager.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\UsefulStuff.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\UniversalFixes.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\WIWrapper.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\resources.res"');
 	tso.Close();
 }

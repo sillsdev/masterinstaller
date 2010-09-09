@@ -97,7 +97,13 @@ int FwPostInstall(SoftwareProduct * Product)
 	g_Log.Write(_T("Found MigrateSqlDbs path: %s"), pszMigrateUtilPath);
 
 	if (pszMigrateUtilPath != NULL)
-		ExecCmd(pszMigrateUtilPath, _T(""));
+	{
+		ShowStatusDialog();
+		DisplayStatusText(0, _T("Migrating any FieldWorks data from earlier versions..."));
+		DisplayStatusText(1, _T(""));
+
+		ExecCmd(pszMigrateUtilPath, _T(""), true, NULL, _T("Monitor 4000"));
+	}
 	g_Log.Write(_T("...Done"));
 
 	return 0;

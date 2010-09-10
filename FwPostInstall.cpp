@@ -102,7 +102,13 @@ int FwPostInstall(SoftwareProduct * Product)
 		DisplayStatusText(0, _T("Migrating any FieldWorks data from earlier versions..."));
 		DisplayStatusText(1, _T(""));
 
-		ExecCmd(pszMigrateUtilPath, _T(""), true, NULL, _T("Monitor 4000"));
+		_TCHAR * pszCmd = new_sprintf(_T("\"%s\" -autoclose"), pszMigrateUtilPath);
+		ExecCmd(pszCmd, _T(""), true, NULL, _T("Monitor 4000"));
+
+		delete[] pszCmd;
+		pszCmd = NULL;
+		delete[] pszMigrateUtilPath;
+		pszMigrateUtilPath = NULL;
 	}
 	g_Log.Write(_T("...Done"));
 

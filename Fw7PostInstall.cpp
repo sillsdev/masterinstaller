@@ -2,10 +2,32 @@
 
 #include <tchar.h>
 #include <shlobj.h>
+#include <msi.h>
 
-#include "InitEC.cpp"
-#include "PreserveWordFormingCharOverrides.cpp"
+// Returns the INSTALLDIR folder from the installation denoted by the given Product Code GUID.
+_TCHAR * GetMsiComponentPath(const _TCHAR * pszProductCode, const _TCHAR * pszComponentId)
+{
+	// Get size of buffer needed for path:
+	DWORD cchBuf = 0;
+	DWORD ret = MsiGetComponentPath(pszProductCode, pszComponentId, NULL, &cchBuf);
 
+	g_Log.Write(_T("MsiGetComponentPath initally returned %d"), ret);
+
+	if (ret == INSTALLSTATE_LOCAL || ret == INSTALLSTATE_SOURCE)
+	{
+		_TCHAR * pszPath = new _TCHAR [++cchBuf];
+
+		ret = MsiGetComponentPath(pszProductCode, pszComponentId, pszPath, &cchBuf);
+		g_Log.Write(_T("MsiGetComponentPath subsequently returned %d"), ret);
+
+		if (ret == INSTALLSTATE_LOCAL || ret == INSTALLSTATE_SOURCE)
+			return pszPath;
+
+		delete[] pszPath;
+		pszPath = NULL;
+	}
+	return NULL;
+}
 
 // Since FW 5.3, we need to test for the presence of the Microsoft.mshtml.dll file on the user's
 // machine, and if it is not present, install it by running vs_piaredist.exe, which we will
@@ -64,12 +86,31 @@ void InitMshtml()
 }
 
 
-int FwPostInstall(SoftwareProduct * /*Product*/)
+int Fw7PostInstall(SoftwareProduct * Product)
 {
-	ReinstantiateWordFormingCharOverrides();
-
 	InitMshtml();
-	InitEC();
+
+	// Run the MigrateSqlDbs.exe utility just installed:
+	g_Log.Write(_T("About to run data migration utility..."));
+
+	_TCHAR * pszMigrateUtilPath = GetMsiComponentPath(Product->m_kpszMsiProductCode, _T("{D25017CC-66F5-4BEE-B7BA-39BE8AE3698F}"));
+	g_Log.Write(_T("Found MigrateSqlDbs path: %s"), pszMigrateUtilPath);
+
+	if (pszMigrateUtilPath != NULL)
+	{
+		ShowStatusDialog();
+		DisplayStatusText(0, _T("Migrating any FieldWorks data from earlier versions..."));
+		DisplayStatusText(1, _T(""));
+
+		_TCHAR * pszCmd = new_sprintf(_T("\"%s\" -autoclose"), pszMigrateUtilPath);
+		ExecCmd(pszCmd, _T(""), true, NULL, _T("Monitor 4000"));
+
+		delete[] pszCmd;
+		pszCmd = NULL;
+		delete[] pszMigrateUtilPath;
+		pszMigrateUtilPath = NULL;
+	}
+	g_Log.Write(_T("...Done"));
 
 	return 0;
 }

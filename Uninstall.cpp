@@ -10,7 +10,7 @@ int Uninstall(const TCHAR * pszProductCode, const TCHAR * pszStatus)
 	int dwResult = 0;
 
 	// See if the installation is present:
-	INSTALLSTATE state = WindowsInstaller.MsiQueryProductState(pszProductCode);
+	INSTALLSTATE state = MsiQueryProductState(pszProductCode);
 	bool fInstalled = false;
 	switch (state)
 	{

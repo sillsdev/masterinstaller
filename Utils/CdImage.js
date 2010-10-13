@@ -38,7 +38,7 @@ if (MasterInstallerPath == "%MASTER_INSTALLER%")
 	WScript.Quit();
 }
 var UtilsPath = fso.BuildPath(MasterInstallerPath, "Utils");
-var MagicISOFile = fso.BuildPAth(UtilsPath, "MagicIso.exe");
+var MagicISOFile = fso.BuildPAth(UtilsPath, "miso.exe");
 if (!fso.FileExists(MagicISOFile))
 {
 	// Try to run miso, to see if file exists on path:

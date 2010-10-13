@@ -1,61 +1,31 @@
 // This script takes an XML file, and compiles/links it into a setup.exe Master Installer file.
+// Prerequisite: a suitable version of Microsoft Visual Studio must be installed. (VS 2005 and 2008 work.)
 
-var fso = new ActiveXObject("Scripting.FileSystemObject");	
+var fso = new ActiveXObject("Scripting.FileSystemObject");
 var shellObj = new ActiveXObject("WScript.Shell");
 
 if (WScript.Arguments.Length < 1)
 {
-	// Assume user just double-clicked on this script. We will register it for context
-	// submenu use.
-	// Get path of this script:
-	var iLastBackslash = WScript.ScriptFullName.lastIndexOf("\\");
-	var Path = WScript.ScriptFullName.slice(0, iLastBackslash);
-	
-	// Build a version of the Path with doubled up backslashes:
-	var aFolder = Path.split("\\");
-	var bs2Path = "";
-	for (i = 0; i < aFolder.length; i++)
-	{
-		if (i > 0)
-			bs2Path += "\\\\";
-		bs2Path += aFolder[i];
-	}
-	
-	// Write registry settings:
-	var RegFile = fso.BuildPath(Path, "CompileXmlMasterInstaller.reg");
-	var tso = fso.OpenTextFile(RegFile, 2, true);
-	tso.WriteLine('Windows Registry Editor Version 5.00');
-	tso.WriteLine('[HKEY_CLASSES_ROOT\\xmlfile\\shell\\CompileMasterInstaller]');
-	tso.WriteLine('@="Compile Master Installer from this XML file"');
-	tso.WriteLine('[HKEY_CLASSES_ROOT\\xmlfile\\shell\\CompileMasterInstaller\\command]');
-	// OK, deep breath, now:
-	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CompileXmlMasterInstaller.js\\" \\"%1\\"\"');
-
-	tso.WriteLine('[HKEY_CLASSES_ROOT\\xmlfile\\shell\\CompileMasterInstallerEx]');
-	tso.WriteLine('@="Compile Master Installer with Easter Eggs from this XML file"');
-	tso.WriteLine('[HKEY_CLASSES_ROOT\\xmlfile\\shell\\CompileMasterInstallerEx\\command]');
-	// OK, deep breath, now:
-	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CompileXmlMasterInstaller.js\\" \\"%1\\" -E\"');
-
-	tso.Close();
-	
-	// Run Regedit with the new file:
-	var Cmd = 'Regedit.exe "' + RegFile + '"';
-	shellObj.Run(Cmd, 0, true);
-	
-	// Delete RegFile:
-	fso.DeleteFile(RegFile);
-
+	WScript.Echo("ERROR: must specify master installer XML file.");
 	WScript.Quit();
 }
 
 var XmlFileName = WScript.Arguments.Item(0);
-var CppFilePath = "F:\\CD Builder\\Master Installer";
+var CppFilePath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
+
+if (CppFilePath == "%MASTER_INSTALLER%")
+{
+	WScript.Echo("ERROR: the MASTER_INSTALLER environment variable has not been defined. This probably means you have not run the InitUtils.exe application in the Master Installer's Utils folder.");
+	WScript.Quit();
+}
+
+var BitmapsPath = fso.BuildPath(CppFilePath, "Bitmaps");
+
 var EasterEggs = false;
 if (WScript.Arguments.Length > 1)
 	if (WScript.Arguments.Item(1) == "-E")
-		EasterEggs = true;
-	
+	EasterEggs = true;
+
 // Check that the input file is an XML file:
 if (XmlFileName.slice(-4).toLowerCase() != ".xml")
 {
@@ -79,6 +49,17 @@ if (xmlDoc.selectSingleNode("/MasterInstaller") == null)
 	WScript.Quit();
 }
 
+// Do a test for legacy data that specified a full path to the background bitmap:
+var bmp = xmlDoc.selectSingleNode("/MasterInstaller/General/ListBackground").text;
+if (bmp.indexOf("\\") >= 0)
+{
+	if (!fso.FileExists(bmp))
+	{
+		WScript.Echo("Bitmap path '" + bmp + "' specified in XML node /MasterInstaller/General/ListBackground does not exist. This may be legacy data. Bitmaps should be stored in the '" + BitmapsPath + "' folder and referenced by file name only.");
+		WScript.Quit();
+	}
+}
+
 iLastBackslash = XmlFileName.lastIndexOf("\\");
 var InputFolder = XmlFileName.substr(0, iLastBackslash);
 var NewCompilationFolder = fso.BuildPath(InputFolder, "setup.exe coming soon");
@@ -96,7 +77,7 @@ var CompileCmd = 'cl.exe @"' + CppRspFilePath + '" /nologo';
 shellObj.Run(CompileCmd, 7, true);
 
 // Compile resource file:
-var ResourceCmd = 'rc.exe ' + (EasterEggs? '/D "EASTER_EGGS" ' : '') + '/fo"' + NewCompilationFolder + '/resources.res" "' + CppFilePath + '\\resources.rc"';
+var ResourceCmd = 'rc.exe /i"' + BitmapsPath + '" ' + (EasterEggs ? '/D "EASTER_EGGS" ' : '') + '/fo"' + NewCompilationFolder + '/resources.res" "' + CppFilePath + '\\resources.rc"';
 shellObj.Run(ResourceCmd, 7, true);
 
 // Prepare the file containing all the linker settings:
@@ -105,7 +86,7 @@ var SetupExePath = InputFolder + "\\setup.exe";
 PrepareObjRspFile(ObjRspFilePath, NewCompilationFolder);
 
 // Link the obj files to produce the master installer:
-var LinkCmd = 'link.exe @"' + ObjRspFilePath + '"'; 
+var LinkCmd = 'link.exe @"' + ObjRspFilePath + '"';
 shellObj.Run(LinkCmd, 7, true);
 
 // Test that setup.exe exists:
@@ -116,7 +97,7 @@ if (!fso.FileExists(SetupExePath))
 }
 
 // Embed the manifest file specifying "requireAdministrator":
-var MtCmd = 'mt.exe -manifest "' + CppFilePath + '\\setup.manifest" -outputresource:"' + SetupExePath + '";#1'; 
+var MtCmd = 'mt.exe -manifest "' + CppFilePath + '\\setup.manifest" -outputresource:"' + SetupExePath + '";#1';
 shellObj.Run(MtCmd, 7, true);
 
 // Remove junk from the NewCompilationFolder:			
@@ -146,7 +127,7 @@ fso.DeleteFolder(NewCompilationFolder);
 function MakeSureFolderExists(strDir)
 {
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	
+
 	// See if the dir exists.
 	if (!fso.FolderExists(strDir))
 	{
@@ -155,7 +136,7 @@ function MakeSureFolderExists(strDir)
 		var strNewFolder = fso.BuildPath(aFolder[0], "\\");
 
 		// Loop through each folder name and create if not already created
-		var	iFolder;
+		var iFolder;
 		for (iFolder = 1; iFolder < aFolder.length; iFolder++)
 		{
 			strNewFolder = fso.BuildPath(strNewFolder, aFolder[iFolder]);
@@ -189,7 +170,7 @@ function ProcessConfigFile(xmlDoc, strInputXsl, strOutputFile)
 		var myErr = xslDoc.parseError;
 		Exception = new Object();
 		Exception.description = "XSL error in " + strInputXsl + ": " + myErr.reason + "\non line " + myErr.line + " at position " + myErr.linepos;
-		throw(Exception);
+		throw (Exception);
 	}
 	xslt.stylesheet = xslDoc;
 	xslProc = xslt.createProcessor();
@@ -206,7 +187,7 @@ function PrepareCppRspFile(RspFilePath, CppFilePath, CompilationFolder)
 {
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "UNICODE" ' + (EasterEggs? '/D "EASTER_EGGS" ' : '') + '/GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Zi /TP');
+	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "UNICODE" ' + (EasterEggs ? '/D "EASTER_EGGS" ' : '') + '/GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Zi /TP');
 	tso.WriteLine('"' + CppFilePath + '\\UsefulStuff.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\UniversalFixes.cpp"');
 	tso.WriteLine('"' + CppFilePath + '\\ProductManager.cpp"');
@@ -227,7 +208,7 @@ function PrepareObjRspFile(RspFilePath, CompilationFolder)
 {
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/OUT:"' + SetupExePath + '" /INCREMENTAL:NO /NOLOGO /LIBPATH:"Msi.lib" /MANIFEST /MANIFESTFILE:"' + CompilationFolder + '\\setup.exe.intermediate.manifest" /SUBSYSTEM:WINDOWS /SWAPRUN:CD /OPT:REF /OPT:ICF /LTCG /MACHINE:X86 version.lib shlwapi.lib C:\\Work\\MsiIntel.SDK\\Lib\\Msi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib');
+	tso.WriteLine('/OUT:"' + SetupExePath + '" /INCREMENTAL:NO /NOLOGO /LIBPATH:"Msi.lib" /MANIFEST /MANIFESTFILE:"' + CompilationFolder + '\\setup.exe.intermediate.manifest" /SUBSYSTEM:WINDOWS /SWAPRUN:CD /OPT:REF /OPT:ICF /LTCG /MACHINE:X86 version.lib shlwapi.lib msi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib');
 	tso.WriteLine('"' + CompilationFolder + '\\Control.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\Dialogs.obj"');
 	tso.WriteLine('"' + CompilationFolder + '\\DiskManager.obj"');
@@ -253,7 +234,7 @@ function DeleteIfExists(FilePath)
 	{
 		fso.DeleteFile(FilePath);
 	}
-	catch(err)
+	catch (err)
 	{
 	}
 }

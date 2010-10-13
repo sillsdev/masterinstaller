@@ -44,6 +44,20 @@ HINSTANCE g_hinstDll = NULL;
 const _TCHAR * pszErrorNotAvailable = _T("Help file not available.");
 const _TCHAR * pszErrorAccess = _T("Error accessing help file.");
 
+// Removes all contiguous backslashes from the end of the given string.
+void RemoveTrailingBackslashes(_TCHAR * pszFolder)
+{
+	size_t nLen = _tcslen(pszFolder);
+	if (nLen >= 1)
+	{
+		if (pszFolder[nLen - 1] == '\\')
+		{
+			pszFolder[nLen - 1] = 0;
+			RemoveTrailingBackslashes(pszFolder);
+		}
+	}
+}
+
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
 	g_hinstDll = hinstDLL;
@@ -191,7 +205,7 @@ DWORD WINAPI HelpThread(LPVOID lpParameter)
 		ExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 		ExecInfo.fMask = SEE_MASK_FLAG_DDEWAIT | SEE_MASK_NOCLOSEPROCESS | SEE_MASK_NO_CONSOLE;
 		ExecInfo.hwnd = NULL;
-		ExecInfo.lpVerb = "open";
+		ExecInfo.lpVerb = _T("open");
 		ExecInfo.lpFile = pszTempPath;
 		ExecInfo.lpParameters = NULL;
 		ExecInfo.lpDirectory = NULL;

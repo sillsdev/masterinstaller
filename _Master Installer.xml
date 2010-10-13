@@ -2,9 +2,6 @@
 <?xml-stylesheet type="text/xsl" href="ConfigureMasterInstaller.xsl" ?>
 <MasterInstaller>
 	<AutoConfigure>
-		<CppFilePath/>
-		<ProductsPath ParallelProductsFolder="true"></ProductsPath>
-		<CDsPath ParallelCDsFolder="true"></CDsPath>
 		<ExternalHelpSource>Documents\SILSoftwareSupport</ExternalHelpSource>
 		<ExternalHelpDestination>SILSoftwareSupport</ExternalHelpDestination>
 		<TermsOfUseSource>Documents\TermsOfUse\License SIL Lang Dev SW.rtf</TermsOfUseSource>
@@ -17,7 +14,7 @@
 	<General>
 		<Title/>
 		<ListSubtitle/>
-		<ListBackground DefaultFolder="Bitmaps"/>
+		<ListBackground/>
 		<ListEvenOneProduct>false</ListEvenOneProduct>
 		<ShowInstallCompleteMessage>true</ShowInstallCompleteMessage>
 		<ListSpacingAdjust></ListSpacingAdjust>

@@ -159,7 +159,7 @@
 	<xsl:template name="script">
 		<script type="text/javascript">
 			<![CDATA[
-  <!--
+	<!--
 // This is line 6
 var Initializing = true;
 var UserPressedNextWhileInitializing = false;
@@ -175,15 +175,23 @@ var SelectedTextElement;
 var VisibleStage = 1;
 var MaxStage = 4;
 var NumFlavors = 1;
-var CdBuilderPath = "F:\\CD Builder";
-var CppFilePath = CdBuilderPath + "\\Master Installer";
-var ProductsPath = CdBuilderPath + "\\Products";
-var UtilsPath = CppFilePath + "\\Utils";
-var SevenZipExeFile = UtilsPath + "\\7za.exe";
-var f7ZipFoundSvn = false;
 
 var fso = new ActiveXObject("Scripting.FileSystemObject");	
 var shellObj = new ActiveXObject("WScript.Shell");
+
+var CppFilePath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
+var ProductsPath = shellObj.ExpandEnvironmentStrings("%PACKAGE_PRODUCTS%");
+
+if (CppFilePath == "%MASTER_INSTALLER%")
+	alert("ERROR: the MASTER_INSTALLER environment variable has not been defined. This probably means you have not run the InitUtils.exe application in the Master Installer's Utils folder.");
+else if (ProductsPath == "%PACKAGE_PRODUCTS%")
+	alert("ERROR: the PACKAGE_PRODUCTS environment variable has not been defined. You cannot create web download packages without specifying where the products and documents are stored.");
+
+var UtilsPath = fso.BuildPath(CppFilePath, "Utils");
+var SevenZipExeFile = fso.BuildPath(UtilsPath, "7za.exe");
+var BitmapsPath = fso.BuildPath(CppFilePath, "Bitmaps");
+
+var f7ZipFoundSvn = false;
 
 // Called upon completion of page loading.
 function Initialize()
@@ -194,6 +202,18 @@ function Initialize()
 		PrevButton = document.getElementById('PrevButton');
 		showPage("BlockedContentWarning", false);
 		showPage("Stage1", true);
+
+		// Do a test for legacy data that specified a full path to the background bitmap:
+		var bmp = document.XMLDocument.selectSingleNode("/MasterInstaller/General/ListBackground").text;
+		if (bmp.indexOf("\\") >= 0)
+		{
+				if (!fso.FileExists(bmp))
+				{
+						Exception = new Object();
+						Exception.description = "Bitmap path '" + bmp + "' specified in XML node /MasterInstaller/General/ListBackground does not exist. This may be legacy data. Bitmaps should be stored in the '" + BitmapsPath + "' folder and referenced by file name only."
+						throw(Exception);
+				}
+		}
 
 		var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
 		NumProducts = ProductNodeList.length;
@@ -912,105 +932,14 @@ function MakeSureFolderExists(strDir)
 
 function CompileMasterInstaller(XmlFileName)
 {
-	// Check that the input file is an XML file:
-	if (XmlFileName.slice(-4).toLowerCase() != ".xml")
-	{
-		Exception = new Object();
-		Exception.description = "ERROR - '" + XmlFileName + "' is not an XML file.";
-		throw(Exception);
-	}
-
-	// Check that the XML file has a <MasterInstaller> node:
-	var xmlDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument.3.0");
-	xmlDoc.async = false;
-	xmlDoc.load(XmlFileName);
-	if (xmlDoc.parseError.errorCode != 0)
-	{
-		var myErr = xmlDoc.parseError;
-		Exception = new Object();
-		Exception.description = "You have an XML error " + myErr.reason + " on line " + myErr.line + " at position " + myErr.linepos;
-		throw(Exception);
-	}
-	if (xmlDoc.selectSingleNode("/MasterInstaller") == null)
-	{
-		Exception = new Object();
-		Exception.description = "ERROR - " + XmlFileName + " is not a Master Installer configuration file." + xmlDoc.xml;
-		throw(Exception);
-	}
-
-	iLastBackslash = XmlFileName.lastIndexOf("\\");
+	var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, "CompileXmlMasterInstaller.js") + '" "' + XmlFileName + '"';
+	shellObj.Run(Cmd, 0, true);
+ 	iLastBackslash = XmlFileName.lastIndexOf("\\");
 	var InputFolder = XmlFileName.substr(0, iLastBackslash);
-	var NewCompilationFolder = fso.BuildPath(InputFolder, "setup.exe coming soon");
-	MakeSureFolderExists(NewCompilationFolder);
-
-	// Write new C++ files to reflect this new configuration:
-	PrepareCppFiles(CppFilePath, xmlDoc);
-
-	// Prepare the file containing all the compilation settings:
-	var CppRspFilePath = NewCompilationFolder + "\\" + "Cpp.rsp";
-	PrepareCppRspFile(CppRspFilePath, CppFilePath, NewCompilationFolder);
-
-	// Compile all C++ files:
-	var CompileCmd = 'cl.exe @"' + CppRspFilePath + '" /nologo';
-	shellObj.Run(CompileCmd, 7, true);
-
-	// Compile resource file:
-	var ResourceCmd = 'rc.exe /fo"' + NewCompilationFolder + '/resources.res" "' + CppFilePath + '\\resources.rc"';
-	shellObj.Run(ResourceCmd, 7, true);
-
-	// Prepare the file containing all the linker settings:
-	var ObjRspFilePath = NewCompilationFolder + "\\" + "Obj.rsp";
 	var SetupExePath = InputFolder + "\\setup.exe";
-	PrepareObjRspFile(ObjRspFilePath, NewCompilationFolder, SetupExePath);
-
-	// Link the obj files to produce the master installer:
-	var LinkCmd = 'link.exe @"' + ObjRspFilePath + '"'; 
-	shellObj.Run(LinkCmd, 7, true);
-
-	// Test that setup.exe exists:
-	if (!fso.FileExists(SetupExePath))
-	{
-		Exception = new Object();
-		Exception.description = "ERROR - Master installer [setup.exe] failed to compile and link.";
-		throw(Exception);
-	}
-
-	// Embed the manifest file specifying "requireAdministrator":
-	var MtCmd = 'mt.exe -manifest "' + CppFilePath + '\\setup.manifest" -outputresource:"' + SetupExePath + '";#1'; 
-	shellObj.Run(MtCmd, 7, true);
-
-	// Remove junk from the NewCompilationFolder:			
-	DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.obj"));
-	DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.res"));
-	DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.rsp"));
-	DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.pdb"));
-	DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.idb"));
-	DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.lib"));
-	DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.exp"));
-	DeleteIfExists(fso.BuildPath(CppFilePath, "ConfigProducts.cpp"));
-	DeleteIfExists(fso.BuildPath(CppFilePath, "ConfigGeneral.cpp"));
-	DeleteIfExists(fso.BuildPath(CppFilePath, "ConfigFunctions.cpp"));
-	DeleteIfExists(fso.BuildPath(CppFilePath, "ConfigDisks.cpp"));
-	DeleteIfExists(fso.BuildPath(CppFilePath, "AutoResources.rc"));
-	DeleteIfExists(fso.BuildPath(CppFilePath, "AutoGlobals.h"));
-	DeleteIfExists(fso.BuildPath(CppFilePath, "Helps.cpp"));
-	DeleteIfExists(fso.BuildPath(CppFilePath, "FileList.cpp"));
-	DeleteIfExists(fso.BuildPath(CppFilePath, "Product?.cpp"));
-	DeleteIfExists(fso.BuildPath(CppFilePath, "Product??.cpp"));
-	fso.DeleteFolder(NewCompilationFolder);
 	return SetupExePath;
 }
 
-// Processes the given xmlDoc to generate the C++ files needed to configure the Setup.exe program.
-function PrepareCppFiles(CppFilePath, xmlDoc)
-{
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGeneral.xsl", CppFilePath + "\\ConfigGeneral.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigDisks.xsl", CppFilePath + "\\ConfigDisks.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigProducts.xsl", CppFilePath + "\\ConfigProducts.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigFunctions.xsl", CppFilePath + "\\ConfigFunctions.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGlobals.xsl", CppFilePath + "\\AutoGlobals.h");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigResources.xsl", CppFilePath + "\\AutoResources.rc");
-}
 
 // Uses the given XSL file (path) to process the given xmlDoc, outputting to strOutputFile (path).
 function ProcessConfigFile(xmlDoc, strInputXsl, strOutputFile)
@@ -1034,60 +963,6 @@ function ProcessConfigFile(xmlDoc, strInputXsl, strOutputFile)
 	var tso = fso.OpenTextFile(strOutputFile, 2, true);
 	tso.Write(xslProc.output);
 	tso.Close();
-}
-
-// Prepares a file of Setup.exe configuration settings for the C++ compiler.
-function PrepareCppRspFile(RspFilePath, CppFilePath, CompilationFolder)
-{
-	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "UNICODE" /GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Zi /TP');
-	tso.WriteLine('"' + CppFilePath + '\\UsefulStuff.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\UniversalFixes.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\ProductManager.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\ProductKeys.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\PersistantProgress.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\main.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\LogFile.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\Globals.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\ErrorHandler.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\DiskManager.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\Dialogs.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\Control.cpp"');
-	tso.Close();
-}
-
-// Prepares a file of Setup.exe configuration settings for the object file linker.
-function PrepareObjRspFile(RspFilePath, CompilationFolder, SetupExePath)
-{
-	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/OUT:"' + SetupExePath + '" /INCREMENTAL:NO /NOLOGO /LIBPATH:"Msi.lib" /MANIFEST /MANIFESTFILE:"' + CompilationFolder + '\\setup.exe.intermediate.manifest" /SUBSYSTEM:WINDOWS /SWAPRUN:CD /OPT:REF /OPT:ICF /LTCG /MACHINE:X86 version.lib shlwapi.lib C:\\Work\\MsiIntel.SDK\\Lib\\Msi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib');
-	tso.WriteLine('"' + CompilationFolder + '\\Control.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\Dialogs.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\DiskManager.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\ErrorHandler.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\Globals.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\LogFile.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\main.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\PersistantProgress.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\ProductKeys.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\ProductManager.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\UniversalFixes.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\UsefulStuff.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\resources.res"');
-	tso.Close();
-}
-
-// Deletes the specified file(s), if they exist. Doesn't complain if they don't.
-// FilePath can contain wildcards for the filename.
-function DeleteIfExists(FilePath)
-{
-	try
-	{
-		fso.DeleteFile(FilePath);
-	}
-	catch(err)
-	{
-	}
 }
 
 // Makes changes to the master installer settings based on the user's selections.

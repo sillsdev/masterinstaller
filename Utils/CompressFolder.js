@@ -11,7 +11,7 @@
 
 // Works by building a batch file full of calls to 7za, adding one file at a time.
 
-var fso = new ActiveXObject("Scripting.FileSystemObject");	
+var fso = new ActiveXObject("Scripting.FileSystemObject");
 var shellObj = new ActiveXObject("WScript.Shell");
 
 // Get path of this script:
@@ -21,39 +21,7 @@ var ScriptPath = WScript.ScriptFullName.slice(0, iLastBackslash);
 // Check we have a valid folder argument:
 if (WScript.Arguments.Length < 1)
 {
-	// Assume user just double-clicked on this script. We will register it for context
-	// submenu use.
-	var Path = ScriptPath;
-	
-	// Build a version of the Path with doubled up backslashes:
-	var aFolder = Path.split("\\");
-	var bs2Path = "";
-	for (i = 0; i < aFolder.length; i++)
-	{
-		if (i > 0)
-			bs2Path += "\\\\";
-		bs2Path += aFolder[i];
-	}
-	
-	// Write registry settings:
-	var RegFile = fso.BuildPath(Path, "7zip.reg");
-	var tso = fso.OpenTextFile(RegFile, 2, true);
-	tso.WriteLine('Windows Registry Editor Version 5.00');
-	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\7-zip]');
-	tso.WriteLine('"EditFlags"=hex:01,00,00,00');
-	tso.WriteLine('@="Compress contents to maximum extent"');
-	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\7-zip\\command]');
-	// OK, deep breath, now:
-	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CompressFolder.js\\" \\"%1\\"\"');
-	tso.Close();
-	
-	// Run Regedit with the new file:
-	var Cmd = 'Regedit.exe "' + RegFile + '"';
-	shellObj.Run(Cmd, 0, true);
-
-	// Delete RegFile:
-	fso.DeleteFile(RegFile);
-
+	WScript.Echo("ERROR: must specify folder to compress.");
 	WScript.Quit();
 }
 
@@ -67,7 +35,7 @@ if (!fso.FolderExists(SourceFolder))
 var iLastBackslash = SourceFolder.lastIndexOf("\\");
 var RootFolder = SourceFolder.slice(iLastBackslash + 1);
 var LocationFolder = SourceFolder.slice(0, iLastBackslash);
-var ZipFile = RootFolder + ".exe";;
+var ZipFile = RootFolder + ".exe";
 var iFirstBackslash = SourceFolder.indexOf("\\");
 var LocationDrive = SourceFolder.slice(0, iFirstBackslash);
 
@@ -146,7 +114,7 @@ if (fso.FileExists(Md5SumsPath))
 	shellObj.Run(Cmd, 1, true);
 	// Delete the batch and list files:
 	fso.DeleteFile(BatchFile);
-	
+
 	// Get the raw md5 value from among the other junk in the output of md5sums:
 	var tso = fso.OpenTextFile(md5File, 1, true);
 	var Line = tso.ReadLine();
@@ -166,7 +134,7 @@ function AddFile(NewFile)
 	// Remove SourceFolder from NewFile:
 	if (NewFile.indexOf(SourceFolder) == 0)
 		NewFile = RootFolder + NewFile.slice(SourceFolder.length);
-	
+
 	var tso = fso.OpenTextFile(ListFile, 8, true);
 	tso.WriteLine('"' + NewFile + '"');
 	tso.Close();
@@ -195,7 +163,7 @@ function GetFileList(FileSpec, RecurseSubfolders)
 		{
 			Exception = new Object();
 			Exception.description = "Source specification '" + FileSpec + "' does not refer to a valid, accessible folder.";
-			throw(Exception);
+			throw (Exception);
 		}
 	}
 	// Build DOS dir command:

@@ -2,7 +2,7 @@
 
 #include <tchar.h>
 #include <shlobj.h>
-#include <msi.h>
+#include "msi.h"
 
 // Returns the INSTALLDIR folder from the installation denoted by the given Product Code GUID.
 _TCHAR * GetMsiComponentPath(const _TCHAR * pszProductCode, const _TCHAR * pszComponentId)

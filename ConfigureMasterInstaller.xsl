@@ -3,509 +3,733 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns:dt="urn:schemas-microsoft-com:datatypes">
-<xsl:output method="html" />
+	<xsl:output method="html" />
 
-<!-- =============================================== -->
-<!-- Root Template                                   -->
-<!-- =============================================== -->
-<xsl:template match="/">
-<html>
-  <head>
-	<title>Master Installer Configuration Tool</title>
-    <xsl:call-template name="script"/>
-  </head>
-  <body onload="Initialize();" bgcolor="#F8F8C8">
-	<span style="font-size:250%"><b>Master Installer Configuration </b></span><span style="font-size:80%">by <a href="mailto:alistair_imrie@sil.org?subject=Master Installer Auto-configuration Tool">Alistair Imrie</a></span>
-	<br/>&#169; 2006 <a href="http://www.sil.org">SIL International</a><br/><br/>
-	<button id="PrevButton" onclick='PrevStage()' disabled="true">&lt; Previous</button>
-	<button id="NextButton" onclick='NextStage()' title='On to General Configuration'>&#160;&#160;&#160;&#160;Next &gt;&#160;&#160;</button>
-	<div id="BlockedContentWarning" style="position:static; visibility:visible">
-		<h2>Please make sure that blocked content <u>and</u> active scripts are enabled in your browser.</h2>
-	</div>
-	<div id="Stage1StillInitializing" style="position:absolute; visibility:hidden">
-		<h2>Initializing - please wait...</h2>
-	</div>
-	<div id="Stage1" style="position:absolute; visibility:hidden">
-		<h2>Project Setup</h2>
-		<h3>Make sure you have up-to-date products and Master Installer files from the Subversion repository.</h3>
-	    <xsl:apply-templates select="/MasterInstaller/AutoConfigure"/>
-	</div>
-	<div id="Stage2" style="position:absolute; visibility:hidden">
-		<h2>General Configuration</h2>
-	    <xsl:apply-templates select="/MasterInstaller/General"/>
-	</div>
-	<div id="Stage3" style="position:absolute; visibility:hidden">
-		<h2>Product Selection</h2>
-	    <xsl:apply-templates select="/MasterInstaller/Products"/>
-	</div>
-	<div id="Stage4" style="position:absolute; visibility:hidden">
-		<h2>Select Single Instances</h2>
-	    <xsl:call-template name="SelectSingleInstances"/>
-	</div>
-	<div id="Stage5" style="position:absolute; visibility:hidden">
-		<h2>CD allocation</h2>
-		<div id="PrelimCompileDiv" valign="middle" style="position:absolute; visibility:hidden">
+	<!-- =============================================== -->
+	<!-- Root Template                                   -->
+	<!-- =============================================== -->
+	<xsl:template match="/">
+		<html>
+			<head>
+				<title>Master Installer Configuration Tool</title>
+				<xsl:call-template name="script"/>
+			</head>
+			<body onload="Initialize();" bgcolor="#F8F8C8">
+				<span style="font-size:250%">
+					<b>Master Installer Configuration </b>
+				</span><span style="font-size:80%">
+					by <a href="mailto:alistair_imrie@sil.org?subject=Master Installer Auto-configuration Tool">Alistair Imrie</a>
+				</span>
+				<br/>&#169; 2006 <a href="http://www.sil.org">SIL International</a><br/><br/>
+				<button id="PrevButton" onclick='PrevStage()' disabled="true">&lt; Previous</button>
+				<button id="NextButton" onclick='NextStage()' title='On to General Configuration'>&#160;&#160;&#160;&#160;Next &gt;&#160;&#160;</button>
+				<div id="BlockedContentWarning" style="position:static; visibility:visible">
+					<h2>
+						Please make sure that blocked content <u>and</u> active scripts are enabled in your browser.
+					</h2>
+				</div>
+				<div id="Stage1StillInitializing" style="position:absolute; visibility:hidden">
+					<h2>Initializing - please wait...</h2>
+				</div>
+				<div id="Stage1" style="position:absolute; visibility:hidden">
+					<h2>Project Setup</h2>
+					<h3>Make sure you have up-to-date products and Master Installer files from the Subversion repository.</h3>
+					<xsl:apply-templates select="/MasterInstaller/AutoConfigure"/>
+				</div>
+				<div id="Stage2" style="position:absolute; visibility:hidden">
+					<h2>General Configuration</h2>
+					<xsl:apply-templates select="/MasterInstaller/General"/>
+				</div>
+				<div id="Stage3" style="position:absolute; visibility:hidden">
+					<h2>Product Selection</h2>
+					<xsl:apply-templates select="/MasterInstaller/Products"/>
+				</div>
+				<div id="Stage4" style="position:absolute; visibility:hidden">
+					<h2>Select Single Instances</h2>
+					<xsl:call-template name="SelectSingleInstances"/>
+				</div>
+				<div id="Stage5" style="position:absolute; visibility:hidden">
+					<h2>CD allocation</h2>
+					<div id="PrelimCompileDiv" valign="middle" style="position:absolute; visibility:hidden">
+						<table>
+							<tr>
+								<td>
+									<b>Important: </b>Some files' sizes are estimates - click button to calculate precise sizes:
+								</td>
+								<td>
+									<button onclick="PrelimCompile();">Preliminary Compilation</button>
+								</td>
+							</tr>
+						</table>
+						<br/>
+					</div>
+					<xsl:call-template name="CDs"/>
+				</div>
+				<div id="PrelimCompileActiveDiv" style="position:absolute; visibility:hidden">
+					<h3>Compiling: please wait...</h3>
+				</div>
+				<div id="Stage6" style="position:absolute; visibility:hidden">
+					<h2>Ready to go...</h2>
+					Select the tasks you want to be performed, then press the Go button.<br/><br/>
+					<input id="WriteXml" type="checkbox" title="Write out an XML configuration file matching your settings."/>Write XML file<br/>
+					<script type="text/javascript">document.getElementById("WriteXml").checked=true;</script>
+					<input id="Compile" type="checkbox" title="Compile a setup.exe program with your settings."/>Compile master installer<br/>
+					<script type="text/javascript">document.getElementById("Compile").checked=true;</script>
+					<input id="SignWithCertificate" type="checkbox" title="Sign setup.exe with the certificate in the root folder on the CD in the specified drive."/>Sign master installer - certificate location:
+					<script type="text/javascript">document.getElementById("SignWithCertificate").checked=true;</script>
+					<input id="CdDrive" type="text" onselect="InputTextSelected(this);" size="2" onfocus="this.select();" title="Drive (or folder) containing digital certifiate CD." value="D:"/><br/>
+					<div id="CompileHelpsDiv" style="position:absolute; visibility:hidden">
+						<input id="CompileHelps" type="checkbox" title="Compile InstallerHelp2.dll to provide embedded setup helps."/>Compile InstallerHelp2.dll<br/>
+						<script type="text/javascript">document.getElementById("CompileHelps").checked=true;</script>
+					</div>
+					<input id="GatherFiles" type="checkbox" title="Gather files needed for your CD image into one folder."/>Gather files for CD image<br/>
+					<script type="text/javascript">document.getElementById("GatherFiles").checked=true;</script>
+					<input id="BuildIso" type="checkbox" title="Create ISO file which can be burned directly to CD. Requires Magic ISO console utility ($30)."/>Build ISO CD Image<br/>
+					<script type="text/javascript">document.getElementById("BuildIso").checked=true;</script>
+					<input id="BuildSfx" type="checkbox" title="Creates .exe file which extracts all files and folders needed on CD. Assumes 7-Zip utility is present."/>Build self-extracting zip of CD contents<br/>
+					<script type="text/javascript">document.getElementById("BuildSfx").checked=false;</script>
+					<br/>
+					<br/>
+					<button onclick="detailsEntered();" style="font-size:130%" title="Start the CD image build process">
+						<b>&#160;&#160; Go! &#160;&#160;</b>
+					</button><br/><br/>
+				</div>
+				<div id="PanicStoppingDiv" style="position:absolute; visibility:hidden">
+					<h2>Stopping - please wait until current action finishes...</h2>
+				</div>
+				<div id="Stage7" style="position:absolute; visibility:hidden">
+					<br/>
+					<table>
+						<tr>
+							<td valign="top">
+								<h2>Running...</h2>
+							</td>
+							<td valign="top">
+								<button id="PanicStopButton" onclick="PanicStop();" title="Panic! Stop the build process!">&#160;&#160; Stop! &#160;&#160;</button>
+							</td>
+						</tr>
+					</table>
+					Please wait while the master installer is built...<br/>
+					<table id="CommentaryTable"/>
+				</div>
+			</body>
+		</html>
+	</xsl:template>
+
+
+	<!-- =============================================== -->
+	<!-- Project Configuration Template                  -->
+	<!-- =============================================== -->
+	<xsl:template match="/MasterInstaller/AutoConfigure">
 		<table>
 			<tr>
-				<td><b>Important: </b>Some files' sizes are estimates - click button to calculate precise sizes:</td>
-				<td><button onclick="PrelimCompile();">Preliminary Compilation</button></td>
-			</tr>
-		</table>
-		<br/>
-		</div>
-	    <xsl:call-template name="CDs"/>
-	</div>
-	<div id="PrelimCompileActiveDiv" style="position:absolute; visibility:hidden">
-	<h3>Compiling: please wait...</h3>
-	</div>
-	<div id="Stage6" style="position:absolute; visibility:hidden">
-		<h2>Ready to go...</h2>
-		Select the tasks you want to be performed, then press the Go button.<br/><br/>
-		<input id="WriteXml" type="checkbox" title="Write out an XML configuration file matching your settings."/>Write XML file<br/>
-		<script type="text/javascript">document.getElementById("WriteXml").checked=true;</script>
-		<input id="Compile" type="checkbox" title="Compile a setup.exe program with your settings."/>Compile master installer<br/>
-		<script type="text/javascript">document.getElementById("Compile").checked=true;</script>
-		<input id="SignWithCertificate" type="checkbox" title="Sign setup.exe with the certificate in the root folder on the CD in the specified drive."/>Sign master installer - certificate location:
-		<script type="text/javascript">document.getElementById("SignWithCertificate").checked=true;</script>
-		<input id="CdDrive" type="text" onselect="InputTextSelected(this);" size="2" onfocus="this.select();" title="Drive (or folder) containing digital certifiate CD." value="D:"/><br/>
-		<div id="CompileHelpsDiv" style="position:absolute; visibility:hidden">
-		<input id="CompileHelps" type="checkbox" title="Compile InstallerHelp2.dll to provide embedded setup helps."/>Compile InstallerHelp2.dll<br/>
-		<script type="text/javascript">document.getElementById("CompileHelps").checked=true;</script>
-		</div>
-		<input id="GatherFiles" type="checkbox" title="Gather files needed for your CD image into one folder."/>Gather files for CD image<br/>
-		<script type="text/javascript">document.getElementById("GatherFiles").checked=true;</script>
-		<input id="BuildIso" type="checkbox" title="Create ISO file which can be burned directly to CD. Requires Magic ISO console utility ($30)."/>Build ISO CD Image<br/>
-		<script type="text/javascript">document.getElementById("BuildIso").checked=true;</script>
-		<input id="BuildSfx" type="checkbox" title="Creates .exe file which extracts all files and folders needed on CD. Assumes 7-Zip utility is present."/>Build self-extracting zip of CD contents<br/>
-		<script type="text/javascript">document.getElementById("BuildSfx").checked=false;</script>
-		<input id="DeleteJunk" type="checkbox" title="Delete temporary files that are created during compilation and linking."/>Clean up afterwards
-		<script type="text/javascript">document.getElementById("DeleteJunk").checked=true;</script>
-		<br/>
-		<br/>
-		<button onclick="detailsEntered();" style="font-size:130%" title="Start the CD image build process"><b>&#160;&#160; Go! &#160;&#160;</b></button><br/><br/>
-	</div>
-	<div id="PanicStoppingDiv" style="position:absolute; visibility:hidden">
-		<h2>Stopping - please wait until current action finishes...</h2>
-	</div>	
-	<div id="Stage7" style="position:absolute; visibility:hidden">
-		<br/>
-		<table>
-			<tr>
-				<td valign="top"><h2>Running...</h2></td>
-				<td valign="top"><button id="PanicStopButton" onclick="PanicStop();" title="Panic! Stop the build process!">&#160;&#160; Stop! &#160;&#160;</button></td>
-			</tr>
-		</table>
-		Please wait while the master installer is built...<br/>
-		<table id="CommentaryTable"/>
-	</div>	
-  </body>
-</html>
-</xsl:template>
-
-
-<!-- =============================================== -->
-<!-- Project Configuration Template                  -->
-<!-- =============================================== -->
-<xsl:template match="/MasterInstaller/AutoConfigure">
-	<table>
-	<tr>
-	<td align="right"><b>Output XML file name: </b></td><td><input id="XmlFileName" type="text" onselect="InputTextSelected(this);" size="35" onfocus="this.select();" value="NewInstaller.xml" title="File name of new XML file used to compile the master installer."/></td>
-	</tr>
-	<tr>
-	<td align="right"><b>CD image path: </b></td><td><input id="CdImagePath" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Target directory for files to be burned onto CD. If the directory does not exist, it will be created. If it does exist, it ought to be empty."/></td>
-	<script type="text/javascript">document.getElementById("CdImagePath").value=CheckCDsRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="CdImagePath"/></xsl:call-template>");</script>
-	</tr>
-	<tr>
-	<td align="right"><b>CD volume label template: </b><br/><span style="font-size:70%">(Leave blank unless anticipating multiple CD set.)</span></td><td><input id="CdLabelPrefix" type="text" onselect="InputTextSelected(this);" size="10" onfocus="this.select();" title="The text to be used as the basis for each CD's volume label. Each Cd's index will be added to form its default label."/></td>
-	</tr>
-	<tr><th align="right" style="font-size:130%"><br/>General Setup</th></tr>
-	<tr>
-	<td align="right"><b>C++ file path:</b></td><td><input id="CppFilePath" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of C++ files used to compile the master installer."/></td>
-	<script type="text/javascript">document.getElementById("CppFilePath").value=CheckRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="CppFilePath"/></xsl:call-template>");</script>
-	</tr>
-	<tr>
-	<td align="right"><b>External Help source path:</b></td><td><input id="ExternalHelpSource" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of files used to implement Software Support on the CD." onkeyup="TestExternalHelpSource();"/></td>
-	<script type="text/javascript">document.getElementById("ExternalHelpSource").value=CheckSourceRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="ExternalHelpSource"/></xsl:call-template>");</script>
-	</tr>
-	<tr>
-	<td align="right"><b>External Help destination folder:</b></td>
-	<td><input id="ExternalHelpFileDest" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Relative path from master installer to root folder of external help file(s) - ONLY IF SOURCE PATH IS A FOLDER"/></td>
-	<script type="text/javascript">document.getElementById("ExternalHelpFileDest").value="<xsl:value-of select="ExternalHelpDestination"/>"</script>
-	</tr>
-	<tr>
-	<td align="right"><b>Terms of use source path:</b></td><td><input id="TermsOfUseSource" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of file(s) used as Terms of Use document(s)." onkeyup="TestTermsOfUseSource();"/></td>
-	<script type="text/javascript">document.getElementById("TermsOfUseSource").value=CheckSourceRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="TermsOfUseSource"/></xsl:call-template>");</script>
-	</tr>
-	<tr>
-	<td align="right"><b>Terms of Use destination folder:</b></td>
-	<td><input id="TermsOfUseFileDest" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Relative path from master installer to root folder of Terms of Use file(s) - ONLY IF SOURCE PATH IS A FOLDER"/></td>
-	<script type="text/javascript">document.getElementById("TermsOfUseFileDest").value="<xsl:value-of select="TermsOfUseDestination"/>";</script>
-	</tr>
-	<tr>
-	<td align="right"><b>CD size (MB):</b></td><td><input id="CdSize" type="text" onselect="InputTextSelected(this);" size="5" onfocus="this.select();" title="Capacity of individual target CD"/></td>
-	<script type="text/javascript">document.getElementById("CdSize").value="<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="CdSize"/></xsl:call-template>"</script>
-	</tr>
-	<tr>
-	<td align="right"><b>Use Universal Disk Format (if this is to be a DVD):</b></td>
-	<td><input id="UseUDF" type="checkbox" title="If checked, any .iso disk image file created will be set to use UDF."/></td>
-	<script type="text/javascript">document.getElementById("UseUDF").checked=<xsl:value-of select="UseUDF"/></script>
-	</tr>
-	<tr>
-	<td align="right"><b>Min file size (Bytes): </b></td><td><input id="MinFileSize" type="text" onselect="InputTextSelected(this);" size="5" onfocus="this.select();" title="The amount of space actually used on CD for a 1-byte file"/></td>
-	<script type="text/javascript">document.getElementById("MinFileSize").value="<xsl:value-of select="MinFileSize"/>"</script>
-	</tr>
-	</table>
-</xsl:template>
-
-
-<!-- =============================================== -->
-<!-- General Configuration Template                  -->
-<!-- =============================================== -->
-<xsl:template match="/MasterInstaller/General">
-	<table>
-	<tr>
-	<td align="right"><b>Title:</b></td>
-	<td><input id="OverallTitle" type="text" onselect="InputTextSelected(this);" size="30" onfocus="this.select();" title="Overall title of master installer" onchange="InvalidateCompiledFiles();"/></td>
-	<script type="text/javascript">document.getElementById("OverallTitle").value="<xsl:value-of select="Title"/>"</script>
-	</tr>
-	<tr>
-	<td align="right"><b>Product selection dialog subtitle:</b></td>
-	<td><input id="ListSubtitle" type="text" onselect="InputTextSelected(this);" size="30" onfocus="this.select();" title="Text appended to overall title in product selection dialog box" onchange="InvalidateCompiledFiles();"/></td>
-	<script type="text/javascript">document.getElementById("ListSubtitle").value="<xsl:value-of select="ListSubtitle"/>"</script>
-	</tr>
-	<tr>
-	<td align="right"><b>Product selection dialog background:</b></td>
-	<td>
-		<table border="1">
-		<tr>
-			<td align="right">Main color:</td>
-			<td>
-				<select name="ListBackground">
-					<option value="None">Blank</option>
-					<option value="Green">Green (Redistributable – no caution needed)</option>
-					<option value="Yellow">Yellow (Redistributable - caution Bible Translation Edition)</option>
-					<option value="Red">Red (Not Redistributable – encumbered)</option>
-					<option value="Blue">Blue (Not Redistributable – commercial)</option>
-					<option value="Black">Black</option>
-					<option value="White">White</option>
-				</select>
-			</td>
-			<script type="text/javascript">SelectBackgroundColor();</script>			
-		</tr>
-		<tr>
-			<td align="right">Bitmap source folder:</td>
-			<td>
-				<input id="BackgroundBmpFolder" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Folder to search for bitmaps to use as background in product selection dialog box"/>
-				<script type="text/javascript">document.getElementById("BackgroundBmpFolder").value=CheckRelativePath("<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="ListBackground/@DefaultFolder"/></xsl:call-template>");</script>
-			</td>
-		</tr>
-		<tr>
-			<td align="right">Bitmap file:</td>
-			<td>
-				<select name="ListBackgroundBmp" onchange="InvalidateCompiledFiles();"><option value="None">None</option></select>
-				&#160;<button id="RefreshBitmapList" title="Scan above folder for bitmap files." onclick="RefreshBitmapList();">Refresh List</button>
-			</td>
-			<script type="text/javascript">RefreshBitmapList();</script>
-		</tr>
-		<tr>
-			<td align="right">X-offset:</td>
-			<td>
-				<input id="OffsetX" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset background bitmap of product selection dialog box"/>
-				<script type="text/javascript">document.getElementById("OffsetX").value="<xsl:value-of select="ListBackground/@OffsetX"/>"</script>
-			</td>
-		</tr>
-		<tr>
-			<td align="right">Y-offset:</td>
-			<td>
-			<input id="OffsetY" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of vertical pixels (positive = down) to offset background bitmap of product selection dialog box"/>
-			<script type="text/javascript">document.getElementById("OffsetY").value="<xsl:value-of select="ListBackground/@OffsetY"/>"</script>
-			</td>
-		</tr>
-		<tr>
-			<td align="right">Blend left:</td>
-			<td>
-				<input id="BlendLeft" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at left of product selection dialog box"/>
-				<script type="text/javascript">document.getElementById("BlendLeft").value="<xsl:value-of select="ListBackground/@BlendLeft"/>"</script>
-			</td>
-		</tr>
-		<tr>
-			<td align="right">Blend right:</td>
-			<td>
-				<input id="BlendRight" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at right of product selection dialog box"/>
-				<script type="text/javascript">document.getElementById("BlendRight").value="<xsl:value-of select="ListBackground/@BlendRight"/>"</script>
-			</td>
-		</tr>
-		<tr>
-			<td align="right">Blend top:</td>
-			<td>
-				<input id="BlendTop" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at top of product selection dialog box"/>
-				<script type="text/javascript">document.getElementById("BlendTop").value="<xsl:value-of select="ListBackground/@BlendTop"/>"</script>
-			</td>
-		</tr>
-		<tr>
-			<td align="right">Blend bottom:</td>
-			<td>
-				<input id="BlendBottom" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at bottom of product selection dialog box"/>
-				<script type="text/javascript">document.getElementById("BlendBottom").value="<xsl:value-of select="ListBackground/@BlendBottom"/>"</script>
-			</td>
-		</tr>
-		</table>
-	</td>
-	</tr>
-	<tr>
-		<td align="right">
-			<b>Initial text:</b>
-		</td>
-		<td>
-			<table border="1">
-				<tr>
-					<td align="right">Message:</td>
-					<td>
-						<input id="InitialTextMessage" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Message to display above list of products"/>
-					</td>
-				</tr>
-				<tr>
-					<td align="right">Alignment:</td>
-					<td>
-						<select name="InitialTextAlignment">
-							<option value="InitialTextLeftEdge">Left</option>
-							<option value="InitialTextButtons">Buttons</option>
-							<option value="InitialTextCheckBoxes">Checkboxes</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td align="right">Left edge offset:</td>
-					<td>
-						<input id="InitialTextLeftOffset" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset initial text"/>
-					</td>
-				</tr>
-				<tr>
-					<td align="right">Right edge offset:</td>
-					<td>
-						<input id="InitialTextRightOffset" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset initial text right-hand edge"/>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-	<td align="right"><b>Allow start from any CD in set</b></td>
-	<td><input id="StartFromAnyCD" type="checkbox" title="If not checked, user must start from CD 1, otherwise a message will be displayed asking them to switch to CD 1."/></td>
-	<script type="text/javascript">document.getElementById("StartFromAnyCD").checked=<xsl:value-of select="StartFromAnyCD"/>;</script>
-	</tr>
-	<tr>
-	<td align="right"><b>List even one product</b></td>
-	<td><input id="ListEvenOneProduct" type="checkbox" title="If checked, the user will get a list of products to select even if there is only one product. If not checked and there is only one product, it will be installed automatically."/></td>
-	<script type="text/javascript">document.getElementById("ListEvenOneProduct").checked=<xsl:value-of select="ListEvenOneProduct"/></script>
-	</tr>
-	<tr>
-	<td align="right"><b>Show final 'Installation has finished' message:</b></td>
-	<td><input id="ShowInstallCompleteMessage" type="checkbox" title="If checked, a message box will be shown at the end of the entire installation sequence indicating that it has finished."/></td>
-	<script type="text/javascript">document.getElementById("ShowInstallCompleteMessage").checked=<xsl:if test="string-length(ShowInstallCompleteMessage)=0"><xsl:text>true</xsl:text></xsl:if><xsl:if test="not(string-length(ShowInstallCompleteMessage)=0)"><xsl:value-of select="ShowInstallCompleteMessage"/></xsl:if>;</script>
-	</tr>
-	<tr>
-	<td align="right"><b>List spacing adjust:</b></td>
-	<td><input id="ListSpacingAdjust" type="text" onselect="InputTextSelected(this);" size="4" title="Number of pixels to adjust vertical spacing by, in main product list. Negative numbers are allowed, and they reduce the spacing." onfocus="this.select();"/></td>
-	<script type="text/javascript">document.getElementById("ListSpacingAdjust").value="<xsl:value-of select="ListSpacingAdjust"/>"</script>
-	</tr>
-	<tr>
-	<td align="right"><b>'?' button adjust:</b></td>
-	<td><input id="InfoButtonAdjust" type="text" onselect="InputTextSelected(this);" size="4" onfocus="this.select();" title="Number of pixels to adjust ? button size by, in main product list.Negative numbers are allowed, and they reduce the button size."/></td>
-	<script type="text/javascript">document.getElementById("InfoButtonAdjust").value="<xsl:value-of select="InfoButtonAdjust"/>"</script>
-	</tr>
-	<tr>
-	<td align="right"><b>Secret product key prompt</b></td>
-	<td><input id="KeyPromptNeedsShiftCtrl" type="checkbox" title="If checked, user must press [shift] + [ctrl] at startup in order to get a prompt for a Product Key."/></td>
-	<script type="text/javascript">document.getElementById("KeyPromptNeedsShiftCtrl").checked=<xsl:value-of select="KeyPromptNeedsShiftCtrl"/>;</script>
-	</tr>
-	<tr>
-	<td align="right"><b>Get Key Title:</b></td>
-	<td><input id="GetKeyTitle" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Title of dialog asking for product key (if applicable)" onchange="InvalidateCompiledFiles();"/></td>
-	<script type="text/javascript">document.getElementById("GetKeyTitle").value="<xsl:value-of select="GetKeyTitle"/>"</script>
-	</tr>
-	<tr>
-	<td align="right"><b>External help file:</b></td>
-	<td><input id="ExternalHelpFile" type="text" onselect="InputTextSelected(this);" size="50" onfocus="this.select();" title="Relative path from master installer to main help file" onchange="InvalidateCompiledFiles();"/></td>
-	<script type="text/javascript">document.getElementById("ExternalHelpFile").value='<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="ExternalHelpFile"/></xsl:call-template>'</script>
-	</tr>
-	<tr>
-	<td align="right"><b>Help button text:</b></td>
-	<td><input id="HelpButtonText" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Text on main help button" onchange="InvalidateCompiledFiles();"/></td>
-	<script type="text/javascript">document.getElementById("HelpButtonText").value="<xsl:value-of select="HelpButtonText"/>"</script>
-	</tr>
-	<tr>
-	<td align="right"><b>Terms of Use file:</b></td>
-	<td><input id="TermsOfUseFile" type="text" onselect="InputTextSelected(this);" size="50" onfocus="this.select();" title="Relative path from master installer to Terms of Use file" onchange="InvalidateCompiledFiles();"/></td>
-	<script type="text/javascript">document.getElementById("TermsOfUseFile").value='<xsl:call-template name="CppPathString"><xsl:with-param name="str" select="TermsOfUseFile"/></xsl:call-template>'</script>
-	</tr>
-	<tr>
-	<td align="right"><b>Terms of Use button text:</b></td>
-	<td><input id="TermsButtonText" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Text on Terms of Use button" onchange="InvalidateCompiledFiles();"/></td>
-	<script type="text/javascript">document.getElementById("TermsButtonText").value="<xsl:value-of select="TermsButtonText"/>"</script>
-	</tr>
-	<tr>
-	<td align="right">
-	<b>Include Easter Eggs</b>
-	</td>
-	<td>
-	<input id="IncludeEasterEggs" type="checkbox" title="Let's have some fun!"/>
-	</td>
-	</tr>
-	</table>
-</xsl:template>
-
-
-<!-- =============================================== -->
-<!-- Products Configuration Template                 -->
-<!-- =============================================== -->
-<xsl:template match="/MasterInstaller/Products">
-	<table>
-	<xsl:for-each select="Product">
-		<tr>
-		<td align="right"><xsl:value-of select="AutoConfigure/Title"/>
-		<input id="ProductTitle{count(preceding-sibling::Product)}" type="checkbox" onclick="showPage('ProductSetup{count(preceding-sibling::Product)}', this.checked); InvalidateCompiledFiles();">
-		<xsl:if test="@List='true'"><xsl:attribute name="checked">true</xsl:attribute></xsl:if>
-		</input></td>
-		<td>
-			<span id="ProductSetup{count(preceding-sibling::Product)}" style="position:absolute; visibility:hidden">
-			<xsl:if test="not(string-length(@KeyId)=0)">
-			<input id="UseKey{count(preceding-sibling::Product)}" type="checkbox" onclick="InvalidateCompiledFiles();"/>Requires Product Key
-			</xsl:if>
-			</span>
-		</td>
-		</tr>
-	</xsl:for-each>
-	</table>
-</xsl:template>
-
-
-<!-- =============================================== -->
-<!-- Select Single Instances Template                -->
-<!-- =============================================== -->
-<xsl:template name="SelectSingleInstances">
-	<h4>The products listed below have more than one variety.<br/>In each case, you must select which one to include in your CD set.</h4>
-	<table border="1">
-		<tr>
-			<th>Product</th>
-			<th>Varieties</th>
-		</tr>
-		<xsl:for-each select="/MasterInstaller/Products/Product">
-			<tr id="DuplicateSetTr{count(preceding-sibling::Product)}" style="display:none">
-				<td align="right" id="DuplicateSetTrTitle{count(preceding-sibling::Product)}"/>
-				<td align="left" id="DuplicateSetTrOptions{count(preceding-sibling::Product)}"/>
-			</tr>
-		</xsl:for-each>
-	</table>
-</xsl:template>
-
-<!-- =============================================== -->
-<!-- CDs Configuration Template                      -->
-<!-- =============================================== -->
-<xsl:template name="CDs">
-	<table border="1">
-		<tr>
-			<th>Product</th>
-			<th>Size of files</th>
-			<th>Include</th>
-			<th>CD number</th>
-		</tr>
-		<xsl:for-each select="/MasterInstaller/Products/Product">
-			<tr id="ProductCdTr{count(preceding-sibling::Product)}" style="display:none">
-				<td align="center"><xsl:value-of select="AutoConfigure/Title"/></td>
-				<td align="center" id="FileSize{count(preceding-sibling::Product)}"></td>
-				<td align="center">
-					<input id="Included{count(preceding-sibling::Product)}" type="checkbox" title="Select to include, clear to omit this product from the CD." onclick="EnableCdIndex({count(preceding-sibling::Product)}, this.checked); UpdateCdTotals();">
-					<xsl:if test="not(CD &lt; 0)"><xsl:attribute name="checked">true</xsl:attribute></xsl:if>
-					</input>
+				<td align="right">
+					<b>Output XML file name: </b>
 				</td>
-				<td align="center"><input id="ProductCD{count(preceding-sibling::Product)}" value="0" onkeyup="UpdateCdTotals();" type="text" size="2" title="Index of CD to place this product on. Zero-based." onfocus="this.select();">
-				<xsl:if test="CD >= 0"><xsl:attribute name="value"><xsl:value-of select="CD"/></xsl:attribute></xsl:if>
-				</input></td>
+				<td>
+					<input id="XmlFileName" type="text" onselect="InputTextSelected(this);" size="35" onfocus="this.select();" value="NewInstaller.xml" title="File name of new XML file used to compile the master installer."/>
+				</td>
 			</tr>
-		</xsl:for-each>
-	</table>
-	<br/>
-	<!-- Set up table for CD labels etc. Allow one CD per product, initially - we will control this interactively. -->
-	<table border="1">
-		<tr>
-			<th>Index</th>
-			<th>Title</th>
-			<th>Volume Label</th>
-			<th>Space Used</th>
-			<th>Space Available</th>
-			<th>Notes</th>
-		</tr>
-		<xsl:for-each select="/MasterInstaller/Products/Product">
-			<tr id="CdTr{count(preceding-sibling::Product)}" style="display:none">
-				<td align="center"><xsl:number value="count(preceding-sibling::Product)"/></td>
-				<td align="center"><input id="CdTitle{count(preceding-sibling::Product)}" type="text" size="30" value="{/MasterInstaller/CDs/CD[1 + current()/CD]/Title}" title="Title to display to user for CD {count(preceding-sibling::Product)}" onfocus="this.select();"/></td>
-				<td align="center"><input id="CdLabel{count(preceding-sibling::Product)}" type="text" value="{/MasterInstaller/CDs/CD[1 + current()/CD]/VolumeLabel}" title="Volume label of CD {count(preceding-sibling::Product)}" onfocus="this.select();"/></td>
-				<td align="center" id="CdUsed{count(preceding-sibling::Product)}"></td>
-				<td align="center" id="CdSpace{count(preceding-sibling::Product)}"></td>
-				<td align="left" id="CdNotes{count(preceding-sibling::Product)}" style="font-size:70%"></td>
+			<tr>
+				<td align="right">
+					<b>CD image path: </b>
+				</td>
+				<td>
+					<input id="CdImagePath" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Target directory for files to be burned onto CD. If the directory does not exist, it will be created. If it does exist, it ought to be empty."/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("CdImagePath").value=CheckCDsRelativePath("<xsl:call-template name="CppPathString">
+						<xsl:with-param name="str" select="CdImagePath"/>
+					</xsl:call-template>");
+				</script>
 			</tr>
-		</xsl:for-each>
-	</table>
-</xsl:template>
+			<tr>
+				<td align="right">
+					<b>CD volume label template: </b>
+					<br/>
+					<span style="font-size:70%">(Leave blank unless anticipating multiple CD set.)</span>
+				</td>
+				<td>
+					<input id="CdLabelPrefix" type="text" onselect="InputTextSelected(this);" size="10" onfocus="this.select();" title="The text to be used as the basis for each CD's volume label. Each Cd's index will be added to form its default label."/>
+				</td>
+			</tr>
+			<tr>
+				<th align="right" style="font-size:130%">
+					<br/>General Setup
+				</th>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>External Help source path:</b>
+				</td>
+				<td>
+					<input id="ExternalHelpSource" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of files used to implement Software Support on the CD." onkeyup="TestExternalHelpSource();"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("ExternalHelpSource").value=CheckSourceRelativePath("<xsl:call-template name="CppPathString">
+						<xsl:with-param name="str" select="ExternalHelpSource"/>
+					</xsl:call-template>");
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>External Help destination folder:</b>
+				</td>
+				<td>
+					<input id="ExternalHelpFileDest" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Relative path from master installer to root folder of external help file(s) - ONLY IF SOURCE PATH IS A FOLDER"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("ExternalHelpFileDest").value="<xsl:value-of select="ExternalHelpDestination"/>"
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Terms of use source path:</b>
+				</td>
+				<td>
+					<input id="TermsOfUseSource" type="text" onselect="InputTextSelected(this);" size="70" onfocus="this.select();" title="Location of file(s) used as Terms of Use document(s)." onkeyup="TestTermsOfUseSource();"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("TermsOfUseSource").value=CheckSourceRelativePath("<xsl:call-template name="CppPathString">
+						<xsl:with-param name="str" select="TermsOfUseSource"/>
+					</xsl:call-template>");
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Terms of Use destination folder:</b>
+				</td>
+				<td>
+					<input id="TermsOfUseFileDest" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Relative path from master installer to root folder of Terms of Use file(s) - ONLY IF SOURCE PATH IS A FOLDER"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("TermsOfUseFileDest").value="<xsl:value-of select="TermsOfUseDestination"/>";
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>CD size (MB):</b>
+				</td>
+				<td>
+					<input id="CdSize" type="text" onselect="InputTextSelected(this);" size="5" onfocus="this.select();" title="Capacity of individual target CD"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("CdSize").value="<xsl:call-template name="CppPathString">
+						<xsl:with-param name="str" select="CdSize"/>
+					</xsl:call-template>"
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Use Universal Disk Format (if this is to be a DVD):</b>
+				</td>
+				<td>
+					<input id="UseUDF" type="checkbox" title="If checked, any .iso disk image file created will be set to use UDF."/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("UseUDF").checked=<xsl:value-of select="UseUDF"/>
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Min file size (Bytes): </b>
+				</td>
+				<td>
+					<input id="MinFileSize" type="text" onselect="InputTextSelected(this);" size="5" onfocus="this.select();" title="The amount of space actually used on CD for a 1-byte file"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("MinFileSize").value="<xsl:value-of select="MinFileSize"/>"
+				</script>
+			</tr>
+		</table>
+	</xsl:template>
 
-<!--
+
+	<!-- =============================================== -->
+	<!-- General Configuration Template                  -->
+	<!-- =============================================== -->
+	<xsl:template match="/MasterInstaller/General">
+		<table>
+			<tr>
+				<td align="right">
+					<b>Title:</b>
+				</td>
+				<td>
+					<input id="OverallTitle" type="text" onselect="InputTextSelected(this);" size="30" onfocus="this.select();" title="Overall title of master installer" onchange="InvalidateCompiledFiles();"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("OverallTitle").value="<xsl:value-of select="Title"/>"
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Product selection dialog subtitle:</b>
+				</td>
+				<td>
+					<input id="ListSubtitle" type="text" onselect="InputTextSelected(this);" size="30" onfocus="this.select();" title="Text appended to overall title in product selection dialog box" onchange="InvalidateCompiledFiles();"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("ListSubtitle").value="<xsl:value-of select="ListSubtitle"/>"
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Product selection dialog background:</b>
+				</td>
+				<td>
+					<table border="1">
+						<tr>
+							<td align="right">Main color:</td>
+							<td>
+								<select name="ListBackground">
+									<option value="None">Blank</option>
+									<option value="Green">Green (Redistributable – no caution needed)</option>
+									<option value="Yellow">Yellow (Redistributable - caution Bible Translation Edition)</option>
+									<option value="Red">Red (Not Redistributable – encumbered)</option>
+									<option value="Blue">Blue (Not Redistributable – commercial)</option>
+									<option value="Black">Black</option>
+									<option value="White">White</option>
+								</select>
+							</td>
+							<script type="text/javascript">SelectBackgroundColor();</script>
+						</tr>
+						<tr>
+							<td align="right">Bitmap file:</td>
+							<td>
+								<select name="ListBackgroundBmp" onchange="InvalidateCompiledFiles();">
+									<option value="None">None</option>
+								</select>
+								&#160;<button id="RefreshBitmapList" title="Scan above folder for bitmap files." onclick="RefreshBitmapList();">Refresh List</button>
+							</td>
+							<script type="text/javascript">RefreshBitmapList();</script>
+						</tr>
+						<tr>
+							<td align="right">X-offset:</td>
+							<td>
+								<input id="OffsetX" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset background bitmap of product selection dialog box"/>
+								<script type="text/javascript">
+									document.getElementById("OffsetX").value="<xsl:value-of select="ListBackground/@OffsetX"/>"
+								</script>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">Y-offset:</td>
+							<td>
+								<input id="OffsetY" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of vertical pixels (positive = down) to offset background bitmap of product selection dialog box"/>
+								<script type="text/javascript">
+									document.getElementById("OffsetY").value="<xsl:value-of select="ListBackground/@OffsetY"/>"
+								</script>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">Blend left:</td>
+							<td>
+								<input id="BlendLeft" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at left of product selection dialog box"/>
+								<script type="text/javascript">
+									document.getElementById("BlendLeft").value="<xsl:value-of select="ListBackground/@BlendLeft"/>"
+								</script>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">Blend right:</td>
+							<td>
+								<input id="BlendRight" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at right of product selection dialog box"/>
+								<script type="text/javascript">
+									document.getElementById("BlendRight").value="<xsl:value-of select="ListBackground/@BlendRight"/>"
+								</script>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">Blend top:</td>
+							<td>
+								<input id="BlendTop" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at top of product selection dialog box"/>
+								<script type="text/javascript">
+									document.getElementById("BlendTop").value="<xsl:value-of select="ListBackground/@BlendTop"/>"
+								</script>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">Blend bottom:</td>
+							<td>
+								<input id="BlendBottom" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Percentage to blend-in background bitmap at bottom of product selection dialog box"/>
+								<script type="text/javascript">
+									document.getElementById("BlendBottom").value="<xsl:value-of select="ListBackground/@BlendBottom"/>"
+								</script>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Initial text:</b>
+				</td>
+				<td>
+					<table border="1">
+						<tr>
+							<td align="right">Message:</td>
+							<td>
+								<input id="InitialTextMessage" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Message to display above list of products"/>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">Alignment:</td>
+							<td>
+								<select name="InitialTextAlignment">
+									<option value="InitialTextLeftEdge">Left</option>
+									<option value="InitialTextButtons">Buttons</option>
+									<option value="InitialTextCheckBoxes">Checkboxes</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">Left edge offset:</td>
+							<td>
+								<input id="InitialTextLeftOffset" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset initial text"/>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">Right edge offset:</td>
+							<td>
+								<input id="InitialTextRightOffset" type="text" onselect="InputTextSelected(this);" size="3" onfocus="this.select();" title="Number of horizontal pixels (positive = right) to offset initial text right-hand edge"/>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Allow start from any CD in set</b>
+				</td>
+				<td>
+					<input id="StartFromAnyCD" type="checkbox" title="If not checked, user must start from CD 1, otherwise a message will be displayed asking them to switch to CD 1."/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("StartFromAnyCD").checked=<xsl:value-of select="StartFromAnyCD"/>;
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>List even one product</b>
+				</td>
+				<td>
+					<input id="ListEvenOneProduct" type="checkbox" title="If checked, the user will get a list of products to select even if there is only one product. If not checked and there is only one product, it will be installed automatically."/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("ListEvenOneProduct").checked=<xsl:value-of select="ListEvenOneProduct"/>
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Show final 'Installation has finished' message:</b>
+				</td>
+				<td>
+					<input id="ShowInstallCompleteMessage" type="checkbox" title="If checked, a message box will be shown at the end of the entire installation sequence indicating that it has finished."/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("ShowInstallCompleteMessage").checked=<xsl:if test="string-length(ShowInstallCompleteMessage)=0">
+						<xsl:text>true</xsl:text>
+					</xsl:if><xsl:if test="not(string-length(ShowInstallCompleteMessage)=0)">
+						<xsl:value-of select="ShowInstallCompleteMessage"/>
+					</xsl:if>;
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>List spacing adjust:</b>
+				</td>
+				<td>
+					<input id="ListSpacingAdjust" type="text" onselect="InputTextSelected(this);" size="4" title="Number of pixels to adjust vertical spacing by, in main product list. Negative numbers are allowed, and they reduce the spacing." onfocus="this.select();"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("ListSpacingAdjust").value="<xsl:value-of select="ListSpacingAdjust"/>"
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>'?' button adjust:</b>
+				</td>
+				<td>
+					<input id="InfoButtonAdjust" type="text" onselect="InputTextSelected(this);" size="4" onfocus="this.select();" title="Number of pixels to adjust ? button size by, in main product list.Negative numbers are allowed, and they reduce the button size."/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("InfoButtonAdjust").value="<xsl:value-of select="InfoButtonAdjust"/>"
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Secret product key prompt</b>
+				</td>
+				<td>
+					<input id="KeyPromptNeedsShiftCtrl" type="checkbox" title="If checked, user must press [shift] + [ctrl] at startup in order to get a prompt for a Product Key."/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("KeyPromptNeedsShiftCtrl").checked=<xsl:value-of select="KeyPromptNeedsShiftCtrl"/>;
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Get Key Title:</b>
+				</td>
+				<td>
+					<input id="GetKeyTitle" type="text" onselect="InputTextSelected(this);" size="45" onfocus="this.select();" title="Title of dialog asking for product key (if applicable)" onchange="InvalidateCompiledFiles();"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("GetKeyTitle").value="<xsl:value-of select="GetKeyTitle"/>"
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>External help file:</b>
+				</td>
+				<td>
+					<input id="ExternalHelpFile" type="text" onselect="InputTextSelected(this);" size="50" onfocus="this.select();" title="Relative path from master installer to main help file" onchange="InvalidateCompiledFiles();"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("ExternalHelpFile").value='<xsl:call-template name="CppPathString">
+						<xsl:with-param name="str" select="ExternalHelpFile"/>
+					</xsl:call-template>'
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Help button text:</b>
+				</td>
+				<td>
+					<input id="HelpButtonText" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Text on main help button" onchange="InvalidateCompiledFiles();"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("HelpButtonText").value="<xsl:value-of select="HelpButtonText"/>"
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Terms of Use file:</b>
+				</td>
+				<td>
+					<input id="TermsOfUseFile" type="text" onselect="InputTextSelected(this);" size="50" onfocus="this.select();" title="Relative path from master installer to Terms of Use file" onchange="InvalidateCompiledFiles();"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("TermsOfUseFile").value='<xsl:call-template name="CppPathString">
+						<xsl:with-param name="str" select="TermsOfUseFile"/>
+					</xsl:call-template>'
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Terms of Use button text:</b>
+				</td>
+				<td>
+					<input id="TermsButtonText" type="text" onselect="InputTextSelected(this);" size="20" onfocus="this.select();" title="Text on Terms of Use button" onchange="InvalidateCompiledFiles();"/>
+				</td>
+				<script type="text/javascript">
+					document.getElementById("TermsButtonText").value="<xsl:value-of select="TermsButtonText"/>"
+				</script>
+			</tr>
+			<tr>
+				<td align="right">
+					<b>Include Easter Eggs</b>
+				</td>
+				<td>
+					<input id="IncludeEasterEggs" type="checkbox" title="Let's have some fun!"/>
+				</td>
+			</tr>
+		</table>
+	</xsl:template>
+
+
+	<!-- =============================================== -->
+	<!-- Products Configuration Template                 -->
+	<!-- =============================================== -->
+	<xsl:template match="/MasterInstaller/Products">
+		<table>
+			<xsl:for-each select="Product">
+				<tr>
+					<td align="right">
+						<xsl:value-of select="AutoConfigure/Title"/>
+						<input id="ProductTitle{count(preceding-sibling::Product)}" type="checkbox" onclick="showPage('ProductSetup{count(preceding-sibling::Product)}', this.checked); InvalidateCompiledFiles();">
+							<xsl:if test="@List='true'">
+								<xsl:attribute name="checked">true</xsl:attribute>
+							</xsl:if>
+						</input>
+					</td>
+					<td>
+						<span id="ProductSetup{count(preceding-sibling::Product)}" style="position:absolute; visibility:hidden">
+							<xsl:if test="not(string-length(@KeyId)=0)">
+								<input id="UseKey{count(preceding-sibling::Product)}" type="checkbox" onclick="InvalidateCompiledFiles();"/>Requires Product Key
+							</xsl:if>
+						</span>
+					</td>
+				</tr>
+			</xsl:for-each>
+		</table>
+	</xsl:template>
+
+
+	<!-- =============================================== -->
+	<!-- Select Single Instances Template                -->
+	<!-- =============================================== -->
+	<xsl:template name="SelectSingleInstances">
+		<h4>
+			The products listed below have more than one variety.<br/>In each case, you must select which one to include in your CD set.
+		</h4>
+		<table border="1">
+			<tr>
+				<th>Product</th>
+				<th>Varieties</th>
+			</tr>
+			<xsl:for-each select="/MasterInstaller/Products/Product">
+				<tr id="DuplicateSetTr{count(preceding-sibling::Product)}" style="display:none">
+					<td align="right" id="DuplicateSetTrTitle{count(preceding-sibling::Product)}"/>
+					<td align="left" id="DuplicateSetTrOptions{count(preceding-sibling::Product)}"/>
+				</tr>
+			</xsl:for-each>
+		</table>
+	</xsl:template>
+
+	<!-- =============================================== -->
+	<!-- CDs Configuration Template                      -->
+	<!-- =============================================== -->
+	<xsl:template name="CDs">
+		<table border="1">
+			<tr>
+				<th>Product</th>
+				<th>Size of files</th>
+				<th>Include</th>
+				<th>CD number</th>
+			</tr>
+			<xsl:for-each select="/MasterInstaller/Products/Product">
+				<tr id="ProductCdTr{count(preceding-sibling::Product)}" style="display:none">
+					<td align="center">
+						<xsl:value-of select="AutoConfigure/Title"/>
+					</td>
+					<td align="center" id="FileSize{count(preceding-sibling::Product)}"></td>
+					<td align="center">
+						<input id="Included{count(preceding-sibling::Product)}" type="checkbox" title="Select to include, clear to omit this product from the CD." onclick="EnableCdIndex({count(preceding-sibling::Product)}, this.checked); UpdateCdTotals();">
+							<xsl:if test="not(CD &lt; 0)">
+								<xsl:attribute name="checked">true</xsl:attribute>
+							</xsl:if>
+						</input>
+					</td>
+					<td align="center">
+						<input id="ProductCD{count(preceding-sibling::Product)}" value="0" onkeyup="UpdateCdTotals();" type="text" size="2" title="Index of CD to place this product on. Zero-based." onfocus="this.select();">
+							<xsl:if test="CD >= 0">
+								<xsl:attribute name="value">
+									<xsl:value-of select="CD"/>
+								</xsl:attribute>
+							</xsl:if>
+						</input>
+					</td>
+				</tr>
+			</xsl:for-each>
+		</table>
+		<br/>
+		<!-- Set up table for CD labels etc. Allow one CD per product, initially - we will control this interactively. -->
+		<table border="1">
+			<tr>
+				<th>Index</th>
+				<th>Title</th>
+				<th>Volume Label</th>
+				<th>Space Used</th>
+				<th>Space Available</th>
+				<th>Notes</th>
+			</tr>
+			<xsl:for-each select="/MasterInstaller/Products/Product">
+				<tr id="CdTr{count(preceding-sibling::Product)}" style="display:none">
+					<td align="center">
+						<xsl:number value="count(preceding-sibling::Product)"/>
+					</td>
+					<td align="center">
+						<input id="CdTitle{count(preceding-sibling::Product)}" type="text" size="30" value="{/MasterInstaller/CDs/CD[1 + current()/CD]/Title}" title="Title to display to user for CD {count(preceding-sibling::Product)}" onfocus="this.select();"/>
+					</td>
+					<td align="center">
+						<input id="CdLabel{count(preceding-sibling::Product)}" type="text" value="{/MasterInstaller/CDs/CD[1 + current()/CD]/VolumeLabel}" title="Volume label of CD {count(preceding-sibling::Product)}" onfocus="this.select();"/>
+					</td>
+					<td align="center" id="CdUsed{count(preceding-sibling::Product)}"></td>
+					<td align="center" id="CdSpace{count(preceding-sibling::Product)}"></td>
+					<td align="left" id="CdNotes{count(preceding-sibling::Product)}" style="font-size:70%"></td>
+				</tr>
+			</xsl:for-each>
+		</table>
+	</xsl:template>
+
+	<!--
 This template is used as a recursive function to double-up '\' and to put '\' before '"'
 -->
-<xsl:template name="CppPathString">
-	<xsl:param name="str"/>
-	<xsl:if test="contains($str, '\')">
-		<xsl:call-template name="CppPathString">
-			<xsl:with-param name="str" select="substring-before($str, '\')"/>
-		</xsl:call-template><xsl:value-of select="'\\'"/>
-		<xsl:call-template name="CppPathString">
-			<xsl:with-param name="str" select="substring-after($str, '\')"/>
-		</xsl:call-template>
-	</xsl:if>
-	<xsl:if test="not(contains($str, '\'))">
-		<xsl:call-template name="SearchReplace">
-			<xsl:with-param name="str" select="$str"/>
-			<xsl:with-param name="find" select="'&quot;'"/>
-			<xsl:with-param name="replace" select="'\&quot;'"/>
-		</xsl:call-template>
-	</xsl:if>
-</xsl:template>
+	<xsl:template name="CppPathString">
+		<xsl:param name="str"/>
+		<xsl:if test="contains($str, '\')">
+			<xsl:call-template name="CppPathString">
+				<xsl:with-param name="str" select="substring-before($str, '\')"/>
+			</xsl:call-template>
+			<xsl:value-of select="'\\'"/>
+			<xsl:call-template name="CppPathString">
+				<xsl:with-param name="str" select="substring-after($str, '\')"/>
+			</xsl:call-template>
+		</xsl:if>
+		<xsl:if test="not(contains($str, '\'))">
+			<xsl:call-template name="SearchReplace">
+				<xsl:with-param name="str" select="$str"/>
+				<xsl:with-param name="find" select="'&quot;'"/>
+				<xsl:with-param name="replace" select="'\&quot;'"/>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:template>
 
-<!--
+	<!--
 This template is used as a recursive function to search and replace
 -->
-<xsl:template name="SearchReplace">
-	<xsl:param name="str"/>
-	<xsl:param name="find"/>
-	<xsl:param name="replace"/>
-	<xsl:if test="contains($str, $find)">
-		<xsl:call-template name="SearchReplace">
-			<xsl:with-param name="str" select="substring-before($str, $find)"/>
-			<xsl:with-param name="find" select="$find"/>
-			<xsl:with-param name="replace" select="$replace"/>
-		</xsl:call-template><xsl:value-of select="$replace"/>
-		<xsl:call-template name="SearchReplace">
-			<xsl:with-param name="str" select="substring-after($str, $find)"/>
-			<xsl:with-param name="find" select="$find"/>
-			<xsl:with-param name="replace" select="$replace"/>
-		</xsl:call-template>
-	</xsl:if>
-	<xsl:if test="not(contains($str, $find))">
-		<xsl:value-of select="$str"/>
-	</xsl:if>
-</xsl:template>
+	<xsl:template name="SearchReplace">
+		<xsl:param name="str"/>
+		<xsl:param name="find"/>
+		<xsl:param name="replace"/>
+		<xsl:if test="contains($str, $find)">
+			<xsl:call-template name="SearchReplace">
+				<xsl:with-param name="str" select="substring-before($str, $find)"/>
+				<xsl:with-param name="find" select="$find"/>
+				<xsl:with-param name="replace" select="$replace"/>
+			</xsl:call-template>
+			<xsl:value-of select="$replace"/>
+			<xsl:call-template name="SearchReplace">
+				<xsl:with-param name="str" select="substring-after($str, $find)"/>
+				<xsl:with-param name="find" select="$find"/>
+				<xsl:with-param name="replace" select="$replace"/>
+			</xsl:call-template>
+		</xsl:if>
+		<xsl:if test="not(contains($str, $find))">
+			<xsl:value-of select="$str"/>
+		</xsl:if>
+	</xsl:template>
 
 
-<!-- =============================================== -->
-<!-- Script Template                                 -->
-<!-- =============================================== -->
-<xsl:template name="script">
-  <script type="text/javascript">
-  <![CDATA[
+	<!-- =============================================== -->
+	<!-- Script Template                                 -->
+	<!-- =============================================== -->
+	<xsl:template name="script">
+		<script type="text/javascript">
+			<![CDATA[
   <!--
 // This is line 6
 var Initializing = true;
 var UserPressedNextWhileInitializing = false;
+
+var fso = new ActiveXObject("Scripting.FileSystemObject");
+var shellObj = new ActiveXObject("WScript.Shell");
+
+var CppFilePath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
+var ProductsPath = shellObj.ExpandEnvironmentStrings("%PACKAGE_PRODUCTS%");
+var CDsPath = shellObj.ExpandEnvironmentStrings("%CD_IMAGES%");
+var UtilsPath = fso.BuildPath(CppFilePath, "Utils");
+var BitmapsPath = fso.BuildPath(CppFilePath, "Bitmaps");
+
+alert("CppFilePath = " + CppFilePath);
+if (CppFilePath == "%MASTER_INSTALLER%")
+  alert("ERROR: the MASTER_INSTALLER environment variable has not been defined. This probably means you have not run the InitUtils.exe application in the Master Installer's Utils folder.");
+else if (ProductsPath == "%PACKAGE_PRODUCTS%")
+  alert("WARNING: the PACKAGE_PRODUCTS environment variable has not been defined. You cannot create CD images without specifying where the products and documents are stored.");
+else if (CDsPath == "%CD_IMAGES%")
+  alert("WARNING: the CD_IMAGES environment variable has not been defined. You cannot create CD images without specifying where the image archives are stored.");
+
 var NumProducts;
 var NeededProducts;
 var SourceFileLists;
@@ -530,19 +754,21 @@ var NextButton;
 var PrevButton;
 var SelectedTextElement;
 
+
 // Called upon completion of page loading.
 function Initialize()
 {
 	try
 	{
-		NextButton = document.getElementById('NextButton');
+    NextButton = document.getElementById('NextButton');
 		PrevButton = document.getElementById('PrevButton');
 		showPage("BlockedContentWarning", false);
 		showPage("Stage1", true);
-		
+    
 		var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
 		NumProducts = ProductNodeList.length;
-		GenerateSourceFileLists(); // Must come after assigning NumProducts and before calling FindDuplicateSets().
+
+    GenerateSourceFileLists(); // Must come after assigning NumProducts and before calling FindDuplicateSets().
 		FindDuplicateSets();
 		NeededProducts = new Array();
 		CdDetails = new Array();
@@ -605,12 +831,11 @@ function CheckRelativePath(Path)
 	{
 		var OrigPath = Path; // Keep a copy, just in case.
 		
-		var fso = new ActiveXObject("Scripting.FileSystemObject");
-		Path = fso.BuildPath(GetDocumentFolder(), Path);
+    Path = fso.BuildPath(GetDocumentFolder(), Path);
 		
 		// If the new path doesn't exist, try prepending the original path with the Cpp File Path:
 		if (!fso.FolderExists(Path))
-			Path = fso.BuildPath(GetCppFilePath(), OrigPath);
+			Path = fso.BuildPath(CppFilePath, OrigPath);
 	}
 	return Path;
 }
@@ -628,7 +853,6 @@ function showRow(sRow, bShow, RegColor, RowTitle)
 function VerifyPage(CurrentStage)
 {
 	var Errors = "";
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	var Path;
 	var CulpritElement;
 
@@ -636,50 +860,43 @@ function VerifyPage(CurrentStage)
 	{
 		case 1:
 			// Check at least one C++ file exists in the specified place:
-			Path = document.getElementById("CppFilePath").value;
-			Path = fso.BuildPath(Path, "main.cpp");
+			Path = fso.BuildPath(CppFilePath, "main.cpp");
 			if (!fso.FileExists(Path))
 			{
-				Errors += "The C++ File Path does not point to a folder containing the main.cpp Master Installer source file.\n";
+				Errors += "The MASTER_INSTALLER environment variable does not point to a folder containing the main.cpp Master Installer source file.\n";
 				Errors += "\tYou must correct this, if you want to compile a master installer.\n";
-				CulpritElement = document.getElementById("CppFilePath");
 			}
 			else
 			{
 				// Check for existence of InstallerHelp.dll:
-				Path = document.getElementById("CppFilePath").value;
-				Path = fso.BuildPath(Path, "InstallerHelp.dll");
+				Path = fso.BuildPath(CppFilePath, "InstallerHelp.dll");
 				if (!fso.FileExists(Path))
 				{
 					Errors += "The expected file '" + Path + "' does not exist.\n";
 					Errors += "\tYou must correct this, if you want to use locked installers in the master installer.\n";
-					CulpritElement = document.getElementById("CppFilePath");
 				}
 
 				// Check for existence of the Binary to C++ utility:
-				Path = GetUtilsPath();
-				Path = fso.BuildPath(Path, "Bin2Cpp.exe");
+				Path = fso.BuildPath(UtilsPath, "Bin2Cpp.exe");
 				if (!fso.FileExists(Path))
 				{
 					Errors += "The expected file '" + Path + "' does not exist.\n";
 					Errors += "\tYou must correct this, if you want to use locked installers in the master installer.\n";
-					CulpritElement = document.getElementById("CppFilePath");
 				}
 
 				// Check for existence of InstallerHelp2.cpp:
-				Path = document.getElementById("CppFilePath").value;
-				Path = fso.BuildPath(Path, "InstallerHelp2.cpp");
+				Path = fso.BuildPath(CppFilePath, "InstallerHelp2.cpp");
 				if (!fso.FileExists(Path))
 				{
 					Errors += "The expected file '" + Path + "' does not exist.\n";
 					Errors += "\tYou must correct this, if you want to use locked installers in the master installer.\n";
-					CulpritElement = document.getElementById("CppFilePath");
 				}
 			
 			}
 
 			// Check for existence of External Help file(s):
 			Path = document.getElementById("ExternalHelpSource").value;
+      Path = CheckSourceRelativePath(Path);
 			if (Path.length > 0 && !fso.FileExists(Path) && !fso.FolderExists(Path))
 			{
 				Errors += "The External Help Source Path does not point to an existing file or folder.\n";
@@ -689,6 +906,7 @@ function VerifyPage(CurrentStage)
 
 			// Check for existence of Terms of Use file(s):
 			Path = document.getElementById("TermsOfUseSource").value;
+      Path = CheckSourceRelativePath(Path);
 			if (Path.length > 0 && !fso.FileExists(Path) && !fso.FolderExists(Path))
 			{
 				Errors += "The Terms of Use Source Path does not point to an existing file or folder.\n";
@@ -991,24 +1209,22 @@ function InvalidateCompiledFiles()
 }
 
 // Populates the ListBackgroundBmp combo box with the names of any bitmap files found in the bitmap
-// folder specified in the BackgroundBmpFolder element.
+// folder specified in the BitmapsPath variable.
 function RefreshBitmapList()
 {
-	var BitmapsFolder = document.getElementById("BackgroundBmpFolder").value;
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	var Folder = fso.GetFolder(BitmapsFolder);
+  var Folder = fso.GetFolder(BitmapsPath);
 	var fc = new Enumerator(Folder.files);
 	document.getElementById("ListBackgroundBmp").options[0].text = "None";
 	var count = 1;
 	var fSelected = false;
-	var OriginalPath = document.XMLDocument.selectSingleNode("/MasterInstaller/General/ListBackground").text;
+	var OriginalFile = document.XMLDocument.selectSingleNode("/MasterInstaller/General/ListBackground").text;
 	for (; !fc.atEnd(); fc.moveNext())
 	{
 		var File = fc.item();
 		if (File.Name.slice(-4).toLowerCase() == ".bmp")
 		{
 			document.getElementById("ListBackgroundBmp").options[count] = new Option(File.Name, File.Name);
-			if (fso.BuildPath(BitmapsFolder, File.Name) == OriginalPath)
+			if (File.Name == OriginalFile)
 			{
 				document.getElementById("ListBackgroundBmp").options[count].selected = true;
 				fSelected = true;
@@ -1017,9 +1233,13 @@ function RefreshBitmapList()
 		}
 	}
 	document.getElementById("ListBackgroundBmp").options.length = count;
-	if (!fSelected && OriginalPath.length > 0)
+	if (!fSelected && OriginalFile.length > 0)
 	{
-		alert('Warning: Background bitmap specification "' + OriginalPath + '" is not valid.');
+		var Warning = 'Warning: Background bitmap specification "' + OriginalFile + '" is not valid.';
+    if (OriginalFile.indexOf("\\") >= 0)
+      if (!fso.FileExists(OriginalFile))
+			  Warning = "Bitmap path '" + OriginalFile + "' specified in XML node /MasterInstaller/General/ListBackground does not exist. This may be legacy data. Bitmaps should be stored in the '" + BitmapsPath + "' folder and referenced by file name only.";
+		alert(Warning);
 	}
 }
 
@@ -1071,8 +1291,8 @@ function InputTextSelected(element)
 // accordingly.
 function TestExternalHelpSource()
 {
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	var DisableDestination = !fso.FolderExists(document.getElementById("ExternalHelpSource").value);
+  Path = CheckSourceRelativePath(document.getElementById("ExternalHelpSource").value);
+  var DisableDestination = !fso.FolderExists(Path);
 	document.getElementById("ExternalHelpFileDest").disabled = DisableDestination;
 }
 
@@ -1080,9 +1300,8 @@ function TestExternalHelpSource()
 // accordingly.
 function TestTermsOfUseSource()
 {
-
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	var DisableDestination = !fso.FolderExists(document.getElementById("TermsOfUseSource").value);
+  Path = CheckSourceRelativePath(document.getElementById("TermsOfUseSource").value);
+  var DisableDestination = !fso.FolderExists(Path);
 	document.getElementById("TermsOfUseFileDest").disabled = DisableDestination;
 }
 
@@ -1415,7 +1634,6 @@ function UpdateCdTotals()
 		}
 	}
 	// Deal with special cases: the need for setup.exe, InstallerHelp.dll, etc
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	// Estimate file sizes where not known:
 	var RoundedSetupExeSize = RoundCdFileSize(152000);
 	var RoundedInstallerHelpDllSize = GetRoundedFileSize(GetInstallerHelpDllFilePath());
@@ -1500,10 +1718,8 @@ function UpdateCdTotals()
 //	Note - Does not handle \\LS-ELMER\ type directory creation.
 function MakeSureFolderExists(strDir)
 {
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	
 	// See if the dir exists.
-	if (!fso.FolderExists(strDir))
+  if (!fso.FolderExists(strDir))
 	{
 		var aFolder = new Array();
 		aFolder = strDir.split("\\");
@@ -1529,7 +1745,6 @@ function MakeSureFolderExists(strDir)
 // Filters out any .svn folders (Subversion metadata).
 function GetFileList(FileSpec, RecurseSubfolders, Attributes)
 {
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	if (Attributes)
 		Attributes += '-D'; // Force removal of folders from list
 	else
@@ -1537,7 +1752,7 @@ function GetFileList(FileSpec, RecurseSubfolders, Attributes)
 
 	// Get the root folder at the base of the search:
 	var RootFolder;
-	if (fso.FolderExists(FileSpec))
+  if (fso.FolderExists(FileSpec))
 		RootFolder = FileSpec;
 	else
 	{
@@ -1566,8 +1781,7 @@ function GetFileList(FileSpec, RecurseSubfolders, Attributes)
 	Cmd += ' >"' + TempFilePath + '"';
 
 	// Run DOS command:
-	var shellObj = new ActiveXObject("WScript.Shell");
-	shellObj.Run(Cmd, 0, true);
+  shellObj.Run(Cmd, 0, true);
 
 	// Read resulting file:
 	var File = fso.OpenTextFile(TempFilePath, 1);
@@ -1603,7 +1817,7 @@ function GetFileList(FileSpec, RecurseSubfolders, Attributes)
 // in the source XML's MasterInstaller/AutoConfigure section.
 function CheckSourceRelativePath(Path)
 {
-	return CheckProductRelativePath(Path, GetSourceRelativePathPrepend());
+	return CheckProductRelativePath(Path, ProductsPath);
 }
 
 // Analyzes whether the given path is a relative path or a full path specification.
@@ -1611,7 +1825,7 @@ function CheckSourceRelativePath(Path)
 // in the source XML's MasterInstaller/AutoConfigure section.
 function CheckCDsRelativePath(Path)
 {
-	return CheckProductRelativePath(Path, GetCdImageRelativePathPrepend());
+	return CheckProductRelativePath(Path, CDsPath);
 }
 
 // Analyzes whether the given path is a relative path or a full path specification.
@@ -1627,76 +1841,10 @@ function CheckProductRelativePath(Path, RelativePathPrepend)
 		IsRelative = false;
 
 	// If Path was found to be relative, find the path of the source XML file:
-	if (IsRelative)
-	{
-		var fso = new ActiveXObject("Scripting.FileSystemObject");	
+  if (IsRelative)
 		Path = fso.BuildPath(RelativePathPrepend, Path);
-	}
-	return Path;
-}
 
-// Determines how we are to prepend relative paths intended as product paths in the Products repository.
-function GetSourceRelativePathPrepend()
-{
-	// If there is a ProductsPath node with a ParallelProductsFolder attribute set to true,
-	// relative paths are to be treated as pointing to a parallel Products folder (in line with
-	// source control layout).
-	// If there is no ParallelProductsFolder attribute, relative paths are prepended with the
-	// value of the ProductsPath node. If there is no ProductsPath node, relative paths are
-	// prepended with the path of the main XML source file:
-	var RootFolder = GetDocumentFolder();
-	var RelativePathPrepend;
-	var ProductsPathNode = document.XMLDocument.selectSingleNode('/MasterInstaller/AutoConfigure/ProductsPath');
-	if (!ProductsPathNode)
-		RelativePathPrepend = RootFolder;
-	else
-	{
-		var ParallelProductsFolderAttr = ProductsPathNode.getAttribute("ParallelProductsFolder");
-		if (ParallelProductsFolderAttr == "true")
-		{
-			// Remove previous folder:
-			iLastBackslash = RootFolder.lastIndexOf("\\");
-			// Add "Products" folder:
-			var fso = new ActiveXObject("Scripting.FileSystemObject");
-			RelativePathPrepend = fso.BuildPath(RootFolder.substr(0, iLastBackslash), "Products");
-			fDone = true;
-		}
-		else
-			RelativePathPrepend = ProductsPathNode.text;
-	}
-	return RelativePathPrepend;
-}
-
-// Determines how we are to prepend relative paths intended as CD image paths in the CDs repository.
-function GetCdImageRelativePathPrepend()
-{
-	// If there is a CDsPath node with a ParallelCDsFolder attribute set to true,
-	// relative paths are to be treated as pointing to a parallel CDs folder (in line with
-	// source control layout).
-	// If there is no ParallelCDsFolder attribute, relative paths are prepended with the
-	// value of the CDsPath node. If there is no CDsPath node, relative paths are
-	// prepended with the path of the main XML source file:
-	var RootFolder = GetDocumentFolder();
-	var RelativePathPrepend;
-	var CDsPathNode = document.XMLDocument.selectSingleNode('/MasterInstaller/AutoConfigure/CDsPath');
-	if (!CDsPathNode)
-		RelativePathPrepend = RootFolder;
-	else
-	{
-		var ParallelCDsFolderAttr = CDsPathNode.getAttribute("ParallelCDsFolder");
-		if (ParallelCDsFolderAttr == "true")
-		{
-			// Remove previous folder:
-			iLastBackslash = RootFolder.lastIndexOf("\\");
-			// Add "CDs" folder:
-			var fso = new ActiveXObject("Scripting.FileSystemObject");
-			RelativePathPrepend = fso.BuildPath(RootFolder.substr(0, iLastBackslash), "CDs");
-			fDone = true;
-		}
-		else
-			RelativePathPrepend = CDsPathNode.text;
-	}
-	return RelativePathPrepend;
+  return Path;
 }
 
 // Builds an array of file lists for each product, where the files in the list are interpretted
@@ -1705,12 +1853,11 @@ function GetCdImageRelativePathPrepend()
 function GenerateSourceFileLists()
 {
 	SourceFileLists = new Array();
-
+  
 	var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	
 	// Determine how we are to handle relative paths:
-	var RelativePathPrepend = GetSourceRelativePathPrepend();
+	var RelativePathPrepend = ProductsPath;
 
 	// Iterate through all products sources:
 	for (iProduct = 0; iProduct < NumProducts; iProduct++)
@@ -1770,8 +1917,8 @@ function GenerateExtHelpAndTermsFileLists()
 {
 	try
 	{
-		// Do the same for the External Help file(s):
 		var ExternalHelpSource = document.getElementById("ExternalHelpSource").value;
+    ExternalHelpSource = CheckSourceRelativePath(ExternalHelpSource);
 		if (ExternalHelpSource.length > 0)
 		{
 			var Recurse = false;
@@ -1789,6 +1936,7 @@ function GenerateExtHelpAndTermsFileLists()
 
 		// Do the same for the Terms of Use file(s):
 		var TermsOfUseSource = document.getElementById("TermsOfUseSource").value;
+    TermsOfUseSource = CheckSourceRelativePath(TermsOfUseSource);
 		if (TermsOfUseSource.length > 0)
 		{
 			Recurse = false;
@@ -1816,8 +1964,7 @@ function GenerateExtHelpAndTermsFileLists()
 function GetAllProductSizes()
 {
 	ProductSizes = new Array();
-	fso = new ActiveXObject("Scripting.FileSystemObject");
-
+  
 	for (iProduct = 0; iProduct < NumProducts; iProduct++)
 	{
 		var FileListData = SourceFileLists[iProduct].ListData;
@@ -1877,8 +2024,7 @@ function GetAllProductSizes()
 // Returns the amount of space needed on a CD for the given single file.
 function GetRoundedFileSize(FilePath)
 {
-	fso = new ActiveXObject("Scripting.FileSystemObject");
-	var File = fso.GetFile(FilePath);
+  var File = fso.GetFile(FilePath);
 	var ActualSize = File.size;
 	return RoundCdFileSize(ActualSize);
 }
@@ -1970,7 +2116,7 @@ function PrelimCompile()
 	showPage('PrelimCompileActiveDiv', true);
 	showPage('Stage5', false);
 	
-	if (BuildCd(true, true, true, false, false, false, false, true, false) != 0)
+	if (BuildCd(true, true, true, false, false, false, false, false) != 0)
 		alert("The build has failed. Estimated values will still be used. Run a full build (from the last configuration page) to get more information about the error.");
 	
 	showPage('PrelimCompileActiveDiv', false);
@@ -1988,7 +2134,6 @@ function detailsEntered()
 		document.getElementById('GatherFiles').checked,
 		document.getElementById('BuildIso').checked,
 		document.getElementById('BuildSfx').checked,
-		document.getElementById('DeleteJunk').checked,
 		true);
 }
 
@@ -2012,39 +2157,21 @@ function GetProjectName()
 	return XmlFileName.slice(0, -4);
 }
 
-// Returns the location of the C++ files needed to compile Setup.exe.
-// This location may be modified by the user.
-function GetCppFilePath()
-{
-	var CppFilePath = document.getElementById('CppFilePath').value;
-	CppFilePath = RemoveTrailingBackslash(CppFilePath);
-	return CppFilePath;
-}
-
-// Returns the location of the Utils folder which contains various tools.
-// This location is based on the C++ Path.
-function GetUtilsPath()
-{
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	return fso.BuildPath(GetCppFilePath(), "Utils");
-}
 
 // Returns the location of the (compiled) InstallerHelp.dll file.
 // This location may be modified by the user.
 function GetInstallerHelpDllFilePath()
 {
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	return fso.BuildPath(GetCppFilePath(), "InstallerHelp.dll");
+  return fso.BuildPath(CppFilePath, "InstallerHelp.dll");
 }
 
 // Deletes the specified file(s), if they exist. Doesn't complain if they don't.
 // FilePath can contain wildcards for the filename.
 function DeleteIfExists(FilePath)
 {
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	try
 	{
-		fso.DeleteFile(FilePath);
+    fso.DeleteFile(FilePath);
 	}
 	catch(err)
 	{
@@ -2057,8 +2184,7 @@ function DeleteIfExists(FilePath)
 function AltCopy(Source, Dest)
 {
 	var Cmd = 'cmd /Q /D /C copy "' + Source + '" "' + Dest + '"';
-	var shellObj = new ActiveXObject("WScript.Shell");
-	shellObj.Run(Cmd, 0, true);
+  shellObj.Run(Cmd, 0, true);
 }
 
 // Builds a complete CD (set) image.
@@ -2070,12 +2196,11 @@ function AltCopy(Source, Dest)
 //	fGatherFiles - true if all files for the CD are to be collected and copied to the CD image folder(s);
 //	fCreateIso - true if CD image (ISO file) is to be produced. Only works if files are gathered and the miso.exe file in Utils folder is licensed.
 //	fCreateSfx - true if self-extracting 7-zip file of gathered files is to be produced. Only works if files are gathered and the 7za.exe and 7zC.sfx files are in the Utils folder.
-//	fDeleteJunk - true if temp files created during compilation and linking are to be deleted;
 //	fDisplayCommentary - true if a running commentary is to be displayed during build.
 // Note that the order actions needed to build the CD image is not necessarily reflected by the order of paramters.
-function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGatherFiles, fCreateIso, fCreateSfx, fDeleteJunk, fDisplayCommentary)
+function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGatherFiles, fCreateIso, fCreateSfx, fDisplayCommentary)
 {
-	if (fDisplayCommentary)
+  if (fDisplayCommentary)
 		AddCommentary(0, "Initializing...", true);
 	var FinalComment = "All finished successfully.<br/>Don't forget to commit the new CD to the source control repository."; // Optimistic initial value
 	var ReturnValue = 0;
@@ -2086,7 +2211,6 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 		// Just read the AddCommentary lines.
 		if (fDisplayCommentary)
 			AddCommentary(1, "Collecting C++ Path", false);
-		var CppFilePath = GetCppFilePath();
 		if (fDisplayCommentary)
 			AddCommentary(1, "Collecting XML Path", false);
 		var XmlFileName = GetXmlFileName();
@@ -2094,7 +2218,6 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 		if (fDisplayCommentary)
 			AddCommentary(1, "Processing Paths", false);
 		var ProjectName = GetProjectName();
-		var fso = new ActiveXObject("Scripting.FileSystemObject");
 		var NewCompilationFolder = fso.BuildPath(CppFilePath, ProjectName);
 
 		// Get a copy of our initial XML document, so we can play with it:
@@ -2128,6 +2251,7 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 		// Find out where we have to copy stuff to:
 		var CdImagePath = document.getElementById('CdImagePath').value;
 		CdImagePath = RemoveTrailingBackslash(CdImagePath);
+    CdImagePath = CheckCDsRelativePath(CdImagePath);
 
 		if (fWriteXml)
 		{
@@ -2160,69 +2284,29 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 
 		if (fCompileSetup)
 		{
-			// Write new C++ files to reflect this new configuration:
 			if (fDisplayCommentary)
-				AddCommentary(0, "Preparing C++ files from XML configuration...", true);
-			PrepareCppFiles(CppFilePath, xmlDoc);
-			if (fDisplayCommentary)
-				AddCommentary(1, "Done.", false);
+				AddCommentary(0, "Building setup.exe...", true);
 
-			// Create a new folder for compilation output, like a Release folder, but named after the output XML File:
-			if (fDisplayCommentary)
-				AddCommentary(0, "Preparing folder for C++ compilation...", true);
-			MakeSureFolderExists(NewCompilationFolder);
-			if (fDisplayCommentary)
-				AddCommentary(1, "Done.", false);
+      // Save current XmlDoc to temp file:
+      MakeSureFolderExists(NewCompilationFolder);
+      var tempPath = fso.BuildPath(NewCompilationFolder, "__temp.xml");
+			var tso = fso.OpenTextFile(tempPath, 2, true, -1);
+			tso.Write(xmlDoc.xml);
+			tso.Close();
+      
+      // Build setup.exe:
+      SetupExePath = CompileMasterInstaller(tempPath);
+      
+      // Delete temp file:
+    	fso.DeleteFile(tempPath);
 
-			// Prepare the file containing all the compilation settings:
-			if (fDisplayCommentary)
-				AddCommentary(0, "Preparing file for compiler settings...", true);
-			var CppRspFilePath = NewCompilationFolder + "\\" + ProjectName + "Cpp.rsp";
-			PrepareCppRspFile(CppRspFilePath, CppFilePath, NewCompilationFolder);
-			if (fDisplayCommentary)
-				AddCommentary(1, "Done.", false);
-
-			// Compile all C++ files:
-			if (fDisplayCommentary)
-				AddCommentary(0, "Compiling C++ files...", true);
-			var shellObj = new ActiveXObject("WScript.Shell");
-			shellObj.Run('cl.exe @"' + CppRspFilePath + '" /nologo', 7, true);
-			if (fDisplayCommentary)
-				AddCommentary(1, "Done.", false);
-
-			// Compile resource file:
-			if (fDisplayCommentary)
-				AddCommentary(0, "Compiling resource file...", true);
-			shellObj.Run('rc.exe /fo"' + NewCompilationFolder + '/resources.res" ' + (document.getElementById("IncludeEasterEggs").checked? '/D "EASTER_EGGS" ' : '') + '"' + CppFilePath + '\\resources.rc"', 7, true);
-			if (fDisplayCommentary)
-				AddCommentary(1, "Done.", false);
-
-			// Prepare the file containing all the linker settings:
-			if (fDisplayCommentary)
-				AddCommentary(0, "Preparing file for linker settings...", true);
-			var ObjRspFilePath = NewCompilationFolder + "\\" + ProjectName + "Obj.rsp";
-			SetupExePath = fso.BuildPath(NewCompilationFolder, "setup.exe");
-			PrepareObjRspFile(ObjRspFilePath, NewCompilationFolder);
-			if (fDisplayCommentary)
-				AddCommentary(1, "Done.", false);
-
-			// Link the obj files to produce the master installer:
-			if (fDisplayCommentary)
-				AddCommentary(0, "Linking compiled files...", true);
-			var LinkStr = 'link.exe @"' + ObjRspFilePath + '"'; 
-			shellObj.Run(LinkStr, 7, true);
-
-			// Test that setup.exe exists:
+      // Test that setup.exe exists:
 			if (!fso.FileExists(SetupExePath))
 			{
 				Exception = new Object();
 				Exception.description = "Master installer [setup.exe] failed to compile and link.";
 				throw(Exception);
 			}
-
-			// Embed the manifest file specifying "requireAdministrator":
-			var MtCmd = 'mt.exe -manifest "' + CppFilePath + '\\setup.manifest" -outputresource:"' + SetupExePath + '";#1'; 
-			shellObj.Run(MtCmd, 7, true);
 
 			if (fDisplayCommentary)
 				AddCommentary(1, "Done.", false);
@@ -2233,7 +2317,7 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 				var SignCmd = '"' + CppFilePath + '\\Utils\\Sign\\signcode.exe" -spc "' + Drive + '\\comodo.spc" -v "' + Drive + '\\comodo.pvk" -n "SIL Software Installer" -t http://timestamp.comodoca.com/authenticode -a sha1 "' + SetupExePath + '"';
 				if (fDisplayCommentary)
 					AddCommentary(0, "Signing setup.exe...", true);
-				shellObj.Run(SignCmd, 1, true);
+        shellObj.Run(SignCmd, 1, true);
 				if (fDisplayCommentary)
 					AddCommentary(1, "Done.", false);
 			}
@@ -2246,28 +2330,6 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 
 		if (fCompileSetup && fCompileHelps)
 			CompiledFilesSizesKnown = true;
-
-		if (fDeleteJunk)
-		{
-			// Remove junk from the NewCompilationFolder:			
-			DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.obj"));
-			DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.res"));
-			DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.rsp"));
-			DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.pdb"));
-			DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.idb"));
-			DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.lib"));
-			DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.exp"));
-			DeleteIfExists(fso.BuildPath(CppFilePath, "ConfigProducts.cpp"));
-			DeleteIfExists(fso.BuildPath(CppFilePath, "ConfigGeneral.cpp"));
-			DeleteIfExists(fso.BuildPath(CppFilePath, "ConfigFunctions.cpp"));
-			DeleteIfExists(fso.BuildPath(CppFilePath, "ConfigDisks.cpp"));
-			DeleteIfExists(fso.BuildPath(CppFilePath, "AutoResources.rc"));
-			DeleteIfExists(fso.BuildPath(CppFilePath, "AutoGlobals.h"));
-			DeleteIfExists(fso.BuildPath(CppFilePath, "Helps.cpp"));
-			DeleteIfExists(fso.BuildPath(CppFilePath, "FileList.cpp"));
-			DeleteIfExists(fso.BuildPath(CppFilePath, "Product?.cpp"));
-			DeleteIfExists(fso.BuildPath(CppFilePath, "Product??.cpp"));
-		}	
 
 		if (fGatherFiles)
 		{
@@ -2291,11 +2353,10 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 					// Generate full folder path to the current CD image:
 					var CdFolder = GetCdFolderPath(CdImagePath, iCd);
 					
-					var shellObj = new ActiveXObject("WScript.Shell");
 					var UDF_arg = "";
 					if (document.getElementById("UseUDF").checked)
 						UDF_arg = " -UDF";
-					shellObj.Run('wscript.exe "' + fso.BuildPath(GetUtilsPath(), "CdImage.js") + '" "' + CdFolder + '"' + UDF_arg, 0, true);
+          shellObj.Run('wscript.exe "' + fso.BuildPath(UtilsPath, "CdImage.js") + '" "' + CdFolder + '"' + UDF_arg, 0, true);
 
 					if (fDisplayCommentary)
 						AddCommentary(1, "Done.", false);
@@ -2308,17 +2369,16 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 				AddCommentary(0, "Creating self extracting 7-zip file.<br/><b>This will continue to run after the 'all finished' message.</b>", true, true);
 
 			// Get path to the 7za.exe and 7zC.sfx files in the Utils folder:
-			var ExePath = fso.BuildPath(GetUtilsPath(), "7za.exe");
-			var SfxPath = fso.BuildPath(GetUtilsPath(), "7zC.sfx");
+			var ExePath = fso.BuildPath(UtilsPath, "7za.exe");
+			var SfxPath = fso.BuildPath(UtilsPath, "7zC.sfx");
 
 			// Iterate over every CD:
-			for (iCd = 0; iCd < MaxNumCds; iCd++)
+      for (iCd = 0; iCd < MaxNumCds; iCd++)
 			{
 				// Only bother with CDs known to be needed:
 				if (CdDetails[iCd].CdInUse())
 				{
 					var CdFolder = GetCdFolderPath(CdImagePath, iCd);
-					var shellObj = new ActiveXObject("WScript.Shell");
 					shellObj.CurrentDirectory = CdImagePath;
 					var Cmd = '"' + ExePath + '" a "-sfx' + SfxPath + '" "' + GetCdLabel(iCd) + '.exe" "' + GetCdLabel(iCd) + '\\*" -r -mx=9 -mmt=on';
 					shellObj.Run(Cmd, 1, false);
@@ -2342,6 +2402,18 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fSignSetupExe, fGather
 		PrevButton.disabled = false;
 	}
 	return ReturnValue;
+}
+
+function CompileMasterInstaller(XmlFileName)
+{
+  var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, "CompileXmlMasterInstaller.js") + '" "' + XmlFileName + '"';
+  if (document.getElementById("IncludeEasterEggs").checked)
+    Cmd += " -E";
+  shellObj.Run(Cmd, 0, true);
+ 	iLastBackslash = XmlFileName.lastIndexOf("\\");
+	var InputFolder = XmlFileName.substr(0, iLastBackslash);
+  var SetupExePath = InputFolder + "\\setup.exe";
+  return SetupExePath;
 }
 
 // Returns true if the specified product is needed on a CD and is to be locked.
@@ -2378,8 +2450,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 	if (fDisplayCommentary)
 		AddCommentary(0, "Crunching help files...", true);
 
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	var HelpFileCruncher = fso.BuildPath(GetUtilsPath(), "Bin2Cpp.exe");
+  var HelpFileCruncher = fso.BuildPath(UtilsPath, "Bin2Cpp.exe");
 
 	// Check that HelpFileCruncher exists:
 	if (!fso.FileExists(HelpFileCruncher))
@@ -2389,27 +2460,25 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 		return;
 	}
 
-	var CppPath = GetCppFilePath();
-	// Check that CppPath exists:
-	if (!fso.FolderExists(CppPath))
+	// Check that CppFilePath exists:
+	if (!fso.FolderExists(CppFilePath))
 	{
 		if (fDisplayCommentary)
-			AddCommentary(1, "Error - InstallerHelp2 C++ files folder '" + CppPath + "' does not exist.", false);
+			AddCommentary(1, "Error - InstallerHelp2 C++ files folder '" + CppFilePath + "' does not exist.", false);
 		return;
 	}
 
 	// Create a new FileList.cpp file:
-	var FileListCpp = fso.OpenTextFile(fso.BuildPath(CppPath, "FileList.cpp"), 2, true);
+	var FileListCpp = fso.OpenTextFile(fso.BuildPath(CppFilePath, "FileList.cpp"), 2, true);
 	// Create a new Helps.cpp file:
-	var HelpsCpp = fso.OpenTextFile(fso.BuildPath(CppPath, "Helps.cpp"), 2, true);
+	var HelpsCpp = fso.OpenTextFile(fso.BuildPath(CppFilePath, "Helps.cpp"), 2, true);
 
 	// Set up some objects to be used inside loop:
-	var shellObj = new ActiveXObject("WScript.Shell");
 	var ProductList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
 	var NewProductNodeList = xmlDoc.selectNodes('/MasterInstaller/Products/Product');
 
 	// Determine how we are to handle relative paths:
-	var RelativePathPrepend = GetSourceRelativePathPrepend();
+	var RelativePathPrepend = ProductsPath;
 
 	// Iterate over every locked product:
 	for (iProduct = 0; iProduct < NumProducts; iProduct++)
@@ -2443,16 +2512,16 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 					
 					var OutputFile = "Product" + iProduct;
 					var OutputFileWithExtn = OutputFile + ".cpp";
-					var OutputPath = fso.BuildPath(CppPath, OutputFileWithExtn);
+					var OutputPath = fso.BuildPath(CppFilePath, OutputFileWithExtn);
 					
 					if (fDisplayCommentary)
 						AddCommentary(1, HelpFile, false);
 					var CmdCrunch = '"' + HelpFileCruncher + '" "' + HelpFile + '" "' + OutputPath + '"';
-					shellObj.Run(CmdCrunch, 7, true);
+          shellObj.Run(CmdCrunch, 7, true);
 
 					FileListCpp.WriteLine('#include "' + fso.GetFileName(OutputPath) + '"');
 					
-					HelpsCpp.WriteLine('if (strcmp(pszStem, "' + HelpFileTag + '") == 0)');
+					HelpsCpp.WriteLine('if (_tcscmp(pszStem, _T("' + HelpFileTag + '")) == 0)');
 					HelpsCpp.WriteLine('{');
 					HelpsCpp.WriteLine('	pbBuffer = rgb' + HelpFileTag + ';');
 					HelpsCpp.WriteLine('	cbSize = sizeof(rgb' + HelpFileTag + ') / sizeof(rgb' + HelpFileTag + '[0]);');
@@ -2482,7 +2551,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 	if (fDisplayCommentary)
 		AddCommentary(0, "Preparing folder for InstallerHelp2.dll compilation...", true);
 	var ProjectName = GetProjectName();
-	var NewCompilationFolder = fso.BuildPath(GetCppFilePath(), ProjectName);
+	var NewCompilationFolder = fso.BuildPath(CppFilePath, ProjectName);
 	MakeSureFolderExists(NewCompilationFolder);
 	if (fDisplayCommentary)
 		AddCommentary(1, "Done.", false);
@@ -2494,7 +2563,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 
 	var tsoCpp = fso.OpenTextFile(CppRspFilePath, 2, true);
 	tsoCpp.WriteLine('/O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "INSTALLERHELP2_EXPORTS" /D "_VC80_UPGRADE=0x0710" /D "_WINDLL" /D "_UNICODE" /D "UNICODE" /FD /EHsc /MT /GS /W3 /c /Zi /TP /Fo"' + NewCompilationFolder + '\\InstallerHelp2.obj"');
-	tsoCpp.WriteLine('"' + CppPath + '\\InstallerHelp2.cpp"');
+	tsoCpp.WriteLine('"' + CppFilePath + '\\InstallerHelp2.cpp"');
 	tsoCpp.Close();
 
 	if (fDisplayCommentary)
@@ -2504,7 +2573,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 	if (fDisplayCommentary)
 		AddCommentary(0, "Compiling InstallerHelp2 C++ files...", true);
 	var CompileStr = 'cl.exe @"' + CppRspFilePath + '" /nologo';
-	if (shellObj.Run(CompileStr, 7, true) != 0)
+  if (shellObj.Run(CompileStr, 7, true) != 0)
 	{
 		Exception = new Object();
 		Exception.description = "InstallerHelp2.dll compile command [" + CompileStr + "] failed.";
@@ -2519,7 +2588,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 	InstallerHelp2DllPath = NewCompilationFolder + "\\InstallerHelp2.dll";
 	var ObjRspFilePath = NewCompilationFolder + "\\" + ProjectName + "Obj.rsp";
 	var tsoObj = fso.OpenTextFile(ObjRspFilePath, 2, true);
-	tsoObj.WriteLine('/OUT:"' + InstallerHelp2DllPath + '" /INCREMENTAL:NO /NOLOGO /DLL /MANIFEST /MANIFESTFILE:"' + NewCompilationFolder + '\\InstallerHelp2.dll.intermediate.manifest" /DEF:"' + CppPath + '\\InstallerHelp2.def" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /IMPLIB:"' + NewCompilationFolder + '/InstallerHelp2.lib" /MACHINE:X86  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib');
+	tsoObj.WriteLine('/OUT:"' + InstallerHelp2DllPath + '" /INCREMENTAL:NO /NOLOGO /DLL /MANIFEST /MANIFESTFILE:"' + NewCompilationFolder + '\\InstallerHelp2.dll.intermediate.manifest" /DEF:"' + CppFilePath + '\\InstallerHelp2.def" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /IMPLIB:"' + NewCompilationFolder + '/InstallerHelp2.lib" /MACHINE:X86  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib');
 	
 	tsoObj.WriteLine('"' + NewCompilationFolder + '\\InstallerHelp2.obj"');
 	tsoObj.Close();
@@ -2530,7 +2599,8 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 	if (fDisplayCommentary)
 		AddCommentary(0, "Linking compiled files...", true);
 	var LinkStr = 'link.exe @"' + ObjRspFilePath + '"'; 
-	if (shellObj.Run(LinkStr, 7, true) != 0)
+  
+  if (shellObj.Run(LinkStr, 7, true) != 0)
 	{
 		Exception = new Object();
 		Exception.description = "InstallerHelp2.dll link command [" + LinkStr + "] failed.";
@@ -2568,22 +2638,7 @@ function ApplyCheckBoxSetting(xmlDoc, ElementId, XPath)
 // Make changes to an XML documemt, according to user's settings:
 function ApplyUserSettings(xmlDoc)
 {
-	// Settings from derived paths:
-	var ProductsPathNode = xmlDoc.selectSingleNode("/MasterInstaller/AutoConfigure/ProductsPath");
-	if (ProductsPathNode)
-	{
-		ProductsPathNode.removeAttribute("ParallelProductsFolder");
-		ProductsPathNode.text = GetSourceRelativePathPrepend();
-	}
-	var CDsPathNode = xmlDoc.selectSingleNode("/MasterInstaller/AutoConfigure/CDsPath");
-	if (CDsPathNode)
-	{
-		CDsPathNode.removeAttribute("ParallelCDsFolder");
-		CDsPathNode.text = GetCdImageRelativePathPrepend();
-	}
-
 	// Settings from Project Setup:
-	ApplyEditBoxSetting(xmlDoc, "CppFilePath", "/MasterInstaller/AutoConfigure/CppFilePath");
 	ApplyEditBoxSetting(xmlDoc, "CdImagePath", "/MasterInstaller/AutoConfigure/CdImagePath");
 	
 	ApplyEditBoxSetting(xmlDoc, "ExternalHelpSource", "/MasterInstaller/AutoConfigure/ExternalHelpSource");
@@ -2598,15 +2653,13 @@ function ApplyUserSettings(xmlDoc)
 	ApplyEditBoxSetting(xmlDoc, "OverallTitle", "/MasterInstaller/General/Title")
 	ApplyEditBoxSetting(xmlDoc, "ListSubtitle", "/MasterInstaller/General/ListSubtitle")
 
-	// For the product selection dialog background, put the bitmap file path as the main value,
+	// For the product selection dialog background, put the bitmap file name as the main value,
 	// and translate the color selection into our RGB values as atrributes:
 	var BmpList = document.getElementById("ListBackgroundBmp");
 	if (BmpList.value != "None")
 	{
-		var fso = new ActiveXObject("Scripting.FileSystemObject");
-		var BmpFolder = document.getElementById("BackgroundBmpFolder").value;
 		var Node = xmlDoc.selectSingleNode("/MasterInstaller/General/ListBackground");
-		Node.text = fso.BuildPath(BmpFolder, BmpList.value);
+		Node.text = BmpList.value;
 	}
 	var ColorSelectionElement = document.getElementById("ListBackground");
 	var rgbRed = 0;
@@ -2804,16 +2857,6 @@ function ApplyUserSettings(xmlDoc)
 	}
 }
 
-// Processes the given xmlDoc to generate the C++ files needed to configure the Setup.exe program.
-function PrepareCppFiles(CppFilePath, xmlDoc)
-{
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGeneral.xsl", CppFilePath + "\\ConfigGeneral.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigDisks.xsl", CppFilePath + "\\ConfigDisks.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigProducts.xsl", CppFilePath + "\\ConfigProducts.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigFunctions.xsl", CppFilePath + "\\ConfigFunctions.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGlobals.xsl", CppFilePath + "\\AutoGlobals.h");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigResources.xsl", CppFilePath + "\\AutoResources.rc");
-}
 
 // Uses the given XSL file (path) to process the given xmlDoc, outputting to strOutputFile (path).
 function ProcessConfigFile(xmlDoc, strInputXsl, strOutputFile)
@@ -2834,62 +2877,15 @@ function ProcessConfigFile(xmlDoc, strInputXsl, strOutputFile)
 	xslProc = xslt.createProcessor();
 	xslProc.input = xmlDoc;
 	xslProc.transform();
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	var tso = fso.OpenTextFile(strOutputFile, 2, true);
+  var tso = fso.OpenTextFile(strOutputFile, 2, true);
 	tso.Write(xslProc.output);
-	tso.Close();
-}
-
-// Prepares a file of Setup.exe configuration settings for the C++ compiler.
-function PrepareCppRspFile(RspFilePath, CppFilePath, CompilationFolder)
-{
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/O1 /Ob1 /Os /Oy /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "UNICODE" ' + (document.getElementById("IncludeEasterEggs").checked? '/D "EASTER_EGGS" ' : '') + '/GF /EHsc /MT /GS- /Gy /Fo"' + CompilationFolder + '\\\\" /Fd"' + CompilationFolder + '\\vc80.pdb" /W3 /c /Zi /TP');
-	tso.WriteLine('"' + CppFilePath + '\\WIWrapper.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\UsefulStuff.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\UniversalFixes.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\ProductManager.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\ProductKeys.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\PersistantProgress.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\main.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\LogFile.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\Globals.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\ErrorHandler.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\DiskManager.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\Dialogs.cpp"');
-	tso.WriteLine('"' + CppFilePath + '\\Control.cpp"');
-	tso.Close();
-}
-
-// Prepares a file of Setup.exe configuration settings for the object file linker.
-function PrepareObjRspFile(RspFilePath, CompilationFolder)
-{
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	var tso = fso.OpenTextFile(RspFilePath, 2, true);
-	tso.WriteLine('/OUT:"' + SetupExePath + '" /INCREMENTAL:NO /NOLOGO /LIBPATH:"Msi.lib" /MANIFEST /MANIFESTFILE:"' + CompilationFolder + '\\setup.exe.intermediate.manifest" /SUBSYSTEM:WINDOWS /SWAPRUN:CD /OPT:REF /OPT:ICF /LTCG /MACHINE:X86 version.lib shlwapi.lib C:\\Work\\MsiIntel.SDK\\Lib\\Msi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib');
-	tso.WriteLine('"' + CompilationFolder + '\\Control.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\Dialogs.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\DiskManager.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\ErrorHandler.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\Globals.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\LogFile.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\main.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\PersistantProgress.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\ProductKeys.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\ProductManager.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\UniversalFixes.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\UsefulStuff.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\WIWrapper.obj"');
-	tso.WriteLine('"' + CompilationFolder + '\\resources.res"');
 	tso.Close();
 }
 
 // Writes an Autorun.inf file, based on user's settings.
 function WriteAutorunInfFile(TargetFolder)
 {
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	AutorunInfPath = fso.BuildPath(TargetFolder, "Autorun.inf");
+  AutorunInfPath = fso.BuildPath(TargetFolder, "Autorun.inf");
 	var tso = fso.OpenTextFile(AutorunInfPath, 2, true);
 	tso.WriteLine('[autorun]');
 	tso.WriteLine('icon=setup.exe');
@@ -2913,8 +2909,7 @@ function GetDestinationFolder(SourcePath, RootFolder, TargetRoot)
 	var SectionStart = RootFolder.length;
 	var SectionEnd = SourcePath.lastIndexOf("\\")
 	var ExtraFolders = SourcePath.slice(SectionStart, SectionEnd);
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	TargetFullPath = fso.BuildPath(TargetFullPath, ExtraFolders);
+  TargetFullPath = fso.BuildPath(TargetFullPath, ExtraFolders);
 	
 	return TargetFullPath;
 }
@@ -2948,13 +2943,9 @@ function GatherFiles(CdImagePath)
 	var TotalDone = 0;
 
 	var StartFromAnyCD = document.getElementById("StartFromAnyCD").checked;
-	
-	// Get helper objects:
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	var shellObj = new ActiveXObject("WScript.Shell");
-
+  
 	// Determine how we are to handle certain relative paths:
-	var RelativePathPrepend = GetSourceRelativePathPrepend();
+	var RelativePathPrepend = ProductsPath;
 
 	// Iterate over every CD:
 	for (iCd = 0; iCd < MaxNumCds; iCd++)
@@ -3143,6 +3134,6 @@ function GatherFiles(CdImagePath)
 
 -->
 ]]>
-</script>
-</xsl:template>
+		</script>
+	</xsl:template>
 </xsl:stylesheet>

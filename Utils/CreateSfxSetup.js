@@ -1,18 +1,21 @@
 // JScript to create self-extracting archive of a folder's contents, which will launch
 // the setup.exe file after extracting the files.
-// Called with one parameter: The full path to a folder whose name will be used as the
-// file name for the 7-zip archive, and whose contents will form the archive content.
-// (That folder must contain a setup.exe file.)
+// Called with two parameters:
+//  1. The full path to a folder whose name will be used as the file name for the 7-zip
+//     archive, and whose contents will form the archive content.
+//	   (That folder must contain a setup.exe file.)
+//	2. The flavor of the archive required. The following values are recognized:
+//		-InstallThenDelete - The archive will delete the extracted files when setup.exe terminates;
+//		-InstallFw - User can choose where to extract to; archive remains after setup.exe terminates;
+//		-Custom - Caller must place a 7-zip sfx configuration file next to the folder (see first parameter);
+//				  file must be named same as folder with ".Config.txt" appended.
 // Subversion meta data folders (.svn) are automatically excluded.
-// If the parameter is missing, then this script merely sets up the registry,
-// creating a shell extension, so that a folder can be right-clicked on to create a
-// 7-zip archive from that folder's contents.
 // Prerequisite: Must have 7-zip tool in same path as this script, or somewhere on PATH.
 // 7-zip can be downloaded from http://www.7-zip.org.
 
 // Works by building a batch file full of calls to 7za, adding one file at a time.
 
-var fso = new ActiveXObject("Scripting.FileSystemObject");	
+var fso = new ActiveXObject("Scripting.FileSystemObject");
 var shellObj = new ActiveXObject("WScript.Shell");
 
 // Get path of this script:
@@ -20,41 +23,9 @@ var iLastBackslash = WScript.ScriptFullName.lastIndexOf("\\");
 var ScriptPath = WScript.ScriptFullName.slice(0, iLastBackslash);
 
 // Check we have a valid folder argument:
-if (WScript.Arguments.Length < 1)
+if (WScript.Arguments.Length < 2)
 {
-	// Assume user just double-clicked on this script. We will register it for context
-	// submenu use.
-	var Path = ScriptPath;
-	
-	// Build a version of the Path with doubled up backslashes:
-	var aFolder = Path.split("\\");
-	var bs2Path = "";
-	for (i = 0; i < aFolder.length; i++)
-	{
-		if (i > 0)
-			bs2Path += "\\\\";
-		bs2Path += aFolder[i];
-	}
-	
-	// Write registry settings:
-	var RegFile = fso.BuildPath(Path, "SilSfxSetup.reg");
-	var tso = fso.OpenTextFile(RegFile, 2, true);
-	tso.WriteLine('Windows Registry Editor Version 5.00');
-	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\SilSfxSetup]');
-	tso.WriteLine('"EditFlags"=hex:01,00,00,00');
-	tso.WriteLine('@="Create SIL Software Package from this folder\'s contents"');
-	tso.WriteLine('[HKEY_CLASSES_ROOT\\Folder\\shell\\SilSfxSetup\\command]');
-	// OK, deep breath, now:
-	tso.WriteLine('@="C:\\\\windows\\\\system32\\\\wscript.exe \\"' + bs2Path + '\\\\CreateSfxSetup.js\\" \\"%1\\"\"');
-	tso.Close();
-	
-	// Run Regedit with the new file:
-	var Cmd = 'Regedit.exe "' + RegFile + '"';
-	shellObj.Run(Cmd, 0, true);
-
-	// Delete RegFile:
-	fso.DeleteFile(RegFile);
-
+	WScript.Echo("ERROR: must supply a folder (whose contents are to be made into the self-extracting archive) and a flavor value (-InstallThenDelete, -InstallFw or -Custom).");
 	WScript.Quit();
 }
 
@@ -64,6 +35,8 @@ if (!fso.FolderExists(SourceFolder))
 	WScript.Echo("ERROR - Folder '" + SourceFolder + "' does not exist.");
 	WScript.Quit();
 }
+
+var Flavor = WScript.Arguments.Item(1);
 
 var iLastBackslash = SourceFolder.lastIndexOf("\\");
 var RootFolder = SourceFolder.slice(iLastBackslash + 1);
@@ -76,6 +49,16 @@ var LocationDrive = SourceFolder.slice(0, iFirstBackslash);
 var BatchFile = SourceFolder + ".temp.bat";
 var ConfigFile = SourceFolder + ".Config.txt";
 var ListFile = SourceFolder + ".list.txt";
+
+if (Flavor == "-Custom")
+{
+	// Make sure the config file exists:
+	if (!fso.FileExists(ConfigFile))
+	{
+		WScript.Echo("ERROR - 7-zip config file '" + ConfigFile + "' does not exist.");
+		WScript.Quit();
+	}
+}
 
 // Check that we can access the 7-zip tool:
 var SevenZipExeFile = ScriptPath + "\\7za.exe"
@@ -122,18 +105,38 @@ else
 }
 
 // Create configuration file to bind to self-extracting archive:
-var tsoConfig = fso.OpenTextFile(ConfigFile, 2, true, 0); // Must be UTF-8; ASCII will do for us
-tsoConfig.WriteLine(';!@Install@!UTF-8!');
-tsoConfig.WriteLine('Title="SIL \'' + RootFolder + '\' Software Package"');
-tsoConfig.WriteLine('HelpText="Double-click the file \'' + RootFolder + '.exe\' to extract the installation files and run the installer.\nThe extracted files will be deleted when the installer has finished.\n\nRun the file with the -nr option to simply extract the files and leave them.\n\nFile extraction will be to the same folder where this file is, in both cases."');
-tsoConfig.WriteLine('InstallPath="%%S"');
-tsoConfig.WriteLine('Delete="%%S\\' + RootFolder + '"');
-tsoConfig.WriteLine('ExtractTitle="Extracting installation files"');
-tsoConfig.WriteLine('ExtractDialogText="Preparing the \'' + RootFolder + '\' files for installation"');
-tsoConfig.WriteLine('RunProgram="fm0:\\"' + RootFolder + '\\setup.exe\\""');
-tsoConfig.WriteLine(';!@InstallEnd@!');
-tsoConfig.Close();
-
+if (Flavor != "-Custom")
+{
+	var tsoConfig = fso.OpenTextFile(ConfigFile, 2, true, 0); // Must be UTF-8; ASCII will do for us
+	switch (Flavor)
+	{
+		case "-InstallThenDelete":
+			tsoConfig.WriteLine(';!@Install@!UTF-8!');
+			tsoConfig.WriteLine('Title="SIL \'' + RootFolder + '\' Software Package"');
+			tsoConfig.WriteLine('HelpText="Double-click the file \'' + RootFolder + '.exe\' to extract the installation files and run the installer.\nThe extracted files will be deleted when the installer has finished.\n\nRun the file with the -nr option to simply extract the files and leave them.\n\nFile extraction will be to the same folder where this file is, in both cases."');
+			tsoConfig.WriteLine('InstallPath="%%S"');
+			tsoConfig.WriteLine('Delete="%%S\\' + RootFolder + '"');
+			tsoConfig.WriteLine('ExtractTitle="Extracting installation files"');
+			tsoConfig.WriteLine('ExtractDialogText="Preparing the \'' + RootFolder + '\' files for installation"');
+			tsoConfig.WriteLine('RunProgram="fm0:\\"' + RootFolder + '\\setup.exe\\""');
+			tsoConfig.WriteLine(';!@InstallEnd@!');
+			break;
+		case "-InstallFw":
+			tsoConfig.WriteLine(';!@Install@!UTF-8!');
+			tsoConfig.WriteLine('Title="SIL FieldWorks Installation (' + RootFolder + ')"');
+			tsoConfig.WriteLine('HelpText="Double-click the file \'' + RootFolder + '.exe\' to extract the installation files and run the installer.\n"');
+			tsoConfig.WriteLine('InstallPath="%%S"');
+			tsoConfig.WriteLine('ExtractTitle="Extracting installation files"');
+			tsoConfig.WriteLine('ExtractDialogText="Preparing the \'' + RootFolder + '\' files for installation"');
+			tsoConfig.WriteLine('RunProgram="fm0:\\"' + RootFolder + '\\setup.exe\\""');
+			tsoConfig.WriteLine('GUIFlags="6240"');
+			tsoConfig.WriteLine('BeginPrompt="The FieldWorks installation files (' + RootFolder + ') will be extracted to the folder specified below, and then the installer will run.\nIMPORTANT: You will need to keep the FieldWorks installer in that folder if you wish to apply future patch upgrades."');
+			tsoConfig.WriteLine('ExtractPathText="Select a folder to store the installation files:"');
+			tsoConfig.WriteLine(';!@InstallEnd@!');
+			break;
+	}
+	tsoConfig.Close();
+}
 // Add self-extracting module and configuration to launch setup.exe:
 tso.WriteLine('copy /b "' + ScriptPath + '\\7zSD_new.sfx" + "' + ConfigFile + '" + "' + ZipFile + '" "' + SfxFile + '"');
 tso.Close();
@@ -168,7 +171,7 @@ if (fso.FileExists(Md5SumsPath))
 	shellObj.Run(Cmd, 1, true);
 	// Delete the batch and list files:
 	fso.DeleteFile(BatchFile);
-	
+
 	// Get the raw md5 value from among the other junk in the output of md5sums:
 	var tso = fso.OpenTextFile(md5File, 1, true);
 	var Line = tso.ReadLine();
@@ -188,7 +191,7 @@ function AddFile(NewFile)
 	// Remove SourceFolder from NewFile:
 	if (NewFile.indexOf(SourceFolder) == 0)
 		NewFile = RootFolder + NewFile.slice(SourceFolder.length);
-	
+
 	var tso = fso.OpenTextFile(ListFile, 8, true);
 	tso.WriteLine('"' + NewFile + '"');
 	tso.Close();
@@ -217,7 +220,7 @@ function GetFileList(FileSpec, RecurseSubfolders)
 		{
 			Exception = new Object();
 			Exception.description = "Source specification '" + FileSpec + "' does not refer to a valid, accessible folder.";
-			throw(Exception);
+			throw (Exception);
 		}
 	}
 	// Build DOS dir command:

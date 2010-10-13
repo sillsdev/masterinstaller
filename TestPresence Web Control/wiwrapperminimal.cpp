@@ -1,7 +1,7 @@
 // This file is included in other C++ files, as needed, so that other definitions and includes
 // can be tailored to the particular project using it.
 
-#include <msi.h>
+#include "msi.h"
 
 // Wrapper class for Windows Installer. Does not contain much functionality, but allows
 // a program to contain calls to Windows Installer, and check at runtime if Windows Installer

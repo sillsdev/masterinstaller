@@ -1,8 +1,8 @@
 #include <windows.h>
 #include <stdio.h>
 #include <tchar.h>
-#include <msi.h>
 
+#include "msi.h"
 #include "ProductManager.h"
 #include "ErrorHandler.h"
 #include "ProductKeys.h"

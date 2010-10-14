@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InitUtils));
 			this.MasterInstallerFolderBox = new System.Windows.Forms.TextBox();
 			this.CancelButton = new System.Windows.Forms.Button();
 			this.OkButton = new System.Windows.Forms.Button();
@@ -35,7 +36,12 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.ProductsFolderBox = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
-			this.CdImagesFoldeerBox = new System.Windows.Forms.TextBox();
+			this.CdImagesFolderBox = new System.Windows.Forms.TextBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.CdDrivesComboBox = new System.Windows.Forms.ComboBox();
+			this.MasterInstallerBrowseButton = new System.Windows.Forms.Button();
+			this.ProductsBrowseButton = new System.Windows.Forms.Button();
+			this.CdsBrowseButton = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// MasterInstallerFolderBox
@@ -50,7 +56,7 @@
 			// CancelButton
 			// 
 			this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.CancelButton.Location = new System.Drawing.Point(424, 154);
+			this.CancelButton.Location = new System.Drawing.Point(500, 165);
 			this.CancelButton.Name = "CancelButton";
 			this.CancelButton.Size = new System.Drawing.Size(75, 23);
 			this.CancelButton.TabIndex = 2;
@@ -61,7 +67,7 @@
 			// OkButton
 			// 
 			this.OkButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.OkButton.Location = new System.Drawing.Point(330, 153);
+			this.OkButton.Location = new System.Drawing.Point(406, 164);
 			this.OkButton.Name = "OkButton";
 			this.OkButton.Size = new System.Drawing.Size(75, 23);
 			this.OkButton.TabIndex = 3;
@@ -99,23 +105,76 @@
 			this.label3.AutoSize = true;
 			this.label3.Location = new System.Drawing.Point(10, 100);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(144, 13);
+			this.label3.Size = new System.Drawing.Size(180, 13);
 			this.label3.TabIndex = 7;
-			this.label3.Text = "Location of CD Images folder";
+			this.label3.Text = "Default location of CD Images folder:";
 			// 
-			// CdImagesFoldeerBox
+			// CdImagesFolderBox
 			// 
-			this.CdImagesFoldeerBox.Location = new System.Drawing.Point(10, 115);
-			this.CdImagesFoldeerBox.Name = "CdImagesFoldeerBox";
-			this.CdImagesFoldeerBox.Size = new System.Drawing.Size(485, 20);
-			this.CdImagesFoldeerBox.TabIndex = 8;
+			this.CdImagesFolderBox.Location = new System.Drawing.Point(10, 115);
+			this.CdImagesFolderBox.Name = "CdImagesFolderBox";
+			this.CdImagesFolderBox.Size = new System.Drawing.Size(485, 20);
+			this.CdImagesFolderBox.TabIndex = 8;
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(10, 145);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(173, 13);
+			this.label4.TabIndex = 9;
+			this.label4.Text = "Drive letter for digital certificate CD:";
+			// 
+			// CdDrivesComboBox
+			// 
+			this.CdDrivesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.CdDrivesComboBox.FormattingEnabled = true;
+			this.CdDrivesComboBox.Location = new System.Drawing.Point(184, 141);
+			this.CdDrivesComboBox.Name = "CdDrivesComboBox";
+			this.CdDrivesComboBox.Size = new System.Drawing.Size(51, 21);
+			this.CdDrivesComboBox.TabIndex = 10;
+			// 
+			// MasterInstallerBrowseButton
+			// 
+			this.MasterInstallerBrowseButton.Location = new System.Drawing.Point(500, 23);
+			this.MasterInstallerBrowseButton.Name = "MasterInstallerBrowseButton";
+			this.MasterInstallerBrowseButton.Size = new System.Drawing.Size(75, 23);
+			this.MasterInstallerBrowseButton.TabIndex = 11;
+			this.MasterInstallerBrowseButton.Text = "Browse...";
+			this.MasterInstallerBrowseButton.UseVisualStyleBackColor = true;
+			this.MasterInstallerBrowseButton.Click += new System.EventHandler(this.OnClickMasterInstallerBrowse);
+			// 
+			// ProductsBrowseButton
+			// 
+			this.ProductsBrowseButton.Location = new System.Drawing.Point(500, 68);
+			this.ProductsBrowseButton.Name = "ProductsBrowseButton";
+			this.ProductsBrowseButton.Size = new System.Drawing.Size(75, 23);
+			this.ProductsBrowseButton.TabIndex = 12;
+			this.ProductsBrowseButton.Text = "Browse...";
+			this.ProductsBrowseButton.UseVisualStyleBackColor = true;
+			this.ProductsBrowseButton.Click += new System.EventHandler(this.OnClickProductsBrowse);
+			// 
+			// CdsBrowseButton
+			// 
+			this.CdsBrowseButton.Location = new System.Drawing.Point(500, 113);
+			this.CdsBrowseButton.Name = "CdsBrowseButton";
+			this.CdsBrowseButton.Size = new System.Drawing.Size(75, 23);
+			this.CdsBrowseButton.TabIndex = 13;
+			this.CdsBrowseButton.Text = "Browse...";
+			this.CdsBrowseButton.UseVisualStyleBackColor = true;
+			this.CdsBrowseButton.Click += new System.EventHandler(this.OnClickCDsBrowse);
 			// 
 			// InitUtils
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(507, 189);
-			this.Controls.Add(this.CdImagesFoldeerBox);
+			this.ClientSize = new System.Drawing.Size(583, 200);
+			this.Controls.Add(this.CdsBrowseButton);
+			this.Controls.Add(this.ProductsBrowseButton);
+			this.Controls.Add(this.MasterInstallerBrowseButton);
+			this.Controls.Add(this.CdDrivesComboBox);
+			this.Controls.Add(this.label4);
+			this.Controls.Add(this.CdImagesFolderBox);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.ProductsFolderBox);
 			this.Controls.Add(this.label2);
@@ -123,8 +182,10 @@
 			this.Controls.Add(this.OkButton);
 			this.Controls.Add(this.CancelButton);
 			this.Controls.Add(this.MasterInstallerFolderBox);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "InitUtils";
 			this.Text = "Initialize Master Installer Utilities";
+			this.Load += new System.EventHandler(this.InitUtils_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -139,7 +200,12 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox ProductsFolderBox;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.TextBox CdImagesFoldeerBox;
+		private System.Windows.Forms.TextBox CdImagesFolderBox;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.ComboBox CdDrivesComboBox;
+		private System.Windows.Forms.Button MasterInstallerBrowseButton;
+		private System.Windows.Forms.Button ProductsBrowseButton;
+		private System.Windows.Forms.Button CdsBrowseButton;
 	}
 }
 

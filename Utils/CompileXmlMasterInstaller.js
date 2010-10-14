@@ -100,6 +100,24 @@ if (!fso.FileExists(SetupExePath))
 var MtCmd = 'mt.exe -manifest "' + CppFilePath + '\\setup.manifest" -outputresource:"' + SetupExePath + '";#1';
 shellObj.Run(MtCmd, 7, true);
 
+// Sign the .exe file, if the certificate can be found:
+var CertificatePath = shellObj.ExpandEnvironmentStrings("%DIGITAL_CERT_DRIVE%");
+if (CertificatePath == "%DIGITAL_CERT_DRIVE%")
+	WScript.Echo("Cannot sign setup.exe, as the DIGITAL_CERT_DRIVE environment variable has not been set. This probably means you need to re-run the InitUtils.exe application in the Master Installer's Utils folder.");
+else
+{
+	var CertFilePath = fso.BuildPath(CertificatePath, "comodo.spc");
+	var CertKeyPath = fso.BuildPath(CertificatePath, "comodo.pvk");
+	if (!fso.FileExists(CertFilePath) || !fso.FileExists(CertKeyPath))
+		WScript.Echo("About to sign setup.exe - insert digital certificate CD into " + CertificatePath + " drive, then click OK, or just click OK anyway to proceed without signing.");
+	if (fso.FileExists(CertFilePath) && fso.FileExists(CertKeyPath))
+	{
+		var SignCodePath = fso.BuildPath(CppFilePath, "Utils\\Sign\\signcode.exe");
+		var SignCmd = '"' + SignCodePath + '" -spc "' + CertFilePath + '" -v "' + CertKeyPath + '" -n "SIL Software Installer" -t http://timestamp.comodoca.com/authenticode -a sha1 "' + SetupExePath + '"';
+		shellObj.Run(SignCmd, 1, true);
+	}
+}
+
 // Remove junk from the NewCompilationFolder:			
 DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.obj"));
 DeleteIfExists(fso.BuildPath(NewCompilationFolder, "*.res"));

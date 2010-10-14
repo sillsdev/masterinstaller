@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
@@ -10,6 +11,7 @@ namespace InitUtils
 		private const string MasterInstaller = "MASTER_INSTALLER";
 		private const string PackageProducts = "PACKAGE_PRODUCTS";
 		private const string CdImages = "CD_IMAGES";
+		private const string CertificateDrive = "DIGITAL_CERT_DRIVE";
 
 		public InitUtils()
 		{
@@ -25,7 +27,14 @@ namespace InitUtils
 				if (MasterInstallerFolderBox.Text.Length == 0)
 					MasterInstallerFolderBox.Text = Path.GetDirectoryName(exeFolder);
 			ProductsFolderBox.Text = Environment.GetEnvironmentVariable(PackageProducts, EnvironmentVariableTarget.Machine);
-			CdImagesFoldeerBox.Text = Environment.GetEnvironmentVariable(CdImages, EnvironmentVariableTarget.Machine);
+			CdImagesFolderBox.Text = Environment.GetEnvironmentVariable(CdImages, EnvironmentVariableTarget.Machine);
+
+			var allDrives = DriveInfo.GetDrives();
+			foreach (var d in allDrives.Where(d => d.DriveType == DriveType.CDRom))
+				CdDrivesComboBox.Items.Add(d.RootDirectory.FullName);
+			CdDrivesComboBox.SelectedItem = Environment.GetEnvironmentVariable(CertificateDrive, EnvironmentVariableTarget.Machine);
+			if (CdDrivesComboBox.SelectedItem == null)
+				CdDrivesComboBox.SelectedIndex = 0;
 		}
 
 		private void OnDragDrop(object sender, DragEventArgs e)
@@ -39,7 +48,9 @@ namespace InitUtils
 				EnvironmentVariableTarget.Machine);
 			Environment.SetEnvironmentVariable(PackageProducts, ProductsFolderBox.Text,
 				EnvironmentVariableTarget.Machine);
-			Environment.SetEnvironmentVariable(CdImages, CdImagesFoldeerBox.Text,
+			Environment.SetEnvironmentVariable(CdImages, CdImagesFolderBox.Text,
+				EnvironmentVariableTarget.Machine);
+			Environment.SetEnvironmentVariable(CertificateDrive, CdDrivesComboBox.SelectedItem.ToString(),
 				EnvironmentVariableTarget.Machine);
 
 			var utilsFolder = Path.Combine(MasterInstallerFolderBox.Text, "Utils");
@@ -82,6 +93,41 @@ namespace InitUtils
 		private void OnClickCancel(object sender, EventArgs e)
 		{
 			Close();
+		}
+
+		private void InitUtils_Load(object sender, EventArgs e)
+		{
+
+		}
+
+		private void OnClickMasterInstallerBrowse(object sender, EventArgs e)
+		{
+			var d = new FolderBrowserDialog();
+			d.Description = "Select the folder that contains your local copy of the Master Installer source files:";
+			d.SelectedPath = MasterInstallerFolderBox.Text;
+			d.ShowNewFolderButton = false;
+			d.ShowDialog();
+			MasterInstallerFolderBox.Text = d.SelectedPath;
+		}
+
+		private void OnClickProductsBrowse(object sender, EventArgs e)
+		{
+			var d = new FolderBrowserDialog();
+			d.Description = "Select the folder that contains your local copy of the Products library:";
+			d.SelectedPath = ProductsFolderBox.Text;
+			d.ShowNewFolderButton = false;
+			d.ShowDialog();
+			ProductsFolderBox.Text = d.SelectedPath;
+		}
+
+		private void OnClickCDsBrowse(object sender, EventArgs e)
+		{
+			var d = new FolderBrowserDialog();
+			d.Description = "Select the folder that does (or will) contain your local copy of the CD images archive:";
+			d.SelectedPath = CdImagesFolderBox.Text;
+			d.ShowNewFolderButton = true;
+			d.ShowDialog();
+			CdImagesFolderBox.Text = d.SelectedPath;
 		}
 	}
 }

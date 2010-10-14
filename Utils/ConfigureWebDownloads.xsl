@@ -44,23 +44,9 @@
 					Select the tasks you want to be performed, then press the Go button.<br/><br/>
 					<table>
 						<tr>
-							<td align="right">Path of C++ source files:</td>
+							<td alight="right">Path of parent folder for all output:</td>
 							<td>
-								<input id="CppPath" type="text" size="60" onfocus="this.select();" title="Folder containing C++ files for compilation into master installer setup.exe"/>
-								<script type="text/javascript">document.getElementById("CppPath").value=CppFilePath;</script>
-							</td>
-						</tr>
-						<tr>
-							<td align="right">Path of Products:</td>
-							<td>
-								<input id="ProductsPath" type="text" size="60" onfocus="this.select();" title="Source folder containing all products for the web downloads"/>
-								<script type="text/javascript">document.getElementById("ProductsPath").value=ProductsPath;</script>
-							</td>
-						</tr>
-						<tr>
-							<td alight="right">Path of root folder for all output:</td>
-							<td>
-								<input id="OutputPath" type="text" size="60" onfocus="this.select();" title="Root folder for all flavors"/>
+								<input id="OutputPath" type="text" size="60" onfocus="this.select();" title="Parent folder for all output flavors"/>
 							</td>
 						</tr>
 					</table>
@@ -70,13 +56,17 @@
 					<script type="text/javascript">document.getElementById("WriteDownloadsXml").checked=true;</script>
 					<input id="Compile" type="checkbox" title="Compile a setup.exe program for each flavor."/>Compile master installer for each flavor<br/>
 					<script type="text/javascript">document.getElementById("Compile").checked=true;</script>
-					<input id="SignWithCertificate" type="checkbox" title="Sign each setup.exe with the certificate in the root folder on the CD in the specified drive."/>Sign each setup.exe - certificate location:
-					<script type="text/javascript">document.getElementById("SignWithCertificate").checked=true;</script>
-					<input id="CdDrive" type="text" onselect="InputTextSelected(this);" size="2" onfocus="this.select();" title="Drive (or folder) containing digital certifiate CD." value="D:"/><br/>
 					<input id="GatherFiles" type="checkbox" title="Gather files needed for each flavor into one folder."/>Gather files for each flavor<br/>
 					<script type="text/javascript">document.getElementById("GatherFiles").checked=true;</script>
-					<input id="BuildSfx" type="checkbox" title="Create self extracting 7-zip archive .exe file for each flavor. Assumes 7-Zip utility is present."/>Build self-extracting download package for each flavor<br/>
+					<input id="BuildSfx" type="checkbox" title="Create self extracting 7-zip archive .exe file for each flavor." onclick="showPage('FwSfx', this.checked);"/>Build self-extracting download package for each flavor
 					<script type="text/javascript">document.getElementById("BuildSfx").checked=true;</script>
+					<span id="FwSfx" style="position:absolute; visibility:hidden">
+						<select name="SfxStyle">
+							<option value="Standard">[No user options; delete archive after setup]</option>
+							<option value="UseFwSfx">[FieldWorks: User chooses destination, archive remains after setup]</option>
+						</select>
+						<script type="text/javascript">SelectSfxStyle();</script>
+					</span>
 					<br/>
 					<br/>
 					<button onclick="Go();" style="font-size:130%" title="Start flavor building process">
@@ -159,7 +149,7 @@
 	<xsl:template name="script">
 		<script type="text/javascript">
 			<![CDATA[
-	<!--
+  <!--
 // This is line 6
 var Initializing = true;
 var UserPressedNextWhileInitializing = false;
@@ -179,17 +169,17 @@ var NumFlavors = 1;
 var fso = new ActiveXObject("Scripting.FileSystemObject");	
 var shellObj = new ActiveXObject("WScript.Shell");
 
-var CppFilePath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
+var MasterInstallerPath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
 var ProductsPath = shellObj.ExpandEnvironmentStrings("%PACKAGE_PRODUCTS%");
 
-if (CppFilePath == "%MASTER_INSTALLER%")
+if (MasterInstallerPath == "%MASTER_INSTALLER%")
 	alert("ERROR: the MASTER_INSTALLER environment variable has not been defined. This probably means you have not run the InitUtils.exe application in the Master Installer's Utils folder.");
 else if (ProductsPath == "%PACKAGE_PRODUCTS%")
 	alert("ERROR: the PACKAGE_PRODUCTS environment variable has not been defined. You cannot create web download packages without specifying where the products and documents are stored.");
-
-var UtilsPath = fso.BuildPath(CppFilePath, "Utils");
+	
+var UtilsPath = fso.BuildPath(MasterInstallerPath, "Utils");
 var SevenZipExeFile = fso.BuildPath(UtilsPath, "7za.exe");
-var BitmapsPath = fso.BuildPath(CppFilePath, "Bitmaps");
+var BitmapsPath = fso.BuildPath(MasterInstallerPath, "Bitmaps");
 
 var f7ZipFoundSvn = false;
 
@@ -386,6 +376,9 @@ function setPageNo(Stage)
 	for (i = 1; i <= MaxStage; i++)
 		showPage('Stage' + i, Stage == i);
 
+	// Deal with a special case:
+	showPage('FwSfx', (Stage == 3 && document.getElementById('BuildSfx').checked));
+
 	return true;
 }
 
@@ -424,6 +417,17 @@ function VerifyPage(CurrentStage)
 		break;
 	}
 	return true;
+}
+
+// Uses hueristic to select default SFX style.
+function SelectSfxStyle()
+{
+	var StyleList = document.getElementById("SfxStyle");
+	StyleList.options[0].selected = true; // Just in case we can't find a better option to select.
+	var InstallerTitle = document.XMLDocument.selectSingleNode('/MasterInstaller/General/Title');
+	if (InstallerTitle != null)
+		if (InstallerTitle.text.indexOf("FieldWorks") != -1)
+			StyleList.options[1].selected = true;
 }
 
 // Builds an array of file lists for each product, where the files in the list are interpretted
@@ -722,9 +726,9 @@ function Go()
 	var WriteFlavorXml = document.getElementById('WriteXml').checked;
 	var WriteDownloadsXml = document.getElementById('WriteDownloadsXml').checked;
 	var CompileFlavorXml = document.getElementById('Compile').checked;
-	var SignSetupExe = document.getElementById('SignWithCertificate').checked;
 	var GatherFlavorFiles = document.getElementById('GatherFiles').checked;
 	var BuildFlavor7zip = document.getElementById('BuildSfx').checked;
+	var SfxStyle = document.getElementById('SfxStyle').value;
 	
 	if (!WriteFlavorXml && !WriteDownloadsXml && !CompileFlavorXml && !GatherFlavorFiles && !BuildFlavor7zip)
 		AddCommentary(0, "Nothing to do!", true);
@@ -734,8 +738,6 @@ function Go()
 		// Everything is surrounded by a try...catch block, so we can trap errors:
 		try
 		{
-			ProductsPath = document.getElementById("ProductsPath").value;
-			CppFilePath = document.getElementById("CppPath").value;
 			var OutputPath = document.getElementById('OutputPath').value;
 			MakeSureFolderExists(OutputPath);
 			var XmlDocs = new Array();
@@ -802,14 +804,6 @@ function Go()
 					fso.MoveFile(SetupExePath, FlavorSetupExePath);
 				}
 				
-				if (SignSetupExe)
-				{
-					var Drive = document.getElementById("CdDrive").value;
-					var SignCmd = '"' + CppFilePath + '\\Utils\\Sign\\signcode.exe" -spc "' + Drive + '\\comodo.spc" -v "' + Drive + '\\comodo.pvk" -n "SIL Software Installer" -t http://timestamp.comodoca.com/authenticode -a sha1 "' + FlavorSetupExePath + '"';
-					AddCommentary(1, "Signing setup.exe...", false);
-					shellObj.Run(SignCmd, 1, true);
-				}
-
 				if (GatherFlavorFiles)
 				{
 					// Gather all the files needed for this flavor:
@@ -821,7 +815,7 @@ function Go()
 				{
 					// Compress the files for the current flavor:
 					AddCommentary(1, "Compressing files...", false);
-					Compress(FlavorFolder);
+					Compress(FlavorFolder, SfxStyle);
 				}
 				
 				AddCommentary(1, "Done.", false);
@@ -932,7 +926,7 @@ function MakeSureFolderExists(strDir)
 
 function CompileMasterInstaller(XmlFileName)
 {
-	var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, "CompileXmlMasterInstaller.js") + '" "' + XmlFileName + '"';
+	var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, "CompileXmlMasterInstaller.js") + '" "' + XmlFileName + '" -E';
 	shellObj.Run(Cmd, 0, true);
  	iLastBackslash = XmlFileName.lastIndexOf("\\");
 	var InputFolder = XmlFileName.substr(0, iLastBackslash);
@@ -1126,7 +1120,7 @@ function GatherFiles(iFlavor, DestinationPath)
 	if (IsAnyProductLocked())
 	{
 		var InstallerHelpDll = "InstallerHelp.dll";
-		var InstallerHelpDllSourcePath = fso.BuildPath(CppFilePath, InstallerHelpDll);
+		var InstallerHelpDllSourcePath = fso.BuildPath(MasterInstallerPath, InstallerHelpDll);
 		var InstallerHelpDllDestPath = fso.BuildPath(DestinationPath, InstallerHelpDll);
 		fso.CopyFile(InstallerHelpDllSourcePath, InstallerHelpDllDestPath, true);
 		AddCommentary(0, "<b>Warning - InstallerHelp2.dll cannot be generated by this tool</b>", true, true);
@@ -1320,7 +1314,7 @@ function AltCopy(Source, Dest)
 }
 
 // Uses the 7-zip tool to make a self-extracting archive of the specified folder.
-function Compress(SourceFolder)
+function Compress(SourceFolder, SfxStyle)
 {
 	if (SevenZipExeFile == null)
 	{
@@ -1376,15 +1370,34 @@ function Compress(SourceFolder)
 	
 	// Create configuration file to bind to self-extracting archive:
 	var tsoConfig = fso.OpenTextFile(ConfigFile, 2, true, 0); // Must be UTF-8; ASCII will do for us
-	tsoConfig.WriteLine(';!@Install@!UTF-8!');
-	tsoConfig.WriteLine('Title="SIL \'' + RootFolder + '\' Software Package"');
-	tsoConfig.WriteLine('HelpText="Double-click the file \'' + RootFolder + '.exe\' to extract the installation files and run the installer.\nThe extracted files will be deleted when the installer has finished.\n\nRun the file with the -nr option to simply extract the files and leave them.\n\nFile extraction will be to the same folder where this file is, in both cases."');
-	tsoConfig.WriteLine('InstallPath="%%S"');
-	tsoConfig.WriteLine('Delete="%%S\\' + RootFolder + '"');
-	tsoConfig.WriteLine('ExtractTitle="Extracting installation files"');
-	tsoConfig.WriteLine('ExtractDialogText="Preparing the \'' + RootFolder + '\' files for installation"');
-	tsoConfig.WriteLine('RunProgram="fm0:\\"' + RootFolder + '\\setup.exe\\""');
-	tsoConfig.WriteLine(';!@InstallEnd@!');
+	
+	switch (SfxStyle)
+	{
+		case 'UseFwSfx':
+			tsoConfig.WriteLine(';!@Install@!UTF-8!');
+			tsoConfig.WriteLine('Title="SIL FieldWorks Installation (' + RootFolder + ')"');
+			tsoConfig.WriteLine('HelpText="Double-click the file \'' + RootFolder + '.exe\' to extract the installation files and run the installer.\n"');
+			tsoConfig.WriteLine('InstallPath="%%S"');
+			tsoConfig.WriteLine('ExtractTitle="Extracting installation files"');
+			tsoConfig.WriteLine('ExtractDialogText="Preparing the \'' + RootFolder + '\' files for installation"');
+			tsoConfig.WriteLine('RunProgram="fm0:\\"' + RootFolder + '\\setup.exe\\""');
+			tsoConfig.WriteLine('GUIFlags="6240"');
+			tsoConfig.WriteLine('BeginPrompt="The FieldWorks installation files (' + RootFolder + ') will be extracted to the folder specified below, and then the installer will run.\nIMPORTANT: You will need to keep the FieldWorks installer in that folder if you wish to apply future patch upgrades."');
+			tsoConfig.WriteLine('ExtractPathText="Select a folder to store the installation files:"');
+			tsoConfig.WriteLine(';!@InstallEnd@!');
+			break;
+		case 'Standard':
+			tsoConfig.WriteLine(';!@Install@!UTF-8!');
+			tsoConfig.WriteLine('Title="SIL \'' + RootFolder + '\' Software Package"');
+			tsoConfig.WriteLine('HelpText="Double-click the file \'' + RootFolder + '.exe\' to extract the installation files and run the installer.\nThe extracted files will be deleted when the installer has finished.\n\nRun the file with the -nr option to simply extract the files and leave them.\n\nFile extraction will be to the same folder where this file is, in both cases."');
+			tsoConfig.WriteLine('InstallPath="%%S"');
+			tsoConfig.WriteLine('Delete="%%S\\' + RootFolder + '"');
+			tsoConfig.WriteLine('ExtractTitle="Extracting installation files"');
+			tsoConfig.WriteLine('ExtractDialogText="Preparing the \'' + RootFolder + '\' files for installation"');
+			tsoConfig.WriteLine('RunProgram="fm0:\\"' + RootFolder + '\\setup.exe\\""');
+			tsoConfig.WriteLine(';!@InstallEnd@!');
+			break;
+	}
 	tsoConfig.Close();
 
 	// Add self-extracting module and configuration to launch setup.exe:
@@ -1399,18 +1412,38 @@ function Compress(SourceFolder)
 	if (fso.FileExists(ListFile))
 		fso.DeleteFile(ListFile);
 
+	// Sign the SfxFile file, if the certificate can be found:
+	var CertificatePath = shellObj.ExpandEnvironmentStrings("%DIGITAL_CERT_DRIVE%");
+	if (CertificatePath == "%DIGITAL_CERT_DRIVE%")
+		alert("Cannot sign '" + SfxFile + "', as the DIGITAL_CERT_DRIVE environment variable has not been set. This probably means you need to re-run the InitUtils.exe application in the Master Installer's Utils folder.");
+	else
+	{
+		var CertFilePath = fso.BuildPath(CertificatePath, "comodo.spc");
+		var CertKeyPath = fso.BuildPath(CertificatePath, "comodo.pvk");
+		if (!fso.FileExists(CertFilePath) || !fso.FileExists(CertKeyPath))
+			alert("About to sign '" + SfxFile + "' - insert digital certificate CD into " + CertificatePath + " drive, then click OK, or just click OK anyway to proceed without signing.");
+		if (fso.FileExists(CertFilePath) && fso.FileExists(CertKeyPath))
+		{
+			var SignCodePath = fso.BuildPath(UtilsPath, "Sign\\signcode.exe");
+			var SfxFilePath = fso.BuildPath(LocationFolder, SfxFile);
+			var SignCmd = '"' + SignCodePath + '" -spc "' + CertFilePath + '" -v "' + CertKeyPath + '" -n "SIL Software Package" -t http://timestamp.comodoca.com/authenticode -a sha1 "' + SfxFilePath + '"';
+			shellObj.Run(SignCmd, 1, true);
+		}
+	}
+
 	// If the md5sums utility exists where we expect, use it to generate an md5 hash
 	// of the new archive file:
-	var Md5SumsPath = fso.BuildPath(CppFilePath, "Utils\\md5sums.exe");
+	var Md5SumsPath = fso.BuildPath(UtilsPath, "md5sums.exe");
 	if (fso.FileExists(Md5SumsPath))
 	{
-		var md5File = LocationFolder + '\\' + RootFolder + '.md5.txt';
+		var md5FilePath = fso.BuildPath(LocationFolder, RootFolder + '.md5.txt');
+		
 		// Make new batch file:
 		var tso = fso.OpenTextFile(BatchFile, 2, true);
 		tso.WriteLine("@echo off");
 		tso.WriteLine(LocationDrive);
 		tso.WriteLine('cd "' + LocationFolder + '"');
-		tso.WriteLine('"' + Md5SumsPath + '" -u "' + LocationFolder + '\\' + SfxFile + '" >"' + md5File + '"');
+		tso.WriteLine('"' + Md5SumsPath + '" -u "' + SfxFile + '" >"' + md5FilePath + '"');
 		tso.Close();
 
 		// Run the temporary batch file we have been building:
@@ -1420,14 +1453,14 @@ function Compress(SourceFolder)
 		fso.DeleteFile(BatchFile);
 	
 		// Get the raw md5 value from among the other junk in the output of md5sums:
-		var tso = fso.OpenTextFile(md5File, 1, true);
+		var tso = fso.OpenTextFile(md5FilePath, 1, true);
 		var Line = tso.ReadLine();
 		tso.Close();
 		var IndexOfSpace = Line.indexOf(' ');
 		var MD5 = Line.slice(0, IndexOfSpace);
 
 		// Write the raw md5 value into the outptut file:
-		var tso = fso.OpenTextFile(md5File, 2, true);
+		var tso = fso.OpenTextFile(md5FilePath, 2, true);
 		tso.WriteLine(MD5);
 		tso.Close();
 	}
@@ -1436,6 +1469,6 @@ function Compress(SourceFolder)
 
 -->
 ]]>
-</script>
-</xsl:template>
+		</script>
+	</xsl:template>
 </xsl:stylesheet>

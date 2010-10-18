@@ -86,6 +86,10 @@ namespace InitUtils
 			Registry.SetValue(@"HKEY_CLASSES_ROOT\Folder\shell\SilCustomSfxSetup", "EditFlags", b, RegistryValueKind.Binary);
 			Registry.SetValue(@"HKEY_CLASSES_ROOT\Folder\shell\SilCustomSfxSetup\command", null, "wscript.exe \"" + Path.Combine(utilsFolder, "CreateSfxSetup.js") + "\" \"%1\" -Custom");
 
+			// Set registry values for the RebuildWebDownload utility:
+			Registry.SetValue(@"HKEY_CLASSES_ROOT\xmlfile\shell\RebuildWebDownload", null, "(Re)build web download package from this XML file");
+			Registry.SetValue(@"HKEY_CLASSES_ROOT\xmlfile\shell\RebuildWebDownload\command", null, "wscript.exe \"" + Path.Combine(utilsFolder, "RebuildWebDownload.js") + "\" \"%1\"");
+
 			MessageBox.Show("Done. You can now use the Master Installer utilities.");
 			Close();
 		}

@@ -44,7 +44,7 @@
 					Select the tasks you want to be performed, then press the Go button.<br/><br/>
 					<table>
 						<tr>
-							<td alight="right">Path of parent folder for all output:</td>
+							<td align="right">Path of parent folder for all output:</td>
 							<td>
 								<input id="OutputPath" type="text" size="60" onfocus="this.select();" title="Parent folder for all output flavors"/>
 							</td>
@@ -899,7 +899,6 @@ function AddCommentary(Column, Text, fNewRow, fUseInnerHtml)
 		Cell.innerText = Text;
 }
 
-
 // Create the specified folder path, if it doesn't already exist.
 // Thanks, Jeff!
 //	Note - Does not handle \\LS-ELMER\ type directory creation.
@@ -923,7 +922,6 @@ function MakeSureFolderExists(strDir)
 	}
 }
 
-
 function CompileMasterInstaller(XmlFileName)
 {
 	var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, "CompileXmlMasterInstaller.js") + '" "' + XmlFileName + '" -E';
@@ -932,31 +930,6 @@ function CompileMasterInstaller(XmlFileName)
 	var InputFolder = XmlFileName.substr(0, iLastBackslash);
 	var SetupExePath = InputFolder + "\\setup.exe";
 	return SetupExePath;
-}
-
-
-// Uses the given XSL file (path) to process the given xmlDoc, outputting to strOutputFile (path).
-function ProcessConfigFile(xmlDoc, strInputXsl, strOutputFile)
-{
-	var xslt = new ActiveXObject("Msxml2.XSLTemplate.3.0");
-	var xslDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument.3.0");
-	var xslProc;
-	xslDoc.async = false;
-	xslDoc.load(strInputXsl);
-	if (xslDoc.parseError.errorCode != 0)
-	{
-		var myErr = xslDoc.parseError;
-		Exception = new Object();
-		Exception.description = "XSL error in " + strInputXsl + ": " + myErr.reason + "\non line " + myErr.line + " at position " + myErr.linepos;
-		throw(Exception);
-	}
-	xslt.stylesheet = xslDoc;
-	xslProc = xslt.createProcessor();
-	xslProc.input = xmlDoc;
-	xslProc.transform();
-	var tso = fso.OpenTextFile(strOutputFile, 2, true);
-	tso.Write(xslProc.output);
-	tso.Close();
 }
 
 // Makes changes to the master installer settings based on the user's selections.
@@ -1022,7 +995,6 @@ function GenerateDownloadsXml(XmlDocs, OutputPath)
 	var NewPath = fso.BuildPath(OutputPath, "downloads.xml");
 	var tso = fso.OpenTextFile(NewPath, 2, true, -1);
 	tso.WriteLine('<?xml version="1.0" encoding="utf-16"?>');
-//	tso.WriteLine('<?xml-stylesheet type="text/xsl" href="TestDownloads.xsl" ?>');
 	tso.WriteLine('<Downloads>');
 
 	// Process each XML file, and write the results into the big new XML file:
@@ -1110,7 +1082,7 @@ function RemoveNodes(xmlDoc, XPath)
 		Nodes.removeNext();
 }
 
-// Copies files from their various sources to the CD image set.
+// Copies files from their various sources to the download package folder.
 function GatherFiles(iFlavor, DestinationPath)
 {
 	MakeSureFolderExists(DestinationPath);

@@ -1,1 +1,3 @@
-signcode.exe -spc D:\comodo.spc -v D:\comodo.pvk -n "SIL Software Installer" -t http://timestamp.comodoca.com/authenticode -a sha1 %1
+@echo off
+echo Signing %1 as "SIL Software Installer"
+"%MASTER_INSTALLER%\Utils\SignFile.js" %1 "SIL Software Installer"

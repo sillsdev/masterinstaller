@@ -9,7 +9,7 @@ var shellObj = new ActiveXObject("WScript.Shell");
 
 if (WScript.Arguments.Length < 1)
 {
-	WScript.Echo("ERROR: must specify a master installer XML .");
+	WScript.Echo("ERROR: must specify a master installer XML.");
 	WScript.Quit();
 }
 
@@ -38,11 +38,37 @@ if (xmlDoc.selectSingleNode("/MasterInstaller") == null)
 	WScript.Quit();
 }
 
+// Sort out which activities we should avoid, based on command line arguments:
+var fBuildSetupExe = true;
+var fGatherFiles = true;
+var fBuildSfx = true;
+var fShowLog = true;
+for (i = 1; i < WScript.Arguments.Length; i++)
+{
+	switch (WScript.Arguments.Item(i))
+	{
+		case "-NoBuildSetupExe":
+			fBuildSetupExe = false;
+			break;
+		case "-NoGatherFiles":
+			fGatherFiles = false;
+			break;
+		case "-NoBuildSfx":
+			fBuildSfx = false;
+			break;
+		case "-NoShowLog":
+			fShowLog = false;
+			break;
+	}
+}
+
 var iLastBackslash = XmlFileName.lastIndexOf("\\");
 var RootFolder = XmlFileName.substr(0, iLastBackslash);
 // The package contents go in a folder with the same name as the master installer XML
 // file (minus the .xml extension):
 var FlavorFolder = XmlFileName.slice(0, -4);
+var FlavorName = FlavorFolder.slice(iLastBackslash + 1);
+var SfxFile = FlavorFolder + ".exe";
 
 var ReportFile = fso.BuildPath(RootFolder, "RebuildWebDownload.log");
 var tsoLog = fso.OpenTextFile(ReportFile, 2, true);
@@ -95,10 +121,13 @@ FileTotal = 0;
 GenerateSourceFileLists(); // Must come after assigning NumProducts and before calling FindDuplicateSets().
 GenerateExtHelpAndTermsFileLists();
 BuildPackage();
-WScript.Echo("Done.");
 
+d = new Date();
 tsoLog.WriteLine("Ended: " + d.toString());
 tsoLog.Close();
+
+if (fShowLog)
+	shellObj.Run('Notepad "' + ReportFile + '"');
 
 // Builds an array of file lists for each product, where the files in the list are interpretted
 // from the AutoConfigure/Source nodes of each product. (More than one source node per product
@@ -317,7 +346,7 @@ function BuildPackage()
 	var FinalSetupExePath = fso.BuildPath(FlavorFolder, "setup.exe");
 	var SetupExeBuilt = false;
 
-	if (!fso.FileExists(FinalSetupExePath))
+	if (fBuildSetupExe && !fso.FileExists(FinalSetupExePath))
 	{
 		tsoLog.WriteLine("Building master installer.");
 		
@@ -332,14 +361,20 @@ function BuildPackage()
 	// Remove from OriginalFileList:
 	RemoveFileFromList(FinalSetupExePath);
 
-	tsoLog.WriteLine("Gathering Files.");
-	if (GatherFiles(FlavorFolder) > 0 || SetupExeBuilt)
+	if (fGatherFiles)
 	{
-		tsoLog.WriteLine("Building self-extracting archive.");
-		Compress(FlavorFolder);
+		tsoLog.WriteLine("Gathering Files.");
+		var NumGatheredFiles = GatherFiles(FlavorFolder);
+		if (fBuildSfx && (NumGatheredFiles > 0 || SetupExeBuilt || !fso.FileExists(SfxFile)))
+		{
+			tsoLog.WriteLine("Building self-extracting archive.");
+			Compress();
+		}
+		else
+			tsoLog.WriteLine("Did not build self-extracting archive.");
 	}
 	else
-		tsoLog.WriteLine("Did not build setup.exe; did not gather any files. Nothing left to do!");
+		tsoLog.WriteLine("Did not gather files.");
 }
 
 // Create the specified folder path, if it doesn't already exist.
@@ -607,7 +642,7 @@ function RemoveFileFromList(path)
 }
 
 // Uses the 7-zip tool to make a self-extracting archive of the specified folder.
-function Compress(SourceFolder)
+function Compress()
 {
 	if (SevenZipExeFile == null)
 	{
@@ -615,27 +650,23 @@ function Compress(SourceFolder)
 		return;
 	}
 
-	var iLastBackslash = SourceFolder.lastIndexOf("\\");
-	var RootFolder = SourceFolder.slice(iLastBackslash + 1);
-	var LocationFolder = SourceFolder.slice(0, iLastBackslash);
-	var ZipFile = RootFolder + ".7z";
-	var SfxFile = RootFolder + ".exe";
-	var iFirstBackslash = SourceFolder.indexOf("\\");
-	var LocationDrive = SourceFolder.slice(0, iFirstBackslash);
+	var ZipFile = FlavorFolder + ".7z";
+	var iFirstBackslash = FlavorFolder.indexOf("\\");
+	var LocationDrive = FlavorFolder.slice(0, iFirstBackslash);
 
-	var BatchFile = SourceFolder + ".temp.bat";
-	var ConfigFile = SourceFolder + ".Config.txt";
-	var ListFile = SourceFolder + ".list.txt";
+	var BatchFile = FlavorFolder + ".temp.bat";
+	var ConfigFile = FlavorFolder + ".Config.txt";
+	var ListFile = FlavorFolder + ".list.txt";
 
 	// Get list of all files to be used in archive:
 	f7ZipFoundSvn = false;
-	var FileList = GetFileList(SourceFolder, true);
+	var FileList = GetFileList(FlavorFolder, true);
 
 	// Initiate creation of 7-zip batch file:
 	var tso = fso.OpenTextFile(BatchFile, 2, true);
 	tso.WriteLine("@echo off");
 	tso.WriteLine(LocationDrive);
-	tso.WriteLine('cd "' + LocationFolder + '"');
+	tso.WriteLine('cd "' + RootFolder + '"');
 
 	// If we found any .svn folders, we have to use a list file, adding individual
 	// files to the list one by one.
@@ -646,9 +677,9 @@ function Compress(SourceFolder)
 		// Add files:
 		for (i = 0; i < FileList.length; i++)
 		{
-			// Remove SourceFolder from FileList[i]:
-			if (FileList[i].indexOf(SourceFolder) == 0)
-				FileList[i] = RootFolder + FileList[i].slice(SourceFolder.length);
+			// Remove FlavorFolder from FileList[i]:
+			if (FileList[i].indexOf(FlavorFolder) == 0)
+				FileList[i] = RootFolder + FileList[i].slice(FlavorFolder.length);
 			
 			var tso = fso.OpenTextFile(ListFile, 8, true);
 			tso.WriteLine('"' + FileList[i] + '"');
@@ -658,7 +689,7 @@ function Compress(SourceFolder)
 	}
 	else
 	{
-		tso.WriteLine('"' + SevenZipExeFile + '" a "' + ZipFile + '" + "' + RootFolder + '\\*" -r -mx=9 -mmt=on');
+		tso.WriteLine('"' + SevenZipExeFile + '" a "' + ZipFile + '" + "' + FlavorName + '\\*" -r -mx=9 -mmt=on');
 	}
 
 	// Add self-extracting module and configuration to launch setup.exe:
@@ -674,38 +705,22 @@ function Compress(SourceFolder)
 		fso.DeleteFile(ListFile);
 
 	// Sign the SfxFile file, if the certificate can be found:
-	var CertificatePath = shellObj.ExpandEnvironmentStrings("%DIGITAL_CERT_DRIVE%");
-	if (CertificatePath == "%DIGITAL_CERT_DRIVE%")
-		WScript.Echo("Cannot sign '" + SfxFile + "', as the DIGITAL_CERT_DRIVE environment variable has not been set. This probably means you need to re-run the InitUtils.exe application in the Master Installer's Utils folder.");
-	else
-	{
-		var CertFilePath = fso.BuildPath(CertificatePath, "comodo.spc");
-		var CertKeyPath = fso.BuildPath(CertificatePath, "comodo.pvk");
-		if (!fso.FileExists(CertFilePath) || !fso.FileExists(CertKeyPath))
-			WScript.Echo("About to sign '" + SfxFile + "' - insert digital certificate CD into " + CertificatePath + " drive, then click OK, or just click OK anyway to proceed without signing.");
-		if (fso.FileExists(CertFilePath) && fso.FileExists(CertKeyPath))
-		{
-			var SignCodePath = fso.BuildPath(UtilsPath, "Sign\\signcode.exe");
-			var SfxFilePath = fso.BuildPath(LocationFolder, SfxFile);
-			var SignCmd = '"' + SignCodePath + '" -spc "' + CertFilePath + '" -v "' + CertKeyPath + '" -n "SIL Software Package" -t http://timestamp.comodoca.com/authenticode -a sha1 "' + SfxFilePath + '"';
-			tsoLog.WriteLine("Signing package with following command line:");
-			tsoLog.WriteLine(SignCmd);
-			shellObj.Run(SignCmd, 8, true);
-		}
-	}
+	var SignBatchPath = fso.BuildPath(UtilsPath, "Sign\\SignPackage.bat");
+	var Cmd = '"' + SignBatchPath + '" "' + SfxFile + '"';
+	shellObj.Run(Cmd, 1, true);
 
 	// If the md5sums utility exists where we expect, use it to generate an md5 hash
 	// of the new archive file:
 	var Md5SumsPath = fso.BuildPath(UtilsPath, "md5sums.exe");
 	if (fso.FileExists(Md5SumsPath))
 	{
-		var md5FilePath = fso.BuildPath(LocationFolder, RootFolder + '.md5.txt');
+		var md5FilePath = FlavorFolder + '.md5.txt';
 
 		// Make new batch file:
 		var tso = fso.OpenTextFile(BatchFile, 2, true);
 		tso.WriteLine("@echo off");
 		tso.WriteLine(LocationDrive);
-		tso.WriteLine('cd "' + LocationFolder + '"');
+		tso.WriteLine('cd "' + RootFolder + '"');
 		tso.WriteLine('"' + Md5SumsPath + '" -u "' + SfxFile + '" >"' + md5FilePath + '"');
 		tso.Close();
 

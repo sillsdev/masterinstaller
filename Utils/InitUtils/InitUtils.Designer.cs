@@ -46,12 +46,10 @@
 			// 
 			// MasterInstallerFolderBox
 			// 
-			this.MasterInstallerFolderBox.AllowDrop = true;
 			this.MasterInstallerFolderBox.Location = new System.Drawing.Point(10, 25);
 			this.MasterInstallerFolderBox.Name = "MasterInstallerFolderBox";
 			this.MasterInstallerFolderBox.Size = new System.Drawing.Size(485, 20);
 			this.MasterInstallerFolderBox.TabIndex = 1;
-			this.MasterInstallerFolderBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.OnDragDrop);
 			// 
 			// CancelButton
 			// 

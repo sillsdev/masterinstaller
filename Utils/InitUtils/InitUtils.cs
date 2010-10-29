@@ -37,11 +37,6 @@ namespace InitUtils
 				CdDrivesComboBox.SelectedIndex = 0;
 		}
 
-		private void OnDragDrop(object sender, DragEventArgs e)
-		{
-			MessageBox.Show("Drop");
-		}
-
 		private void OnClickOk(object sender, EventArgs e)
 		{
 			Environment.SetEnvironmentVariable(MasterInstaller, MasterInstallerFolderBox.Text,

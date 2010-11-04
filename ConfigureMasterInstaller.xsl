@@ -1870,6 +1870,7 @@ function GenerateSourceFileLists()
 				var NameWhenLocked = ProductSource.getAttribute("NameWhenLocked");
 				var Attributes = ProductSource.getAttribute("Attributes");
 				var DestPath = ProductSource.getAttribute("DestPath");
+				var SignAs = ProductSource.getAttribute("SignAs");
 
 				// Check if source path is relative:
 				var SourcePath = CheckProductRelativePath(ProductSource.text, RelativePathPrepend);
@@ -1885,6 +1886,10 @@ function GenerateSourceFileLists()
 					Recurse = (RecurseAttribute == "true");
 				else if (fso.FolderExists(SourcePath))
 					Recurse = true;
+					
+				// The SignAs value is only valid if the Source is a file (not a directory):
+				if (!fso.FileExists(SourcePath))
+					SignAs = null;
 
 				var NewListData = GetFileList(SourcePath, Recurse, Attributes);
 				if (NameWhenLocked && NewListData.FileList.length > 1)
@@ -1892,6 +1897,7 @@ function GenerateSourceFileLists()
 				if (NameWhenLocked)
 					NewListData.NameWhenLocked = NameWhenLocked;
 				NewListData.DestPath = DestPath;
+				NewListData.SignAs = SignAs;
 
 				FileListData[iSource] = NewListData;
 			}
@@ -3059,6 +3065,7 @@ function GatherFiles(CdImagePath)
 							var RootFolder = FileListData[iData].RootFolder;
 							var Substitution = FileListData[iData].NameWhenLocked;
 							var DestPath = FileListData[iData].DestPath;
+							var SignAs = FileListData[iData].SignAs;
 
 							for (i = 0; i < FileList.length; i++)
 							{
@@ -3083,6 +3090,14 @@ function GatherFiles(CdImagePath)
 								// function instead:
 								AltCopy(FileList[i], TargetFullPath);
 								//fso.CopyFile(FileList[i], Destination, true);
+								
+								if (SignAs != null)
+								{
+									// Sign the current file:
+									var SignBatchPath = fso.BuildPath(UtilsPath, "Sign\\SignGeneric.bat");
+									var Cmd = '"' + SignBatchPath + '" "' + TargetFullPath + '" "' + SignAs + '"';
+									shellObj.Run(Cmd, 1, true);
+								}
 
 								if (!fso.FileExists(TargetFullPath))
 									AddCommentary(0, "Error - could not copy from\n" + FileList[i] + " to\n" + TargetFullPath, true);

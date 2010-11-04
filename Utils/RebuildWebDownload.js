@@ -151,6 +151,7 @@ function GenerateSourceFileLists()
 			var NameWhenLocked = ProductSource.getAttribute("NameWhenLocked");
 			var Attributes = ProductSource.getAttribute("Attributes");
 			var DestPath = ProductSource.getAttribute("DestPath");
+			var SignAs = ProductSource.getAttribute("SignAs");
 
 			// Check if source path is relative:
 			var SourcePath = CheckProductRelativePath(ProductSource.text, ProductsPath);
@@ -167,6 +168,10 @@ function GenerateSourceFileLists()
 			else if (fso.FolderExists(SourcePath))
 				Recurse = true;
 
+			// The SignAs value is only valid if the Source is a file (not a directory):
+			if (!fso.FileExists(SourcePath))
+				SignAs = null;
+
 			var NewListData = GetFileList(SourcePath, Recurse, Attributes);
 			if (NameWhenLocked && NewListData.FileList.length > 1)
 			{
@@ -176,6 +181,7 @@ function GenerateSourceFileLists()
 			if (NameWhenLocked)
 				NewListData.NameWhenLocked = NameWhenLocked;
 			NewListData.DestPath = DestPath;
+			NewListData.SignAs = SignAs;
 			FileTotal += NewListData.FileList.length;
 
 			FileListData[iSource] = NewListData;
@@ -483,6 +489,7 @@ function GatherFiles(DestinationPath)
 				var RootFolder = FileListData[iData].RootFolder;
 				var Substitution = FileListData[iData].NameWhenLocked;
 				var DestPath = FileListData[iData].DestPath;
+				var SignAs = FileListData[iData].SignAs;
 
 				for (i = 0; i < FileList.length; i++)
 				{
@@ -503,7 +510,17 @@ function GatherFiles(DestinationPath)
 						TargetFullPath = fso.BuildPath(TargetFullPath, fso.GetFileName(SourcePath));
 
 					if (TestCopy(FileList[i], TargetFullPath))
+					{
 						FilesCopied++;
+
+						if (SignAs != null)
+						{
+							// Sign the current file:
+							var SignBatchPath = fso.BuildPath(UtilsPath, "Sign\\SignGeneric.bat");
+							var Cmd = '"' + SignBatchPath + '" "' + TargetFullPath + '" "' + SignAs + '"';
+							shellObj.Run(Cmd, 1, true);
+						} 
+					}
 				} // Next file
 			} // Next source node
 			
@@ -586,12 +603,13 @@ function GetDestinationFolder(SourcePath, RootFolder, TargetRoot)
 
 // Copies over the Source file to the Dest path, unless the file is already
 // there (with the same size and modification date).
+// Returns true if the copy was at least attempted because it was needed.
 function TestCopy(Source, Dest)
 {
 	if (!fso.FileExists(Source))
 	{
 		tsoLog.WriteLine("Error: file " + Source + " does not exist.");
-		return;
+		return false;
 	}
 	if (fso.FileExists(Dest))
 	{

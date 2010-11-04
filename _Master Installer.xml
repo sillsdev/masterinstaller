@@ -32,7 +32,7 @@
 		<Product>
 			<AutoConfigure>
 				<Title>FW BTE 7.0 Alpha2 (from \\cana\LSDev\Installers\FW7.0Alpha2\BTE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW7.0Alpha2\BTE\FieldWorks\SetupFW.msi</Source>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0Alpha2\BTE\FieldWorks\SetupFW.msi</Source>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
 			<Title>SIL FieldWorks 7.0 BTE Alpha2</Title>
@@ -56,7 +56,7 @@
 		<Product>
 			<AutoConfigure>
 				<Title>FW SE 7.0 Alpha2 (from \\cana\LSDev\Installers\FW7.0Alpha2\SE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW7.0Alpha2\SE\FieldWorks\SetupFW_SE.msi</Source>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0Alpha2\SE\FieldWorks\SetupFW_SE.msi</Source>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
 			<Title>SIL FieldWorks 7.0 SE Alpha2</Title>

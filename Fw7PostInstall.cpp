@@ -419,7 +419,7 @@ int Fw7PostInstall(SoftwareProduct * Product)
 		g_Log.Write(_T("Asking user the following question: %s"), pszMessage);
 
 		if (MessageBox(NULL, pszMessage, _T("Earlier version of FieldWorks found"),
-			MB_YESNO | (migrationStatus == 0 ? MB_DEFBUTTON1 : MB_DEFBUTTON2)) == IDYES)
+			MB_YESNO | MB_DEFBUTTON2) == IDYES)
 		{
 			// User opted to uninstall earlier version of FW:
 			g_Log.Write(_T("User answered \"yes\"; uninstalling..."));

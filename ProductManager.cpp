@@ -62,8 +62,8 @@ public:
 	const _TCHAR * m_kpszInstallerFlagFalse;
 	const _TCHAR * m_kpszMsiFlags;
 	bool m_fTestAnsiConversion;
-	const _TCHAR * m_kpszMsiVersion;
-	const _TCHAR * m_kpszMsiUpgrade;
+	const _TCHAR * m_kpszMsiUpgradeTo;
+	const _TCHAR * m_kpszMsiUpgradeFlags;
 	pfnInstall m_pfnInstall;
 	DWORD dwSuccessCodeOverride;
 
@@ -114,6 +114,7 @@ public:
 	bool TestPresence();
 	bool TestPresence(const _TCHAR * pszVersion);
 	bool TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion);
+	int CompareMsiVersionWithInstalled();
 	const _TCHAR * GetCriticalFile();
 	bool IsContainer();
 	bool IsInstallable();
@@ -462,23 +463,14 @@ bool SoftwareProduct::TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * 
 				g_Log.Write(_T(".msi installation is present."));
 
 				// Product is installed, but check if an upgrade is required:
-				if (m_kpszMsiVersion)
+				if (m_kpszMsiUpgradeTo)
 				{
-					const int kcchVersion = 256;
-					_TCHAR szIntalledVersion[kcchVersion];
-					DWORD cch = kcchVersion;
-					if (MsiGetProductInfo(m_kpszMsiProductCode, INSTALLPROPERTY_VERSIONSTRING,
-						szIntalledVersion, &cch) == ERROR_SUCCESS)
+					if (CompareMsiVersionWithInstalled() == 1)
 					{
-						if (!VersionInRange(szIntalledVersion, pszMinVersion,
-							pszMaxVersion))
-						{
-							fPresent = false;
-							g_Log.Write(_T("Version %s is installed, but version %s is available."),
-								szIntalledVersion, m_kpszMsiVersion);
-						}
+						fPresent = false;
+						g_Log.Write(_T("Newer version is available."));
 					}
-				} // End if the is an MsiVersion specified
+				} // End if m_kpszMsiUpgradeTo exists
 			} // End case scope
 		} // End switch
 	} // End if product code exists
@@ -491,6 +483,84 @@ bool SoftwareProduct::TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * 
 		(fPresent ? _T("present") : _T("absent")));
 
 	return fPresent;
+}
+
+// Tests the version of the installed instance of the product against the version of the one
+// we have. Returns -1 if our product is an earlier version (implying a downgrade), zero if
+// the versions are the same, and +1 if our product is a later version (implying an upgrade).
+// returns MAXINT if the product is not even installed or not an .msi type installer.
+int SoftwareProduct::CompareMsiVersionWithInstalled()
+{
+	// Test that we're specified as an .msi installer:
+	if (m_kpszMsiProductCode == NULL)
+		return MAXINT;
+	if (*m_kpszMsiProductCode == 0)
+		return MAXINT;
+
+	// Test that we're specified as being able to upgrade:
+	if (m_kpszMsiUpgradeTo == NULL)
+		return MAXINT;
+	if (*m_kpszMsiUpgradeTo == 0)
+		return MAXINT;
+
+	g_Log.Write(_T("Comparing version of installed instance of %s with version in our .msi package."), m_kpszNiceName);
+
+	// Get version of installed instance:
+	DWORD cchInstalledVersion = 0;
+	_TCHAR * pszInstalledVersion = NULL;
+
+	// First attempt is a dummy to get the required InstalledVersion buffer size:
+	UINT ret = MsiGetProductInfo(m_kpszMsiProductCode, INSTALLPROPERTY_VERSIONSTRING, pszInstalledVersion, &cchInstalledVersion);
+
+	if (ret == ERROR_UNKNOWN_PRODUCT)
+	{
+		g_Log.Write(_T("Product wasn't even installed."));
+		return MAXINT;
+	}
+
+	if (ret == ERROR_MORE_DATA || ret == ERROR_SUCCESS) // The documented response is ERROR_MORE_DATA, but in practice, ERROR_SUCCESS is returned.
+	{
+		delete[] pszInstalledVersion;
+		// Try again with properly-sized InstalledVersion buffer:
+		pszInstalledVersion = new _TCHAR [++cchInstalledVersion];
+		ret = MsiGetProductInfo(m_kpszMsiProductCode, INSTALLPROPERTY_VERSIONSTRING, pszInstalledVersion, &cchInstalledVersion);
+	}
+
+	if (ret != ERROR_SUCCESS)
+	{
+		delete[] pszInstalledVersion;
+		pszInstalledVersion = NULL;
+		return MAXINT; // Weird.
+	}
+
+	g_Log.Write(_T("Installed version is %s"), pszInstalledVersion);
+
+	g_Log.Write(_T("Package version upgrades up to %s"), m_kpszMsiUpgradeTo);
+
+	int ReturnValue = MAXINT;
+
+	if (VersionInRangeEx(pszInstalledVersion, _T("0.0.0.0"), m_kpszMsiUpgradeTo))
+	{
+		g_Log.Write(_T("Installed version is lower than our package's version, so upgrade is possible."));
+		ReturnValue = 1;
+	}
+	else if (VersionInRangeEx(pszInstalledVersion, m_kpszMsiUpgradeTo, _T("32767.32767.32767.32767")))
+	{
+		g_Log.Write(_T("Installed version is higher than our package's version, so upgrade is not possible."));
+		ReturnValue = -1;
+	}
+	else if (VersionInRange(pszInstalledVersion, m_kpszMsiUpgradeTo, m_kpszMsiUpgradeTo))
+	{
+		g_Log.Write(_T("Installed version is same as our package's version."));
+		ReturnValue = 0;
+	}
+	else
+		g_Log.Write(_T("Comparison was inconclusive."));
+
+	delete[] pszInstalledVersion;
+	pszInstalledVersion = NULL;
+
+	return ReturnValue;
 }
 
 // Determines if there is a critical file that will match any Windows language criteria in its
@@ -574,28 +644,16 @@ DWORD SoftwareProduct::RunInstaller()
 			const _TCHAR * kpszInstallFlags = _T("/i");
 
 			// See if we need to test for a minor upgrade:
-			if (m_kpszMsiVersion)
+			if (m_kpszMsiUpgradeTo)
 			{
-				g_Log.Write(_T("MsiVersion %s specified."), m_kpszMsiVersion);
+				g_Log.Write(_T("Testing to see if we'll be doing a minor upgrade."));
 
-				// Get version number of installed instance:
-				const int kcchVersion = 256;
-				_TCHAR szIntalledVersion[kcchVersion];
-				DWORD cch = kcchVersion;
-				if (MsiGetProductInfo(m_kpszMsiProductCode, INSTALLPROPERTY_VERSIONSTRING,
-					szIntalledVersion, &cch) == ERROR_SUCCESS)
+				if (CompareMsiVersionWithInstalled() == 1)
 				{
-					g_Log.Write(_T("Version %s already installed."), szIntalledVersion);
-					// Another version is installed, so check if its version is less than ours:
-					__int64 nIntalledVersion = GetHugeVersion(szIntalledVersion);
-					__int64 nOurVersion = GetHugeVersion(m_kpszMsiVersion);
-					if (nOurVersion > nIntalledVersion)
-					{
-						g_Log.Write(_T("Minor upgrade will be performed."));
-						kpszInstallFlags = _T("/fvomus");
-						if (m_kpszMsiUpgrade)
-							kpszInstallFlags = m_kpszMsiUpgrade;
-					}
+					g_Log.Write(_T("Minor upgrade will be performed."));
+					kpszInstallFlags = _T("/fvomus");
+					if (m_kpszMsiUpgradeFlags)
+						kpszInstallFlags = m_kpszMsiUpgradeFlags;
 				}
 			}
 			// Run msiexec:
@@ -1099,6 +1157,8 @@ public:
 	virtual bool PossibleToTestPresence(int iProduct) const;
 	virtual bool TestPresence(int iProduct, const _TCHAR * pszMinVersion = NULL,
 		const _TCHAR * pszMaxVersion = NULL);
+	virtual bool IsMsiUpgradePermitted(int iProduct) const;
+	virtual int CompareMsiVersionWithInstalled(int iProduct) const;
 	virtual const _TCHAR * GetName(int iProduct) const;
 	virtual const _TCHAR * GetCommentary(int iProduct) const;
 	virtual const _TCHAR * GetStatusWindowControl(int iProduct) const;
@@ -1341,6 +1401,19 @@ bool ProductManager_t::TestPresence(int iProduct, const _TCHAR * pszMinVersion,
 {
 	CheckProductIndex(iProduct);
 	return Products[iProduct].TestPresence(pszMinVersion, pszMaxVersion);
+}
+
+// Returns true if the given product may be updated with "msiexec /fvomus ..."
+bool ProductManager_t::IsMsiUpgradePermitted(int iProduct) const
+{
+	CheckProductIndex(iProduct);
+	return (Products[iProduct].m_kpszMsiUpgradeTo != NULL);
+}
+
+int ProductManager_t::CompareMsiVersionWithInstalled(int iProduct) const
+{
+	CheckProductIndex(iProduct);
+	return Products[iProduct].CompareMsiVersionWithInstalled();
 }
 
 // Get the formal name of the given product.

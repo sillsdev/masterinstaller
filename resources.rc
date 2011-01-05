@@ -352,6 +352,8 @@ BEGIN
     IDC_MESSAGE_CONFIRM_QUIT_REBOOT 
                             "If you quit now, your new SIL software may not work properly. In addition, you will have to reboot your machine manually, else some of your exisitng software may fail. Only quit if you know what you are doing. Are you sure you want to quit?"
     IDC_MESSAGE_ALREADY_INSTALLED "(already installed)"
+    IDC_MESSAGE_UPGRADE_READY "(upgrade)"
+    IDC_MESSAGE_DOWNGRADE_DANGER "(higher version already installed)"
     IDC_MESSAGE_CONFIRM_QUIT_MAIN 
                             "Are you sure you want to quit without installing any software?"
     IDC_MESSAGE_CONFIRM_QUIT_WHOLE 

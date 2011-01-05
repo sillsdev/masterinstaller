@@ -581,7 +581,27 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 				if (pProductManager->IsInstallable(iProduct) || pProductManager->IsContainer(iProduct))
 				{
 					// See if product has been installed before:
-					if (pProductManager->PossibleToTestPresence(iProduct))
+					if (pProductManager->IsMsiUpgradePermitted(iProduct))
+					{
+						switch (pProductManager->CompareMsiVersionWithInstalled(iProduct))
+						{
+						case -1:
+							new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
+								FetchString(IDC_MESSAGE_DOWNGRADE_DANGER));
+							fOnlyVisible = true;
+							break;
+						case 0:
+							new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
+								FetchString(IDC_MESSAGE_ALREADY_INSTALLED));
+							fFoundInstalledProduct = true;
+							break;
+						case 1:
+							new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
+								FetchString(IDC_MESSAGE_UPGRADE_READY));
+							break;
+						}
+					}
+					else if (pProductManager->PossibleToTestPresence(iProduct))
 					{
 						const _TCHAR * pszVersion = pProductManager->GetTestPresenceVersion(iProduct);
 						bool fInstalled = pProductManager->TestPresence(iProduct, pszVersion,

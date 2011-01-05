@@ -67,7 +67,7 @@ bool VersionInRange(__int64 nVersion, const _TCHAR * pszMinVersion,
 // If pszMinVersion is NULL, any range up to (and including) pszMaxVersion will do.
 // If pszMaxVersion is NULL, any range above (and including) pszMinVersion will do.
 // If pszMinVersion is NULL and pszMaxVersion is NULL, any version will do.
-// Uses inclusive test: candidate version is allowed to equal range extemities.
+// Uses inclusive test: candidate version is allowed to equal range extremities.
 bool VersionInRange(const _TCHAR * pszVersion, const _TCHAR * pszMinVersion, 
 					const _TCHAR * pszMaxVersion)
 {
@@ -84,7 +84,7 @@ bool VersionInRange(const _TCHAR * pszVersion, const _TCHAR * pszMinVersion,
 // If pszMinVersion is NULL, any range up to (and including) pszMaxVersion will do.
 // If pszMaxVersion is NULL, any range above (and including) pszMinVersion will do.
 // If pszMinVersion is NULL and pszMaxVersion is NULL, any version will do.
-// Uses exclusive test: candidate version is not allowed to equal range extemities.
+// Uses exclusive test: candidate version is not allowed to equal range extremities.
 bool VersionInRangeEx(__int64 nVersion, const _TCHAR * pszMinVersion, 
 					const _TCHAR * pszMaxVersion)
 {

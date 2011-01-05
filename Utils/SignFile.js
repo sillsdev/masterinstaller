@@ -41,7 +41,12 @@ else
 		{
 			var SignCodePath = fso.BuildPath(UtilsPath, "Sign\\signcode.exe");
 			var SignCmd = '"' + SignCodePath + '" -spc "' + CertFilePath + '" -v "' + CertKeyPath + '" -n "' + TextDescription + '" -t http://timestamp.comodoca.com/authenticode -a sha1 "' + FileToBeSigned + '"';
-			shellObj.Run(SignCmd, 0, true);
+			if (-1 == shellObj.Run(SignCmd, 0, true))
+			{
+				WScript.Echo("Signing failed - the password was probably incorrect. You can have one more attempt.");
+				if (-1 == shellObj.Run(SignCmd, 0, true))
+					WScript.Echo("Signing failed.");
+			}
 		}
 	}
 }

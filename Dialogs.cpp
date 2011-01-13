@@ -599,6 +599,11 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 							new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
 								FetchString(IDC_MESSAGE_UPGRADE_READY));
 							break;
+						case 2:
+							new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
+								FetchString(IDC_MESSAGE_UPGRADE_TOO_LATE));
+							fOnlyVisible = true;
+							break;
 						}
 					}
 					else if (pProductManager->PossibleToTestPresence(iProduct))

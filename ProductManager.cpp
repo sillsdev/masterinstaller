@@ -62,6 +62,7 @@ public:
 	const _TCHAR * m_kpszInstallerFlagFalse;
 	const _TCHAR * m_kpszMsiFlags;
 	bool m_fTestAnsiConversion;
+	const _TCHAR * m_kpszMsiUpgradeFrom;
 	const _TCHAR * m_kpszMsiUpgradeTo;
 	const _TCHAR * m_kpszMsiUpgradeFlags;
 	pfnInstall m_pfnInstall;
@@ -487,7 +488,9 @@ bool SoftwareProduct::TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * 
 
 // Tests the version of the installed instance of the product against the version of the one
 // we have. Returns -1 if our product is an earlier version (implying a downgrade), zero if
-// the versions are the same, and +1 if our product is a later version (implying an upgrade).
+// the versions are the same, +1 if our product is a later version (implying an upgrade is
+// possible), and +2 if our product is a later version, but the installed one is too old
+// to be upgraded.
 // returns MAXINT if the product is not even installed or not an .msi type installer.
 int SoftwareProduct::CompareMsiVersionWithInstalled()
 {
@@ -535,14 +538,28 @@ int SoftwareProduct::CompareMsiVersionWithInstalled()
 
 	g_Log.Write(_T("Installed version is %s"), pszInstalledVersion);
 
+	if (m_kpszMsiUpgradeFrom)
+		g_Log.Write(_T("Package version upgrades from %s"), m_kpszMsiUpgradeFrom);
+
 	g_Log.Write(_T("Package version upgrades up to %s"), m_kpszMsiUpgradeTo);
 
 	int ReturnValue = MAXINT;
 
 	if (VersionInRangeEx(pszInstalledVersion, _T("0.0.0.0"), m_kpszMsiUpgradeTo))
 	{
-		g_Log.Write(_T("Installed version is lower than our package's version, so upgrade is possible."));
-		ReturnValue = 1;
+		if (m_kpszMsiUpgradeFrom)
+		{
+			if (!VersionInRange(pszInstalledVersion, m_kpszMsiUpgradeFrom, m_kpszMsiUpgradeTo))
+			{
+				g_Log.Write(_T("Installed version is too old to be upgraded."));
+				ReturnValue = 2;
+			}
+		}
+		if (ReturnValue != 2)
+		{
+			g_Log.Write(_T("Installed version is lower than our package's version, so upgrade is possible."));
+			ReturnValue = 1;
+		}
 	}
 	else if (VersionInRangeEx(pszInstalledVersion, m_kpszMsiUpgradeTo, _T("32767.32767.32767.32767")))
 	{

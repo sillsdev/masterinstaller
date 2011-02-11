@@ -31,16 +31,16 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
-				<Title>FW BTE 7.0 Beta (from \\cana\LSDev\Installers\FW7.0Beta\BTE\FieldWorks)</Title>
-				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0Beta\BTE\FieldWorks\SetupFW.msi</Source>
+				<Title>FW BTE 7.0 Beta 3 (from \\cana\LSDev\Installers\FW7.0Beta3\BTE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0Beta3\BTE\FieldWorks\SetupFW.msi</Source>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 7.0 BTE Beta</Title>
+			<Title>SIL FieldWorks 7.0 BTE Beta 3</Title>
 			<Tag>FW70BTE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="6.9.4" MsiUpgradeTo="7.0.0"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{256A50FA-761A-488b-B282-3543C1DDAE76}</ProductCode>
 			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
@@ -55,16 +55,16 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW SE 7.0 Beta (from \\cana\LSDev\Installers\FW7.0Beta\SE\FieldWorks)</Title>
-				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0Beta\SE\FieldWorks\SetupFW_SE.msi</Source>
+				<Title>FW SE 7.0 Beta 3 (from \\cana\LSDev\Installers\FW7.0Beta3\SE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0Beta3\SE\FieldWorks\SetupFW_SE.msi</Source>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 7.0 SE Beta</Title>
+			<Title>SIL FieldWorks 7.0 SE Beta 3</Title>
 			<Tag>FW70SE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW_SE.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="6.9.4" MsiUpgradeTo="7.0.0"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{256A50FA-761A-488b-B282-3543C1DDAE76}</ProductCode>
 			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>

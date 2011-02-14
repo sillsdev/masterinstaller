@@ -85,6 +85,10 @@ namespace InitUtils
 			Registry.SetValue(@"HKEY_CLASSES_ROOT\xmlfile\shell\RebuildWebDownload", null, "(Re)build web download package from this XML file");
 			Registry.SetValue(@"HKEY_CLASSES_ROOT\xmlfile\shell\RebuildWebDownload\command", null, "wscript.exe \"" + Path.Combine(utilsFolder, "RebuildWebDownload.js") + "\" \"%1\"");
 
+			// Set registry values for the WriteDownloadReport utility:
+			Registry.SetValue(@"HKEY_CLASSES_ROOT\xmlfile\shell\WriteDownloadReport", null, "Compose downloads report from this XML file");
+			Registry.SetValue(@"HKEY_CLASSES_ROOT\xmlfile\shell\WriteDownloadReport\command", null, "wscript.exe \"" + Path.Combine(utilsFolder, "WriteDownloadReport.js") + "\" \"%1\"");
+
 			MessageBox.Show("Done. You can now use the Master Installer utilities.");
 			Close();
 		}

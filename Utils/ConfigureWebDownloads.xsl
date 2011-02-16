@@ -68,6 +68,8 @@
 						<script type="text/javascript">SelectSfxStyle();</script>
 					</span>
 					<br/>
+					<input id="SaveSettings" type="checkbox" title="Save AutoBuildDownloadPackages.js containing code to automatically fill in same settings in subequent re-runs."/>Remember settings<br/>
+					<script type="text/javascript">document.getElementById("SaveSettings").checked=true;</script>
 					<br/>
 					<button onclick="Go();" style="font-size:130%" title="Start flavor building process">
 						<b>&#160;&#160; Go! &#160;&#160;</b>
@@ -180,6 +182,39 @@ var BitmapsPath = fso.BuildPath(MasterInstallerPath, "Bitmaps");
 
 var f7ZipFoundSvn = false;
 
+var DocSource = document.URL.replace("file://", "");
+var DocSource = DocSource.replace("file:///", "");
+var iLastBackslash = DocSource.lastIndexOf("\\");
+var sourceFolder = DocSource.substr(0, iLastBackslash);
+
+// If there is a file AutoBuildDownloadPackages.js present in the same folder as the XML source,
+// It will be included. It is expected to contain a function AutomatePackages() which will be
+// called at the end of the initialization of the web UI:
+var WebBotIncluded = include("AutoBuildDownloadPackages.js");
+function include(file)
+{
+	// Check if the file exists:
+	if (!fso.FileExists(fso.BuildPath(sourceFolder, file)))
+		return false;
+		
+	if (document.createElement && document.getElementsByTagName)
+	{
+		var head = document.getElementsByTagName('head')[0];
+
+		var script = document.createElement('script');
+		script.setAttribute('type', 'text/javascript');
+		script.setAttribute('src', file);
+
+		head.appendChild(script);
+		
+		return true;
+	}
+	else
+		alert('Your browser can\'t deal with the DOM standard. That means it\'s old. Go fix it!');
+	
+	return false;
+}
+
 // Called upon completion of page loading.
 function Initialize()
 {
@@ -219,6 +254,23 @@ function Initialize()
 	{
 		alert("Error while initializing: " + err.description);
 	}
+	
+	if (WebBotIncluded)
+		AutomatePackages();
+}
+
+function SetElement(id, value)
+{
+	var Element = document.getElementById(id);
+	if (Element != null)
+		Element.value = value;
+}
+
+function SelectElement(id, bool)
+{
+	var Element = document.getElementById(id);
+	if (Element != null)
+		Element.checked = bool;
 }
 
 // Shows or hides a specified page or subpage of configuration settings.
@@ -494,6 +546,77 @@ function Go()
 	var GatherFlavorFiles = document.getElementById('GatherFiles').checked;
 	var BuildFlavor7zip = document.getElementById('BuildSfx').checked;
 	var SfxStyle = document.getElementById('SfxStyle').value;
+	var SaveSettings = document.getElementById("SaveSettings").checked;
+	
+	if (SaveSettings)
+	{
+		var tso = fso.OpenTextFile(fso.BuildPath(sourceFolder, "AutoBuildDownloadPackages.js"), 2, true);
+		tso.WriteLine("// Fills in details for download packages automatically.");
+		tso.WriteLine("// This instance created AUTOMATICALLY during a previous run.");
+		tso.WriteLine("function AutomatePackages()");
+		tso.WriteLine("{");
+
+		for (flavor = 1; flavor <= NumFlavors; flavor++)
+		{
+			if (flavor > 1)
+				tso.WriteLine('	AddFlavor();');
+
+			var FlavorName = document.getElementById("FlavorName" + flavor).value;
+			var FlavorURL = document.getElementById("FlavorUrl" + flavor).value;
+			
+			tso.WriteLine('	SetElement("FlavorName' + flavor + '", "' + FlavorName + '");');
+			tso.WriteLine('	SetElement("FlavorUrl' + flavor + '", "' + FlavorURL + '");');
+		}
+		
+		tso.WriteLine('');
+		tso.WriteLine('	NextStage();');
+		tso.WriteLine('');
+
+		for (flavor = 1; flavor <= NumFlavors; flavor++)
+		{
+			var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+			for (iProduct = 0; iProduct < ProductNodeList.length; iProduct++)
+			{
+				var IncludedCheckBox = document.getElementById("IncludedF" + flavor + "P" + (iProduct + 1));
+				tso.WriteLine('	SelectElement("IncludedF' + flavor + 'P' + (iProduct + 1) + '", ' + IncludedCheckBox.checked + ');');
+			}
+			tso.WriteLine('');
+		}
+		
+		tso.WriteLine('	NextStage();');
+		tso.WriteLine('');
+
+		var OutputPath = document.getElementById('OutputPath').value.replace(/\\/g, "\\\\");
+		tso.WriteLine('	SetElement("OutputPath", "' + OutputPath + '");');
+		
+		var WriteXml = document.getElementById('WriteXml').checked;
+		tso.WriteLine('	SelectElement("WriteXml", ' + WriteXml + ');');
+		
+		var WriteDownloadsXml = document.getElementById('WriteDownloadsXml').checked;
+		tso.WriteLine('	SelectElement("WriteDownloadsXml", ' + WriteDownloadsXml + ');');
+
+		var Compile = document.getElementById('Compile').checked;
+		tso.WriteLine('	SelectElement("Compile", ' + Compile + ');');
+
+		var GatherFiles = document.getElementById('GatherFiles').checked;
+		tso.WriteLine('	SelectElement("GatherFiles", ' + GatherFiles + ');');
+
+		var BuildSfx = document.getElementById('BuildSfx').checked;
+		tso.WriteLine('	SelectElement("BuildSfx", ' + BuildSfx + ');');
+		
+		var SfxStyle = document.getElementById('SfxStyle').value;
+		tso.WriteLine('	SetElement("SfxStyle", "' + SfxStyle + '");');
+		
+		tso.WriteLine('	SetElement("SaveSettings", false);');
+
+		tso.WriteLine('');
+		tso.WriteLine('	Go();');
+		
+		tso.WriteLine('}');
+		tso.Close();
+		
+		AddCommentary(0, "Settings saved.");
+	}
 	
 	if (!WriteFlavorXml && !WriteDownloadsXml && !CompileFlavorXml && !GatherFlavorFiles && !BuildFlavor7zip)
 		AddCommentary(0, "Nothing to do!");
@@ -597,7 +720,10 @@ function Go()
 			if (WriteDownloadsXml)
 			{
 				// Generate the downloads.xml file for all the flavors:
-				GenerateDownloadsXml(XmlDocs, OutputPath);				
+				var DownloadsFilePath = GenerateDownloadsXml(XmlDocs, OutputPath);
+				// Generate the text report summarizing the download packages:
+				var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, 'WriteDownloadReport.js') + '" "' + DownloadsFilePath + '"';
+				shellObj.Run(Cmd, 1, true);
 			}
 		}
 		catch(err)
@@ -818,6 +944,8 @@ function GenerateDownloadsXml(XmlDocs, OutputPath)
 	}
 	tso.WriteLine('</Downloads>');
 	tso.Close();
+	
+	return NewPath;
 }
 
 // The function passed to the sort() method on our XmlDocs array.

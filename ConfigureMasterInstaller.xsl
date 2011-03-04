@@ -764,13 +764,12 @@ function Initialize()
 		var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
 		NumProducts = ProductNodeList.length;
 
-    GenerateSourceFileLists(); // Must come after assigning NumProducts and before calling FindDuplicateSets().
+    InitSourceFileLists(); // Must come after assigning NumProducts
 		FindDuplicateSets();
 		NeededProducts = new Array();
 		CdDetails = new Array();
 		MaxNumCds = NumProducts; // Allow max of one CD per product
-		GetAllProductSizes();
-		WriteTotalSourceSizes();
+		InitAllProductSizes();
 
 		for (iProduct = 0; iProduct < NumProducts; iProduct++)
 			NeededProducts[iProduct] = false;
@@ -1045,58 +1044,55 @@ function setPageNo(Stage)
 	switch (GetStageNo())
 	{
 		case 1:
-			// If we're about to leave the Project Setup page, Recalc file sizes:
-			GenerateExtHelpAndTermsFileLists();
-			GetAllProductSizes();
-			WriteTotalSourceSizes();
+			if (Stage > 1)
+			{
+				// If we're about to advance past the Project Setup page, Recalc file sizes:
+				GenerateExtHelpAndTermsFileLists();
+				InitAllProductSizes();
+			}
 			break;
 		case 2:
-			// If we're about to leave the General Configuration page, apply defaults to CD
-			// label and title, if blank, and see if Terms of Use and External Help are needed:
-			var Title = document.getElementById('OverallTitle').value;
-			var CdLabelPrefix = document.getElementById('CdLabelPrefix').value;
-			for (iCd = 0; iCd < MaxNumCds; iCd++)
+			if (Stage > 2)
 			{
-				CdTitleElement = document.getElementById('CdTitle' + iCd);
-				if (CdTitleElement.value == "")
-					CdTitleElement.value = Title + " Disc " + (1 + iCd);
-				CdLabelElement = document.getElementById('CdLabel' + iCd);
-				if (CdLabelElement.value == "")
-					CdLabelElement.value = CdLabelPrefix + (1 + iCd);
+				// If we're about to advance past the General Configuration page, apply defaults to CD
+				// label and title, if blank, and see if Terms of Use and External Help are needed:
+				var Title = document.getElementById('OverallTitle').value;
+				var CdLabelPrefix = document.getElementById('CdLabelPrefix').value;
+				for (iCd = 0; iCd < MaxNumCds; iCd++)
+				{
+					CdTitleElement = document.getElementById('CdTitle' + iCd);
+					if (CdTitleElement.value == "")
+						CdTitleElement.value = Title + " Disc " + (1 + iCd);
+					CdLabelElement = document.getElementById('CdLabel' + iCd);
+					if (CdLabelElement.value == "")
+						CdLabelElement.value = CdLabelPrefix + (1 + iCd);
+				}
+				// See if Terms of Use and External Help are needed:
+				TermsOfUseNeeded = (document.getElementById("TermsOfUseFile").value.length > 0);
+				ExternalHelpNeeded = (document.getElementById("ExternalHelpFile").value.length > 0);
 			}
-			// See if Terms of Use and External Help are needed:
-			TermsOfUseNeeded = (document.getElementById("TermsOfUseFile").value.length > 0);
-			ExternalHelpNeeded = (document.getElementById("ExternalHelpFile").value.length > 0);
 			break;
 		case 3:
-			// If we're about to leave the Product Selection page, Recalc needed products:
-			CalcNeededProducts();
-			ShowDuplicateSetData();
+			if (Stage > 3)
+			{
+				// If we're about to advance past the Product Selection page, Recalc needed products:
+				CalcNeededProducts();
+				ShowDuplicateSetData();
+				WriteTotalSourceSizes();
+			}
 			break;
 		case 4:
-			// If we're about to leave the Select Single Instances page, Adjust needed products:
-			AdjustNeededProductsDuplicates();
+			if (Stage > 4)
+			{
+				// If we're about to advance past the Select Single Instances page, Adjust needed products:
+				AdjustNeededProductsDuplicates();
+			}
 			break;
 	}
 
 	// Perform certain housekeeping tasks, depending on which stage we're about to enter:
 	switch (Stage)
 	{
-		case 3:
-			// If we're about to enter the Product Selection page, check if any products
-			// are unavailable because their files were inaccessible:
-			for (i = 0; i < NumProducts; i++)
-			{
-				var ProductElement = document.getElementById('ProductTitle' + i);
-				ProductElement.disabled = false;
-				ProductElement.title = "";
-				if (!SourceFileLists[i].AllFilesFound)
-				{
-					ProductElement.disabled = true;
-					ProductElement.title = "This product is unavailable because its source path is inaccessible.";
-				}
-			}
-			break;
 		case 4:
 			// If we're about to enter the Select Single Instances page, check that there is
 			// anything to show:
@@ -1351,14 +1347,11 @@ function FillDuplicateSetTable()
 					if (DuplicateSets[i] == iSet)
 					{
 						var innerHTMLSegment = '<input type="radio" name="Set' + iSet + '" id="DuplicateProduct' + i + '"';
-						var Disabled = (!SourceFileLists[i].AllFilesFound);
-						if (FirstOption && !Disabled)
+						if (FirstOption)
 						{
 							innerHTMLSegment += ' checked="checked"';
 							FirstOption = false;
 						}
-						if (Disabled)
-							innerHTMLSegment += ' disabled="true" title="This product is unavailable because its source path is inaccessible."';
 						innerHTMLSegment += '>' + ProductList[i].selectSingleNode('AutoConfigure/Title').text + '<br/>';
 						TableData.innerHTML += innerHTMLSegment;
 					}
@@ -1626,7 +1619,7 @@ function UpdateCdTotals()
 		{
 			var iCd = GetCdIndexOfProduct(i);
 			if (iCd >= 0)
-				CdDetails[iCd].TotalSize += ProductSizes[i];
+				CdDetails[iCd].TotalSize += GetProductSize(i);
 		}
 	}
 	// Deal with special cases: the need for setup.exe, InstallerHelp.dll, etc
@@ -1843,74 +1836,84 @@ function CheckProductRelativePath(Path, RelativePathPrepend)
   return Path;
 }
 
-// Builds an array of file lists for each product, where the files in the list are interpretted
-// from the AutoConfigure/Source nodes of each product. (More than one source node per product
-// is allowed.)
-function GenerateSourceFileLists()
+// Builds an array of file list place-holders for each product.
+function InitSourceFileLists()
 {
 	SourceFileLists = new Array();
   
-	var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
-	
-	// Determine how we are to handle relative paths:
-	var RelativePathPrepend = ProductsPath;
-
-	// Iterate through all products sources:
 	for (iProduct = 0; iProduct < NumProducts; iProduct++)
 	{
-		var FileListData = new Array();
-		var AllOk = true;
-		try
-		{
-			var ProductNode = ProductNodeList[iProduct];
-			var ProductSourceList = ProductNode.selectNodes('AutoConfigure/Source');
-			for (iSource = 0; iSource < ProductSourceList.length; iSource++)
-			{
-				var ProductSource = ProductSourceList[iSource];
-				var NameWhenLocked = ProductSource.getAttribute("NameWhenLocked");
-				var Attributes = ProductSource.getAttribute("Attributes");
-				var DestPath = ProductSource.getAttribute("DestPath");
-				var SignAs = ProductSource.getAttribute("SignAs");
-
-				// Check if source path is relative:
-				var SourcePath = CheckProductRelativePath(ProductSource.text, RelativePathPrepend);
-
-				// Whether or not we recurse depends on the following rules, in order
-				// of decreasing priority:
-				// 1) If there is a Recurse attribute defined, we use its value
-				// 2) Otherwise, if the source text is an existing folder, we recurse
-				// 3) Otherwise, we do not recurse.
-				var Recurse = false; // Value if all other tests fail
-				var RecurseAttribute = ProductSource.getAttribute("Recurse");
-				if (RecurseAttribute)
-					Recurse = (RecurseAttribute == "true");
-				else if (fso.FolderExists(SourcePath))
-					Recurse = true;
-					
-				// The SignAs value is only valid if the Source is a file (not a directory):
-				if (!fso.FileExists(SourcePath))
-					SignAs = null;
-
-				var NewListData = GetFileList(SourcePath, Recurse, Attributes);
-				if (NameWhenLocked && NewListData.FileList.length > 1)
-					alert("Error - Product " + ProductNode.selectSingleNode('Title').text + " contains an AutoConfigure Source node with a NameWhenLocked attribute (" + NameWhenLocked + ") but multiple files matching.");
-				if (NameWhenLocked)
-					NewListData.NameWhenLocked = NameWhenLocked;
-				NewListData.DestPath = DestPath;
-				NewListData.SignAs = SignAs;
-
-				FileListData[iSource] = NewListData;
-			}
-		}
-		catch (err)
-		{
-			AllOk = false;
-			alert("Error while initializing: " + err.description);
-		}
 		SourceFileLists[iProduct] = new Object();
-		SourceFileLists[iProduct].ListData = FileListData;
-		SourceFileLists[iProduct].AllFilesFound = AllOk;
-	} // Next Product
+		SourceFileLists[iProduct].ListData = null;
+		SourceFileLists[iProduct].AllFilesFound = false;
+	}
+}
+
+function GetSourceFileList(iProduct)
+{
+	if (SourceFileLists[iProduct].ListData == null)
+		GenerateSourceFileList(iProduct);
+	
+	return SourceFileLists[iProduct];
+}
+
+// Builds an array of file lists for the specified product, where the files in the list are interpretted
+// from the AutoConfigure/Source nodes of each product. (More than one source node per product
+// is allowed.)
+function GenerateSourceFileList(iProduct)
+{
+	var FileListData = new Array();
+	var AllOk = true;
+	try
+	{
+		var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+		var ProductNode = ProductNodeList[iProduct];
+		var ProductSourceList = ProductNode.selectNodes('AutoConfigure/Source');
+		for (iSource = 0; iSource < ProductSourceList.length; iSource++)
+		{
+			var ProductSource = ProductSourceList[iSource];
+			var NameWhenLocked = ProductSource.getAttribute("NameWhenLocked");
+			var Attributes = ProductSource.getAttribute("Attributes");
+			var DestPath = ProductSource.getAttribute("DestPath");
+			var SignAs = ProductSource.getAttribute("SignAs");
+
+			// Check if source path is relative:
+			var SourcePath = CheckProductRelativePath(ProductSource.text, ProductsPath);
+
+			// Whether or not we recurse depends on the following rules, in order
+			// of decreasing priority:
+			// 1) If there is a Recurse attribute defined, we use its value
+			// 2) Otherwise, if the source text is an existing folder, we recurse
+			// 3) Otherwise, we do not recurse.
+			var Recurse = false; // Value if all other tests fail
+			var RecurseAttribute = ProductSource.getAttribute("Recurse");
+			if (RecurseAttribute)
+				Recurse = (RecurseAttribute == "true");
+			else if (fso.FolderExists(SourcePath))
+				Recurse = true;
+				
+			// The SignAs value is only valid if the Source is a file (not a directory):
+			if (!fso.FileExists(SourcePath))
+				SignAs = null;
+
+			var NewListData = GetFileList(SourcePath, Recurse, Attributes);
+			if (NameWhenLocked && NewListData.FileList.length > 1)
+				alert("Error - Product " + ProductNode.selectSingleNode('Title').text + " contains an AutoConfigure Source node with a NameWhenLocked attribute (" + NameWhenLocked + ") but multiple files matching.");
+			if (NameWhenLocked)
+				NewListData.NameWhenLocked = NameWhenLocked;
+			NewListData.DestPath = DestPath;
+			NewListData.SignAs = SignAs;
+
+			FileListData[iSource] = NewListData;
+		}
+	}
+	catch (err)
+	{
+		AllOk = false;
+		alert("Error while initializing: " + err.description);
+	}
+	SourceFileLists[iProduct].ListData = FileListData;
+	SourceFileLists[iProduct].AllFilesFound = AllOk;
 }
 
 // Builds file list each for the External Help file(s) and the Terms of Use file(s),
@@ -1920,9 +1923,9 @@ function GenerateExtHelpAndTermsFileLists()
 	try
 	{
 		var ExternalHelpSource = document.getElementById("ExternalHelpSource").value;
-    ExternalHelpSource = CheckSourceRelativePath(ExternalHelpSource);
 		if (ExternalHelpSource.length > 0)
 		{
+	    ExternalHelpSource = CheckSourceRelativePath(ExternalHelpSource);
 			var Recurse = false;
 			if (fso.FolderExists(ExternalHelpSource))
 				Recurse = true;
@@ -1938,9 +1941,9 @@ function GenerateExtHelpAndTermsFileLists()
 
 		// Do the same for the Terms of Use file(s):
 		var TermsOfUseSource = document.getElementById("TermsOfUseSource").value;
-    TermsOfUseSource = CheckSourceRelativePath(TermsOfUseSource);
 		if (TermsOfUseSource.length > 0)
 		{
+	    TermsOfUseSource = CheckSourceRelativePath(TermsOfUseSource);
 			Recurse = false;
 			if (fso.FolderExists(TermsOfUseSource))
 				Recurse = true;
@@ -1960,16 +1963,51 @@ function GenerateExtHelpAndTermsFileLists()
 	}
 }
 
-// Builds an array of total file sizes, one total for each product.
-// Sizes are rounded to reflect the space they will occupy on a CD.
-// Assumes GenerateSourceFileLists() has already been called.
-function GetAllProductSizes()
+// Initializes an array of total file sizes, one total for each product.
+// (Sizes will be rounded to reflect the space they will occupy on a CD.)
+function InitAllProductSizes()
 {
 	ProductSizes = new Array();
   
 	for (iProduct = 0; iProduct < NumProducts; iProduct++)
 	{
-		var FileListData = SourceFileLists[iProduct].ListData;
+		ProductSizes[iProduct] = -1;
+	}
+	
+	// Do the actual calculations for the External Help file(s):
+	if (ExternalHelpFileData)
+	{
+		ExternalHelpFileData.ExternalHelpSize = 0;
+		var FileList = ExternalHelpFileData.FileList;
+		for (iFile = 0; iFile < FileList.length; iFile++)
+		{
+			var File = fso.GetFile(FileList[iFile]);
+			var ActualSize = File.size;
+			ExternalHelpFileData.ExternalHelpSize += RoundCdFileSize(ActualSize);
+		}
+	}
+
+	// Do the actual calculations for the Terms of Use file(s):
+	if (TermsOfUseFileData)
+	{
+		TermsOfUseFileData.TermsOfUseSize = 0;
+		var FileList = TermsOfUseFileData.FileList;
+		for (iFile = 0; iFile < FileList.length; iFile++)
+		{
+			var File = fso.GetFile(FileList[iFile]);
+			var ActualSize = File.size;
+			TermsOfUseFileData.TermsOfUseSize += RoundCdFileSize(ActualSize);
+		}
+	}
+}
+
+// Builds an array of total file sizes for specified product.
+// Sizes are rounded to reflect the space they will occupy on a CD.
+function GetProductSize(iProduct)
+{
+	if (ProductSizes[iProduct] == -1)
+	{
+		var FileListData = GetSourceFileList(iProduct).ListData;
 		var Total = 0;
 		for (iData = 0; iData < FileListData.length; iData++)
 		{
@@ -1995,32 +2033,7 @@ function GetAllProductSizes()
 			}
 		}
 	}
-	
-	// Do the same for the External Help file(s):
-	if (ExternalHelpFileData)
-	{
-		ExternalHelpFileData.ExternalHelpSize = 0;
-		var FileList = ExternalHelpFileData.FileList;
-		for (iFile = 0; iFile < FileList.length; iFile++)
-		{
-			var File = fso.GetFile(FileList[iFile]);
-			var ActualSize = File.size;
-			ExternalHelpFileData.ExternalHelpSize += RoundCdFileSize(ActualSize);
-		}
-	}
-
-	// Do the same for the Terms of Use file(s):
-	if (TermsOfUseFileData)
-	{
-		TermsOfUseFileData.TermsOfUseSize = 0;
-		var FileList = TermsOfUseFileData.FileList;
-		for (iFile = 0; iFile < FileList.length; iFile++)
-		{
-			var File = fso.GetFile(FileList[iFile]);
-			var ActualSize = File.size;
-			TermsOfUseFileData.TermsOfUseSize += RoundCdFileSize(ActualSize);
-		}
-	}
+	return ProductSizes[iProduct];
 }
 
 // Returns the amount of space needed on a CD for the given single file.
@@ -2031,13 +2044,16 @@ function GetRoundedFileSize(FilePath)
 	return RoundCdFileSize(ActualSize);
 }
 
-// Writes the total CD file size of each product in the relevant table.
+// Writes the total CD file size of each needed product in the relevant table.
 function WriteTotalSourceSizes()
 {
 	for (iProduct = 0; iProduct < NumProducts; iProduct++)
 	{
-		SizeElement = document.getElementById("FileSize" + iProduct);
-		SizeElement.innerText = addCommas(ProductSizes[iProduct]);
+		if (IsProductNeeded(iProduct))
+		{
+			SizeElement = document.getElementById("FileSize" + iProduct);
+			SizeElement.innerText = addCommas(GetProductSize(iProduct));
+		}
 	}
 }
 
@@ -2928,7 +2944,7 @@ function GatherFiles(CdImagePath)
 	var TotalBytesToCopy = 0;
 	for (iProduct = 0; iProduct < NumProducts; iProduct++)
 		if (IsProductNeeded(iProduct))
-			TotalBytesToCopy += ProductSizes[iProduct];
+			TotalBytesToCopy += GetProductSize(iProduct);
 	var TotalDone = 0;
 
 	var StartFromAnyCD = document.getElementById("StartFromAnyCD").checked;
@@ -3058,7 +3074,7 @@ function GatherFiles(CdImagePath)
 						var ProductTitle = ProductNode.selectSingleNode("Title").text;
 						AddCommentary(1, "[" + Math.round((100 * TotalDone / TotalBytesToCopy)) + "%] Copying " + ProductTitle + " files", false);
 						var Destination = CdFolder + ProductNode.selectSingleNode('AutoConfigure/Destination').text;
-						var FileListData = SourceFileLists[iProduct].ListData;
+						var FileListData = GetSourceFileList(iProduct).ListData;
 						for (iData = 0; iData < FileListData.length; iData++)
 						{
 							var FileList = FileListData[iData].FileList;
@@ -3121,7 +3137,7 @@ function GatherFiles(CdImagePath)
 							}
 						}
 
-						TotalDone += ProductSizes[iProduct];
+						TotalDone += GetProductSize(iProduct);
 					} // End if current product goes on current CD
 				} // End if current product is needed
 			} // Next product

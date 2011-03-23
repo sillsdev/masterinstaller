@@ -601,37 +601,43 @@ int Fw7PostInstall(SoftwareProduct * Product)
 		MAKEINTRESOURCE(IDD_DIALOG_EARLIER_FW_FOUND), NULL,  DlgProcEarlierFwDetected,
 		(LPARAM)(pszVersion));
 
-		if (userResponse & EARLIER_FW_REMOVE_SHORTCUTS)
+		if (userResponse >= 0)
 		{
-			g_Log.Write(_T("User opted to delete desktop shortcuts from older FW installation; deleting..."));
-			g_Log.Indent();
-			DeleteOldFwShortcuts();
-			g_Log.Unindent();
-			g_Log.Write(_T("...Done."));
-		}
-		else
-			g_Log.Write(_T("User did not opt to delete desktop shortcuts."));
-
-		if (userResponse & EARLIER_FW_UNINSTALL)
-		{
-			// User opted to uninstall earlier version of FW:
-			g_Log.Write(_T("User opted to uninstall; uninstalling..."));
-			ShowStatusDialog();
-			DisplayStatusText(0, _T("Uninstalling FieldWorks %s."), pszVersion);
-			DisplayStatusText(1, _T(""));
-
-			if (ERROR_SUCCESS != MsiConfigureProduct(pszProductCode, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT))
+			if (userResponse & EARLIER_FW_REMOVE_SHORTCUTS)
 			{
-				g_Log.Write(_T("...Uninstallation has failed."));
-				_TCHAR * pszMsg = new_sprintf(_T("ERROR: Failed to uninstall FieldWorks %s."), pszVersion);
-				MessageBox(NULL, pszMsg, _T("Uninstallation error"), MB_ICONINFORMATION | MB_OK);
-				delete[] pszMsg;
+				g_Log.Write(_T("User opted to delete desktop shortcuts from older FW installation; deleting..."));
+				g_Log.Indent();
+				DeleteOldFwShortcuts();
+				g_Log.Unindent();
+				g_Log.Write(_T("...Done."));
 			}
 			else
-				g_Log.Write(_T("...Done."));
+				g_Log.Write(_T("User did not opt to delete desktop shortcuts."));
+
+			if (userResponse & EARLIER_FW_UNINSTALL)
+			{
+				// User opted to uninstall earlier version of FW:
+				g_Log.Write(_T("User opted to uninstall; uninstalling..."));
+				ShowStatusDialog();
+				DisplayStatusText(0, _T("Uninstalling FieldWorks %s."), pszVersion);
+				DisplayStatusText(1, _T(""));
+
+				if (ERROR_SUCCESS != MsiConfigureProduct(pszProductCode, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT))
+				{
+					g_Log.Write(_T("...Uninstallation has failed."));
+					_TCHAR * pszMsg = new_sprintf(_T("ERROR: Failed to uninstall FieldWorks %s."), pszVersion);
+					MessageBox(NULL, pszMsg, _T("Uninstallation error"), MB_ICONINFORMATION | MB_OK);
+					delete[] pszMsg;
+				}
+				else
+					g_Log.Write(_T("...Done."));
+			}
+			else
+				g_Log.Write(_T("User did not opt to uninstall."));
 		}
 		else
-			g_Log.Write(_T("User did not opt to uninstall."));
+			g_Log.Write(_T("Could not display dialog asking user if they wished to uninstall older FW and/or shortcuts. DialogBoxParam returned %d, GetLastError = %d."), userResponse, GetLastError());
+
 
 		delete[] pszVersion;
 		delete[] pszProductCode;

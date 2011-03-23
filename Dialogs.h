@@ -38,6 +38,8 @@ struct ReportPackage_t
 INT_PTR CALLBACK DlgProcDisplayReport(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK DlgProcRebootCountdown(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern void CentralizeWindow(HWND hwnd);
+extern void SetSilIcon(HWND hwnd);
 extern void ShowStatusDialog();
 extern BOOL my_OpenClipboard(bool * fCloseStatusDialog);
 extern const _TCHAR * DisplayStatusText(int iPosition, const _TCHAR * pszText, ...);

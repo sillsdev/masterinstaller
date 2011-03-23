@@ -2,7 +2,12 @@
 
 #include <tchar.h>
 #include <shlobj.h>
+#include <shobjidl.h>
+#include <shlguid.h>
+
 #include "msi.h"
+
+#include "Fw7PostInstall.h"
 
 // Returns the INSTALLDIR folder from the installation denoted by the given Product Code GUID.
 // Caller must delete[] the returned value.
@@ -153,8 +158,8 @@ void UninstallProduct(_TCHAR * pszDisplayName)
 	RegCloseKey(hKey);
 }
 
-// Detects if our SILFW instance of SQL Server is installed. If so, offers to uninstall it.
-// If there are no other instances, offers to uninstall all SQL Server components.
+// Detects if our SILFW instance of SQL Server is installed. If so, uninstalls it.
+// If there are no other instances, uninstalls all SQL Server components.
 void DisposeOfSqlServer()
 {
 	g_Log.Write(_T("Searching for SQL Server installation..."));
@@ -223,59 +228,41 @@ void DisposeOfSqlServer()
 
 	g_Log.Write(_T("Got product code for SILFW instance: %s"), szProductCode);
 
-	// Generate question to pose to user:
-	_TCHAR * pszQuestion;
-	if (NumSqlInstances == 1)
-		pszQuestion = new_sprintf(_T("SQL Server 2005 is installed on this machine, but it was only needed for FieldWorks. It is no longer needed. Would you like to uninstall it now?"));
-	else
-		pszQuestion = new_sprintf(_T("SQL Server 2005 is installed on this machine. There are %d instances, one of which (\"SILFW\") was needed for FieldWorks. That instance is no longer needed. Would you like to uninstall the SILFW instance now?"), NumSqlInstances);
+	// Uninstall SQL Server:
+	g_Log.Write(_T("Uninstalling SQL Server..."));
+	ShowStatusDialog();
+	DisplayStatusText(0, _T("Uninstalling unneeded components of SQL Server 2005."));
+	DisplayStatusText(1, _T("Removing SILFW instance"));
 
-	// Ask user:
-	HideStatusDialog();
-	g_Log.Write(_T("Asking user the following question: %s"), pszQuestion);
-
-	if (MessageBox(NULL, pszQuestion, _T("SQL Server 2005 found"), MB_YESNO) == IDYES)
+	// Uninstall SILFW instance first:
+	if (ERROR_SUCCESS != MsiConfigureProduct(szProductCode, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT))
 	{
-		// User opted to uninstall SQL Server:
-		g_Log.Write(_T("User answered \"yes\"; uninstalling..."));
-		ShowStatusDialog();
-		DisplayStatusText(0, _T("Uninstalling unneeded components of SQL Server 2005."));
-		DisplayStatusText(1, _T("Removing SILFW instance"));
+		g_Log.Write(_T("...Uninstallation of SILFW instance has failed."));
+		MessageBox(NULL, _T("ERROR: Failed to uninstall SILFW instance."),
+			_T("Uninstallation error"), MB_ICONINFORMATION | MB_OK);
+	}
 
-		// Uninstall SILFW instance first:
-		if (ERROR_SUCCESS != MsiConfigureProduct(szProductCode, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT))
+	if (NumSqlInstances == 1)
+	{
+		// Uninstall SQL Server main product:
+		g_Log.Write(_T("Attempting to uninstall SQL Server main product"));
+		DisplayStatusText(1, _T("Removing SQL Server main product"));
+
+		if (ERROR_SUCCESS != MsiConfigureProduct(_T("{2750B389-A2D2-4953-99CA-27C1F2A8E6FD}"),
+			INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT))
 		{
-			g_Log.Write(_T("...Uninstallation of SILFW instance has failed."));
-			MessageBox(NULL, _T("ERROR: Failed to uninstall SILFW instance."),
+			g_Log.Write(_T("...Uninstallation of SQL Server has failed."));
+			MessageBox(NULL, _T("ERROR: Failed to uninstall SQL Server main product."),
 				_T("Uninstallation error"), MB_ICONINFORMATION | MB_OK);
 		}
 
-		if (NumSqlInstances == 1)
-		{
-			// Uninstall SQL Server main product:
-			g_Log.Write(_T("Attempting to uninstall SQL Server main product"));
-			DisplayStatusText(1, _T("Removing SQL Server main product"));
-
-			if (ERROR_SUCCESS != MsiConfigureProduct(_T("{2750B389-A2D2-4953-99CA-27C1F2A8E6FD}"),
-				INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT))
-			{
-				g_Log.Write(_T("...Uninstallation of SQL Server has failed."));
-				MessageBox(NULL, _T("ERROR: Failed to uninstall SQL Server main product."),
-					_T("Uninstallation error"), MB_ICONINFORMATION | MB_OK);
-			}
-
-			// Uninstall other SQL Server bits:
-			UninstallProduct(_T("Microsoft SQL Server Setup Support Files (English)"));
-			UninstallProduct(_T("Microsoft SQL Server VSS Writer"));
-			UninstallProduct(_T("Microsoft SQL Server Native Client"));
-		}
-
-		g_Log.Write(_T("...Done uninstalling SQL Server."));
+		// Uninstall other SQL Server bits:
+		UninstallProduct(_T("Microsoft SQL Server Setup Support Files (English)"));
+		UninstallProduct(_T("Microsoft SQL Server VSS Writer"));
+		UninstallProduct(_T("Microsoft SQL Server Native Client"));
 	}
-	else
-		g_Log.Write(_T("User answered \"no\"."));
 
-	delete[] pszQuestion;
+	g_Log.Write(_T("...Done uninstalling SQL Server."));
 }
 
 // Detects if any earlier (than 7.0) version of FW was installed.
@@ -338,6 +325,210 @@ _TCHAR * DetectEarlierFwInstallation()
 	return NULL;
 }
 
+// Returns the target of a Windows shortcut (.lnk file)
+// Caller must delete[] the returned value;
+_TCHAR * GetShortcutTarget(_TCHAR * pszShortcutPath)
+{
+	IShellLink * pISL = NULL;    
+	IPersistFile * ppf  = NULL;
+	_TCHAR * pszTargetPath = new _TCHAR [MAX_PATH];
+	pszTargetPath[0] = 0;
+
+	CoInitialize(NULL);
+
+	if (SUCCEEDED(CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&pISL)))
+	{
+		if (SUCCEEDED (pISL->QueryInterface(IID_IPersistFile, (LPVOID*)&ppf)))
+		{
+			// If it did, load the shortcut into our persistent file
+			if (SUCCEEDED (ppf->Load(pszShortcutPath, 0)))
+			{
+				// Read the target information from the shortcut object
+				if (S_OK != (pISL->GetPath(pszTargetPath, MAX_PATH, NULL, SLGP_UNCPRIORITY)))
+				{
+					pszTargetPath[0] = 0;
+					g_Log.Write(_T("GetPath() failed while attempting to get target for shortcut %s"), pszShortcutPath);
+				}
+			}
+			else
+				g_Log.Write(_T("Load() failed while attempting to get target for shortcut %s"), pszShortcutPath);
+		}
+		else
+			g_Log.Write(_T("QueryInterface() failed while attempting to get target for shortcut %s"), pszShortcutPath);
+	}
+	else
+		g_Log.Write(_T("CoCreateInstance() failed while attempting to get target for shortcut %s"), pszShortcutPath);
+
+	if (ppf)
+		ppf->Release();
+
+	if (pISL)
+		pISL->Release();
+
+	return pszTargetPath;
+}
+
+// Searches for older FW shortcuts in the given folder, and deletes them, including project-specific ones.
+void SearchAndDeleteOldFwShortcuts(_TCHAR * pszFolder)
+{
+	g_Log.Write(_T("Searching for older FW shortcuts in %s..."), pszFolder);
+
+	// Look up the older FieldWorks code directory in the registry:
+	_TCHAR * pszRootCodeDir = NewRegString(HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\SIL\\FieldWorks"), _T("RootCodeDir"));
+
+	if (!pszRootCodeDir)
+	{
+		g_Log.Write(_T("Could not read registry value RootCodeDir"));
+		return;
+	}
+
+	// Make strings of paths to old TE and FLEx apps:
+	_TCHAR * pszOldTePath = MakePath(pszRootCodeDir, _T("TE.exe"));
+	_TCHAR * pszOldFLExPath = MakePath(pszRootCodeDir, _T("FLEx.exe"));
+
+	// Search the given folder for all shortcuts (.lnk files):
+	_TCHAR * pszSearch = MakePath(pszFolder, _T("*.lnk"));
+
+	WIN32_FIND_DATA wfd;
+	HANDLE hFind = FindFirstFile(pszSearch, &wfd);
+
+	delete[] pszSearch;
+	pszSearch = NULL;
+
+	if (hFind == INVALID_HANDLE_VALUE)
+	{
+		g_Log.Write(_T("No shortcuts exist in %s..."), pszFolder);
+		return;
+	}
+	do
+	{
+		// Got a shortcut. Retrieve its full path:
+		_TCHAR * pszShortcut = MakePath(pszFolder, wfd.cFileName);
+		// Get the target that the shortuct points to:
+		_TCHAR * pszShortcutTarget = GetShortcutTarget(pszShortcut);
+
+		// If the target begins with the path to an older FLEx or TE
+		// (e.g. "C:\Program Files\SIL\FieldWorks\TE.exe"), then delete it:
+		if (_tcsncicmp(pszShortcutTarget, pszOldTePath, _tcslen(pszOldTePath)) == 0
+			|| _tcsncicmp(pszShortcutTarget, pszOldFLExPath, _tcslen(pszOldFLExPath)) == 0)
+		{
+			g_Log.Write(_T("Found shortcut %s which has a target of %s: deleting"), pszShortcut, pszShortcutTarget);
+			DeleteFile(pszShortcut);
+		}
+
+		// Tidy up:
+		delete[] pszShortcutTarget;
+		pszShortcutTarget = NULL;
+		delete[] pszShortcut;
+		pszShortcut = NULL;
+
+	} while (FindNextFile(hFind, &wfd));
+
+	// Tidy up:
+	FindClose(hFind);
+	hFind = NULL;
+	delete[] pszOldTePath;
+	pszOldTePath = NULL;
+	delete[] pszOldFLExPath;
+	pszOldFLExPath = NULL;
+}
+
+// Examines all desktop shortcuts (current user and all-users) and deletes ones for FLEx and TE
+// from FW version 6 and earlier, including project-specific ones.
+void DeleteOldFwShortcuts()
+{
+	// Form list of system folders where we will search for old FW shortcuts:
+	const int FolderIds[] = { CSIDL_DESKTOPDIRECTORY, CSIDL_COMMON_DESKTOPDIRECTORY };
+
+	// Iterate through above list of system folders:
+	for (int i = 0; i < sizeof(FolderIds) / sizeof(FolderIds[0]); i++)
+	{
+		// Get a string to the actual folder:
+		_TCHAR * pszFolderPath = GetFolderPathNew(FolderIds[i]);
+		// Delete all old FW shortcuts in folder:
+		SearchAndDeleteOldFwShortcuts(pszFolderPath);
+
+		// Tidy up:
+		delete[] pszFolderPath;
+		pszFolderPath = NULL;
+	}
+}
+
+INT_PTR CALLBACK DlgProcEarlierFwDetected(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+// The dialog procedure for informing user that an earlier version of FW has been found.
+{
+	static _TCHAR * pszVersion = NULL;
+
+	switch(msg)
+	{
+	case WM_INITDIALOG: // Dialog is being shown.
+		{
+			CentralizeWindow(hwnd);
+
+			pszVersion = reinterpret_cast<_TCHAR *>(lParam);
+
+			if (pszVersion)
+			{
+				// Set first checkbox text:
+				_TCHAR * pszRemoveShortcuts = new_sprintf(_T("Remove the shortcuts for the earlier version of FieldWorks (%s)."), pszVersion);
+				SendDlgItemMessage(hwnd, IDC_CHECKBOX_REMOVE_SHORTCUTS, WM_SETTEXT, 0, (LPARAM)pszRemoveShortcuts);
+				delete[] pszRemoveShortcuts;
+				pszRemoveShortcuts = NULL;
+
+				// Set second checkbox text:
+				_TCHAR * pszUninstall = new_sprintf(_T("Uninstall the earlier version of FieldWorks (%s)."), pszVersion);
+				SendDlgItemMessage(hwnd, IDC_CHECKBOX_UNINSTALL_EARLIER_FW, WM_SETTEXT, 0, (LPARAM)pszUninstall);
+				delete[] pszUninstall;
+				pszUninstall = NULL;
+			}
+
+			// Set Icon:
+			SetSilIcon(hwnd);
+		}
+		break;
+
+	case WM_COMMAND: // We got a message from a control/menu - in this case, a button.
+		switch(LOWORD(wParam))
+		{
+		case IDOK:
+			{
+				int retVal = 0;
+				// Collect user settings and combine into a single integer:
+				if (SendDlgItemMessage(hwnd, IDC_CHECKBOX_REMOVE_SHORTCUTS, BM_GETCHECK, 0, 0) == BST_CHECKED)
+					retVal |= EARLIER_FW_REMOVE_SHORTCUTS;
+				if (SendDlgItemMessage(hwnd, IDC_CHECKBOX_UNINSTALL_EARLIER_FW, BM_GETCHECK, 0, 0) == BST_CHECKED)
+					retVal |= EARLIER_FW_UNINSTALL;
+
+				EndDialog(hwnd, retVal);
+			}
+			break;
+		case IDC_CHECKBOX_UNINSTALL_EARLIER_FW:
+			// If the "uninstall earlier FW" box has just been selected, select the "remove shortcuts" option and 
+			// disable its box:
+			if (SendDlgItemMessage(hwnd, IDC_CHECKBOX_UNINSTALL_EARLIER_FW, BM_GETCHECK, 0, 0) == BST_CHECKED)
+			{
+				SendDlgItemMessage(hwnd, IDC_CHECKBOX_REMOVE_SHORTCUTS, BM_SETCHECK, BST_CHECKED, 0);
+				EnableWindow(GetDlgItem(hwnd, IDC_CHECKBOX_REMOVE_SHORTCUTS), FALSE);
+			}
+			else // Enable the "remove shortcuts" box
+				EnableWindow(GetDlgItem(hwnd, IDC_CHECKBOX_REMOVE_SHORTCUTS), TRUE);
+			break;
+		default: // All the WM_COMMAND messages we don't handle are handled by Windows.
+			return 0;
+		}
+		break;
+
+	case WM_DESTROY: // Dialog is off the screen by now.
+		pszVersion = NULL;
+		break;
+
+	default: // All the messages we don't handle are handled by Windows.
+		return 0;
+	}
+	return 1; // This means we have processed the message.
+}
+
 int Fw7PostInstall(SoftwareProduct * Product)
 {
 	InitMshtml();
@@ -369,23 +560,18 @@ int Fw7PostInstall(SoftwareProduct * Product)
 	else
 		g_Log.Write(_T("Could not find path to MigrateSqlDbs.exe."));
 
-	_TCHAR * pszRecommendation;
-
 	// Examine the return value from MigrateSqlDbs.exe and prepare a text recommending whether or
 	// not the user should allow uninstallation of an earlier version of FW.
 	switch (migrationStatus)
 	{
 	case -1:
 		g_Log.Write(_T("Data Migration failed for some unknown reason."));
-		pszRecommendation = my_strdup(_T(", although this is not recommended because the data migration process failed unexpectedly."));
 		break;
 	case 0:
 		g_Log.Write(_T("Data Migration succeeded."));
-		pszRecommendation = my_strdup(_T(", especially since copies of all your data have been successfully migrated to the new version."));
 		break;
 	default:
 		g_Log.Write(_T("%d projects failed to migrate."), migrationStatus);
-		pszRecommendation = new_sprintf(_T(", although this is not recommended because %d of your projects failed to migrate to the new version"), migrationStatus);
 		break;
 	}
 	g_Log.Write(_T("...Done"));
@@ -407,22 +593,29 @@ int Fw7PostInstall(SoftwareProduct * Product)
 			pszVersion = my_strdup(szIntalledVersion);
 		}
 
-		// Prepare message to offer uninstallation to user:
-		_TCHAR * pszMessage = new_sprintf(_T("FieldWorks 7.0 is now installed, but an earlier version of FieldWorks (%s) is also installed.\n\n")
-			_T("You could uninstall FieldWorks %s now and just use FieldWorks 7.0%s. Would you like FieldWorks %s to be uninstalled right now?"),
-			pszVersion, pszVersion, pszRecommendation, pszVersion);
-
-		delete[] pszRecommendation;
-
 		HideStatusDialog();
 
-		g_Log.Write(_T("Asking user the following question: %s"), pszMessage);
+		g_Log.Write(_T("Notifying user about discovery of version %s"), pszVersion);
 
-		if (MessageBox(NULL, pszMessage, _T("Earlier version of FieldWorks found"),
-			MB_YESNO | MB_DEFBUTTON2) == IDYES)
+		int userResponse = DialogBoxParam(GetModuleHandle(NULL),
+		MAKEINTRESOURCE(IDD_DIALOG_EARLIER_FW_FOUND), NULL,  DlgProcEarlierFwDetected,
+		(LPARAM)(pszVersion));
+
+		if (userResponse & EARLIER_FW_REMOVE_SHORTCUTS)
+		{
+			g_Log.Write(_T("User opted to delete desktop shortcuts from older FW installation; deleting..."));
+			g_Log.Indent();
+			DeleteOldFwShortcuts();
+			g_Log.Unindent();
+			g_Log.Write(_T("...Done."));
+		}
+		else
+			g_Log.Write(_T("User did not opt to delete desktop shortcuts."));
+
+		if (userResponse & EARLIER_FW_UNINSTALL)
 		{
 			// User opted to uninstall earlier version of FW:
-			g_Log.Write(_T("User answered \"yes\"; uninstalling..."));
+			g_Log.Write(_T("User opted to uninstall; uninstalling..."));
 			ShowStatusDialog();
 			DisplayStatusText(0, _T("Uninstalling FieldWorks %s."), pszVersion);
 			DisplayStatusText(1, _T(""));
@@ -438,20 +631,19 @@ int Fw7PostInstall(SoftwareProduct * Product)
 				g_Log.Write(_T("...Done."));
 		}
 		else
-			g_Log.Write(_T("User answered \"no\"."));
+			g_Log.Write(_T("User did not opt to uninstall."));
 
 		delete[] pszVersion;
 		delete[] pszProductCode;
-		delete[] pszMessage;
 
 		ShowStatusDialog();
 	}
 
-	// If there is now no earlier FW installed, we should offer to uninstall SQL Server if it is present:
+	// If there is now no earlier FW installed, we should uninstall SQL Server (SILFW instance) if it is present:
 	pszProductCode = DetectEarlierFwInstallation();
 	if (pszProductCode)
 	{
-		g_Log.Write(_T("Earlier FW with product code %s detected, so won't ask to uninstall SQL Server."), pszProductCode);
+		g_Log.Write(_T("Earlier FW with product code %s detected, so won't uninstall SQL Server."), pszProductCode);
 		delete[] pszProductCode;
 	}
 	else

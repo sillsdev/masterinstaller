@@ -27,6 +27,24 @@ with the "setup" project to make an executable master installer.
 		</xsl:call-template>
 		<xsl:text>"&#13;</xsl:text>
 	</xsl:if>
+
+	<!-- Include resource files that accompany Preinstall and PostInstall files: -->
+	<xsl:text>&#13;// Resources for external functions:&#13;</xsl:text>
+	<xsl:for-each select="MasterInstaller/Products/Product/Preinstall">
+		<xsl:if test="@IncludeResourceFile='true'">
+			<xsl:text>#include "</xsl:text>
+			<xsl:value-of select="."/>
+			<xsl:text>.rc"&#13;</xsl:text>
+		</xsl:if>
+	</xsl:for-each>
+	<xsl:for-each select="MasterInstaller/Products/Product/PostInstall">
+		<xsl:if test="@IncludeResourceFile='true'">
+			<xsl:text>#include "</xsl:text>
+			<xsl:value-of select="."/>
+			<xsl:text>.rc"&#13;</xsl:text>
+		</xsl:if>
+	</xsl:for-each>
+
 </xsl:template>
 
 <!--

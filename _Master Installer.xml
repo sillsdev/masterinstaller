@@ -45,7 +45,7 @@
 			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
 			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
 			<Preinstall>RemovePreviousFW7s</Preinstall>
-			<PostInstall>Fw7PostInstall</PostInstall>
+			<PostInstall IncludeResourceFile="true">Fw7PostInstall</PostInstall>
 			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			<Contact>
@@ -70,7 +70,7 @@
 			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
 			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
 			<Preinstall>RemovePreviousFW7s</Preinstall>
-			<PostInstall>Fw7PostInstall</PostInstall>
+			<PostInstall IncludeResourceFile="true">Fw7PostInstall</PostInstall>
 			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			<Contact>

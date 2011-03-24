@@ -383,9 +383,11 @@ void SearchAndDeleteOldFwShortcuts(_TCHAR * pszFolder)
 		return;
 	}
 
-	// Make strings of paths to old TE and FLEx apps:
+	// Make strings of paths to old FW apps (except WorldPad):
 	_TCHAR * pszOldTePath = MakePath(pszRootCodeDir, _T("TE.exe"));
 	_TCHAR * pszOldFLExPath = MakePath(pszRootCodeDir, _T("FLEx.exe"));
+	_TCHAR * pszOldDnPath = MakePath(pszRootCodeDir, _T("FwNotebook.exe"));
+	_TCHAR * pszOldTlePath = MakePath(pszRootCodeDir, _T("FwListEditor.exe"));
 
 	// Search the given folder for all shortcuts (.lnk files):
 	_TCHAR * pszSearch = MakePath(pszFolder, _T("*.lnk"));
@@ -408,10 +410,12 @@ void SearchAndDeleteOldFwShortcuts(_TCHAR * pszFolder)
 		// Get the target that the shortuct points to:
 		_TCHAR * pszShortcutTarget = GetShortcutTarget(pszShortcut);
 
-		// If the target begins with the path to an older FLEx or TE
+		// If the target begins with the path to an older FW app (except WorldPad)
 		// (e.g. "C:\Program Files\SIL\FieldWorks\TE.exe"), then delete it:
-		if (_tcsncicmp(pszShortcutTarget, pszOldTePath, _tcslen(pszOldTePath)) == 0
-			|| _tcsncicmp(pszShortcutTarget, pszOldFLExPath, _tcslen(pszOldFLExPath)) == 0)
+		if (_tcsicmp(pszShortcutTarget, pszOldTePath) == 0
+			|| _tcsicmp(pszShortcutTarget, pszOldFLExPath) == 0
+			|| _tcsicmp(pszShortcutTarget, pszOldDnPath) == 0
+			|| _tcsicmp(pszShortcutTarget, pszOldTlePath) == 0)
 		{
 			g_Log.Write(_T("Found shortcut %s which has a target of %s: deleting"), pszShortcut, pszShortcutTarget);
 			DeleteFile(pszShortcut);
@@ -432,6 +436,10 @@ void SearchAndDeleteOldFwShortcuts(_TCHAR * pszFolder)
 	pszOldTePath = NULL;
 	delete[] pszOldFLExPath;
 	pszOldFLExPath = NULL;
+	delete[] pszOldDnPath;
+	pszOldDnPath = NULL;
+	delete[] pszOldTlePath;
+	pszOldTlePath = NULL;
 }
 
 // Examines all desktop shortcuts (current user and all-users) and deletes ones for FLEx and TE
@@ -485,6 +493,9 @@ INT_PTR CALLBACK DlgProcEarlierFwDetected(HWND hwnd, UINT msg, WPARAM wParam, LP
 
 			// Set Icon:
 			SetSilIcon(hwnd);
+
+			// Select first checkbox:
+			SendDlgItemMessage(hwnd, IDC_CHECKBOX_REMOVE_SHORTCUTS, BM_SETCHECK, BST_CHECKED, 0);
 		}
 		break;
 

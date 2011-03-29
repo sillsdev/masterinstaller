@@ -5,12 +5,12 @@
 #include "Uninstall.cpp"
 #include "SearchOtherUsersInstallations.cpp"
 
-// Remove any existing version of FieldWorks:
+// Remove any existing version of FieldWorks 7:
 int RemovePreviousFW7s(SoftwareProduct * /*Product*/)
 {
 	int nResult = 0;
 
-	// List of all previous FW product codes:
+	// List of all previous FW 7 product codes:
 	const TCHAR * pszProductCode[] = 
 	{
 		_T("{256A50FA-761A-488b-B282-3543C1DDAE76}"), // FW 7 alpha and beta

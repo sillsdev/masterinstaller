@@ -990,8 +990,8 @@ function WriteSfxConfig(OutputPath, FlavorName, SfxStyle)
 			tsoConfig.WriteLine('ExtractDialogText="Preparing the \'' + FlavorName + '\' files for installation"');
 			tsoConfig.WriteLine('RunProgram="fm0:\\"' + FlavorName + '\\setup.exe\\""');
 			tsoConfig.WriteLine('GUIFlags="6240"');
-			tsoConfig.WriteLine('BeginPrompt="The FieldWorks installation files (' + FlavorName + ') will be extracted to the folder specified below, and then the installer will run.\nIMPORTANT: You will need to keep the FieldWorks installer in that folder if you wish to apply future patch upgrades."');
-			tsoConfig.WriteLine('ExtractPathText="Select a folder to store the installation files:"');
+			tsoConfig.WriteLine('BeginPrompt="A folder (' + FlavorName + ') containing installation files will be created in the location specified below, and then the installer will run.\nIMPORTANT: You will need to keep the FieldWorks installer in that location if you wish to apply future patch upgrades."');
+			tsoConfig.WriteLine('ExtractPathText="Select a location to store the installation folder:"');
 			tsoConfig.WriteLine(';!@InstallEnd@!');
 			break;
 		case 'Standard':

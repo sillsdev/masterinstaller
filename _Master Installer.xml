@@ -380,6 +380,8 @@
 				<FirstName>Randy</FirstName>
 				<LastName>Regnier</LastName>
 				<Email>randy_regnier@sil.org</Email>
+				<ExternalSource>http://downloads.palaso.org/LiftBridge/LiftBridgeForFW7Installer.0.7.17.msi</ExternalSource>
+				<VersionInfo>http://downloads.palaso.org/LiftBridge/</VersionInfo>
 			</Contact>
 		</Product>
 		<Product KeyId="2" Version="5.0">

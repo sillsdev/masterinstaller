@@ -364,75 +364,22 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW 5.5 (Trunk) BTE with movies (from \\cana\LSDev\Installers\Trunk\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\Trunk\FieldWorks\SetupFW.msi</Source>
-				<Source>\\cana\LSDev\Installers\Trunk\FieldWorks\TE_M.cab</Source>
-				<Source>\\cana\LSDev\Installers\Trunk\FieldWorks\Flex_M.cab</Source>
-				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
-				<Source>Documents\FieldWorks\TechSupport.txt</Source>
-				<Source>Documents\FieldWorks\CopyToCd</Source>
-				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
-				<Destination>FieldWorks</Destination>
+				<Title>LiftBridge for FW 7 (from Products\Installers\LiftBridgeForFw7)</Title>
+				<Source SignAs="LiftBridge for FieldWorks 7 Installer">Installers\LiftBridgeForFw7\LiftBridgeForFW7Installer.0.7.17.msi</Source>
+				<Destination>LiftBridge</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 5.5 BTE (Trunk build)</Title>
-			<Tag>FW55BTE</Tag>
-			<MinOS>5.0</MinOS>
+			<Title>LiftBridge for SIL FieldWorks 7</Title>
+			<Tag>LB4FW7</Tag>
+			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
+			<CriticalFile>LiftBridge\LiftBridgeForFW7Installer.0.7.17.msi</CriticalFile>
+			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
-			<ProductCode>{5A789B25-5206-49e2-968B-88C17835B80A}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
-			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
-			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
-			<Preinstall>CleanStartFw40</Preinstall>
-			<PostInstall>FwPostInstall</PostInstall>
-			<Feature>
-				<Title>FieldWorks Data Notebook 2.13999</Title>
-				<Tag>DN_TC</Tag>
-				<MsiFeature>DN</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Language Explorer 2.999</Title>
-				<Tag>LT_TC</Tag>
-				<MsiFeature>FLEX</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Topics List Editor 2.13999</Title>
-				<Tag>TLE_TC</Tag>
-				<MsiFeature>TLE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks Translation Editor 2.999</Title>
-				<Tag>TE_TC</Tag>
-				<MsiFeature>TE</MsiFeature>
-				<Requires Tag="SQL2005_64" MinVersion="9" FailMsg="The program will crash on startup."/>
-				<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
-			<Feature>
-				<Title>FieldWorks WorldPad 2.13999</Title>
-				<Tag>WP_TC</Tag>
-				<MsiFeature>WP</MsiFeature>
-				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
-			</Feature>
+			<ProductCode>{326E9511-DA22-4163-BE83-0B1C3FC827EB}</ProductCode>
 			<Contact>
-				<FirstName>Susanna</FirstName>
-				<LastName>Imrie</LastName>
-				<Email>susanna_imrie@sil.org</Email>
+				<FirstName>Randy</FirstName>
+				<LastName>Regnier</LastName>
+				<Email>randy_regnier@sil.org</Email>
 			</Contact>
 		</Product>
 		<Product KeyId="2" Version="5.0">
@@ -1031,14 +978,14 @@
 				<Title>Keyman Desktop Light 7.1 (30 day evaluation)</Title>
 				<Source>3rd Party\Keyman 7.1 Light</Source>
 				<Destination>Utilities\Keyman71</Destination>
-<!--				<SetupHelp>Documents\Keyman71\KeymanLight.rtf</SetupHelp>-->
+				<!--				<SetupHelp>Documents\Keyman71\KeymanLight.rtf</SetupHelp>-->
 			</AutoConfigure>
 			<Title>Keyman Desktop Light 7.1 (30 day evaluation)</Title>
 			<Tag>KeymanL</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
 			<MinOS>5.0</MinOS>
 			<CriticalFile>Utilities\Keyman71\keymandesktoplight-7.1.265.0.exe</CriticalFile>
-<!--			<Help>Utilities\Keyman70\KeymanLight.rtf</Help>-->
+			<!--			<Help>Utilities\Keyman70\KeymanLight.rtf</Help>-->
 			<Install SuccessReturns="1">$CriticalFile$</Install>
 			<StatusWindow>Show</StatusWindow>
 			<Commentary>Please follow the instructions on the Keyman Setup dialog.</Commentary>
@@ -1060,14 +1007,14 @@
 				<Title>Keyman Desktop Professional 7.1 (30 day evaluation)</Title>
 				<Source>3rd Party\Keyman 7.1 Professional</Source>
 				<Destination>Utilities\Keyman71</Destination>
-<!--				<SetupHelp>Documents\Keyman71\KeymanProfessional.rtf</SetupHelp>-->
+				<!--				<SetupHelp>Documents\Keyman71\KeymanProfessional.rtf</SetupHelp>-->
 			</AutoConfigure>
 			<Title>Keyman Desktop Professional 7.1 (30 day evaluation)</Title>
 			<Tag>KeymanP</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
 			<MinOS>5.0</MinOS>
 			<CriticalFile>Utilities\Keyman71\keymandesktoppro-7.1.265.0.exe</CriticalFile>
-<!--			<Help>Utilities\Keyman71\KeymanProfessional.rtf</Help>-->
+			<!--			<Help>Utilities\Keyman71\KeymanProfessional.rtf</Help>-->
 			<Install SuccessReturns="1">$CriticalFile$</Install>
 			<StatusWindow>Show</StatusWindow>
 			<Commentary>Please follow the instructions on the Keyman Setup dialog.</Commentary>
@@ -1089,14 +1036,14 @@
 				<Title>Keyman Developer 7.1 (30 day evaluation)</Title>
 				<Source>3rd Party\Keyman Developer 7.1</Source>
 				<Destination>Utilities\Keyman71</Destination>
-<!--				<SetupHelp>Documents\Keyman71\KeymanDeveloper.rtf</SetupHelp>-->
+				<!--				<SetupHelp>Documents\Keyman71\KeymanDeveloper.rtf</SetupHelp>-->
 			</AutoConfigure>
 			<Title>Keyman Developer 7.1 (30 day evaluation)</Title>
 			<Tag>KeymanD</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
 			<MinOS>5.0</MinOS>
 			<CriticalFile>Utilities\Keyman71\keymandeveloper-7.1.265.0.exe</CriticalFile>
-<!--			<Help>Utilities\Keyman70\KeymanDeveloper.rtf</Help>-->
+			<!--			<Help>Utilities\Keyman70\KeymanDeveloper.rtf</Help>-->
 			<Install SuccessReturns="1">$CriticalFile$</Install>
 			<StatusWindow>Show</StatusWindow>
 			<Commentary>Please follow the instructions on the Keyman Setup dialog.</Commentary>
@@ -1315,7 +1262,7 @@
 			<CriticalFile>Utilities\MSDE\setup.exe</CriticalFile>
 			<KillHangingWindows>true</KillHangingWindows>
 			<Preinstall>RemoveAnyPreviousMSDE</Preinstall>
-<!--			<Install Flag="g_fExistingMsdeNeedsUpgrade">
+			<!--			<Install Flag="g_fExistingMsdeNeedsUpgrade">
 				<True>Utilities\MSDE\setup.exe /upgradesp sqlrun DISABLENETWORKPROTOCOLS=0 INSTANCENAME=SILFW /L*v C:\MSDELog.log</True>
 				<False>Utilities\MSDE\setup.exe DISABLENETWORKPROTOCOLS=0 TARGETDIR="[HKEY_LOCAL_MACHINE\SOFTWARE\SIL\FieldWorks::RootDir]" INSTANCENAME=SILFW SECURITYMODE=SQL SAPWD=inscrutable /L*v C:\MSDELog.log</False>
 			</Install> -->
@@ -1433,7 +1380,7 @@
 			<Install>$CriticalFile$</Install>
 			<TestPresence Version="1">TestWinVistaSpPresence</TestPresence>
 			<DownloadURL>http://windowsupdate.microsoft.com/</DownloadURL>
-<!--			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=B0C7136D-5EBB-413B-89C9-CB3D06D12674&amp;displaylang=en</DownloadURL>-->
+			<!--			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyId=B0C7136D-5EBB-413B-89C9-CB3D06D12674&amp;displaylang=en</DownloadURL>-->
 			<Commentary>Follow instructions in installer wizard.</Commentary>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<FlushReboot>true</FlushReboot>
@@ -1574,14 +1521,14 @@
 			<CriticalFile>Utilities\DotNet 3.5 SP1\dotnetfx35.exe</CriticalFile>
 			<Install>$CriticalFile$ /q</Install>
 			<TestPresence Version="3.5.1">TestDotNetPresence</TestPresence>
-      <PostInstall>DotNet35SP1PostInstall</PostInstall>
+			<PostInstall>DotNet35SP1PostInstall</PostInstall>
 			<DownloadURL>http://www.microsoft.com/downloads/details.aspx?FamilyID=AB99342F-5D1A-413D-8319-81DA479AB0D7&amp;displaylang=en</DownloadURL>
 			<Commentary>This installation may take several minutes, without visible sign of progress.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 			<FlushReboot>true</FlushReboot>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
 		</Product>
-    <Product>
+		<Product>
 			<AutoConfigure>
 				<Title>Internet Explorer 6.0 SP1 (English)</Title>
 				<Source>3rd Party\IE60</Source>

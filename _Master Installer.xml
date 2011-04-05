@@ -375,6 +375,36 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>WorldPad 3.0 (from FW 6.0.4 at \\cana\lsdev\Installers\WorldPad_Maint\SetupWP.msi)</Title>
+				<Source>\\cana\lsdev\Installers\WorldPad_Maint\SetupWP.msi</Source>
+				<!--<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>-->
+				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks without TE\TechSupport.txt</Source>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL WorldPad 3.0</Title>
+			<Tag>FW604WP</Tag>
+			<MinOS>5.0</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<Help>FieldWorks\WPReadMe.rtf</Help>
+			<CriticalFile>FieldWorks\SetupWP.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{2A458F3A-B88E-416F-997E-F7935489C054}</ProductCode>
+			<!--<Help>FieldWorks\SetupFW.rtf</Help>-->
+			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
+			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1" MinVersion="1"/>
+			<!--<Preinstall>CleanStartFw40</Preinstall>-->
+			<PostInstall>WpPostInstall</PostInstall>
+			<Feature>
+				<Title>FieldWorks WorldPad 3.0</Title>
+				<Tag>WP_TC</Tag>
+				<MsiFeature>WP</MsiFeature>
+				<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			</Feature>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>LiftBridge for FW 7 (from Products\Installers\LiftBridgeForFw7)</Title>
 				<Source SignAs="LiftBridge for FieldWorks 7 Installer">Installers\LiftBridgeForFw7\LiftBridgeForFW7Installer.0.7.17.msi</Source>
 				<Destination>LiftBridge</Destination>

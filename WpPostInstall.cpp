@@ -124,7 +124,7 @@ int InitInstallLanguage()
 
 		// Reset the InitIcu registry flag:
 		HKEY hKey;
-		lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL"), 0, KEY_WRITE, &hKey);
+		LRESULT lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SIL"), 0, KEY_WRITE, &hKey);
 		if (ERROR_SUCCESS == lResult)
 		{
 			DWORD dwZero = 0;

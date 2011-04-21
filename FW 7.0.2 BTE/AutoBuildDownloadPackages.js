@@ -6,7 +6,7 @@ function AutomatePackages()
 	SetElement("FlavorUrl1", "http://downloads.sil.org/FieldWorks/7.0.2/BTE/FW702_BTE_A.exe");
 	AddFlavor();
 	SetElement("FlavorName2", "FW702_BTE_B");
-	SetElement("FlavorUrl2", "http://downloads.sil.org/FieldWorks/7.0.2/BTE/FW702_BTE_A.exe");
+	SetElement("FlavorUrl2", "http://downloads.sil.org/FieldWorks/7.0.2/BTE/FW702_BTE_B.exe");
 
 	NextStage();
 

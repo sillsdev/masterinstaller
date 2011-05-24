@@ -42,8 +42,15 @@ if (FileDriveType != 2 && FileDriveType != 5)
 		WScript.Echo("ERROR: Cannot move file to TEMP folder because TEMP environment variable is not defined.");
 		WScript.Quit();
 	}
-
-	fso.MoveFile(FileToBeSigned, FileTempPath);
+	
+	try
+	{
+		fso.MoveFile(FileToBeSigned, FileTempPath);
+	}
+	catch (err)
+	{
+		WScript.Echo("ERROR: Cannot move file " + FileToBeSigned + " to " + FileTempPath + ". Please sort out the problem and then press OK.");
+	}
 	FileToBeSigned = FileTempPath;
 	MovedToTemp = true;
 }

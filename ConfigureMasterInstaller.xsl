@@ -75,6 +75,14 @@
 					<script type="text/javascript">document.getElementById("WriteXml").checked=true;</script>
 					<input id="Compile" type="checkbox" title="Compile a setup.exe program with your settings."/>Compile master installer<br/>
 					<script type="text/javascript">document.getElementById("Compile").checked=true;</script>
+					<table>
+						<tr>
+							<td align="right">Password for digital certificate:</td>
+							<td>
+								<input id="CertificatePassword" type="password" size="12" onfocus="this.select();" title="Password to use when digitally signing files."/>
+							</td>
+						</tr>
+					</table>
 					<div id="CompileHelpsDiv" style="position:absolute; visibility:hidden">
 						<input id="CompileHelps" type="checkbox" title="Compile InstallerHelp2.dll to provide embedded setup helps."/>Compile InstallerHelp2.dll<br/>
 						<script type="text/javascript">document.getElementById("CompileHelps").checked=true;</script>
@@ -2411,7 +2419,7 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fCreateI
 
 function CompileMasterInstaller(XmlFileName)
 {
-  var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, "CompileXmlMasterInstaller.js") + '" "' + XmlFileName + '"';
+  var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, "CompileXmlMasterInstaller.js") + '" "' + XmlFileName + '" "-certificatepassword:' + document.getElementById('CertificatePassword').value + '"';
   if (document.getElementById("IncludeEasterEggs").checked)
     Cmd += " -E";
   shellObj.Run(Cmd, 0, true);
@@ -3110,8 +3118,7 @@ function GatherFiles(CdImagePath)
 								if (SignAs != null)
 								{
 									// Sign the current file:
-									var SignBatchPath = fso.BuildPath(UtilsPath, "Sign\\SignGeneric.bat");
-									var Cmd = '"' + SignBatchPath + '" "' + TargetFullPath + '" "' + SignAs + '"';
+									var Cmd = '"' + fso.BuildPath(UtilsPath, "SignMaster.exe") + '" "' + TargetFullPath + '" -d "' + SignAs + '" -p "' + document.getElementById('CertificatePassword').value + '"';
 									shellObj.Run(Cmd, 1, true);
 								}
 

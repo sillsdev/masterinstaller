@@ -18,7 +18,7 @@ var XmlFileName = WScript.Arguments.Item(0);
 // Check that the input file is an XML file:
 if (XmlFileName.slice(-4).toLowerCase() != ".xml")
 {
-	WScript.Echo("ERROR - XML file must be specified.");
+	WScript.Echo("ERROR in RebuildWebDownload.js - XML file must be specified: " + XmlFileName);
 	WScript.Quit();
 }
 
@@ -29,7 +29,7 @@ xmlDoc.load(XmlFileName);
 if (xmlDoc.parseError.errorCode != 0)
 {
 	var myErr = xmlDoc.parseError;
-	WScript.Echo("You have an XML error " + myErr.reason + " on line " + myErr.line + " at position " + myErr.linepos);
+	WScript.Echo("You have an XML error in " + XmlFileName + ": " + myErr.reason + " on line " + myErr.line + " at position " + myErr.linepos);
 	WScript.Quit();
 }
 if (xmlDoc.selectSingleNode("/MasterInstaller") == null)
@@ -43,22 +43,31 @@ var fBuildSetupExe = true;
 var fGatherFiles = true;
 var fBuildSfx = true;
 var fShowLog = true;
+var CertificatePassword = "";
+
 for (i = 1; i < WScript.Arguments.Length; i++)
 {
-	switch (WScript.Arguments.Item(i))
+	var arg = WScript.Arguments.Item(i);
+
+	if (arg.slice(0, 21) == "-certificatepassword:") // See if a certificate signing password was supplied
+		CertificatePassword = arg.slice(21);
+	else
 	{
-		case "-NoBuildSetupExe":
-			fBuildSetupExe = false;
-			break;
-		case "-NoGatherFiles":
-			fGatherFiles = false;
-			break;
-		case "-NoBuildSfx":
-			fBuildSfx = false;
-			break;
-		case "-NoShowLog":
-			fShowLog = false;
-			break;
+		switch (arg)
+		{
+			case "-NoBuildSetupExe":
+				fBuildSetupExe = false;
+				break;
+			case "-NoGatherFiles":
+				fGatherFiles = false;
+				break;
+			case "-NoBuildSfx":
+				fBuildSfx = false;
+				break;
+			case "-NoShowLog":
+				fShowLog = false;
+				break;
+		}
 	}
 }
 
@@ -354,7 +363,7 @@ function BuildPackage()
 	if (fBuildSetupExe && !fso.FileExists(FinalSetupExePath))
 	{
 		Report("Building master installer.");
-		
+
 		// Compile master installer:
 		var SetupExePath = CompileMasterInstaller(XmlFileName);
 
@@ -407,7 +416,7 @@ function MakeSureFolderExists(strDir)
 
 function CompileMasterInstaller(XmlFileName)
 {
-	var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, "CompileXmlMasterInstaller.js") + '" "' + XmlFileName + '" -E';
+	var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, "CompileXmlMasterInstaller.js") + '" "' + XmlFileName + '" -E "-certificatepassword:' + CertificatePassword + '"';
 	Report("Running DOS command: " + Cmd);
 	shellObj.Run(Cmd, 0, true);
 	var SetupExePath = RootFolder + "\\setup.exe";
@@ -516,11 +525,10 @@ function GatherFiles(DestinationPath)
 						if (SignAs != null)
 						{
 							// Sign the current file:
-							var SignBatchPath = fso.BuildPath(UtilsPath, "Sign\\SignGeneric.bat");
-							var Cmd = '"' + SignBatchPath + '" "' + TargetFullPath + '" "' + SignAs + '"';
-							Report("Running DOS command: " + Cmd);
+							var Cmd = '"' + fso.BuildPath(UtilsPath, "SignMaster.exe") + '" "' + TargetFullPath + '" -d "' + SignAs + '" -p "' + CertificatePassword + '"';
+							Report("Running command: " + Cmd.replace(CertificatePassword, "********"));
 							shellObj.Run(Cmd, 1, true);
-						} 
+						}
 					}
 				} // Next file
 			} // Next source node
@@ -729,7 +737,7 @@ function Compress()
 	}
 
 	// Add self-extracting module and configuration to launch setup.exe:
-	BatchLine = 'copy /b "' + UtilsPath + '\\7zSD_new.sfx" + "' + ConfigFile + '" + "' + ZipFile + '" "' + SfxFile + '"'
+	BatchLine = 'copy /b "' + fso.BuildPath(UtilsPath, "7zSD_new.sfx") + '" + "' + ConfigFile + '" + "' + ZipFile + '" "' + SfxFile + '"'
 	tso.WriteLine(BatchLine);
 	Report(BatchLine);
 	tso.Close();
@@ -743,10 +751,9 @@ function Compress()
 	if (fso.FileExists(ListFile))
 		fso.DeleteFile(ListFile);
 
-	// Sign the SfxFile file, if the certificate can be found:
-	var SignBatchPath = fso.BuildPath(UtilsPath, "Sign\\SignPackage.bat");
-	var Cmd = '"' + SignBatchPath + '" "' + SfxFile + '"';
-	Report("Running DOS command: " + Cmd);
+	// Attempt to sign the SfxFile file:
+	var Cmd = '"' + fso.BuildPath(UtilsPath, "SignMaster.exe") + '" "' + SfxFile + '" -d "SIL Software Package" -p "' + CertificatePassword + '"';
+	Report("Running command: " + Cmd.replace(CertificatePassword, "********"));
 	shellObj.Run(Cmd, 1, true);
 
 	// If the md5sums utility exists where we expect, use it to generate an md5 hash

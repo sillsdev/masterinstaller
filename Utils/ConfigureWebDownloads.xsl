@@ -54,6 +54,14 @@
 					<script type="text/javascript">document.getElementById("WriteXml").checked=true;</script>
 					<input id="WriteDownloadsXml" type="checkbox" title="Write out an XML configuration file matching your settings for the TestPresence ActiveX control."/>Write downloads.xml file<br/>
 					<script type="text/javascript">document.getElementById("WriteDownloadsXml").checked=true;</script>
+					<table>
+						<tr>
+							<td align="right">Password for digital certificate:</td>
+							<td>
+								<input id="CertificatePassword" type="password" size="12" onfocus="this.select();" title="Password to use when digitally signing files."/>
+							</td>
+						</tr>
+					</table>
 					<input id="Compile" type="checkbox" title="Compile a setup.exe program for each flavor."/>Compile master installer for each flavor<br/>
 					<script type="text/javascript">document.getElementById("Compile").checked=true;</script>
 					<input id="GatherFiles" type="checkbox" title="Gather files needed for each flavor into one folder."/>Gather files for each flavor<br/>
@@ -608,9 +616,6 @@ function Go()
 		tso.WriteLine('	SetElement("SfxStyle", "' + SfxStyle + '");');
 		
 		tso.WriteLine('	SetElement("SaveSettings", false);');
-
-		tso.WriteLine('');
-		tso.WriteLine('	Go();');
 		
 		tso.WriteLine('}');
 		tso.Close();
@@ -678,7 +683,7 @@ function Go()
 				if (CompileFlavorXml || GatherFlavorFiles || BuildFlavor7zip)
 				{
 					AddCommentary(1, "Running RebuildWebDownload utility to do the following:");
-					var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, 'RebuildWebDownload.js') + '" "' + FlavorXmlPath + '" -NoShowLog';
+					var Cmd = 'wscript.exe "' + fso.BuildPath(UtilsPath, 'RebuildWebDownload.js') + '" "' + FlavorXmlPath + '" -NoShowLog "-certificatepassword:' + document.getElementById('CertificatePassword').value + '"';
 
 					// Put in relevant options:
 					if (CompileFlavorXml)

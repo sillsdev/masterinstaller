@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using IWshRuntimeLibrary;
 
 namespace InitUtils
 {
@@ -89,6 +90,35 @@ namespace InitUtils
 			Registry.SetValue(@"HKEY_CLASSES_ROOT\xmlfile\shell\WriteDownloadReport", null, "Compose downloads report from this XML file");
 			Registry.SetValue(@"HKEY_CLASSES_ROOT\xmlfile\shell\WriteDownloadReport\command", null, "wscript.exe \"" + Path.Combine(utilsFolder, "WriteDownloadReport.js") + "\" \"%1\"");
 
+			// Set registry values for the SignMaster utility:
+			Registry.SetValue(@"HKEY_CLASSES_ROOT\Msi.Package\shell\Sign", null, "Sign with digital certificate");
+			Registry.SetValue(@"HKEY_CLASSES_ROOT\Msi.Package\shell\Sign\command", null, "\"" + Path.Combine(utilsFolder, "SignMaster.exe") + "\" -d \"SIL Software Installer\" \"%1\"");
+
+			// Add desktop shortcuts for the SignMaster utility:
+			var wshShell = new WshShell();
+
+			var masterInstallerShortcut = (IWshShortcut)wshShell.CreateShortcut(Path.Combine(
+				Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+				"Drop (Master) Installer here to sign it.lnk"));
+
+			masterInstallerShortcut.TargetPath = Path.Combine(utilsFolder, "SignMaster.exe");
+			masterInstallerShortcut.Arguments = "-d \"SIL Software Installer\"";
+			masterInstallerShortcut.Description =
+				"Launches the SignMaster utility to sign the dropped file(s) as SIL Software Installer(s).";
+			masterInstallerShortcut.IconLocation = "SHELL32.dll,216";
+			masterInstallerShortcut.Save();
+
+			var downloadPackageShortcut = (IWshShortcut)wshShell.CreateShortcut(Path.Combine(
+				Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+				"Drop Software Package here to sign it.lnk"));
+
+			downloadPackageShortcut.TargetPath = Path.Combine(utilsFolder, "SignMaster.exe");
+			downloadPackageShortcut.Arguments = "-d \"SIL Software Package\"";
+			downloadPackageShortcut.Description =
+				"Launches the SignMaster utility to sign the dropped file(s) as SIL Software Package(s).";
+			downloadPackageShortcut.IconLocation = "SHELL32.dll,216";
+			downloadPackageShortcut.Save();
+
 			MessageBox.Show("Done. You can now use the Master Installer utilities.");
 			Close();
 		}
@@ -96,11 +126,6 @@ namespace InitUtils
 		private void OnClickCancel(object sender, EventArgs e)
 		{
 			Close();
-		}
-
-		private void InitUtils_Load(object sender, EventArgs e)
-		{
-
 		}
 
 		private void OnClickMasterInstallerBrowse(object sender, EventArgs e)

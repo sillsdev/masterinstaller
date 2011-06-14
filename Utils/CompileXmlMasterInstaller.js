@@ -10,7 +10,31 @@ if (WScript.Arguments.Length < 1)
 	WScript.Quit();
 }
 
-var XmlFileName = WScript.Arguments.Item(0);
+var XmlFileName = "";
+var EasterEggs = false;
+var CertificatePassword = "";
+
+for (i = 0; i < WScript.Arguments.Length; i++)
+{
+	var arg = WScript.Arguments.Item(i);
+
+	if (arg == "-E")
+		EasterEggs = true;
+	else if (arg.slice(0, 21) == "-certificatepassword:") // See if a certificate signing password was supplied
+		CertificatePassword = arg.slice(21);
+	else
+	{
+		XmlFileName = arg;
+
+		// Check that the input file is an XML file:
+		if (XmlFileName.slice(-4).toLowerCase() != ".xml")
+		{
+			WScript.Echo("ERROR in CompileXmlMasterInstaller.js - XML file must be specified: " + XmlFileName);
+			WScript.Quit();
+		}
+	}
+}
+
 var CppFilePath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
 
 if (CppFilePath == "%MASTER_INSTALLER%")
@@ -22,18 +46,6 @@ var UtilsPath = fso.BuildPath(CppFilePath, "Utils");
 
 var BitmapsPath = fso.BuildPath(CppFilePath, "Bitmaps");
 
-var EasterEggs = false;
-if (WScript.Arguments.Length > 1)
-	if (WScript.Arguments.Item(1) == "-E")
-	EasterEggs = true;
-
-// Check that the input file is an XML file:
-if (XmlFileName.slice(-4).toLowerCase() != ".xml")
-{
-	WScript.Echo("ERROR - XML file must be specified.");
-	WScript.Quit();
-}
-
 // Check that the XML file has a <MasterInstaller> node:
 var xmlDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument.3.0");
 xmlDoc.async = false;
@@ -41,7 +53,7 @@ xmlDoc.load(XmlFileName);
 if (xmlDoc.parseError.errorCode != 0)
 {
 	var myErr = xmlDoc.parseError;
-	WScript.Echo("You have an XML error " + myErr.reason + " on line " + myErr.line + " at position " + myErr.linepos);
+	WScript.Echo("You have an XML error in " + XmlFileName + ": " + myErr.reason + " on line " + myErr.line + " at position " + myErr.linepos);
 	WScript.Quit();
 }
 if (xmlDoc.selectSingleNode("/MasterInstaller") == null)
@@ -107,9 +119,8 @@ do
 		WScript.Echo("mt.exe found " + SetupExePath + " was locked. Trying again. If problem persists, switch off anti-virus real-time file checking.");	
 } while (ret == 31)
 
-// Sign the .exe file, if the certificate can be found:
-var SignBatchPath = fso.BuildPath(UtilsPath, "Sign\\Sign.bat");
-var Cmd = '"' + SignBatchPath + '" "' + SetupExePath + '"';
+// Attempt to sign the .exe file:
+var Cmd = '"' + fso.BuildPath(UtilsPath, "SignMaster.exe") + '" "' + SetupExePath + '" -d "SIL Software Installer" -p "' + CertificatePassword + '"';
 shellObj.Run(Cmd, 1, true);
 
 // Remove junk from the NewCompilationFolder:			

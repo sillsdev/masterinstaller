@@ -183,7 +183,6 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "InitUtils";
 			this.Text = "Initialize Master Installer Utilities";
-			this.Load += new System.EventHandler(this.InitUtils_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

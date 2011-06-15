@@ -12,7 +12,7 @@
 #include "DiskManager.h"
 #include "Dialogs.h"
 #include "PersistantProgress.h"
-
+#include "Uninstall.cpp"
 
 // Forward declaration:
 class SoftwareProduct;
@@ -115,7 +115,7 @@ public:
 	bool TestPresence();
 	bool TestPresence(const _TCHAR * pszVersion);
 	bool TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion);
-	int CompareMsiVersionWithInstalled();
+	int CompareMsiVersionWithInstalled(_TCHAR ** ppszInstalledVersion = NULL);
 	const _TCHAR * GetCriticalFile();
 	bool IsContainer();
 	bool IsInstallable();
@@ -492,7 +492,10 @@ bool SoftwareProduct::TestPresence(const _TCHAR * pszMinVersion, const _TCHAR * 
 // possible), and +2 if our product is a later version, but the installed one is too old
 // to be upgraded.
 // returns MAXINT if the product is not even installed or not an .msi type installer.
-int SoftwareProduct::CompareMsiVersionWithInstalled()
+// If ppszInstalledVersion is not NULL, where possible it will be allocated a string
+// containing the currently installed version number. Caller must subsequently delete[]
+// this value.
+int SoftwareProduct::CompareMsiVersionWithInstalled(_TCHAR ** ppszInstalledVersion)
 {
 	// Test that we're specified as an .msi installer:
 	if (m_kpszMsiProductCode == NULL)
@@ -537,6 +540,9 @@ int SoftwareProduct::CompareMsiVersionWithInstalled()
 	}
 
 	g_Log.Write(_T("Installed version is %s"), pszInstalledVersion);
+
+	if (ppszInstalledVersion != NULL)
+		*ppszInstalledVersion = my_strdup(pszInstalledVersion);
 
 	if (m_kpszMsiUpgradeFrom)
 		g_Log.Write(_T("Package version upgrades from %s"), m_kpszMsiUpgradeFrom);
@@ -665,13 +671,37 @@ DWORD SoftwareProduct::RunInstaller()
 			{
 				g_Log.Write(_T("Testing to see if we'll be doing a minor upgrade."));
 
-				if (CompareMsiVersionWithInstalled() == 1)
+				_TCHAR * pszInstalledVersion = NULL;
+				switch (CompareMsiVersionWithInstalled(&pszInstalledVersion))
 				{
-					g_Log.Write(_T("Minor upgrade will be performed."));
+				case 1:
+					g_Log.Write(_T("Minor upgrade will be performed from version %s."), pszInstalledVersion);
 					kpszInstallFlags = _T("/fvomus");
 					if (m_kpszMsiUpgradeFlags)
 						kpszInstallFlags = m_kpszMsiUpgradeFlags;
+					break;
+				case 2:
+					g_Log.Write(_T("Existing version %s will first be uninstalled (Product code %s)."), pszInstalledVersion, m_kpszMsiProductCode);
+					{ // Start block so we can declare local variable inside case.
+					StatusTextSnapshot statusSnapshot;
+					_TCHAR * pszMsg = new_sprintf(_T("Removing previous FieldWorks version (%s)."), pszInstalledVersion);
+					nResult = Uninstall(m_kpszMsiProductCode, pszMsg);
+					delete[] pszMsg;
+					statusSnapshot.Repost();
+					}
+					if (nResult == 0)
+						g_Log.Write(_T("Uninstall succeeded."));
+					else
+					{
+						g_Log.Write(_T("Uninstall failed with error code %d."), nResult);
+						delete[] pszInstalledVersion;
+						pszInstalledVersion = NULL;
+						return nResult;
+					}
+					break;
 				}
+				delete[] pszInstalledVersion;
+				pszInstalledVersion = NULL;
 			}
 			// Run msiexec:
 			_TCHAR * pszMsiExec = new_sprintf(_T("MsiExec.exe %s \"%s\" %s"), kpszInstallFlags,
@@ -1175,7 +1205,7 @@ public:
 	virtual bool TestPresence(int iProduct, const _TCHAR * pszMinVersion = NULL,
 		const _TCHAR * pszMaxVersion = NULL);
 	virtual bool IsMsiUpgradePermitted(int iProduct) const;
-	virtual int CompareMsiVersionWithInstalled(int iProduct) const;
+	virtual int CompareMsiVersionWithInstalled(int iProduct, _TCHAR ** ppszInstalledVersion = NULL) const;
 	virtual const _TCHAR * GetName(int iProduct) const;
 	virtual const _TCHAR * GetCommentary(int iProduct) const;
 	virtual const _TCHAR * GetStatusWindowControl(int iProduct) const;
@@ -1427,10 +1457,10 @@ bool ProductManager_t::IsMsiUpgradePermitted(int iProduct) const
 	return (Products[iProduct].m_kpszMsiUpgradeTo != NULL);
 }
 
-int ProductManager_t::CompareMsiVersionWithInstalled(int iProduct) const
+int ProductManager_t::CompareMsiVersionWithInstalled(int iProduct, _TCHAR ** ppszInstalledVersion) const
 {
 	CheckProductIndex(iProduct);
-	return Products[iProduct].CompareMsiVersionWithInstalled();
+	return Products[iProduct].CompareMsiVersionWithInstalled(ppszInstalledVersion);
 }
 
 // Get the formal name of the given product.

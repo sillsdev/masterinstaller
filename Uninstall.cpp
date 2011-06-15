@@ -22,11 +22,14 @@ int Uninstall(const TCHAR * pszProductCode, const TCHAR * pszStatus)
 	}
 	if (fInstalled)
 	{
-		// Display status message, and write progress to log file:
-		ShowStatusDialog();
-		g_Log.Write(DisplayStatusText(0, pszStatus));
-		g_Log.Write(DisplayStatusText(1, _T("This may take a few minutes.")));
-		g_Log.Write(DisplayStatusText(2, _T("")));
+		if (pszStatus)
+		{
+			// Display status message, and write progress to log file:
+			ShowStatusDialog();
+			g_Log.Write(DisplayStatusText(0, pszStatus));
+			g_Log.Write(DisplayStatusText(1, _T("This may take a few minutes.")));
+			g_Log.Write(DisplayStatusText(2, _T("")));
+		}
 
 		// Remove the installation:
 		if (pszUninstallWarning)

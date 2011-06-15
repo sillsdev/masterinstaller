@@ -540,9 +540,34 @@ INT_PTR CALLBACK DlgProcEarlierFwDetected(HWND hwnd, UINT msg, WPARAM wParam, LP
 	return 1; // This means we have processed the message.
 }
 
+#include "InitEC.cpp"
+
 int Fw7PostInstall(SoftwareProduct * Product)
 {
 	InitMshtml();
+
+	// For FieldWorks 7.0.x, we still need to initialize the Encoding Converters by
+	// running EncConvertersAppDataMover30.exe. This was erroneously omitted through
+	// version 7.0.3.
+	g_Log.Write(_T("Contemplating running EncConvertersAppDataMover30.exe: Testing for FW 7.0.x..."));
+	if (Product)
+	{
+		if (_tcsicmp(Product->m_kpszMsiProductCode, _T("{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}")) == 0)
+		{
+			g_Log.Write(_T("Identified FW7 GUID."));
+			if (VersionInRange(Product->m_kpszMsiUpgradeTo, _T("7.0.4"), _T("7.0.32767")))
+			{
+				g_Log.Write(_T("MsiUpgradeTo version is %s, so we will try to launch EncConvertersAppDataMover30.exe"), Product->m_kpszMsiUpgradeTo);
+				InitEC();
+			}
+			else
+				g_Log.Write(_T("MsiUpgradeTo version is %s, so not part of 7.0.x."), Product->m_kpszMsiUpgradeTo);
+		}
+		else
+			g_Log.Write(_T("Product GUID is not from FW7."));
+	}
+	else
+		g_Log.Write(_T("Product is NULL."));
 
 	g_Log.Write(_T("About to run data migration utility..."));
 

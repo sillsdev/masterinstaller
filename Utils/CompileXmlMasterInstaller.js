@@ -12,7 +12,7 @@ if (WScript.Arguments.Length < 1)
 
 var XmlFileName = "";
 var EasterEggs = false;
-var CertificatePassword = "";
+var CertificatePassword = null;
 
 for (i = 0; i < WScript.Arguments.Length; i++)
 {
@@ -120,7 +120,11 @@ do
 } while (ret == 31)
 
 // Attempt to sign the .exe file:
-var Cmd = '"' + fso.BuildPath(UtilsPath, "SignMaster.exe") + '" "' + SetupExePath + '" -d "SIL Software Installer" -p "' + CertificatePassword + '"';
+var Cmd;
+if (CertificatePassword == null)
+	Cmd = '"' + fso.BuildPath(UtilsPath, "SignMaster.exe") + '" "' + SetupExePath + '" -d "SIL Software Installer"';
+else
+	Cmd = '"' + fso.BuildPath(UtilsPath, "SignMaster.exe") + '" "' + SetupExePath + '" -d "SIL Software Installer" -p "' + CertificatePassword + '"';
 shellObj.Run(Cmd, 1, true);
 
 // Remove junk from the NewCompilationFolder:			

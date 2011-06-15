@@ -35,6 +35,18 @@ struct ReportPackage_t
 		fCanToggleShortAndFull(false), prgiProducts(NULL) { }
 };
 
+class StatusTextSnapshot
+{
+protected:
+	_TCHAR * m_pszText[3];
+	_TCHAR * GetText(int i);
+
+public:
+	StatusTextSnapshot();
+	~StatusTextSnapshot();
+	void Repost();
+};
+
 INT_PTR CALLBACK DlgProcDisplayReport(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK DlgProcRebootCountdown(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);

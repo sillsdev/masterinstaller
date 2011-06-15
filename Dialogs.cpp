@@ -583,28 +583,26 @@ INT_PTR CALLBACK DlgProcMainProductSelect(HWND hwnd, UINT msg, WPARAM wParam, LP
 					// See if product has been installed before:
 					if (pProductManager->IsMsiUpgradePermitted(iProduct))
 					{
-						switch (pProductManager->CompareMsiVersionWithInstalled(iProduct))
+						_TCHAR * pszInstalledVersion = NULL;
+						switch (pProductManager->CompareMsiVersionWithInstalled(iProduct, &pszInstalledVersion))
 						{
 						case -1:
-							new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
-								FetchString(IDC_MESSAGE_DOWNGRADE_DANGER));
+							new_sprintf_concat(pszCheckBox, 0, FetchString(IDC_MESSAGE_DOWNGRADE_DANGER), pszInstalledVersion);
 							fOnlyVisible = true;
 							break;
 						case 0:
-							new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
-								FetchString(IDC_MESSAGE_ALREADY_INSTALLED));
+							new_sprintf_concat(pszCheckBox, 0, FetchString(IDC_MESSAGE_ALREADY_INSTALLED));
 							fFoundInstalledProduct = true;
 							break;
 						case 1:
-							new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
-								FetchString(IDC_MESSAGE_UPGRADE_READY));
+							new_sprintf_concat(pszCheckBox, 0, FetchString(IDC_MESSAGE_UPGRADE_READY), pszInstalledVersion);
 							break;
 						case 2:
-							new_sprintf_concat(pszCheckBox, 0, _T(" %s"),
-								FetchString(IDC_MESSAGE_UPGRADE_TOO_LATE));
-							fOnlyVisible = true;
+							new_sprintf_concat(pszCheckBox, 0, FetchString(IDC_MESSAGE_UPGRADE_TOO_LATE), pszInstalledVersion);
 							break;
 						}
+						delete[] pszInstalledVersion;
+						pszInstalledVersion = NULL;
 					}
 					else if (pProductManager->PossibleToTestPresence(iProduct))
 					{
@@ -1186,8 +1184,31 @@ BOOL my_OpenClipboard(bool * fCloseStatusDialog)
 	return OpenClipboard(hwndStatusDialog);
 }
 
+_TCHAR * StatusTextSnapshot::GetText(int i)
+{
+	_TCHAR pszBuf[1024];
+	SendDlgItemMessage(hwndStatusDialog, ridStatusText[i], WM_GETTEXT, 1024, (LPARAM)pszBuf);
+	return my_strdup(pszBuf);
+}
+
+StatusTextSnapshot::StatusTextSnapshot()
+{
+	for (int i = 0; i < 3; i++)
+		m_pszText[i] = GetText(i);
+}
+StatusTextSnapshot::~StatusTextSnapshot()
+{
+	for (int i = 0; i < 3; i++)
+		delete[] m_pszText[i];
+}
+void StatusTextSnapshot::Repost()
+{
+	for (int i = 0; i < 3; i++)
+		DisplayStatusText(i, m_pszText[i]);
+}
+
 // Put formatted message into the status dialog at the given position.
-// Caller must NOT delete[] return value.
+// Caller must NOT delete[] return value, which is the formatted message.
 const _TCHAR * DisplayStatusText(int iPosition, const _TCHAR * pszText, ...)
 {
 	if (iPosition < 0 || iPosition >= s_kctStatusText)

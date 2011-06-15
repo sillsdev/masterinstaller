@@ -2,8 +2,6 @@
 
 #include <tchar.h>
 
-#include "InitEC.cpp"
-
 
 // Detect if there is a registry key signalling we are to run the KB908002 Fix, and
 // run it if so. Then remove the temporary Extensibility.dll file, if it exists.
@@ -99,8 +97,8 @@ int SetupInstalledConverters(SoftwareProduct * /*Product*/)
 
 		INSTALLSTATE state = INSTALLSTATE_UNKNOWN;
 
-		state = WindowsInstaller.MsiQueryFeatureState(
-			_T("{DC07DA97-25EB-4B1C-8B1B-190E3FBDB00A}"), pszEcFeatures[i]);
+		state = MsiQueryFeatureState(
+			_T("{F28612B2-B73F-4561-9B9F-1DA1F538020B}"), pszEcFeatures[i]);
 
 		switch (state)
 		{
@@ -125,7 +123,7 @@ int SetupInstalledConverters(SoftwareProduct * /*Product*/)
 	g_Log.Write(_T("Looking for path of SetupSC.exe."));
 
 	_TCHAR * pszPath = NewRegString(HKEY_LOCAL_MACHINE,
-		_T("SOFTWARE\\SIL\\SilEncConverters31\\Installer"), _T("InstallerPath"));
+		_T("SOFTWARE\\SIL\\SilEncConverters40\\Installer"), _T("InstallerPath"));
 
 	if (!pszPath)
 	{
@@ -139,11 +137,12 @@ int SetupInstalledConverters(SoftwareProduct * /*Product*/)
 	DisplayStatusText(0, _T("Installing converters to repository"));
 	DisplayStatusText(1, _T("Please follow instructions in dialog"));
 
-	TCHAR * pszSetupSC = MakePath(pszPath, _T("SetupSC.exe"));
-	DWORD dwExitCode = ExecCmd(pszSetupSC, NULL, true);
+	g_Log.Write(_T("Found ", pszPath));
 
-	delete[] pszSetupSC;
-	pszSetupSC = NULL;
+	DWORD dwExitCode = ExecCmd(pszPath, NULL, true);
+
+	delete[] pszPath;
+	pszPath = NULL;
 
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done."));
@@ -154,7 +153,6 @@ int SetupInstalledConverters(SoftwareProduct * /*Product*/)
 // Call RunKB908002Fix and SetupInstalledConverters
 int EncodingConvertersPostInstall(SoftwareProduct * Product)
 {
-	InitEC();
 	RunKB908002Fix();
 	return SetupInstalledConverters(Product);
 }

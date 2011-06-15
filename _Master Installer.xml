@@ -31,8 +31,8 @@
 	<Products>
 		<Product>
 			<AutoConfigure>
-				<Title>FW BTE 7.0.3 (from \\cana\LSDev\Installers\FW7.0.3\BTE\FieldWorks)</Title>
-				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0.3\BTE\FieldWorks\SetupFW.msi</Source>
+				<Title>FW BTE 7.1.0 (from \\cana\LSDev\Installers\FW7.1.0\BTE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.1.0\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
@@ -41,12 +41,12 @@
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 7.0.3 BTE</Title>
-			<Tag>FW703BTE</Tag>
+			<Title>SIL FieldWorks 7.1.0 BTE</Title>
+			<Tag>FW710BTE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.0.1" MsiUpgradeTo="7.0.3"/>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.1.0" MsiUpgradeTo="7.1.0"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
@@ -63,8 +63,8 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW SE 7.0.3 (from \\cana\LSDev\Installers\FW7.0.3\SE\FieldWorks)</Title>
-				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0.3\SE\FieldWorks\SetupFW_SE.msi</Source>
+				<Title>FW SE 7.1.0 (from \\cana\LSDev\Installers\FW7.1.0\SE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.1.0\SE\FieldWorks\SetupFW_SE.msi</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
@@ -72,12 +72,75 @@
 				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 7.0.3 SE</Title>
-			<Tag>FW703SE</Tag>
+			<Title>SIL FieldWorks 7.1.0 SE</Title>
+			<Tag>FW710SE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW_SE.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.0.1" MsiUpgradeTo="7.0.3"/>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.1.0" MsiUpgradeTo="7.1.0"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
+			<Preinstall>RemovePreviousFW7s</Preinstall>
+			<PostInstall IncludeResourceFile="true">Fw7PostInstall</PostInstall>
+			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>FW BTE 7.0.4 (from \\cana\LSDev\Installers\FW7.0.4\BTE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0.4\BTE\FieldWorks\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 7.0.4 BTE</Title>
+			<Tag>FW704BTE</Tag>
+			<MinOS>5.1.2</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.0.1" MsiUpgradeTo="7.0.4"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
+			<Preinstall>RemovePreviousFW7s</Preinstall>
+			<PostInstall IncludeResourceFile="true">Fw7PostInstall</PostInstall>
+			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>FW SE 7.0.4 (from \\cana\LSDev\Installers\FW7.0.4\SE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0.4\SE\FieldWorks\SetupFW_SE.msi</Source>
+				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks without TE\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 7.0.4 SE</Title>
+			<Tag>FW704SE</Tag>
+			<MinOS>5.1.2</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW_SE.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.0.1" MsiUpgradeTo="7.0.4"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
@@ -1107,17 +1170,17 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Encoding Converters 3.1 Web Installer</Title>
+				<Title>Encoding Converters 4.0 Web Installer</Title>
 			</AutoConfigure>
-			<Title>SIL Converters and Repository 3.1</Title>
-			<Tag>EncCvtrs_3_1_Web</Tag>
+			<Title>SIL Converters and Repository 4.0</Title>
+			<Tag>EncCvtrs_4_0_Web</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>http://downloads.sil.org/EncodingConverters/3.1/WebSetupEC.msi</CriticalFile>
+			<CriticalFile>http://downloads.sil.org/EncodingConverters/4.0/WebSetupEC.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 8000</StatusWindow>
-			<ProductCode>{DC07DA97-25EB-4B1C-8B1B-190E3FBDB00A}</ProductCode>
+			<ProductCode>{F28612B2-B73F-4561-9B9F-1DA1F538020B}</ProductCode>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
@@ -1129,15 +1192,15 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>Encoding Converters 3.1 CD Installer (from \\cana\LSDev\Installers\FW6.0\SEC3.1\SIL Converters)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0\SEC3.1\SIL Converters\SetupEC.msi</Source>
+				<Title>Encoding Converters 4.0 CD Installer (from \\cana\LSDev\Installers\FW.ww\SEC4.0\SIL Converters)</Title>
+				<Source>\\cana\LSDev\Installers\FW.ww\SEC4.0\SIL Converters\SetupEC.msi</Source>
 				<Source>Documents\Encoding Converters\SetupEC.rtf</Source>
 				<Source>Documents\Encoding Converters\Help for SIL Converters.pdf</Source>
 				<Source>Documents\Encoding Converters\SILConverters Installation Help.pdf</Source>
 				<Destination>SIL Converters</Destination>
 			</AutoConfigure>
-			<Title>SIL Converters and Repository 3.1</Title>
-			<Tag>EncCvtrs_3_1</Tag>
+			<Title>SIL Converters and Repository 4.0</Title>
+			<Tag>EncCvtrs_4_0</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<Help>SIL Converters\SetupEC.rtf</Help>
@@ -1145,7 +1208,7 @@
 			<CriticalFile>SIL Converters\SetupEC.msi</CriticalFile>
 			<Install MsiFlags="MASTER_INSTALLER=1"/>
 			<StatusWindow>Monitor 5000</StatusWindow>
-			<ProductCode>{DC07DA97-25EB-4B1C-8B1B-190E3FBDB00A}</ProductCode>
+			<ProductCode>{F28612B2-B73F-4561-9B9F-1DA1F538020B}</ProductCode>
 			<Commentary>Please follow instructions in installer.</Commentary>
 			<PostInstall>EncodingConvertersPostInstall</PostInstall>
 			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1ALT" MinVersion="2.0"/>

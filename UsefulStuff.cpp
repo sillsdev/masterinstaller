@@ -73,6 +73,8 @@ DWORD ExecCmd(LPCTSTR pszCmd, const _TCHAR * pszCurrentDir, bool fWaitTillExit,
 	siBlank.cb = sizeof(siBlank);
 	STARTUPINFO * psiInUse = pStartupInfo ? pStartupInfo : &siBlank;
 
+	g_Log.Write(_T("Launching process: %s"), pszCmd);
+
 	// Launch new process. The CREATE_SEPARATE_WOW_VDM should be ignored for 32-bit programs,
 	// and also when running on Windows 98, but it is essential for 16-bit programs running on
 	// Windows 2000 or later, else we cannot easily monitor when termination occurs:

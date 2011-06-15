@@ -15,7 +15,7 @@ public:
 	virtual bool TestPresence(int iProduct, const _TCHAR * pszMinVersion = NULL,
 		const _TCHAR * pszMaxVersion = NULL) = 0;
 	virtual bool IsMsiUpgradePermitted(int iProduct) const = 0;
-	virtual int CompareMsiVersionWithInstalled(int iProduct) const = 0;
+	virtual int CompareMsiVersionWithInstalled(int iProduct, _TCHAR ** ppszInstalledVersion = NULL) const = 0;
 	virtual const _TCHAR * GetName(int iProduct) const = 0;
 	virtual const _TCHAR * GetCommentary(int iProduct) const = 0;
 	virtual const _TCHAR * GetStatusWindowControl(int iProduct) const = 0;

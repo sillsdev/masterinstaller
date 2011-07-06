@@ -94,8 +94,8 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW BTE 7.0.4 (from \\cana\LSDev\Installers\FW7.0.4\BTE\FieldWorks)</Title>
-				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0.4\BTE\FieldWorks\SetupFW.msi</Source>
+				<Title>FW BTE 7.0.5 (from \\cana\LSDev\Installers\FW7.0.5\BTE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0.5\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
@@ -104,12 +104,12 @@
 				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 7.0.4 BTE</Title>
-			<Tag>FW704BTE</Tag>
+			<Title>SIL FieldWorks 7.0.5 BTE</Title>
+			<Tag>FW705BTE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.0.1" MsiUpgradeTo="7.0.4"/>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.0.1" MsiUpgradeTo="7.0.5"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
@@ -126,8 +126,8 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW SE 7.0.4 (from \\cana\LSDev\Installers\FW7.0.4\SE\FieldWorks)</Title>
-				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0.4\SE\FieldWorks\SetupFW_SE.msi</Source>
+				<Title>FW SE 7.0.5 (from \\cana\LSDev\Installers\FW7.0.5\SE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0.5\SE\FieldWorks\SetupFW_SE.msi</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
@@ -135,12 +135,12 @@
 				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 7.0.4 SE</Title>
-			<Tag>FW704SE</Tag>
+			<Title>SIL FieldWorks 7.0.5 SE</Title>
+			<Tag>FW705SE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW_SE.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.0.1" MsiUpgradeTo="7.0.4"/>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.0.1" MsiUpgradeTo="7.0.5"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>

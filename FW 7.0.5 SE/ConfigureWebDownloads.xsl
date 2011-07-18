@@ -3,8 +3,9 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns:dt="urn:schemas-microsoft-com:datatypes">
-	<xsl:output method="html" />
+	<xsl:output method="html" doctype-system="" indent="yes"/>
 
+	
 	<!-- =============================================== -->
 	<!-- Root Template                                   -->
 	<!-- =============================================== -->
@@ -69,11 +70,10 @@
 					<input id="BuildSfx" type="checkbox" title="Create self extracting 7-zip archive .exe file for each flavor." onclick="showPage('FwSfx', this.checked);"/>Build self-extracting download package for each flavor
 					<script type="text/javascript">document.getElementById("BuildSfx").checked=true;</script>
 					<span id="FwSfx" style="position:absolute; visibility:hidden">
-						<select name="SfxStyle">
+						<select id="SfxStyle">
 							<option value="Standard">[No user options; delete archive after setup]</option>
 							<option value="UseFwSfx">[FieldWorks: User chooses destination, archive remains after setup]</option>
 						</select>
-						<script type="text/javascript">SelectSfxStyle();</script>
 					</span>
 					<br/>
 					<input id="SaveSettings" type="checkbox" title="Save AutoBuildDownloadPackages.js containing code to automatically fill in same settings in subequent re-runs."/>Remember settings<br/>
@@ -160,7 +160,7 @@
 		<script type="text/javascript">
 			<![CDATA[
   <!--
-// This is line 6
+// This is line 7
 var Initializing = true;
 var UserPressedNextWhileInitializing = false;
 var NumProducts;
@@ -176,6 +176,12 @@ var NumFlavors = 1;
 
 var fso = new ActiveXObject("Scripting.FileSystemObject");	
 var shellObj = new ActiveXObject("WScript.Shell");
+
+var MasterXmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
+MasterXmlDoc.async = false;
+MasterXmlDoc.load(document.URL);
+if (MasterXmlDoc.parseError.errorCode != 0)
+	alert("Error - XML file is invalid:\n" + MasterXmlDoc.parseError.reason + "\non line " + MasterXmlDoc.parseError.line + " at position " + MasterXmlDoc.parseError.linepos);
 
 var MasterInstallerPath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
 var ProductsPath = shellObj.ExpandEnvironmentStrings("%PACKAGE_PRODUCTS%");
@@ -228,13 +234,14 @@ function Initialize()
 {
 	try
 	{
+		SelectSfxStyle();
 		NextButton = document.getElementById('NextButton');
 		PrevButton = document.getElementById('PrevButton');
 		showPage("BlockedContentWarning", false);
 		showPage("Stage1", true);
 
 		// Do a test for legacy data that specified a full path to the background bitmap:
-		var bmp = document.XMLDocument.selectSingleNode("/MasterInstaller/General/ListBackground").text;
+		var bmp = MasterXmlDoc.selectSingleNode("/MasterInstaller/General/ListBackground").text;
 		if (bmp.indexOf("\\") >= 0)
 		{
 				if (!fso.FileExists(bmp))
@@ -245,7 +252,7 @@ function Initialize()
 				}
 		}
 
-		var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+		var ProductNodeList = MasterXmlDoc.selectNodes('/MasterInstaller/Products/Product');
 		NumProducts = ProductNodeList.length;
 		FileTotal = 0;
 
@@ -463,7 +470,7 @@ function SelectSfxStyle()
 {
 	var StyleList = document.getElementById("SfxStyle");
 	StyleList.options[0].selected = true; // Just in case we can't find a better option to select.
-	var InstallerTitle = document.XMLDocument.selectSingleNode('/MasterInstaller/General/Title');
+	var InstallerTitle = MasterXmlDoc.selectSingleNode('/MasterInstaller/General/Title');
 	if (InstallerTitle != null)
 		if (InstallerTitle.text.indexOf("FieldWorks") != -1)
 			StyleList.options[1].selected = true;
@@ -582,7 +589,7 @@ function Go()
 
 		for (flavor = 1; flavor <= NumFlavors; flavor++)
 		{
-			var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+			var ProductNodeList = MasterXmlDoc.selectNodes('/MasterInstaller/Products/Product');
 			for (iProduct = 0; iProduct < ProductNodeList.length; iProduct++)
 			{
 				var IncludedCheckBox = document.getElementById("IncludedF" + flavor + "P" + (iProduct + 1));
@@ -645,7 +652,7 @@ function Go()
 					AddCommentary(1, "Writing XML file...");
 					var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
 					xmlDoc.async = false;
-					document.XMLDocument.save(xmlDoc);
+					MasterXmlDoc.save(xmlDoc);
 					if (xmlDoc.parseError.errorCode != 0)
 					{
 						AddCommentary(0, "Error - copied XML file is invalid:\n" + xmlDoc.parseError.reason + "\non line " + xmlDoc.parseError.line + " at position " + xmlDoc.parseError.linepos);
@@ -842,7 +849,7 @@ function AdjustMasterInstaller(xmlDoc, flavor)
 				// See if there is a new Destination folder specified.
 				// This swap must be done in the original XML structure, as that is
 				// where the destination is read from when files are copied:
-				var OrigProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+				var OrigProductNodeList = MasterXmlDoc.selectNodes('/MasterInstaller/Products/Product');
 				var OrigAutoConfigureNode = OrigProductNodeList[iProduct].selectSingleNode('AutoConfigure');
 				var NewDestinationNode = OrigAutoConfigureNode.selectSingleNode('WhenLocked/Destination');
 				if (NewDestinationNode)

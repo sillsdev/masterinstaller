@@ -158,7 +158,7 @@
 		<Product>
 			<AutoConfigure>
 				<Title>FW 6.0.6 BTE with movies (from \\cana\LSDev\Installers\FW6.0.6\BTE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.6\BTE\FieldWorks\SetupFW.msi</Source>
+				<Source SignAs="SIL FieldWorks 6 Installer">\\cana\LSDev\Installers\FW6.0.6\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>\\cana\LSDev\Installers\FW6.0.6\BTE\FieldWorks\TE_M.cab</Source>
 				<Source>\\cana\LSDev\Installers\FW6.0.6\BTE\FieldWorks\Flex_M.cab</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
@@ -235,7 +235,7 @@
 		<Product>
 			<AutoConfigure>
 				<Title>FW 6.0.6 SE with movies (from \\cana\LSDev\Installers\FW6.0.6\SE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.6\SE\FieldWorks\SetupFW.msi</Source>
+				<Source SignAs="SIL FieldWorks 6 Installer">\\cana\LSDev\Installers\FW6.0.6\SE\FieldWorks\SetupFW.msi</Source>
 				<Source>\\cana\LSDev\Installers\FW6.0.6\SE\FieldWorks\Flex_M.cab</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
@@ -301,7 +301,7 @@
 		<Product>
 			<AutoConfigure>
 				<Title>FW 6.0.6 BTE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW6.0.6\BTE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.6\BTE\FieldWorks\SetupFW.msi</Source>
+				<Source SignAs="SIL FieldWorks 6 Installer">\\cana\LSDev\Installers\FW6.0.6\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -376,7 +376,7 @@
 		<Product>
 			<AutoConfigure>
 				<Title>FW 6.0.6 SE WITHOUT MOVIES (from \\cana\LSDev\Installers\FW6.0.6\SE\FieldWorks)</Title>
-				<Source>\\cana\LSDev\Installers\FW6.0.6\SE\FieldWorks\SetupFW.msi</Source>
+				<Source SignAs="SIL FieldWorks 6 Installer">\\cana\LSDev\Installers\FW6.0.6\SE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\DNReadMe.rtf</Source>
 				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
@@ -441,7 +441,7 @@
 		<Product>
 			<AutoConfigure>
 				<Title>WorldPad 3.0 (from FW 6.0.4 at \\cana\lsdev\Installers\WorldPad_Maint\SetupWP.msi)</Title>
-				<Source>\\cana\lsdev\Installers\WorldPad_Maint\SetupWP.msi</Source>
+				<Source SignAs="SIL FieldWorks WorldPad 3 Installer">\\cana\lsdev\Installers\WorldPad_Maint\SetupWP.msi</Source>
 				<!--<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>-->
 				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
 				<Source>Documents\FieldWorks without TE\TechSupport.txt</Source>

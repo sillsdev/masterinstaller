@@ -3,7 +3,7 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns:dt="urn:schemas-microsoft-com:datatypes">
-	<xsl:output method="html" />
+	<xsl:output method="html" doctype-system="" indent="yes"/>
 
 	<!-- =============================================== -->
 	<!-- Root Template                                   -->
@@ -286,7 +286,7 @@
 						<tr>
 							<td align="right">Main color:</td>
 							<td>
-								<select name="ListBackground">
+								<select id="ListBackground">
 									<option value="None">Blank</option>
 									<option value="Green">Green (Redistributable – no caution needed)</option>
 									<option value="Yellow">Yellow (Redistributable - caution Bible Translation Edition)</option>
@@ -296,17 +296,15 @@
 									<option value="White">White</option>
 								</select>
 							</td>
-							<script type="text/javascript">SelectBackgroundColor();</script>
 						</tr>
 						<tr>
 							<td align="right">Bitmap file:</td>
 							<td>
-								<select name="ListBackgroundBmp" onchange="InvalidateCompiledFiles();">
+								<select id="ListBackgroundBmp" onchange="InvalidateCompiledFiles();">
 									<option value="None">None</option>
 								</select>
 								&#160;<button id="RefreshBitmapList" title="Scan above folder for bitmap files." onclick="RefreshBitmapList();">Refresh List</button>
 							</td>
-							<script type="text/javascript">RefreshBitmapList();</script>
 						</tr>
 						<tr>
 							<td align="right">X-offset:</td>
@@ -380,7 +378,7 @@
 						<tr>
 							<td align="right">Alignment:</td>
 							<td>
-								<select name="InitialTextAlignment">
+								<select id="InitialTextAlignment">
 									<option value="InitialTextLeftEdge">Left</option>
 									<option value="InitialTextButtons">Buttons</option>
 									<option value="InitialTextCheckBoxes">Checkboxes</option>
@@ -714,12 +712,18 @@ This template is used as a recursive function to search and replace
 		<script type="text/javascript">
 			<![CDATA[
   <!--
-// This is line 6
+// This is line 7
 var Initializing = true;
 var UserPressedNextWhileInitializing = false;
 
 var fso = new ActiveXObject("Scripting.FileSystemObject");
 var shellObj = new ActiveXObject("WScript.Shell");
+
+var MasterXmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
+MasterXmlDoc.async = false;
+MasterXmlDoc.load(document.URL);
+if (MasterXmlDoc.parseError.errorCode != 0)
+	alert("Error - XML file is invalid:\n" + MasterXmlDoc.parseError.reason + "\non line " + MasterXmlDoc.parseError.line + " at position " + MasterXmlDoc.parseError.linepos);
 
 var CppFilePath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
 var ProductsPath = shellObj.ExpandEnvironmentStrings("%PACKAGE_PRODUCTS%");
@@ -764,12 +768,15 @@ function Initialize()
 {
 	try
 	{
+		SelectBackgroundColor();
+		RefreshBitmapList();
+		
     NextButton = document.getElementById('NextButton');
 		PrevButton = document.getElementById('PrevButton');
 		showPage("BlockedContentWarning", false);
 		showPage("Stage1", true);
     
-		var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+		var ProductNodeList = MasterXmlDoc.selectNodes('/MasterInstaller/Products/Product');
 		NumProducts = ProductNodeList.length;
 
     InitSourceFileLists(); // Must come after assigning NumProducts
@@ -1217,7 +1224,7 @@ function RefreshBitmapList()
 	document.getElementById("ListBackgroundBmp").options[0].text = "None";
 	var count = 1;
 	var fSelected = false;
-	var OriginalFile = document.XMLDocument.selectSingleNode("/MasterInstaller/General/ListBackground").text;
+	var OriginalFile = MasterXmlDoc.selectSingleNode("/MasterInstaller/General/ListBackground").text;
 	for (; !fc.atEnd(); fc.moveNext())
 	{
 		var File = fc.item();
@@ -1246,7 +1253,7 @@ function RefreshBitmapList()
 // Selects the background color item in the combo box that matches existing Red, Green and Blue values.
 function SelectBackgroundColor()
 {
-	var BackgroundNode = document.XMLDocument.selectSingleNode("/MasterInstaller/General/ListBackground");
+	var BackgroundNode = MasterXmlDoc.selectSingleNode("/MasterInstaller/General/ListBackground");
 	if (!BackgroundNode)
 		return;
 		
@@ -1310,7 +1317,7 @@ function FindDuplicateSets()
 {
 	DuplicateSets = new Array();
 	NumDuplicateSets = 0;
-	var ProductList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+	var ProductList = MasterXmlDoc.selectNodes('/MasterInstaller/Products/Product');
 	for (iProd = 0; iProd < NumProducts; iProd++)
 	{
 		if (DuplicateSets[iProd] == null)
@@ -1332,7 +1339,7 @@ function FindDuplicateSets()
 // Fills in the Duplicate Sets table.
 function FillDuplicateSetTable()
 {
-	var ProductList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+	var ProductList = MasterXmlDoc.selectNodes('/MasterInstaller/Products/Product');
 	
 	for (iSet = 0; iSet < NumDuplicateSets; iSet++)
 	{
@@ -1431,7 +1438,7 @@ function CalcNeededProducts()
 // Works out which other products are needed by the given product.
 function AddDependenciesOfProduct(iProduct)
 {
-	var ProductNode = document.XMLDocument.selectSingleNode('/MasterInstaller/Products/Product[' + iProduct + ']');
+	var ProductNode = MasterXmlDoc.selectSingleNode('/MasterInstaller/Products/Product[' + iProduct + ']');
 	AddDependenciesOfProductNode(ProductNode);
 
 	// Check for features:
@@ -1473,7 +1480,7 @@ function FindAndAddDependentProducts(List)
 function FindProductsByTag(Tag, StopAfterFirstMatch)
 {
 	var Indexes = new Array();
-	var ProductList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+	var ProductList = MasterXmlDoc.selectNodes('/MasterInstaller/Products/Product');
 	for (i = 0; i < NumProducts; i++)
 	{
 		var ProductNode = ProductList[i];
@@ -1874,7 +1881,7 @@ function GenerateSourceFileList(iProduct)
 	var AllOk = true;
 	try
 	{
-		var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+		var ProductNodeList = MasterXmlDoc.selectNodes('/MasterInstaller/Products/Product');
 		var ProductNode = ProductNodeList[iProduct];
 		var ProductSourceList = ProductNode.selectNodes('AutoConfigure/Source');
 		for (iSource = 0; iSource < ProductSourceList.length; iSource++)
@@ -2249,7 +2256,7 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fCreateI
 			AddCommentary(1, "Creating copy of XML file", false);
 		var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
 		xmlDoc.async = false;
-		document.XMLDocument.save(xmlDoc);
+		MasterXmlDoc.save(xmlDoc);
 		if (xmlDoc.parseError.errorCode != 0)
 		{
 			if (fDisplayCommentary)
@@ -2487,7 +2494,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 	var HelpsCpp = fso.OpenTextFile(fso.BuildPath(CppFilePath, "Helps.cpp"), 2, true);
 
 	// Set up some objects to be used inside loop:
-	var ProductList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+	var ProductList = MasterXmlDoc.selectNodes('/MasterInstaller/Products/Product');
 	var NewProductNodeList = xmlDoc.selectNodes('/MasterInstaller/Products/Product');
 
 	// Determine how we are to handle relative paths:
@@ -2815,7 +2822,7 @@ function ApplyUserSettings(xmlDoc)
 					// See if there is a new Destination folder specified.
 					// This swap must be done in the original XML structure, as that is
 					// where the destination is read from when files are copied:
-					var OrigProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+					var OrigProductNodeList = MasterXmlDoc.selectNodes('/MasterInstaller/Products/Product');
 					var OrigAutoConfigureNode = OrigProductNodeList[iProduct].selectSingleNode('AutoConfigure');
 					var NewDestinationNode = OrigAutoConfigureNode.selectSingleNode('WhenLocked/Destination');
 					if (NewDestinationNode)
@@ -2845,7 +2852,7 @@ function ApplyUserSettings(xmlDoc)
 
 	// Settings from Product Selection:
 	// Finally, remove nodes where product not needed. This means that the 
-	// new xmlDoc and the original document.XMLDocument will be out of sync from
+	// new xmlDoc and the original MasterXmlDoc will be out of sync from
 	// now on, in terms of product numbers etc.
 	var ProductNodeList = xmlDoc.selectNodes('/MasterInstaller/Products/Product');
 	for (i = 0; i < NumProducts; i++)
@@ -3077,7 +3084,7 @@ function GatherFiles(CdImagePath)
 				{
 					if (GetCdIndexOfProduct(iProduct) == iCd)
 					{
-						var ProductNodeList = document.XMLDocument.selectNodes('/MasterInstaller/Products/Product');
+						var ProductNodeList = MasterXmlDoc.selectNodes('/MasterInstaller/Products/Product');
 						var ProductNode = ProductNodeList[iProduct];
 						var ProductTitle = ProductNode.selectSingleNode("Title").text;
 						AddCommentary(1, "[" + Math.round((100 * TotalDone / TotalBytesToCopy)) + "%] Copying " + ProductTitle + " files", false);

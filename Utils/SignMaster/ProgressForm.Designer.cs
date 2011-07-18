@@ -39,13 +39,13 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.progressBar.Location = new System.Drawing.Point(12, 12);
 			this.progressBar.Name = "progressBar";
-			this.progressBar.Size = new System.Drawing.Size(324, 23);
+			this.progressBar.Size = new System.Drawing.Size(384, 23);
 			this.progressBar.TabIndex = 0;
 			// 
 			// btnProgressCancel
 			// 
 			this.btnProgressCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnProgressCancel.Location = new System.Drawing.Point(261, 176);
+			this.btnProgressCancel.Location = new System.Drawing.Point(321, 176);
 			this.btnProgressCancel.Name = "btnProgressCancel";
 			this.btnProgressCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnProgressCancel.TabIndex = 2;
@@ -64,7 +64,7 @@
 			this.progressText.Name = "progressText";
 			this.progressText.ReadOnly = true;
 			this.progressText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.progressText.Size = new System.Drawing.Size(324, 129);
+			this.progressText.Size = new System.Drawing.Size(384, 129);
 			this.progressText.TabIndex = 3;
 			this.progressText.WordWrap = false;
 			// 
@@ -72,12 +72,13 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(348, 211);
+			this.ClientSize = new System.Drawing.Size(408, 211);
 			this.Controls.Add(this.progressText);
 			this.Controls.Add(this.btnProgressCancel);
 			this.Controls.Add(this.progressBar);
 			this.Name = "ProgressForm";
-			this.Text = "ProgressForm";
+			this.ShowIcon = false;
+			this.Text = "Signing in progress...";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

@@ -5,7 +5,6 @@
   xmlns:dt="urn:schemas-microsoft-com:datatypes">
 	<xsl:output method="html" doctype-system="" indent="yes"/>
 
-	
 	<!-- =============================================== -->
 	<!-- Root Template                                   -->
 	<!-- =============================================== -->
@@ -402,7 +401,6 @@ function setPageNo(Stage)
 		case 1:
 			// If we're about to leave the Flavors Setup page, update the Flavor Configuration table:
 			UpdateFlavorConfigTable();
-			//RedrawFlavorConfigTable();
 			break;
 	}
 
@@ -511,13 +509,23 @@ function AddFlavor()
 
 function DeleteLastFlavor()
 {
-	NumFlavors--;
 	var Table = document.getElementById("FlavorTable");
 	Table.deleteRow(NumFlavors);
+	NumFlavors--;
 	if (NumFlavors <= 1)
 	{
 		var DeleteButton = document.getElementById("DeleteLastFlavor");
 		DeleteButton.disabled = true;
+	}
+
+	// Remove last column from the Flavor Config table, too:
+	Table = document.getElementById("FlavorConfigTable");
+	var HeaderRow = Table.rows(0);
+	NewCell = HeaderRow.deleteCell();
+	for (i=1; i < Table.rows.length; i++)
+	{
+		var Row = Table.rows(i);
+		Row.deleteCell();
 	}
 }
 
@@ -526,7 +534,7 @@ function UpdateFlavorConfigTable()
 {
 	var Table = document.getElementById("FlavorConfigTable");
 	var HeaderRow = Table.rows(0);
-	for (i=1; i < HeaderRow.cells.length; i++)
+	for (i=1; i <= NumFlavors; i++)
 	{
 		var CurrentFlavor = document.getElementById("FlavorName" + i).value;
 		HeaderRow.cells(i).innerHTML = "<b>" + CurrentFlavor + "</b>";
@@ -537,11 +545,6 @@ function UpdateFlavorConfigTable()
 				Element.title = 'Select to include, clear to omit "' + Table.rows(j).cells(0).innerText + '" from "' + CurrentFlavor + '"';
 		}
 	}
-}
-
-function RedrawFlavorConfigTable()
-{
-	var Table = document.getElementById("FlavorConfigTable");
 }
 
 // Responds to the user pressing the Go! button. Builds a CD image.

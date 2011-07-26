@@ -447,7 +447,7 @@ void MasterInstaller_t::Run()
 
 		int nResult = IDCANCEL;
 			
-		if (fShowFinalMessage)
+		if (fShowFinalMessage && !g_fSilent)
 			nResult = MessageBox(NULL, pszWksp, g_pszTitle, uType);
 		delete[] pszWksp;
 		pszWksp = NULL;

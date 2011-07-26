@@ -704,8 +704,9 @@ DWORD SoftwareProduct::RunInstaller()
 				pszInstalledVersion = NULL;
 			}
 			// Run msiexec:
-			_TCHAR * pszMsiExec = new_sprintf(_T("MsiExec.exe %s \"%s\" %s"), kpszInstallFlags,
-				GetCriticalFile(), m_kpszMsiFlags? m_kpszMsiFlags : _T(""));
+			_TCHAR * pszMsiExec = new_sprintf(_T("MsiExec.exe %s \"%s\" %s %s"), kpszInstallFlags,
+				GetCriticalFile(), m_kpszMsiFlags? m_kpszMsiFlags : _T(""),
+				g_fSilent? _T("/qb") : _T(""));
 
 			g_Log.Write(_T("About to run \"%s\""), pszMsiExec);
 

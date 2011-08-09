@@ -33,12 +33,12 @@
 			<AutoConfigure>
 				<Title>FW BTE 7.1.0 (from \\cana\LSDev\Installers\FW7.1.0\BTE\FieldWorks)</Title>
 				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.1.0\BTE\FieldWorks\SetupFW.msi</Source>
-				<Source>Documents\FieldWorks\RTFs\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\TEReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
-				<Source>Documents\FieldWorks\TechSupport.txt</Source>
-				<SetupHelp>Documents\FieldWorks\RTFs\SetupFW.rtf</SetupHelp>
+				<Source>Documents\FieldWorks 7.1\BTE\RTFs\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks 7.1\BTE\RTFs\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks 7.1\BTE\RTFs\TEReadMe.rtf</Source>
+				<Source>Documents\FieldWorks 7.1\BTE\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks 7.1\BTE\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks 7.1\BTE\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
 			<Title>SIL FieldWorks 7.1.0 BTE</Title>
@@ -65,11 +65,11 @@
 			<AutoConfigure>
 				<Title>FW SE 7.1.0 (from \\cana\LSDev\Installers\FW7.1.0\SE\FieldWorks)</Title>
 				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.1.0\SE\FieldWorks\SetupFW_SE.msi</Source>
-				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
-				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
-				<Source>Documents\FieldWorks without TE\TechSupport.txt</Source>
-				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
+				<Source>Documents\FieldWorks 7.1\SE unique\RTFs\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks 7.1\BTE\RTFs\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks 7.1\BTE\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks 7.1\SE unique\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks 7.1\SE unique\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
 			<Title>SIL FieldWorks 7.1.0 SE</Title>

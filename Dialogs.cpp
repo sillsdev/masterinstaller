@@ -1152,8 +1152,8 @@ void ShowStatusDialog()
 	DWORD nThreadId; // MSDN says you can pass NULL instead of this, but you can't on Win98.
 	HANDLE hThread = CreateThread(NULL, 0, StatusDlgThreadEntry, NULL, 0, &nThreadId);
 
-	// Wait upto 15 seconds or until window has a handle:
-	if (WaitForSingleObject(hCreateStatusDlg, 15000/*INFINITE*/) == WAIT_TIMEOUT)
+	// Wait upto 30 seconds or until window has a handle:
+	if (WaitForSingleObject(hCreateStatusDlg, 30000/*INFINITE*/) == WAIT_TIMEOUT)
 	{
 		StatusDialogCreateFailed();
 	}

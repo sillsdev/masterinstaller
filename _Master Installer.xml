@@ -220,6 +220,38 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>FW SE 7.0.6 WITH MOVIES (from \\cana\LSDev\Installers\FW7.0.6\SE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.0.6\SE\FieldWorks\SetupFW_SE.msi</Source>
+				<Source SignAs="SIL FieldWorks 7 Installer Cabinet">\\cana\LSDev\Installers\FW7.0.6\SE\FieldWorks\Flex_MSE.cab</Source>
+				<Source>Documents\FieldWorks without TE\RTFs\ReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\FLExReadMe.rtf</Source>
+				<Source>Documents\FieldWorks\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks without TE\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks without TE\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 7.0.6 SE</Title>
+			<Tag>FW706SE</Tag>
+			<MinOS>5.1.2</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW_SE.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.0.1" MsiUpgradeTo="7.0.6"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
+			<Preinstall>RemovePreviousFW7s</Preinstall>
+			<PostInstall IncludeResourceFile="true">Fw7PostInstall</PostInstall>
+			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>FW 6.0.6 BTE with movies (from \\cana\LSDev\Installers\FW6.0.6\BTE\FieldWorks)</Title>
 				<Source SignAs="SIL FieldWorks 6 Installer">\\cana\LSDev\Installers\FW6.0.6\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>\\cana\LSDev\Installers\FW6.0.6\BTE\FieldWorks\TE_M.cab</Source>

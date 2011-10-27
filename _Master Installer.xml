@@ -1572,6 +1572,24 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>Windows XP Service Pack 3</Title>
+				<Source>3rd Party\Win XP SP3</Source>
+				<Destination>Utilities\Win XP SP3</Destination>
+			</AutoConfigure>
+			<Title>Windows XP Service Pack 3</Title>
+			<Tag>Win XP SP3</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>$LANG$09$Utilities\Win XP SP3\WindowsXP-KB936929-SP3-x86-ENU.EXE</CriticalFile>
+			<Install>$CriticalFile$</Install>
+			<TestPresence Version="3">TestWinXpSpPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;id=24</DownloadURL>
+			<Commentary>Follow instructions in installer wizard.</Commentary>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<MustNotDelayReboot>true</MustNotDelayReboot>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>Windows Vista Service Pack 1</Title>
 				<Source>3rd Party\Win Vista SP1</Source>
 				<Destination>Utilities\Win Vista SP1</Destination>
@@ -1730,6 +1748,28 @@
 			<StatusWindow>Show</StatusWindow>
 			<FlushReboot>true</FlushReboot>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>.NET Framework 4.0</Title>
+				<Source>3rd Party\DotNet 4.0\dotNetFx40_Full_x86_x64.exe</Source>
+				<Destination>Utilities\DotNet 4.0</Destination>
+			</AutoConfigure>
+			<Title>Microsoft .NET Framework version 4.0</Title>
+			<Tag>.NET4.0</Tag>
+			<MustBeAdmin>true</MustBeAdmin>
+			<MinOS>5.1</MinOS>
+			<CriticalFile>Utilities\DotNet 4.0\dotNetFx40_Full_x86_x64.exe</CriticalFile>
+			<Install>$CriticalFile$ /q</Install>
+			<TestPresence Version="4.0">TestDotNetPresence</TestPresence>
+			<DownloadURL>http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;id=17718</DownloadURL>
+			<Commentary>This installation may take several minutes, without visible sign of progress.</Commentary>
+			<StatusWindow>Show</StatusWindow>
+			<FlushReboot>true</FlushReboot>
+			<Prerequisite Tag="IE" MinVersion="5.01"/>
+			<Prerequisite Tag="WI31" MinVersion="3.1"/>
+			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP3" MinVersion="3"/>
+			<Prerequisite MinOS="6.0.0" MaxOS="6.0.32767" Tag="Win Vista SP1" MinVersion="1"/>
 		</Product>
 		<Product>
 			<AutoConfigure>

@@ -89,6 +89,35 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>FW BTE 7.2.0 (for .NET 4.0)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">C:\FW2010\Installer\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks 7.2\BTE\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks 7.2\BTE\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks 7.2\BTE\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 7.2.0 BTE (for .NET 4.0)</Title>
+			<Tag>FW720BTENET4</Tag>
+			<MinOS>5.1.2</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.2.0" MsiUpgradeTo="7.2.0"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET4.0" MinVersion="4.0"/>
+			<Preinstall>RemovePreviousFW7s</Preinstall>
+			<PostInstall IncludeResourceFile="true">Fw7PostInstall</PostInstall>
+			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>WorldPad 3.0 (from FW 6.0.4 at \\cana\lsdev\Installers\WorldPad_Maint\SetupWP.msi)</Title>
 				<Source SignAs="SIL FieldWorks WorldPad 3 Installer">\\cana\lsdev\Installers\WorldPad_Maint\SetupWP.msi</Source>
 				<!--<Source>Documents\FieldWorks\RTFs\WPReadMe.rtf</Source>-->

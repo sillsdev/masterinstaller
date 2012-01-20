@@ -56,36 +56,36 @@ bool TestDotNetPresence(const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersi
 						DWORD cbData = sizeof(dwSP);
 						LONG lResult = RegQueryValueEx(hKeyVersion, _T("SP"), NULL, NULL, (LPBYTE)&dwSP, &cbData);
 
-						if (ERROR_SUCCESS == lResult)
+						if (ERROR_SUCCESS != lResult)
 						{
-							// Construct mangled version number with major, minor and service pack numbers:
-							_TCHAR * pszVersionNumber = (szVersion + 1);
-
-							// Truncate at second '.' (if present) and append service pack number:
-							_TCHAR * pszDot = _tcschr(pszVersionNumber, _TCHAR('.'));
-
-							if (pszDot)
-							{
-								pszDot = _tcschr((pszDot + 1), _TCHAR('.'));
-								if (pszDot)
-									*pszDot = 0;
-							}
 #if !defined NOLOGGING
-							g_Log.Write(_T("Found .NET runtime version %s service pack %d."), pszVersionNumber, dwSP);
+							g_Log.Write(_T("Could not read SP registry value - using zero as default."));
 #endif
+							dwSP = 0;
+						}
+						// Construct mangled version number with major, minor and service pack numbers:
+						_TCHAR * pszVersionNumber = (szVersion + 1);
 
-							_TCHAR * pszMangledVersion = new_sprintf(_T("%s.%d"), pszVersionNumber, dwSP);
+						// Truncate at second '.' (if present) and append service pack number:
+						_TCHAR * pszDot = _tcschr(pszVersionNumber, _TCHAR('.'));
 
-							if (VersionInRange(pszMangledVersion, pszMin, pszMax))
-							{
-								fResult = true;
-								break;
-							}
+						if (pszDot)
+						{
+							pszDot = _tcschr((pszDot + 1), _TCHAR('.'));
+							if (pszDot)
+								*pszDot = 0;
 						}
 #if !defined NOLOGGING
-						else
-							g_Log.Write(_T("Could not read SP registry value."));
+						g_Log.Write(_T("Found .NET runtime version %s service pack %d."), pszVersionNumber, dwSP);
 #endif
+
+						_TCHAR * pszMangledVersion = new_sprintf(_T("%s.%d"), pszVersionNumber, dwSP);
+
+						if (VersionInRange(pszMangledVersion, pszMin, pszMax))
+						{
+							fResult = true;
+							break;
+						}
 					}
 #if !defined NOLOGGING
 					else

@@ -89,6 +89,64 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
+				<Title>FW BTE 7.2.2 (from \\cana\LSDev\Installers\FW7.2.2\BTE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.2.2\BTE\FieldWorks\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks 7.2\BTE\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks 7.2\BTE\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks 7.2\BTE\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 7.2.2 BTE</Title>
+			<Tag>FW730BTE</Tag>
+			<MinOS>5.1.2</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.2.0" MsiUpgradeTo="7.2.2"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
+			<Preinstall>RemovePreviousFW7s</Preinstall>
+			<PostInstall IncludeResourceFile="true">Fw7PostInstall</PostInstall>
+			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
+		</Product>
+		<Product>
+			<AutoConfigure>
+				<Title>FW SE 7.2.2 (from \\cana\LSDev\Installers\FW7.2.2\SE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.2.2\SE\FieldWorks\SetupFW_SE.msi</Source>
+				<Source>Documents\FieldWorks 7.2\BTE\RTFs\License.rtf</Source>
+				<Source>Documents\FieldWorks 7.2\SE unique\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks 7.2\SE unique\RTFs\SetupFW.rtf</SetupHelp>
+				<Destination>FieldWorks</Destination>
+			</AutoConfigure>
+			<Title>SIL FieldWorks 7.2.2 SE</Title>
+			<Tag>FW730SE</Tag>
+			<MinOS>5.1.2</MinOS>
+			<MustBeAdmin>true</MustBeAdmin>
+			<CriticalFile>FieldWorks\SetupFW_SE.msi</CriticalFile>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.2.0" MsiUpgradeTo="7.2.2"/>
+			<StatusWindow>Monitor 4000</StatusWindow>
+			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
+			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Prerequisite Tag=".NET3.5SP1" MinVersion="3.5.1"/>
+			<Preinstall>RemovePreviousFW7s</Preinstall>
+			<PostInstall IncludeResourceFile="true">Fw7PostInstall</PostInstall>
+			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
+			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
+			<Contact>
+				<FirstName>Susanna</FirstName>
+				<LastName>Imrie</LastName>
+				<Email>susanna_imrie@sil.org</Email>
+			</Contact>
+		</Product>
+		<Product>
+			<AutoConfigure>
 				<Title>FW BTE 7.2.0 (for .NET 4.0)</Title>
 				<Source SignAs="SIL FieldWorks 7 Installer">C:\FW2010\Installer\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks 7.2\BTE\RTFs\License.rtf</Source>

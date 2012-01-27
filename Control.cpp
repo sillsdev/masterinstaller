@@ -526,7 +526,7 @@ bool MasterInstaller_t::TestAndReportLanguageConflicts(IndexList_t & rgiProducts
 		}
 		else
 		{
-			g_Log.Write(_T("%s has no dependencies. No need to check languge restrictions."),
+			g_Log.Write(_T("%s has no dependencies. No need to check language restrictions."),
 				m_ppmProductManager->GetName(iCurrentProduct));
 		}
 

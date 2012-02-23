@@ -89,19 +89,19 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW BTE 7.2.2 (from \\cana\LSDev\Installers\FW7.2.2\BTE\FieldWorks)</Title>
-				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.2.2\BTE\FieldWorks\SetupFW.msi</Source>
+				<Title>FW BTE 7.2.3 (from \\cana\LSDev\Installers\FW7.2.3\BTE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.2.3\BTE\FieldWorks\SetupFW.msi</Source>
 				<Source>Documents\FieldWorks 7.2\BTE\RTFs\License.rtf</Source>
 				<Source>Documents\FieldWorks 7.2\BTE\TechSupport.txt</Source>
 				<SetupHelp>Documents\FieldWorks 7.2\BTE\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 7.2.2 BTE</Title>
-			<Tag>FW730BTE</Tag>
+			<Title>SIL FieldWorks 7.2.3 BTE</Title>
+			<Tag>FW723BTE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.2.0" MsiUpgradeTo="7.2.2"/>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.2.0" MsiUpgradeTo="7.2.3"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
@@ -118,19 +118,19 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW SE 7.2.2 (from \\cana\LSDev\Installers\FW7.2.2\SE\FieldWorks)</Title>
-				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.2.2\SE\FieldWorks\SetupFW_SE.msi</Source>
+				<Title>FW SE 7.2.3 (from \\cana\LSDev\Installers\FW7.2.3\SE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.2.3\SE\FieldWorks\SetupFW_SE.msi</Source>
 				<Source>Documents\FieldWorks 7.2\BTE\RTFs\License.rtf</Source>
 				<Source>Documents\FieldWorks 7.2\SE unique\TechSupport.txt</Source>
 				<SetupHelp>Documents\FieldWorks 7.2\SE unique\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 7.2.2 SE</Title>
-			<Tag>FW730SE</Tag>
+			<Title>SIL FieldWorks 7.2.3 SE</Title>
+			<Tag>FW723SE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW_SE.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.2.0" MsiUpgradeTo="7.2.2"/>
+			<Install MsiFlags="MASTER_INSTALLER=1" MsiUpgradeFrom="7.2.0" MsiUpgradeTo="7.2.3"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>

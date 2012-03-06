@@ -91,59 +91,36 @@ void InitMshtml()
 	g_Log.Write(_T("...Done."));
 }
 
-// Launch the FieldWorks Bridge installer, which should have been installed to the Installers sub folder.
-void InstallFieldWorksBridge(SoftwareProduct * Product)
+// Launch the FLEx Bridge installer, which should have been installed to the Installers sub folder.
+void InstallFLExBridge(SoftwareProduct * Product)
 {
-	g_Log.Write(_T("About to run FieldWorks Bridge installer..."));
+	g_Log.Write(_T("About to run FLEx Bridge installer..."));
 	g_Log.Indent();
 
 	// Find the installer file using its component GUID from the FW installer's Files.wxs source:
-	_TCHAR * pszFieldWorksBridgeInstallerPath = GetMsiComponentPath(Product->m_kpszMsiProductCode,
+	_TCHAR * pszFLExBridgeInstallerPath = GetMsiComponentPath(Product->m_kpszMsiProductCode,
 		_T("{9442BF43-4A64-4885-9593-43DD7E927290}"));
 
-	if (!pszFieldWorksBridgeInstallerPath)
+	if (!pszFLExBridgeInstallerPath)
 	{
-		g_Log.Write(_T("Could not locate FieldWorks Bridge installer"));
+		g_Log.Write(_T("Could not locate FLEx Bridge installer"));
 		return;
 	}
 
-	g_Log.Write(_T("Found FieldWorks Bridge installer path: %s"), pszFieldWorksBridgeInstallerPath);
+	g_Log.Write(_T("Found FLEx Bridge installer path: %s"), pszFLExBridgeInstallerPath);
 
-	// Uninstall any previous version of FieldWorks Bridge, if there is one:
-	const _TCHAR * pszFieldWorksBridgeProductCode = _T("{FDD4B174-8190-4819-880F-77D1F9F1DA9C}");
-	
-	INSTALLSTATE state = MsiQueryProductState(pszFieldWorksBridgeProductCode);
-	switch (state)
-	{
-		case INSTALLSTATE_ADVERTISED:
-		case INSTALLSTATE_LOCAL:
-		case INSTALLSTATE_SOURCE:
-		case INSTALLSTATE_DEFAULT:
-			g_Log.Write(_T("Found existing installation of FieldWorks Bridge - uninstalling..."));
-			DisplayStatusText(0, _T("Installing previous FieldWorks Bridge ready for current version..."));
-			DisplayStatusText(1, _T(""));
-
-			if (ERROR_SUCCESS != MsiConfigureProduct(pszFieldWorksBridgeProductCode, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT))
-			{
-				g_Log.Write(_T("...Uninstallation of FieldWorks Bridge has failed."));
-			}
-			else
-				g_Log.Write(_T("...Done."));
-	}
-
-
-	DisplayStatusText(0, _T("Installing FieldWorks Bridge..."));
+	DisplayStatusText(0, _T("Installing FLEx Bridge..."));
 	DisplayStatusText(1, _T(""));
 
-	_TCHAR * pszCmd = new_sprintf(_T("msiexec /i \"%s\" /qb"), pszFieldWorksBridgeInstallerPath);
+	_TCHAR * pszCmd = new_sprintf(_T("msiexec /i \"%s\" /qb"), pszFLExBridgeInstallerPath);
 
 	ExecCmd(pszCmd, NULL);
 
 	delete[] pszCmd;
 	pszCmd = NULL;
 
-	delete[] pszFieldWorksBridgeInstallerPath;
-	pszFieldWorksBridgeInstallerPath = NULL;
+	delete[] pszFLExBridgeInstallerPath;
+	pszFLExBridgeInstallerPath = NULL;
 	
 	g_Log.Unindent();
 	g_Log.Write(_T("...Done."));
@@ -602,8 +579,15 @@ INT_PTR CALLBACK DlgProcEarlierFwDetected(HWND hwnd, UINT msg, WPARAM wParam, LP
 
 int Fw7PostInstall(SoftwareProduct * Product)
 {
+	// Partial fix for FWR-3405, FWR-3207, FWR-3703, LTB-1330, LTB-1334, LTB-1414, LT-12723, etc:
+	g_Log.Write(_T("Broadcasting first WM_SETTINGCHANGE message..."));
+	const _TCHAR pszEnv[] = _T("Environment");
+	SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)pszEnv, SMTO_ABORTIFHUNG, 1000, NULL);
+	g_Log.Write(_T("...Done."));
+
 	InitMshtml();
-	InstallFieldWorksBridge(Product);
+
+	InstallFLExBridge(Product);
 
 	// For FieldWorks 7.0.x, we still need to initialize the Encoding Converters by
 	// running EncConvertersAppDataMover30.exe. This was erroneously omitted through

@@ -110,7 +110,7 @@ public:
 	bool CriticalFileLanguageUnavailable();
 	const _TCHAR * GetDownloadUrl() { return m_kpszDownloadUrl; }
 	_TCHAR * new_LanguageDecodedString(const _TCHAR * pszTemplate);
-	_TCHAR * new_InterpretString(const _TCHAR * pszTemplate);
+	_TCHAR * new_InterpretString(const _TCHAR * pszTemplate, bool InsideCurlyBraces = false);
 	bool PossibleToTestPresence() const;
 	bool TestPresence();
 	bool TestPresence(const _TCHAR * pszVersion);
@@ -236,7 +236,14 @@ _TCHAR * SoftwareProduct::new_LanguageDecodedString(const _TCHAR * pszTemplate)
 // Parses the given string, replacing special tokens with runtime data. Returns newly created
 // string with interpretted data.
 // Caller must delete[] return value.
-_TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
+// Special tokens are:
+// {string} - if string contains other special tokens that evaluate to empty, then whole expression becomes empty,
+// otherwise evaluates as if {} were not there.
+// $CriticalFile$ - becomes the critical file path (this is a member variable)
+// $SID$nn$ - becomes localized account name of well-known SID nn
+// %ENV% - becomes value of environment variable ENV
+// [RegKey::Value] - becomes the data stored in Value of RegKey
+_TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate, bool InsideCurlyBraces)
 {
 	if (!pszTemplate)
 		return NULL;
@@ -245,19 +252,58 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 	// Make a working copy that we can manipulate:
 	_TCHAR * pszTemplateCopy = my_strdup(pszTemplate);
 
+	// Search for '{' character (optional block):
+	_TCHAR * pszOpenBrace = _tcschr(pszTemplateCopy, _TCHAR('{'));
+	if (pszOpenBrace)
+	{
+		// We have a '{' character. See if there is a '}':
+		_TCHAR * pszCloseBrace = _tcschr(pszOpenBrace + 1, _TCHAR('}'));
+		if (pszCloseBrace)
+		{
+			// There are matching braces, so we will process inner text as "InsideCurlyBraces",
+			// and forget the whole thing if we get a NULL back:
+			*pszOpenBrace = 0;
+			*pszCloseBrace = 0;
+			_TCHAR * pszInnerText = new_InterpretString(pszOpenBrace + 1, true);
+
+			_TCHAR * pszIntermediate;
+
+			if (pszInnerText == NULL)
+				pszIntermediate = new_sprintf(_T("%s%s"), pszTemplateCopy, (pszCloseBrace + 1));
+			else
+			{
+				// Got the value, so perform the substitution:
+				pszIntermediate = new_sprintf(_T("%s%s%s"), pszTemplateCopy, pszInnerText, (pszCloseBrace + 1));
+			}
+
+			// Now recurse, to see if any more text needs interpretting:
+			pszResult = new_InterpretString(pszIntermediate, false);
+			delete[] pszIntermediate;
+		}
+	}
+
 	// Search for "$CriticalFile$" string:
 	const _TCHAR * kpszCritFileToken = _T("$CriticalFile$");
 	_TCHAR * pszCritFileToken = _tcsstr(pszTemplateCopy, kpszCritFileToken);
 	if (pszCritFileToken)
 	{
+		const _TCHAR * pszCriticalFile = GetCriticalFile();
+
+		if (InsideCurlyBraces && (pszCriticalFile == NULL || *pszCriticalFile == 0))
+		{
+			delete[] pszTemplateCopy;
+			pszTemplateCopy = NULL;
+			return NULL;
+		}
+
 		// Cut off string at the token:
 		*pszCritFileToken = 0;
 		// Got the token, so perform the substitution:
-		_TCHAR * pszIntermediate = new_sprintf(_T("%s%s%s"), pszTemplateCopy, GetCriticalFile(),
+		_TCHAR * pszIntermediate = new_sprintf(_T("%s%s%s"), pszTemplateCopy, pszCriticalFile,
 			(pszCritFileToken + _tcslen(kpszCritFileToken)));
 
 		// Now recurse, to see if any more text needs interpretting:
-		pszResult = new_InterpretString(pszIntermediate);
+		pszResult = new_InterpretString(pszIntermediate, InsideCurlyBraces);
 		delete[] pszIntermediate;
 	}
 
@@ -278,6 +324,13 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 		_TCHAR * pszAccount = CreateAccountNameFromWellKnownSidIndex(SidIndex);
 		if (!pszAccount)
 		{
+			if (InsideCurlyBraces)
+			{
+				delete[] pszTemplateCopy;
+				pszTemplateCopy = NULL;
+				return NULL;
+			}
+
 			_TCHAR * pszMsg = new_sprintf(_T("A request to evaluate Well Known SID %d failed."), SidIndex);
 			HandleError(kNonFatal, false, IDC_ERROR_INTERNAL, pszMsg);
 			delete[] pszMsg;
@@ -291,7 +344,7 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 		delete[] pszAccount;
 
 		// Now recurse, to see if any more text needs interpretting:
-		pszResult = new_InterpretString(pszIntermediate);
+		pszResult = new_InterpretString(pszIntermediate, InsideCurlyBraces);
 		delete[] pszIntermediate;
 	}
 
@@ -312,6 +365,13 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 			_TCHAR szEnvValue[cchEnvValue];
 			if (!GetEnvironmentVariable(pszEnvVarName, szEnvValue, cchEnvValue))
 			{
+				if (InsideCurlyBraces)
+				{
+					delete[] pszTemplateCopy;
+					pszTemplateCopy = NULL;
+					return NULL;
+				}
+
 				_TCHAR * pszMsg = new_sprintf(_T("A request to evaluate Environment Variable \"%s\"")
 					_T(" failed."), pszEnvVarName);
 				HandleError(kNonFatal, false, IDC_ERROR_INTERNAL, pszMsg);
@@ -323,7 +383,7 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 				(pszSecondPercent + 1));
 
 			// Now recurse, to see if any more text needs interpretting:
-			pszResult = new_InterpretString(pszIntermediate);
+			pszResult = new_InterpretString(pszIntermediate, InsideCurlyBraces);
 			delete[] pszIntermediate;
 		}
 	} // End search for environment variables
@@ -369,6 +429,15 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 			_TCHAR * pszKeyData = NewRegString(hKeyRoot, pszRegSubKey, pszValue);
 			if (!pszKeyData)
 			{
+				if (InsideCurlyBraces)
+				{
+					delete[] pszRegKeyCopy;
+					pszRegKeyCopy = NULL;
+					delete[] pszTemplateCopy;
+					pszTemplateCopy = NULL;
+					return NULL;
+				}
+
 				_TCHAR * pszMsg = new_sprintf(_T("A request to evaluate Registry Data \"%s\"")
 					_T(" failed."), pszRegKeyCopy);
 				delete[] pszRegKeyCopy;
@@ -388,7 +457,7 @@ _TCHAR * SoftwareProduct::new_InterpretString(const _TCHAR * pszTemplate)
 			pszKeyData = NULL;
 
 			// Now recurse, to see if any more text needs interpretting:
-			pszResult = new_InterpretString(pszIntermediate);
+			pszResult = new_InterpretString(pszIntermediate, InsideCurlyBraces);
 			delete[] pszIntermediate;
 		}
 	} // End search for registry data
@@ -684,7 +753,7 @@ DWORD SoftwareProduct::RunInstaller()
 					g_Log.Write(_T("Existing version %s will first be uninstalled (Product code %s)."), pszInstalledVersion, m_kpszMsiProductCode);
 					{ // Start block so we can declare local variable inside case.
 					StatusTextSnapshot statusSnapshot;
-					_TCHAR * pszMsg = new_sprintf(_T("Removing previous FieldWorks version (%s)."), pszInstalledVersion);
+					_TCHAR * pszMsg = new_sprintf(_T("Removing previous version (%s)."), pszInstalledVersion);
 					nResult = Uninstall(m_kpszMsiProductCode, pszMsg);
 					delete[] pszMsg;
 					statusSnapshot.Repost();
@@ -703,10 +772,19 @@ DWORD SoftwareProduct::RunInstaller()
 				delete[] pszInstalledVersion;
 				pszInstalledVersion = NULL;
 			}
+			// Evaluate MSI flags:
+			_TCHAR * pszMsiFlags = NULL;
+			if (m_kpszMsiFlags)
+				pszMsiFlags = new_InterpretString(m_kpszMsiFlags);
+			if (pszMsiFlags == NULL)
+				pszMsiFlags = my_strdup(_T(""));
+
 			// Run msiexec:
 			_TCHAR * pszMsiExec = new_sprintf(_T("MsiExec.exe %s \"%s\" %s %s"), kpszInstallFlags,
-				GetCriticalFile(), m_kpszMsiFlags? m_kpszMsiFlags : _T(""),
-				g_fSilent? _T("/qb") : _T(""));
+				GetCriticalFile(), pszMsiFlags, g_fSilent? _T("/qb") : _T(""));
+
+			delete[] pszMsiFlags;
+			pszMsiFlags = NULL;
 
 			g_Log.Write(_T("About to run \"%s\""), pszMsiExec);
 

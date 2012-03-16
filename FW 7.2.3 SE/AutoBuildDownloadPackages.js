@@ -2,11 +2,11 @@
 // This instance created AUTOMATICALLY during a previous run.
 function AutomatePackages()
 {
-	SetElement("FlavorName1", "FW722_SE_A");
-	SetElement("FlavorUrl1", "http://downloads.sil.org/FieldWorks/7.2.2/SE/FW722_SE_A.exe");
+	SetElement("FlavorName1", "FW723_SE_A");
+	SetElement("FlavorUrl1", "http://downloads.sil.org/FieldWorks/7.2.3/SE/FW723_SE_A.exe");
 	AddFlavor();
-	SetElement("FlavorName2", "FW722_SE_B");
-	SetElement("FlavorUrl2", "http://downloads.sil.org/FieldWorks/7.2.2/SE/FW722_SE_B.exe");
+	SetElement("FlavorName2", "FW723_SE_B");
+	SetElement("FlavorUrl2", "http://downloads.sil.org/FieldWorks/7.2.3/SE/FW723_SE_B.exe");
 
 	NextStage();
 
@@ -26,7 +26,7 @@ function AutomatePackages()
 
 	NextStage();
 
-	SetElement("OutputPath", "G:\\Software Package Builder\\Web Downloads\\FW 7.2.2 SE");
+	SetElement("OutputPath", "G:\\Software Package Builder\\Web Downloads\\FW 7.2.3 SE");
 	SelectElement("WriteXml", true);
 	SelectElement("WriteDownloadsXml", true);
 	SelectElement("Compile", true);

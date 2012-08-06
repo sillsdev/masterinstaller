@@ -1,9 +1,0 @@
-; TestPresence Web Control.def : Declares the module parameters.
-
-LIBRARY      "TestPresence Web Control.OCX"
-
-EXPORTS
-	DllCanUnloadNow     PRIVATE
-	DllGetClassObject   PRIVATE
-	DllRegisterServer   PRIVATE
-	DllUnregisterServer PRIVATE

@@ -725,11 +725,13 @@ MasterXmlDoc.load(document.URL);
 if (MasterXmlDoc.parseError.errorCode != 0)
 	alert("Error - XML file is invalid:\n" + MasterXmlDoc.parseError.reason + "\non line " + MasterXmlDoc.parseError.line + " at position " + MasterXmlDoc.parseError.linepos);
 
-var CppFilePath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
+var MasterInstallerPath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
 var ProductsPath = shellObj.ExpandEnvironmentStrings("%PACKAGE_PRODUCTS%");
 var CDsPath = shellObj.ExpandEnvironmentStrings("%CD_IMAGES%");
-var UtilsPath = fso.BuildPath(CppFilePath, "Utils");
+var CppFilePath = fso.BuildPath(MasterInstallerPath, "Code and Projects");
+var UtilsPath = fso.BuildPath(MasterInstallerPath, "Utils");
 var BitmapsPath = fso.BuildPath(CppFilePath, "Bitmaps");
+var InstallerDefinitionsPath = fso.BuildPath(MasterInstallerPath, "Installer Definitions");
 
 if (CppFilePath == "%MASTER_INSTALLER%")
   alert("ERROR: the MASTER_INSTALLER environment variable has not been defined. This probably means you have not run the InitUtils.exe application in the Master Installer's Utils folder.");
@@ -2249,7 +2251,7 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fCreateI
 		if (fDisplayCommentary)
 			AddCommentary(1, "Processing Paths", false);
 		var ProjectName = GetProjectName();
-		var NewCompilationFolder = fso.BuildPath(CppFilePath, ProjectName);
+		var NewCompilationFolder = fso.BuildPath(InstallerDefinitionsPath, ProjectName);
 
 		// Get a copy of our initial XML document, so we can play with it:
 		if (fDisplayCommentary)
@@ -2571,7 +2573,7 @@ function PrepareInstallerHelp2Dll(xmlDoc, fDisplayCommentary)
 	if (fDisplayCommentary)
 		AddCommentary(0, "Preparing folder for InstallerHelp2.dll compilation...", true);
 	var ProjectName = GetProjectName();
-	var NewCompilationFolder = fso.BuildPath(CppFilePath, ProjectName);
+	var NewCompilationFolder = fso.BuildPath(InstallerDefinitionsPath, ProjectName);
 	MakeSureFolderExists(NewCompilationFolder);
 	if (fDisplayCommentary)
 		AddCommentary(1, "Done.", false);

@@ -191,7 +191,7 @@ else if (ProductsPath == "%PACKAGE_PRODUCTS%")
 	alert("ERROR: the PACKAGE_PRODUCTS environment variable has not been defined. You cannot create web download packages without specifying where the products and documents are stored.");
 	
 var UtilsPath = fso.BuildPath(MasterInstallerPath, "Utils");
-var BitmapsPath = fso.BuildPath(MasterInstallerPath, "Bitmaps");
+var BitmapsPath = fso.BuildPath(MasterInstallerPath, "Code and Projects\\Bitmaps");
 
 var f7ZipFoundSvn = false;
 

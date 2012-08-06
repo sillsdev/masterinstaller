@@ -35,15 +35,16 @@ for (i = 0; i < WScript.Arguments.Length; i++)
 	}
 }
 
-var CppFilePath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
+var MasterInstallerPath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
 
-if (CppFilePath == "%MASTER_INSTALLER%")
+if (MasterInstallerPath == "%MASTER_INSTALLER%")
 {
 	WScript.Echo("ERROR: the MASTER_INSTALLER environment variable has not been defined. This probably means you have not run the InitUtils.exe application in the Master Installer's Utils folder.");
 	WScript.Quit();
 }
-var UtilsPath = fso.BuildPath(CppFilePath, "Utils");
+var UtilsPath = fso.BuildPath(MasterInstallerPath, "Utils");
 
+var CppFilePath = fso.BuildPath(MasterInstallerPath, "Code and Projects");
 var BitmapsPath = fso.BuildPath(CppFilePath, "Bitmaps");
 
 // Check that the XML file has a <MasterInstaller> node:
@@ -92,7 +93,6 @@ shellObj.Run(CompileCmd, 7, true);
 // Compile resource file:
 var ResourceCmd = 'rc.exe /i"' + BitmapsPath + '" ' + (EasterEggs ? '/D "EASTER_EGGS" ' : '') + '/fo"' + NewCompilationFolder + '/resources.res" "' + CppFilePath + '\\resources.rc"';
 shellObj.Run(ResourceCmd, 7, true);
-
 // Prepare the file containing all the linker settings:
 var ObjRspFilePath = NewCompilationFolder + "\\" + "Obj.rsp";
 var SetupExePath = InputFolder + "\\setup.exe";

@@ -1,0 +1,4 @@
+LIBRARY	InstallerHelp2
+
+EXPORTS
+   Help				@1

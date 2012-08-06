@@ -1,0 +1,5 @@
+LIBRARY	InstallerHelp2
+
+EXPORTS
+   Help				@1
+   TestFromRunDll32	@2

@@ -108,7 +108,7 @@ else if (ProductsPath == "%PACKAGE_PRODUCTS%")
 
 var UtilsPath = fso.BuildPath(MasterInstallerPath, "Utils");
 var SevenZipExeFile = fso.BuildPath(UtilsPath, "7za.exe");
-var BitmapsPath = fso.BuildPath(MasterInstallerPath, "Bitmaps");
+var BitmapsPath = fso.BuildPath(MasterInstallerPath, "Code and Projects\\Bitmaps");
 
 var f7ZipFoundSvn = false;
 

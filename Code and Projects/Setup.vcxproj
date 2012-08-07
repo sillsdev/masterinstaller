@@ -242,6 +242,9 @@
     <ResourceCompile Include="resources.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\_Master Installer.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Setup.ico" />
     <None Include="Active.avi" />
     <None Include="ConfigDisks.xsl" />

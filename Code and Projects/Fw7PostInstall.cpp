@@ -103,6 +103,7 @@ void InstallFLExBridge(SoftwareProduct * Product)
 
 	if (!pszFLExBridgeInstallerPath)
 	{
+		g_Log.Unindent();
 		g_Log.Write(_T("Could not locate FLEx Bridge installer"));
 		return;
 	}

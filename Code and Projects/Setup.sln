@@ -8,6 +8,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bin2Cpp", "Bin2Cpp\Bin2Cpp.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InstallerHelp2", "InstallerHelp2\InstallerHelp2.vcxproj", "{D9F1BD71-CE4A-4D09-BC09-19D08E2CF5B6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DownloadPackageAdvisor", "DownloadPackageAdvisor\DownloadPackageAdvisor.vcxproj", "{DACD55B7-1AA4-4E2D-847E-51C62D56DCB2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Active (Unicode)|Win32 = Active (Unicode)|Win32
@@ -35,6 +37,12 @@ Global
 		{D9F1BD71-CE4A-4D09-BC09-19D08E2CF5B6}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D9F1BD71-CE4A-4D09-BC09-19D08E2CF5B6}.Release|Win32.ActiveCfg = Release|Win32
 		{D9F1BD71-CE4A-4D09-BC09-19D08E2CF5B6}.Release|Win32.Build.0 = Release|Win32
+		{DACD55B7-1AA4-4E2D-847E-51C62D56DCB2}.Active (Unicode)|Win32.ActiveCfg = Release|Win32
+		{DACD55B7-1AA4-4E2D-847E-51C62D56DCB2}.Active (Unicode)|Win32.Build.0 = Release|Win32
+		{DACD55B7-1AA4-4E2D-847E-51C62D56DCB2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DACD55B7-1AA4-4E2D-847E-51C62D56DCB2}.Debug|Win32.Build.0 = Debug|Win32
+		{DACD55B7-1AA4-4E2D-847E-51C62D56DCB2}.Release|Win32.ActiveCfg = Release|Win32
+		{DACD55B7-1AA4-4E2D-847E-51C62D56DCB2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

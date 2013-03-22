@@ -24,7 +24,7 @@ bool TestXml2Presence(const _TCHAR * /*pszMinVersion*/, const _TCHAR * /*pszMaxV
 	// That test didn't work, so we'll try a simple call to Windows Installer, to test presence
 	// of the MSXML2 product code:
 	const _TCHAR * pszProductCode = _T("{7CFAEC66-BA0E-4076-AAA5-2BE29153E6DF}");
-	INSTALLSTATE state = WindowsInstaller.MsiQueryProductState(pszProductCode);
+	INSTALLSTATE state = MsiQueryProductState(pszProductCode);
 	switch (state)
 	{
 	case INSTALLSTATE_ADVERTISED:

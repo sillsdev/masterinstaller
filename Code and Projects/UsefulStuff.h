@@ -1,7 +1,7 @@
 /*
 	Copyright (c) 2003 SIL International.
 
-	Master installer auxilary functions header file.
+	Master installer auxiliary functions header file.
 */
 
 #pragma once

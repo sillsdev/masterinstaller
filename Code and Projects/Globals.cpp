@@ -95,7 +95,9 @@ _TCHAR * OSVersion_t::MakeGeneralDescription(const _TCHAR * pszOsNum)
 	delete[] pszOsNumCpy;
 	pszOsNumCpy = NULL;
 
-	if (nMajor == 6 && nMinor == 1)
+	if (nMajor == 6 && nMinor == 2)
+		pszRet = new_sprintf(_T("Windows 8"));
+	else if (nMajor == 6 && nMinor == 1)
 		pszRet = new_sprintf(_T("Windows 7"));
 	else if (nMajor == 6 && nMinor == 0)
 		pszRet = new_sprintf(_T("Windows Vista"));
@@ -148,7 +150,14 @@ _TCHAR * OSVersion_t::MakeDescription()
 		}
 		break;
 	case VER_PLATFORM_WIN32_NT:
-		if (m_OSversion.dwMajorVersion == 6 && m_OSversion.dwMinorVersion == 1)
+		if (m_OSversion.dwMajorVersion == 6 && m_OSversion.dwMinorVersion == 2)
+		{
+			if (m_OSversion.wProductType == VER_NT_WORKSTATION)
+				pszRet = new_sprintf(_T("Windows 8 %s"), m_OSversion.szCSDVersion);
+			else
+				pszRet = new_sprintf(_T("Windows Server 2012 %s"), m_OSversion.szCSDVersion);
+		}
+		else if (m_OSversion.dwMajorVersion == 6 && m_OSversion.dwMinorVersion == 1)
 		{
 			if (m_OSversion.wProductType == VER_NT_WORKSTATION)
 				pszRet = new_sprintf(_T("Windows 7 %s"), m_OSversion.szCSDVersion);
@@ -259,6 +268,7 @@ _TCHAR * OSVersion_t::Win2k = _T("5.0");
 _TCHAR * OSVersion_t::XP = _T("5.1");
 _TCHAR * OSVersion_t::Vista = _T("6.0");
 _TCHAR * OSVersion_t::W7 = _T("6.1");
+_TCHAR * OSVersion_t::W8 = _T("6.2");
 _TCHAR * OSVersion_t::kpszOperatorError = _T("Null value supplied to OSVersion_t comparison operator");
 
 

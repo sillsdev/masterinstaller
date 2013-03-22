@@ -24,7 +24,7 @@ void DoUniversalFixes()
 	g_Log.Write(_T("...done universal fixes."));
 }
 
-// Tests to see if a particluar registry key exists. If not, creates it with given
+// Tests to see if a particular registry key exists. If not, creates it with given
 // default data.
 // phkeyReturn is a holder for the return of the HKEY of the key in question, but only if created
 // by this function. Caller should set parameter to NULL if key not needed, otherwise caller must

@@ -1061,7 +1061,7 @@ bool SoftwareProduct::Install()
 			}			
 			else 
 			{
-				// See if the product is acutally there:
+				// See if the product is actually there:
 				if (PossibleToTestPresence() && !TestPresence())
 				{
 					m_InstallStatus = InstallFailed;

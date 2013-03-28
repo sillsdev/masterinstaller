@@ -4,7 +4,7 @@
 	<AutoConfigure>
 		<ExternalHelpSource>Documents\SILSoftwareSupport</ExternalHelpSource>
 		<ExternalHelpDestination>SILSoftwareSupport</ExternalHelpDestination>
-		<TermsOfUseSource>Documents\TermsOfUse\License SIL Lang Dev SW.rtf</TermsOfUseSource>
+		<TermsOfUseSource>Documents\TermsOfUse\License SIL Lang Dev SW.pdf</TermsOfUseSource>
 		<TermsOfUseDestination></TermsOfUseDestination>
 		<CdImagePath>NewCd</CdImagePath>
 		<CdSize>700</CdSize>
@@ -25,28 +25,28 @@
 		<InitialText/>
 		<ExternalHelpFile>SILSoftwareSupport\Index.htm</ExternalHelpFile>
 		<HelpButtonText>Software Support...</HelpButtonText>
-		<TermsOfUseFile>License SIL Lang Dev SW.rtf</TermsOfUseFile>
+		<TermsOfUseFile>License SIL Lang Dev SW.pdf</TermsOfUseFile>
 		<TermsButtonText>Terms of Use...</TermsButtonText>
 	</General>
 	<Products>
 		<Product>
 			<AutoConfigure>
-				<Title>FW BTE 7.3.3 (from \\cana\LSDev\Installers\FW7.3.3\BTE\FieldWorks)</Title>
-				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.3.3\BTE\FieldWorks\SetupFW.msi</Source>
-				<Source>Documents\FieldWorks 7.3\BTE\RTFs\License.rtf</Source>
-				<Source>Documents\FieldWorks 7.3\BTE\TechSupport.txt</Source>
-				<SetupHelp>Documents\FieldWorks 7.3\BTE\RTFs\SetupFW.rtf</SetupHelp>
+				<Title>FW BTE 8.0.0 (from \\cana\LSDev\Installers\FW8.0.0\BTE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW8.0.0\BTE\FieldWorks\SetupFW.msi</Source>
+				<Source>Documents\FieldWorks 8.0\BTE\PDFs\License.pdf</Source>
+				<Source>Documents\FieldWorks 8.0\BTE\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks 8.0\BTE\PDFs\SetupFW.pdf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 7.3.3 BTE</Title>
-			<Tag>FW733BTE</Tag>
+			<Title>SIL FieldWorks 8.0.0 BTE</Title>
+			<Tag>FW800BTE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1 {PROJECTSDIR=\&quot;%FWINSTALLERPROJDIRDEFAULT%\&quot;}" MsiUpgradeFrom="7.3.3" MsiUpgradeTo="7.3.3"/>
+			<Install MsiFlags="MASTER_INSTALLER=1 {PROJECTSDIR=\&quot;%FWINSTALLERPROJDIRDEFAULT%\&quot;}" MsiUpgradeFrom="8.0.0" MsiUpgradeTo="8.0.0"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Help>FieldWorks\SetupFW.pdf</Help>
 			<Prerequisite Tag=".NET4.0F" MinVersion="4 Full"/>
 			<Preinstall>FwPreInstall</Preinstall>
 			<PostInstall IncludeResourceFile="true">Fw7PostInstall</PostInstall>
@@ -60,19 +60,19 @@
 		</Product>
 		<Product>
 			<AutoConfigure>
-				<Title>FW SE 7.3.3 (from \\cana\LSDev\Installers\FW7.3.3\SE\FieldWorks)</Title>
-				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW7.3.3\SE\FieldWorks\SetupFW_SE.msi</Source>
-				<Source>Documents\FieldWorks 7.3\BTE\RTFs\License.rtf</Source>
-				<Source>Documents\FieldWorks 7.3\SE unique\TechSupport.txt</Source>
-				<SetupHelp>Documents\FieldWorks 7.3\SE unique\RTFs\SetupFW.rtf</SetupHelp>
+				<Title>FW SE 8.0.0 (from \\cana\LSDev\Installers\FW8.0.0\SE\FieldWorks)</Title>
+				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW8.0.0\SE\FieldWorks\SetupFW_SE.msi</Source>
+				<Source>Documents\FieldWorks 8.0\BTE\PDFs\License.rtf</Source>
+				<Source>Documents\FieldWorks 8.0\SE unique\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks 8.0\SE unique\RTFs\SetupFW.rtf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
-			<Title>SIL FieldWorks 7.3.3 SE</Title>
-			<Tag>FW733SE</Tag>
+			<Title>SIL FieldWorks 8.0.0 SE</Title>
+			<Tag>FW800SE</Tag>
 			<MinOS>5.1.2</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>FieldWorks\SetupFW_SE.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1 {PROJECTSDIR=\&quot;%FWINSTALLERPROJDIRDEFAULT%\&quot;}" MsiUpgradeFrom="7.3.3" MsiUpgradeTo="7.3.3"/>
+			<Install MsiFlags="MASTER_INSTALLER=1 {PROJECTSDIR=\&quot;%FWINSTALLERPROJDIRDEFAULT%\&quot;}" MsiUpgradeFrom="8.0.0" MsiUpgradeTo="8.0.0"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
 			<Help>FieldWorks\SetupFW.rtf</Help>
@@ -1373,12 +1373,13 @@
 			<MustBeAdmin>true</MustBeAdmin>
 			<MinOS>5.1</MinOS>
 			<CriticalFile>Utilities\DotNet 4.0\dotNetFx40_Full_x86_x64.exe</CriticalFile>
-			<Install>$CriticalFile$ /q</Install>
+			<Install>$CriticalFile$ /q /norestart</Install>
 			<TestPresence Version="4 Full">TestDotNetPresence</TestPresence>
 			<DownloadURL>http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;id=17718</DownloadURL>
 			<Commentary>This installation may take several minutes, without visible sign of progress.</Commentary>
 			<StatusWindow>Show</StatusWindow>
 			<FlushReboot>true</FlushReboot>
+			<MustNotDelayReboot>true</MustNotDelayReboot>
 			<Prerequisite Tag="IE" MinVersion="6.0"/>
 			<Prerequisite Tag="WI31" MinVersion="3.1"/>
 			<Prerequisite MinOS="5.1.0" MaxOS="5.1.32767" Tag="Win XP SP3" MinVersion="3"/>

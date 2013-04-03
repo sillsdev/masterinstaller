@@ -1,0 +1,13 @@
+#include "Fw8PostInstall.h"
+
+IDD_DIALOG_EARLIER_FW_FOUND DIALOGEX 0, 0, 250, 70
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Earlier version of FieldWorks found"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON		"&OK",IDOK,200,50,45,14
+	AUTOCHECKBOX	"Remove the shortcuts for the earlier version of FieldWorks", IDC_CHECKBOX_REMOVE_SHORTCUTS, 10, 10, 230, 8
+	AUTOCHECKBOX	"Uninstall the earlier version of FieldWorks.", IDC_CHECKBOX_UNINSTALL_EARLIER_FW, 10, 25, 230, 8
+	LTEXT			"(This will make it less convenient to restore an old backup.)", -1, 20, 33, 230, 8
+END

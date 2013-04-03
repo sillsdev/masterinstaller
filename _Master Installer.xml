@@ -49,7 +49,7 @@
 			<Help>FieldWorks\SetupFW.pdf</Help>
 			<Prerequisite Tag=".NET4.0F" MinVersion="4 Full"/>
 			<Preinstall>FwPreInstall</Preinstall>
-			<PostInstall IncludeResourceFile="true">Fw7PostInstall</PostInstall>
+			<PostInstall IncludeResourceFile="true">Fw8PostInstall</PostInstall>
 			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			<Contact>
@@ -78,7 +78,7 @@
 			<Help>FieldWorks\SetupFW.rtf</Help>
 			<Prerequisite Tag=".NET4.0F" MinVersion="4 Full"/>
 			<Preinstall>FwPreInstall</Preinstall>
-			<PostInstall IncludeResourceFile="true">Fw7PostInstall</PostInstall>
+			<PostInstall IncludeResourceFile="true">Fw8PostInstall</PostInstall>
 			<Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls."/>
 			<Requires Tag="MS TSF" FailMsg="Some keyboard sequences may not work when entering non-Roman text."/>
 			<Contact>

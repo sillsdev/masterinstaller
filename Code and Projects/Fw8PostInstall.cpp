@@ -737,10 +737,11 @@ int Fw8PostInstall(SoftwareProduct * Product)
 	else
 		DisposeOfSqlServer();
 
-	// If we stored a value in _FormerFw7ProjectsFolder then we need to move data from
-	// that folder to the new FW data folder, unless they are the same:
+	// If we stored a value in _FormerFw7ProjectsFolder then we may need to move data from
+	// that folder to the new FW data folder:
 	if (_FormerFw7ProjectsFolder)
 	{
+		RemoveTrailingBackslashes(_FormerFw7ProjectsFolder);
 		g_Log.Write(_T("Recalling FW 7 projects folder: %s"), _FormerFw7ProjectsFolder);
 
 		// Look up the new FieldWorks projects directory in the registry:
@@ -748,72 +749,111 @@ int Fw8PostInstall(SoftwareProduct * Product)
 
 		if (pszProjectsDir)
 		{
+			RemoveTrailingBackslashes(pszProjectsDir);
 			g_Log.Write(_T("New projects folder is %s"), pszProjectsDir);
 
-			_TCHAR * pszFormerFw7ProjectsFolderWithExtraSlash = new_sprintf(_T("%s\\"), _FormerFw7ProjectsFolder);
-
 			// Don't move data if the source and target folders are the same!
-			if (_tcsicmp(_FormerFw7ProjectsFolder, pszProjectsDir) != 0
-				&& _tcsicmp(pszFormerFw7ProjectsFolderWithExtraSlash, pszProjectsDir) != 0)
+			if (_tcsicmp(_FormerFw7ProjectsFolder, pszProjectsDir) != 0)
 			{
-				DisplayStatusText(0, _T("Moving FieldWorks 7 projects to FieldWorks 8 folder..."));
-				DisplayStatusText(1, _T(""));
+				// We should ask the user for permission to move data if they picked a non-default
+				// location for data in the new installer:
+				bool fPermission = true;
 
-				// Copy each folder in the FW 7 Projects folder to the new Projects folder, 
-				// except for Sena and Lela-Teli projects:
-				HANDLE hFind = INVALID_HANDLE_VALUE;
-				WIN32_FIND_DATA fdata;
+				_TCHAR * pszDefaultFwDataFolder = GetNewEnvironmentValue(_T("FWINSTALLERPROJDIRDEFAULT"));
 
-				_TCHAR * pszFindPattern = MakePath(_FormerFw7ProjectsFolder, _T("*"));
-
-				hFind = FindFirstFile(pszFindPattern, &fdata);
-				
-				if (hFind != INVALID_HANDLE_VALUE)
-				{
-					do
-					{
-						if (_tcsicmp(fdata.cFileName, _T(".")) != 0 &&
-							_tcsicmp(fdata.cFileName, _T("..")) != 0)
-						{
-							if (fdata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-							{
-								if (_tcsicmp(fdata.cFileName, _T("Lela-Teli 2")) != 0 &&
-									_tcsicmp(fdata.cFileName, _T("Lela-Teli 3")) != 0 &&
-									_tcsicmp(fdata.cFileName, _T("Sena 2")) != 0 &&
-									_tcsicmp(fdata.cFileName, _T("Sena 3")) != 0)
-								{
-									DisplayStatusText(1, fdata.cFileName);
-
-									_TCHAR * pszFullProjectPath = MakePath(_FormerFw7ProjectsFolder, fdata.cFileName);
-									_TCHAR * pszFullDestPath = MakePath(pszProjectsDir, fdata.cFileName);
-
-									if (MoveFile(pszFullProjectPath, pszFullDestPath))
-										g_Log.Write(_T("Moved folder %s to %s."), pszFullProjectPath, pszFullDestPath);
-									else
-										g_Log.Write(_T("Could not move folder %s to %s. GetLastError returned %d."), pszFullProjectPath, pszFullDestPath, GetLastError());
-
-									delete[] pszFullProjectPath;
-									delete[] pszFullDestPath;
-								} // End if not sample data folder
-							} // End if we found a directory (not a file)
-						} // End if not "." or ".."
-					} while (FindNextFile(hFind, &fdata) != 0);
-				} // End if found anything in _FormerFw7ProjectsFolder
+				if (pszDefaultFwDataFolder == NULL)
+					g_Log.Write(_T("Could not read FWINSTALLERPROJDIRDEFAULT environment variable"));
 				else
-					g_Log.Write(_T("Not bothering to move any existing projects."));
+				{
+					RemoveTrailingBackslashes(pszDefaultFwDataFolder);
+					g_Log.Write(_T("Default projects folder used in installer was %s"), pszDefaultFwDataFolder);
 
-				DisplayStatusText(0, _T(""));
-				DisplayStatusText(1, _T(""));
+					if (_tcsicmp(pszDefaultFwDataFolder, pszProjectsDir) != 0)
+					{
+						g_Log.Write(_T("Asking user for permission to move projects."));
+
+						_TCHAR * msg = new_sprintf(_T("You chose a folder for FieldWorks 8 projects that is different from the FieldWorks 7 projects folder. Would you like your FieldWorks 7 projects to be moved to the new location (from %s to %s)?"), pszDefaultFwDataFolder, pszProjectsDir);
+						if (MessageBox(NULL, msg, _T("New FieldWorks Projects folder"), MB_YESNO | MB_DEFBUTTON1) != IDYES)
+						{
+							g_Log.Write(_T("User did not give permission."));
+							fPermission = false;
+						}
+						else
+							g_Log.Write(_T("User gave permission."));
+						delete[] msg;
+						msg = NULL;
+					}
+
+					delete[] pszDefaultFwDataFolder;
+					pszDefaultFwDataFolder = NULL;
+				}
+
+				if (fPermission)
+				{
+					DisplayStatusText(0, _T("Moving FieldWorks 7 projects to FieldWorks 8 folder..."));
+					DisplayStatusText(1, _T(""));
+
+					// Copy each folder in the FW 7 Projects folder to the new Projects folder, 
+					// except for Sena and Lela-Teli projects:
+					HANDLE hFind = INVALID_HANDLE_VALUE;
+					WIN32_FIND_DATA fdata;
+
+					_TCHAR * pszFindPattern = MakePath(_FormerFw7ProjectsFolder, _T("*"));
+
+					hFind = FindFirstFile(pszFindPattern, &fdata);
+				
+					if (hFind != INVALID_HANDLE_VALUE)
+					{
+						do
+						{
+							if (_tcsicmp(fdata.cFileName, _T(".")) != 0 &&
+								_tcsicmp(fdata.cFileName, _T("..")) != 0)
+							{
+								if (fdata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+								{
+									if (_tcsicmp(fdata.cFileName, _T("Lela-Teli 2")) != 0 &&
+										_tcsicmp(fdata.cFileName, _T("Lela-Teli 3")) != 0 &&
+										_tcsicmp(fdata.cFileName, _T("Sena 2")) != 0 &&
+										_tcsicmp(fdata.cFileName, _T("Sena 3")) != 0)
+									{
+										DisplayStatusText(1, fdata.cFileName);
+
+										_TCHAR * pszFullProjectPath = MakePath(_FormerFw7ProjectsFolder, fdata.cFileName);
+										_TCHAR * pszFullDestPath = MakePath(pszProjectsDir, fdata.cFileName);
+
+										if (MoveFile(pszFullProjectPath, pszFullDestPath))
+											g_Log.Write(_T("Moved folder %s to %s."), pszFullProjectPath, pszFullDestPath);
+										else
+										{
+											g_Log.Write(_T("Could not move folder %s to %s. GetLastError returned %d."), pszFullProjectPath, pszFullDestPath, GetLastError());
+											_TCHAR * msg = new_sprintf(_T("Could not move folder %s to %s. Check log file %s for details"), pszFullProjectPath, pszFullDestPath, g_Log.GetFilePath());
+											MessageBox(NULL, msg, _T("FieldWorks project relocation error"), MB_ICONEXCLAMATION | MB_OK);
+											delete[] msg;
+										}
+
+										delete[] pszFullProjectPath;
+										delete[] pszFullDestPath;
+									} // End if not sample data folder
+								} // End if we found a directory (not a file)
+							} // End if not "." or ".."
+						} while (FindNextFile(hFind, &fdata) != 0);
+					} // End if found anything in _FormerFw7ProjectsFolder
+					else
+						g_Log.Write(_T("Not bothering to move any existing projects."));
+
+					DisplayStatusText(0, _T(""));
+					DisplayStatusText(1, _T(""));
 
 
-				FindClose(hFind);
-				delete[] pszFindPattern;
+					FindClose(hFind);
+					delete[] pszFindPattern;
+				} // End if permission given (or implied) for data folder moving.
+				else
+					g_Log.Write(_T("Did not attempt to move projects."));
 
 			} // End if source and target folders are different.
 			else
 				g_Log.Write(_T("New projects folder same as previous one. No data moved."));
-
-			delete[] pszFormerFw7ProjectsFolderWithExtraSlash;
 		}
 		else
 			g_Log.Write(_T("Could not find new projects folder. No data moved."));

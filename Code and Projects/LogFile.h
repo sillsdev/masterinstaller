@@ -19,6 +19,7 @@ public:
 	void Write(const _TCHAR * szText, ...);
 	void Terminate();
 	bool WriteClipboard();
+	_TCHAR * GetFilePath();
 
 protected:
 	_TCHAR * m_pszFilePath;

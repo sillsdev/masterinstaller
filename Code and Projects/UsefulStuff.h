@@ -35,6 +35,7 @@ extern void NewConcatenatePath(_TCHAR *& pszFolder, const _TCHAR * pszFile);
 extern void RemoveTrailingBackslashes(_TCHAR * pszFolder);
 extern _TCHAR * NewGetExeFolder();
 extern _TCHAR * NewRegString(HKEY hKeyRoot, const _TCHAR * pszSubKey, const _TCHAR * pszValueName = NULL);
+extern _TCHAR * GetNewEnvironmentValue(_TCHAR * pszEnvVar);
 extern __int64 GetHugeVersion(const _TCHAR * pszVersion);
 extern _TCHAR * GenVersionText(__int64 nHugeVersion);
 extern bool VersionInRange(__int64 nVersion, const _TCHAR * pszMinVersion, const _TCHAR * pszMaxVersion);

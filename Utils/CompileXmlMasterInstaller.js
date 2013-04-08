@@ -110,14 +110,23 @@ if (!fso.FileExists(SetupExePath))
 }
 
 // Embed the manifest file specifying "requireAdministrator":
-var ret = 0;
-do
+var numRetries = 5;
+while (numRetries > 0)
 {
 	var MtCmd = 'mt.exe -manifest "' + fso.BuildPath(CppFilePath, 'setup.manifest') + '" -outputresource:"' + SetupExePath + '";#1';
-	ret = shellObj.Run(MtCmd, 7, true);
+	var ret = shellObj.Run(MtCmd, 7, true);
 	if (ret == 31)
-		WScript.Echo("mt.exe found " + SetupExePath + " was locked. Trying again. If problem persists, switch off anti-virus real-time file checking.");	
-} while (ret == 31)
+	{
+		numRetries--;
+		if (numRetries == 0)
+		{
+			WScript.Echo("mt.exe found " + SetupExePath + " was locked. Trying again. If problem persists, switch off anti-virus real-time file checking.");
+			numRetries = 5;
+		}
+	}
+	else
+		numRetries = 0;
+}
 
 // Attempt to sign the .exe file:
 var Cmd;

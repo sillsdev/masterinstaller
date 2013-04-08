@@ -251,3 +251,14 @@ _TCHAR * LogFile::NewTempFolderLogPath()
 
 	return pszLogPath;
 }
+
+/*----------------------------------------------------------------------------------------------
+	Returns path to log file.
+----------------------------------------------------------------------------------------------*/
+_TCHAR * LogFile::GetFilePath()
+{
+	if (!m_pszFilePath)
+		return _T("[unknown]");
+
+	return m_pszFilePath;
+}

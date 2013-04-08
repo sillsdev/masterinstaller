@@ -46,71 +46,41 @@ int FwPreInstall(SoftwareProduct * Product)
 
 		g_Log.Write(_T("Highest FW version found was %s"), pszHighestExistingFwVersion);
 
-		// If we found any FW version numbers, use the highest one to read the path of the Projects directory:
-		if (GetHugeVersion(pszHighestExistingFwVersion) > 0)
+		// If we found FW 7 as the highest installed version, store its projects path for later:
+		if (GetHugeVersion(pszHighestExistingFwVersion) == 0x0007000000000000)
 		{
-			// Open FW versioned reg key:
-			HKEY hKeyFwVersion;
-			LONG lResultVer = RegOpenKeyEx(hKey, pszHighestExistingFwVersion, 0, KEY_READ, &hKeyFwVersion);
-			if (ERROR_SUCCESS == lResultVer)
+			// Get ProjectsDir value:
+			_FormerFw7ProjectsFolder = NewRegString(hKey, pszHighestExistingFwVersion, _T("ProjectsDir"));
+
+			if (_FormerFw7ProjectsFolder)
 			{
-				// Get ProjectsDir value:
-				const int knProjectsDirLen = 1024;
-				_TCHAR szProjectsDir[knProjectsDirLen];
-				DWORD cbData = knProjectsDirLen;
-				lResultVer = RegQueryValueEx(hKeyFwVersion, _T("ProjectsDir"), NULL, NULL, (LPBYTE)szProjectsDir, &cbData);
-				RegCloseKey(hKeyFwVersion);
+				RemoveTrailingBackslashes(_FormerFw7ProjectsFolder);
+				g_Log.Write(_T("FW 7 Projects directory was %s."), _FormerFw7ProjectsFolder);
 
-				if (ERROR_SUCCESS == lResultVer)
+				// If the FW 7 project directory is not the FW 7 default (C:\ProgramData\SIL\FieldWorks 7\Projects)
+				// then we will change the default projects folder presented in the new installer
+				// to facilitate preservation of existing folder:
+				_TCHAR * pszCommonAppDataFolder = GetFolderPathNew(CSIDL_COMMON_APPDATA);
+				_TCHAR * pszDefaultFw7ProjectsFolder = MakePath(pszCommonAppDataFolder, _T("SIL\\FieldWorks 7\\Projects"));
+
+				if (_tcsicmp(_FormerFw7ProjectsFolder, pszDefaultFw7ProjectsFolder) != 0)
 				{
-					g_Log.Write(_T("FW version %s Projects directory was %s."), pszHighestExistingFwVersion, szProjectsDir);
-					// We now have the path to the FW projects for the latest installed version.
-					// If the latest version was 7.0 (which includes any of the version 7 family)
-					// and the project directory is the default (C:\ProgramData\SIL\FieldWorks 7\Projects)
-					// Then we will rename that "FieldWorks 7" folder to omit the " 7" and set the
-					// corresponding Projects folder as the default:
-					if (GetHugeVersion(pszHighestExistingFwVersion) == 0x0007000000000000)
-					{
-						// Get the CommonAppDataFolder string:
-						_TCHAR * pszCommonAppDataFolder = GetFolderPathNew(CSIDL_COMMON_APPDATA);
-						// Form default data directory for FW 7:
-						_TCHAR * pszFw7DefaultFolder = MakePath(pszCommonAppDataFolder, _T("SIL\\FieldWorks 7"));
-						_TCHAR * pszFw7DefaultProjectsFolder = MakePath(pszFw7DefaultFolder, _T("Projects"));
-						_TCHAR * pszFw7DefaultProjectsFolderWithExtraSlash = new_sprintf(_T("%s\\"), pszFw7DefaultProjectsFolder);
-						delete[] pszFw7DefaultFolder;
-
-						if (_tcsicmp(pszFw7DefaultProjectsFolder, szProjectsDir) == 0
-							|| _tcsicmp(pszFw7DefaultProjectsFolderWithExtraSlash, szProjectsDir) == 0)
-						{
-							g_Log.Write(_T("Existing FW projects folder is default for FW 7 [%s]. Will store value for later."), pszFw7DefaultProjectsFolder);
-
-							_FormerFw7ProjectsFolder = my_strdup(pszFw7DefaultProjectsFolder);
-
-							_TCHAR * pszNewFwDefaultFolder = MakePath(pszCommonAppDataFolder, _T("SIL\\FieldWorks"));
-							_TCHAR * pszNewFwDefaultProjectsFolder = MakePath(pszNewFwDefaultFolder, _T("Projects\\"));
-							delete[] pszCommonAppDataFolder;
-
-							g_Log.Write(_T("Adjusting default Projects folder for FW installer from %s to %s."), szProjectsDir, pszNewFwDefaultProjectsFolder);
-							_tcscpy_s(szProjectsDir, knProjectsDirLen, pszNewFwDefaultProjectsFolder);
-
-							delete[] pszNewFwDefaultFolder;
-							delete[] pszNewFwDefaultProjectsFolder;
-						}
-						else 
-							g_Log.Write(_T("Existing FW projects folder [%s] is not the default for FW 7. No need to remember - not contemplating moving projects."), pszFw7DefaultProjectsFolder);
-						delete[] pszFw7DefaultProjectsFolder;
-						delete[] pszFw7DefaultProjectsFolderWithExtraSlash;
-					}
-
-					// Store it in an environment variable (which will only endure for this process):
-					SetEnvironmentVariable(_T("FWINSTALLERPROJDIRDEFAULT"), szProjectsDir);
-					g_Log.Write(_T("Writing environment variable FWINSTALLERPROJDIRDEFAULT as %s."), szProjectsDir);					
+					// Store FW 7 projects folder in an environment variable (which will endure only for this process):
+					SetEnvironmentVariable(_T("FWINSTALLERPROJDIRDEFAULT"), _FormerFw7ProjectsFolder);
+					g_Log.Write(_T("Writing environment variable FWINSTALLERPROJDIRDEFAULT as %s."), _FormerFw7ProjectsFolder);
 				}
 				else
-					g_Log.Write(_T("Could not read FW version %s Projects directory"), pszHighestExistingFwVersion);
+				{
+					// Store FW 8 default projects folder in an environment variable (which will endure only for this process):
+					_TCHAR * pszDefaultFw8ProjectsFolder = MakePath(pszCommonAppDataFolder, _T("SIL\\FieldWorks\\Projects"));
+					SetEnvironmentVariable(_T("FWINSTALLERPROJDIRDEFAULT"), pszDefaultFw8ProjectsFolder);
+					g_Log.Write(_T("Writing environment variable FWINSTALLERPROJDIRDEFAULT as %s."), pszDefaultFw8ProjectsFolder);
+					delete[] pszDefaultFw8ProjectsFolder;
+				}
+				delete[] pszCommonAppDataFolder;
 			}
 			else
-				g_Log.Write(_T("Could not open %s registry key under HKLM\\%s"), pszHighestExistingFwVersion, kpszFwKey);
+				g_Log.Write(_T("Could not read FW 7 Projects directory"));
 		}
 
 		RegCloseKey(hKey);

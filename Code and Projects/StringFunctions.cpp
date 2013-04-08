@@ -177,6 +177,22 @@ void NewConcatenatePath(_TCHAR *& pszFolder, const _TCHAR * pszFile)
 	new_sprintf_concat(pszFolder, 0, pszFile);
 }
 
+// Returns newly allocated string containing the specified environment value.
+// Caller must delete[] the returned value. Returns NULL if something went wrong.
+_TCHAR * GetNewEnvironmentValue(_TCHAR * pszEnvVar)
+{
+	DWORD bufSize = GetEnvironmentVariable(pszEnvVar, NULL, 0);
+
+	_TCHAR * pszValue = new _TCHAR [bufSize];
+	if (0 == GetEnvironmentVariable(pszEnvVar, pszValue, bufSize))
+	{
+		delete[] pszValue;
+		pszValue = NULL;
+	}
+
+	return pszValue;
+}
+
 // Returns newly allocated string containing the specified registry value from the specified
 // key. Caller must delete[] the returned value. pszValueName can be NULL to get default value.
 // Returns NULL if something went wrong.

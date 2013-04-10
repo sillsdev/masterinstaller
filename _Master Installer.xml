@@ -33,9 +33,9 @@
 			<AutoConfigure>
 				<Title>FW BTE 8.0.0 (from \\cana\LSDev\Installers\FW8.0.0\BTE\FieldWorks)</Title>
 				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW8.0.0\BTE\FieldWorks\SetupFW.msi</Source>
-				<Source>Documents\FieldWorks 8.0\BTE\PDFs\License.pdf</Source>
-				<Source>Documents\FieldWorks 8.0\BTE\TechSupport.txt</Source>
-				<SetupHelp>Documents\FieldWorks 8.0\BTE\PDFs\SetupFW.pdf</SetupHelp>
+				<Source>Documents\FieldWorks 8\BTE\PDFs\License.pdf</Source>
+				<Source>Documents\FieldWorks 8\BTE\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks 8\BTE\PDFs\SetupFW.pdf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
 			<Title>SIL FieldWorks 8.0.0 BTE</Title>
@@ -62,9 +62,9 @@
 			<AutoConfigure>
 				<Title>FW SE 8.0.0 (from \\cana\LSDev\Installers\FW8.0.0\SE\FieldWorks)</Title>
 				<Source SignAs="SIL FieldWorks 7 Installer">\\cana\LSDev\Installers\FW8.0.0\SE\FieldWorks\SetupFW_SE.msi</Source>
-				<Source>Documents\FieldWorks 8.0\BTE\PDFs\License.rtf</Source>
-				<Source>Documents\FieldWorks 8.0\SE unique\TechSupport.txt</Source>
-				<SetupHelp>Documents\FieldWorks 8.0\SE unique\RTFs\SetupFW.rtf</SetupHelp>
+				<Source>Documents\FieldWorks 8\BTE\PDFs\License.pdf</Source>
+				<Source>Documents\FieldWorks 8\SE unique\TechSupport.txt</Source>
+				<SetupHelp>Documents\FieldWorks 8\SE unique\PDFs\SetupFW.pdf</SetupHelp>
 				<Destination>FieldWorks</Destination>
 			</AutoConfigure>
 			<Title>SIL FieldWorks 8.0.0 SE</Title>
@@ -75,7 +75,7 @@
 			<Install MsiFlags="MASTER_INSTALLER=1 {PROJECTSDIR=\&quot;%FWINSTALLERPROJDIRDEFAULT%\&quot;}" MsiUpgradeFrom="8.0.0" MsiUpgradeTo="8.0.0"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
-			<Help>FieldWorks\SetupFW.rtf</Help>
+			<Help>FieldWorks\SetupFW.pdf</Help>
 			<Prerequisite Tag=".NET4.0F" MinVersion="4 Full"/>
 			<Preinstall>FwPreInstall</Preinstall>
 			<PostInstall IncludeResourceFile="true">Fw8PostInstall</PostInstall>

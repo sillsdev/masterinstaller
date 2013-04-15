@@ -2290,6 +2290,20 @@ function BuildCd(fWriteXml, fCompileHelps, fCompileSetup, fGatherFiles, fCreateI
 		{
 			if (fDisplayCommentary)
 				AddCommentary(0, "Writing out new XML file...", true);
+				
+			// Change processing instruction to refer to XSLT style sheet for creating web downloads:
+			for (var i=0; i<xmlDoc.childNodes.length; i++)
+			{
+				if (xmlDoc.childNodes.item(i).nodeType == 7)
+				{
+					var pi = xmlDoc.childNodes.item(i);
+					if (pi.data.indexOf("ConfigureMasterInstaller") != -1)
+						pi.data = "type=\"text/xsl\" href=\"ConfigureWebDownloads.xsl\"";
+				}
+      }
+			//var pi = xmlDoc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"ConfigureWebDownloads.xsl\"");
+			//xmlDoc.insertBefore(pi, xmlDoc.childNodes.item(0));
+	 
 			// Write out a copy of our new XML document. Note: the save() method does not work from a web browser.
 			MakeSureFolderExists(NewCompilationFolder);
 			var tso = fso.OpenTextFile(fso.BuildPath(NewCompilationFolder, XmlFileName), 2, true, -1);

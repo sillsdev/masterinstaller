@@ -242,6 +242,7 @@
     <ResourceCompile Include="resources.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\ConfigureMasterInstaller.xsl" />
     <None Include="..\_Master Installer.xml">
       <SubType>Designer</SubType>
     </None>

@@ -197,13 +197,13 @@
 				<VersionInfo>http://downloads.palaso.org/LiftBridge/</VersionInfo>
 			</Contact>
 		</Product>
-		<Product KeyId="2" Version="5.0">
+		<Product KeyId="2" Version="5.1">
 			<AutoConfigure>
-				<Title>TW5 (From source control repository)</Title>
-				<Source NameWhenLocked="2.msi">Installers\Translator's Workplace 5\SetupTW.msi</Source>
-				<Source>Documents\Translator's Workplace 5\CopyToCd</Source>
-				<SetupHelp>Documents\Translator's Workplace 5\ReadMe.rtf</SetupHelp>
-				<Destination>TW5</Destination>
+				<Title>TW5 Update 1 (From source control repository)</Title>
+				<Source NameWhenLocked="2.msi" SignAs="SIL Software Installer">Installers\Translator's Workplace 5 Update 1\SetupTW.msi</Source>
+				<Source>Documents\Translator's Workplace 5 Update 1\CopyToCd</Source>
+				<SetupHelp>Documents\Translator's Workplace 5 Update 1\ReadMe.rtf</SetupHelp>
+				<Destination>TW51</Destination>
 				<WhenLocked>
 					<Destination></Destination>
 					<Substitutions>
@@ -212,15 +212,15 @@
 					</Substitutions>
 				</WhenLocked>
 			</AutoConfigure>
-			<Title>Translator's Workplace 5.0</Title>
-			<Tag>TW5</Tag>
+			<Title>Translator's Workplace 5 Update 1</Title>
+			<Tag>TW51</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
-			<CriticalFile>TW5\SetupTW.msi</CriticalFile>
+			<CriticalFile>TW51\SetupTW.msi</CriticalFile>
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>This installer may take a few minutes to start from the DVD.</Commentary>
-			<ProductCode>{E98FADB8-031E-42E3-B581-268B126C81B6}</ProductCode>
-			<Help>TW5\ReadMe.rtf</Help>
+			<ProductCode>{3ED44B20-1AB3-4F08-A430-78E70BDDFA18}</ProductCode>
+			<Help>TW51\ReadMe.rtf</Help>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Contact>
 				<FirstName>Jim</FirstName>
@@ -230,8 +230,8 @@
 		</Product>
 		<Product KeyId="1" Version="5.3">
 			<AutoConfigure>
-				<Title>BART 5.3 (From source control repository)</Title>
-				<Source NameWhenLocked="3.msi">Installers\BART 5\SetupBart.msi</Source>
+				<Title>BART 5.3.1 (From source control repository)</Title>
+				<Source NameWhenLocked="3.msi" SignAs="SIL Software Installer">Installers\BART 5\SetupBart.msi</Source>
 				<SetupHelp>Documents\BART 5\SetupBART.rtf</SetupHelp>
 				<Destination>BART5</Destination>
 				<WhenLocked>
@@ -242,7 +242,7 @@
 					</Substitutions>
 				</WhenLocked>
 			</AutoConfigure>
-			<Title>BART 5.3</Title>
+			<Title>BART 5.3.1</Title>
 			<Tag>BART5</Tag>
 			<MinOS>5.0</MinOS>
 			<MustBeAdmin>true</MustBeAdmin>
@@ -251,7 +251,7 @@
 			<Install/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>BART5\SetupBART.rtf</Help>
-			<ProductCode>{574CC5E0-54C0-4A8E-9F96-7F16734DCF35}</ProductCode>
+			<ProductCode>{3F4B1F76-BABC-433C-B0DF-19CC6C5B8D03}</ProductCode>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Contact>
 				<FirstName>Paul</FirstName>

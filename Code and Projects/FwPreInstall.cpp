@@ -4,7 +4,8 @@
 
 #include "RemovePreviousFW7s.cpp"
 
-_TCHAR * _FormerFw7ProjectsFolder = NULL;
+// TODO: Rename to _FormerFw7PlusProjectsFolder?
+_TCHAR * _FormerFw7ProjectsFolder = NULL; // Projects directory from the most recent installation of FW 7 or Later, if any
 
 // Deal with stuff prior to installing FieldWorks:
 int FwPreInstall(SoftwareProduct * Product)
@@ -46,8 +47,8 @@ int FwPreInstall(SoftwareProduct * Product)
 
 		g_Log.Write(_T("Highest FW version found was %s"), pszHighestExistingFwVersion);
 
-		// If we found FW 7 as the highest installed version, store its projects path for later:
-		if (GetHugeVersion(pszHighestExistingFwVersion) == 0x0007000000000000)
+		// If we found FW 7 or Later as the highest installed version, store its projects path for later:
+		if (GetHugeVersion(pszHighestExistingFwVersion) >= 0x0007000000000000)
 		{
 			// Get ProjectsDir value:
 			_FormerFw7ProjectsFolder = NewRegString(hKey, pszHighestExistingFwVersion, _T("ProjectsDir"));
@@ -57,9 +58,9 @@ int FwPreInstall(SoftwareProduct * Product)
 				RemoveTrailingBackslashes(_FormerFw7ProjectsFolder);
 				g_Log.Write(_T("FW 7 Projects directory was %s."), _FormerFw7ProjectsFolder);
 
-				// If the FW 7 project directory is not the FW 7 default (C:\ProgramData\SIL\FieldWorks 7\Projects)
+				// If the FW 7 or Later project directory is not the FW 7 default (C:\ProgramData\SIL\FieldWorks 7\Projects)
 				// then we will change the default projects folder presented in the new installer
-				// to facilitate preservation of existing folder:
+				// to facilitate preservation of the existing folder:
 				_TCHAR * pszCommonAppDataFolder = GetFolderPathNew(CSIDL_COMMON_APPDATA);
 				_TCHAR * pszDefaultFw7ProjectsFolder = MakePath(pszCommonAppDataFolder, _T("SIL\\FieldWorks 7\\Projects"));
 
@@ -71,6 +72,8 @@ int FwPreInstall(SoftwareProduct * Product)
 				}
 				else
 				{
+					// REVIEW Hasso 2014.01: Why are we storing the *default* location in the registry *iff* a FW 7 folder exists *and*
+					// it is the FW 7 default?  Seems we could comletely omit this step if we don't need to do it every time.
 					// Store FW 8 default projects folder in an environment variable (which will endure only for this process):
 					_TCHAR * pszDefaultFw8ProjectsFolder = MakePath(pszCommonAppDataFolder, _T("SIL\\FieldWorks\\Projects"));
 					SetEnvironmentVariable(_T("FWINSTALLERPROJDIRDEFAULT"), pszDefaultFw8ProjectsFolder);

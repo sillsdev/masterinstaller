@@ -615,48 +615,52 @@ int Fw8PostInstall(SoftwareProduct * Product)
 	else
 		g_Log.Write(_T("Product is NULL."));
 
-	g_Log.Write(_T("About to run data migration utility..."));
-
-	// See if we can locate the data migration utility we should have just installed:
-	_TCHAR * pszMigrateUtilPath = GetMsiComponentPath(Product->m_kpszMsiProductCode, _T("{D25017CC-66F5-4BEE-B7BA-39BE8AE3698F}"));
-	g_Log.Write(_T("Found MigrateSqlDbs path: %s"), pszMigrateUtilPath);
-
-	DWORD migrationStatus = -1; // Default to value meaning "utility failed for some reason other than migration failure".
-
-	if (pszMigrateUtilPath != NULL)
+	// If there are no projects to migrate from FW 7 or Later, check for projects from FW 6 or Earlier
+	if (_FormerFw7ProjectsFolder == NULL)
 	{
-		ShowStatusDialog();
-		DisplayStatusText(0, _T("Migrating any FieldWorks data from earlier versions..."));
-		DisplayStatusText(1, _T(""));
+		g_Log.Write(_T("About to run data migration utility..."));
 
-		// Run the MigrateSqlDbs.exe utility:
-		_TCHAR * pszCmd = new_sprintf(_T("\"%s\" -autoclose"), pszMigrateUtilPath);
-		migrationStatus = ExecCmd(pszCmd, _T(""), true, NULL, _T("Monitor 4000"));
+		// See if we can locate the data migration utility we should have just installed:
+		_TCHAR * pszMigrateUtilPath = GetMsiComponentPath(Product->m_kpszMsiProductCode, _T("{D25017CC-66F5-4BEE-B7BA-39BE8AE3698F}"));
+		g_Log.Write(_T("Found MigrateSqlDbs path: %s"), pszMigrateUtilPath);
 
-		// Tidy up:
-		delete[] pszCmd;
-		pszCmd = NULL;
-		delete[] pszMigrateUtilPath;
-		pszMigrateUtilPath = NULL;
+		DWORD migrationStatus = -1; // Default to value meaning "utility failed for some reason other than migration failure".
+
+		if (pszMigrateUtilPath != NULL)
+		{
+			ShowStatusDialog();
+			DisplayStatusText(0, _T("Migrating any FieldWorks data from earlier versions..."));
+			DisplayStatusText(1, _T(""));
+
+			// Run the MigrateSqlDbs.exe utility:
+			_TCHAR * pszCmd = new_sprintf(_T("\"%s\" -autoclose"), pszMigrateUtilPath);
+			migrationStatus = ExecCmd(pszCmd, _T(""), true, NULL, _T("Monitor 4000"));
+
+			// Tidy up:
+			delete[] pszCmd;
+			pszCmd = NULL;
+			delete[] pszMigrateUtilPath;
+			pszMigrateUtilPath = NULL;
+		}
+		else
+			g_Log.Write(_T("Could not find path to MigrateSqlDbs.exe."));
+
+		// Examine the return value from MigrateSqlDbs.exe and prepare a text recommending whether or
+		// not the user should allow uninstallation of an earlier version of FW.
+		switch (migrationStatus)
+		{
+		case -1:
+			g_Log.Write(_T("Data Migration failed for some unknown reason."));
+			break;
+		case 0:
+			g_Log.Write(_T("Data Migration succeeded."));
+			break;
+		default:
+			g_Log.Write(_T("%d projects failed to migrate."), migrationStatus);
+			break;
+		}
+		g_Log.Write(_T("...Done"));
 	}
-	else
-		g_Log.Write(_T("Could not find path to MigrateSqlDbs.exe."));
-
-	// Examine the return value from MigrateSqlDbs.exe and prepare a text recommending whether or
-	// not the user should allow uninstallation of an earlier version of FW.
-	switch (migrationStatus)
-	{
-	case -1:
-		g_Log.Write(_T("Data Migration failed for some unknown reason."));
-		break;
-	case 0:
-		g_Log.Write(_T("Data Migration succeeded."));
-		break;
-	default:
-		g_Log.Write(_T("%d projects failed to migrate."), migrationStatus);
-		break;
-	}
-	g_Log.Write(_T("...Done"));
 
 	// See if an earlier version of FW is installed:
 	_TCHAR * pszProductCode = DetectEarlierFwInstallation();

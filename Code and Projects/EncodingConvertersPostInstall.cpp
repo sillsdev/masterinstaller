@@ -98,7 +98,7 @@ int SetupInstalledConverters(SoftwareProduct * /*Product*/)
 		INSTALLSTATE state = INSTALLSTATE_UNKNOWN;
 
 		state = MsiQueryFeatureState(
-			_T("{F28612B2-B73F-4561-9B9F-1DA1F538020B}"), pszEcFeatures[i]);
+			_T("{B8CC40C1-1EE9-4FE8-BC9F-F37CD8F60E1C}"), pszEcFeatures[i]);
 
 		switch (state)
 		{

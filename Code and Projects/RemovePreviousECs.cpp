@@ -126,7 +126,8 @@ int RemovePreviousECs(SoftwareProduct * /*Product*/)
 		_T("{DCDE04DF-4429-44E3-939F-E618A8106DC7}"), // EC Version 2.6.1 produced with FW 5.0
 		_T("{287F6ADF-DA8A-46fc-8BE0-351AA6412B79}"), // EC Version 3.0 produced with FW 5.4
 		_T("{DC07DA97-25EB-4B1C-8B1B-190E3FBDB00A}"), // EC Version 3.1 produced with FW 6.0
-//		_T("{F28612B2-B73F-4561-9B9F-1DA1F538020B}"), // EC Version 4.0 produced with FW 7.1
+		_T("{F28612B2-B73F-4561-9B9F-1DA1F538020B}"), // EC Version 4.0 (beta) produced with FW 7.1
+//		_T("{B8CC40C1-1EE9-4FE8-BC9F-F37CD8F60E1C}"), // SEC Version 4.0 (real release)
 	};
 
 	for (int i = 0; i < (sizeof(pszProductCode) / sizeof(pszProductCode[0])); i++)

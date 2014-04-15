@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tchar.h>
+#include <wchar.h>
 #include <shlobj.h>
 #include <shobjidl.h>
 #include <shlguid.h>
@@ -867,6 +868,29 @@ int Fw8PostInstall(SoftwareProduct * Product)
 	}
 	else
 		g_Log.Write(_T("Did not store any previous FW Projects folder. No data moved."));
+
+	// Make sure special character definitions are not lost (LT-15327).
+	// Couldn't figure out how to get a guid for UnicodeCharEditor.exe without causing conflicts with the UnicodeCharEditor shortcut.
+	// So hacked this by getting the path to MigrateSqlDb and changing it to UnicodeCharEditor which is in the same location.
+	g_Log.Write(_T("About to run Unicode character definitions installation utility..."));
+	_TCHAR * pszMigrateSqlDbPath = GetMsiComponentPath(Product->m_kpszMsiProductCode, _T("{D25017CC-66F5-4BEE-B7BA-39BE8AE3698F}"));
+	if (pszMigrateSqlDbPath != NULL)
+	{
+		int pathLength = wcslen(pszMigrateSqlDbPath) - wcslen(_T("MigrateSqlDbs.exe"));
+		pszMigrateSqlDbPath[pathLength] = 0;
+		g_Log.Write(_T("Path to programs = %s"), pszMigrateSqlDbPath);
+		_TCHAR * pszCmd = new_sprintf(_T("\"%sUnicodeCharEditor.exe\" -i"), pszMigrateSqlDbPath);
+		g_Log.Write(_T("Executing UnicodeCharEditor using: %s"), pszCmd);
+		ExecCmd(pszCmd, NULL);
+
+		// Tidy up:
+		delete[] pszCmd;
+		pszCmd = NULL;
+		delete[] pszMigrateSqlDbPath;
+		pszMigrateSqlDbPath = NULL;
+	}
+	else
+		g_Log.Write(_T("Could not find path to UnicodeCharEditor.exe."));
 
 	return 0;
 }

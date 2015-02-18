@@ -1,0 +1,46 @@
+Rebuild of D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web
+Wed Dec 10 12:00:33 CST 2014 - Started.
+Wed Dec 10 12:00:33 CST 2014 - Running DOS command: cmd /Q /D /C dir "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web" /B /S /A:-D >"C:\Users\busha\AppData\Local\Temp\radA2D7E.tmp"
+Wed Dec 10 12:00:33 CST 2014 - Starting off with 0 files already in D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web.
+Wed Dec 10 12:00:33 CST 2014 - Running DOS command: cmd /Q /D /C dir "\\cana\LSDev\Installers\SEC 4.0 Web\SIL Converters\SEC Setup.msi" /B /A:-D >"C:\Users\busha\AppData\Local\Temp\rad30AAE.tmp"
+Wed Dec 10 12:00:33 CST 2014 - Running DOS command: cmd /Q /D /C dir "G:\Software Package Builder\Products\Documents\Encoding Converters\SetupEC.rtf" /B /A:-D >"C:\Users\busha\AppData\Local\Temp\rad947D0.tmp"
+Wed Dec 10 12:00:33 CST 2014 - Running DOS command: cmd /Q /D /C dir "G:\Software Package Builder\Products\Documents\Encoding Converters\Help for SIL Converters.pdf" /B /A:-D >"C:\Users\busha\AppData\Local\Temp\rad24BCA.tmp"
+Wed Dec 10 12:00:33 CST 2014 - Running DOS command: cmd /Q /D /C dir "G:\Software Package Builder\Products\Documents\Encoding Converters\SILConverters Installation Help.pdf" /B /A:-D >"C:\Users\busha\AppData\Local\Temp\radD601E.tmp"
+Wed Dec 10 12:00:33 CST 2014 - Running DOS command: cmd /Q /D /C dir "G:\Software Package Builder\Products\3rd Party\Win 2000 SP4" /B /S /A:-D >"C:\Users\busha\AppData\Local\Temp\radCBAC0.tmp"
+Wed Dec 10 12:00:33 CST 2014 - Running DOS command: cmd /Q /D /C dir "G:\Software Package Builder\Products\3rd Party\Win XP SP3" /B /S /A:-D >"C:\Users\busha\AppData\Local\Temp\rad9A3A0.tmp"
+Wed Dec 10 12:00:33 CST 2014 - Running DOS command: cmd /Q /D /C dir "G:\Software Package Builder\Products\3rd Party\Win Vista SP1" /B /S /A:-D >"C:\Users\busha\AppData\Local\Temp\rad825FB.tmp"
+Wed Dec 10 12:00:33 CST 2014 - Running DOS command: cmd /Q /D /C dir "G:\Software Package Builder\Products\3rd Party\DotNet 4.0\dotNetFx40_Full_x86_x64.exe" /B /A:-D >"C:\Users\busha\AppData\Local\Temp\rad22F9B.tmp"
+Wed Dec 10 12:00:33 CST 2014 - Running DOS command: cmd /Q /D /C dir "G:\Software Package Builder\Products\3rd Party\IE60" /B /S /A:-D >"C:\Users\busha\AppData\Local\Temp\radD36FF.tmp"
+Wed Dec 10 12:00:34 CST 2014 - Running DOS command: cmd /Q /D /C dir "G:\Software Package Builder\Products\3rd Party\Windows Installer 3.1" /B /S /A:-D >"C:\Users\busha\AppData\Local\Temp\radF4471.tmp"
+Wed Dec 10 12:00:34 CST 2014 - Running DOS command: cmd /Q /D /C dir "G:\Software Package Builder\Products\Documents\TermsOfUse\License SIL Lang Dev SW.rtf" /B /A:-D >"C:\Users\busha\AppData\Local\Temp\rad7F600.tmp"
+Wed Dec 10 12:00:34 CST 2014 - D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web does not yet exist; building from scratch.
+Wed Dec 10 12:00:34 CST 2014 - Building master installer.
+Wed Dec 10 12:00:34 CST 2014 - Running DOS command: wscript.exe "D:\Work\Master Installer\Utils\CompileXmlMasterInstaller.js" "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web.xml" -E "-certificatepassword:Psalm 16:5"
+Wed Dec 10 12:00:51 CST 2014 - Gathering Files.
+Wed Dec 10 12:00:51 CST 2014 - D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\License SIL Lang Dev SW.rtf does not exist - copying from G:\Software Package Builder\Products\Documents\TermsOfUse\License SIL Lang Dev SW.rtf
+Wed Dec 10 12:00:51 CST 2014 - Running DOS command: cmd /Q /D /C copy "G:\Software Package Builder\Products\Documents\TermsOfUse\License SIL Lang Dev SW.rtf" "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\License SIL Lang Dev SW.rtf"
+Wed Dec 10 12:00:51 CST 2014 - D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\SIL Converters\SEC Setup.msi does not exist - copying from \\cana\LSDev\Installers\SEC 4.0 Web\SIL Converters\SEC Setup.msi
+Wed Dec 10 12:00:51 CST 2014 - Running DOS command: cmd /Q /D /C copy "\\cana\LSDev\Installers\SEC 4.0 Web\SIL Converters\SEC Setup.msi" "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\SIL Converters\SEC Setup.msi"
+Wed Dec 10 12:00:53 CST 2014 - D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\SIL Converters\SetupEC.rtf does not exist - copying from G:\Software Package Builder\Products\Documents\Encoding Converters\SetupEC.rtf
+Wed Dec 10 12:00:53 CST 2014 - Running DOS command: cmd /Q /D /C copy "G:\Software Package Builder\Products\Documents\Encoding Converters\SetupEC.rtf" "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\SIL Converters\SetupEC.rtf"
+Wed Dec 10 12:00:55 CST 2014 - D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\SIL Converters\Help for SIL Converters.pdf does not exist - copying from G:\Software Package Builder\Products\Documents\Encoding Converters\Help for SIL Converters.pdf
+Wed Dec 10 12:00:55 CST 2014 - Running DOS command: cmd /Q /D /C copy "G:\Software Package Builder\Products\Documents\Encoding Converters\Help for SIL Converters.pdf" "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\SIL Converters\Help for SIL Converters.pdf"
+Wed Dec 10 12:00:56 CST 2014 - D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\SIL Converters\SILConverters Installation Help.pdf does not exist - copying from G:\Software Package Builder\Products\Documents\Encoding Converters\SILConverters Installation Help.pdf
+Wed Dec 10 12:00:56 CST 2014 - Running DOS command: cmd /Q /D /C copy "G:\Software Package Builder\Products\Documents\Encoding Converters\SILConverters Installation Help.pdf" "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\SIL Converters\SILConverters Installation Help.pdf"
+Wed Dec 10 12:00:56 CST 2014 - D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\Utilities\DotNet 4.0\dotNetFx40_Full_x86_x64.exe does not exist - copying from G:\Software Package Builder\Products\3rd Party\DotNet 4.0\dotNetFx40_Full_x86_x64.exe
+Wed Dec 10 12:00:56 CST 2014 - Running DOS command: cmd /Q /D /C copy "G:\Software Package Builder\Products\3rd Party\DotNet 4.0\dotNetFx40_Full_x86_x64.exe" "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\Utilities\DotNet 4.0\dotNetFx40_Full_x86_x64.exe"
+Wed Dec 10 12:01:02 CST 2014 - D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\Utilities\MSInstall\WindowsInstaller-KB893803-v2-x86.exe does not exist - copying from G:\Software Package Builder\Products\3rd Party\Windows Installer 3.1\WindowsInstaller-KB893803-v2-x86.exe
+Wed Dec 10 12:01:02 CST 2014 - Running DOS command: cmd /Q /D /C copy "G:\Software Package Builder\Products\3rd Party\Windows Installer 3.1\WindowsInstaller-KB893803-v2-x86.exe" "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web\Utilities\MSInstall\WindowsInstaller-KB893803-v2-x86.exe"
+Wed Dec 10 12:01:02 CST 2014 - 7 files gathered.
+Wed Dec 10 12:01:02 CST 2014 - Building self-extracting archive.
+Wed Dec 10 12:01:02 CST 2014 - Running DOS command: cmd /Q /D /C dir "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web" /B /S /A:-D >"C:\Users\busha\AppData\Local\Temp\rad72885.tmp"
+Wed Dec 10 12:01:02 CST 2014 - Building batch file D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web.temp.bat
+Wed Dec 10 12:01:02 CST 2014 - @echo off
+Wed Dec 10 12:01:02 CST 2014 - D:
+Wed Dec 10 12:01:02 CST 2014 - cd "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web"
+Wed Dec 10 12:01:02 CST 2014 - "D:\Work\Master Installer\Utils\7za.exe" a "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web.7z" + "SEC 4.0 Web\*" -r -mx=9 -mmt=on
+Wed Dec 10 12:01:02 CST 2014 - copy /b "D:\Work\Master Installer\Utils\7zSD_new.sfx" + "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web.Config.txt" + "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web.7z" "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web.exe"
+Wed Dec 10 12:01:02 CST 2014 - Running DOS command: cmd /D /C ""D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web.temp.bat""
+Wed Dec 10 12:01:32 CST 2014 - Running command: "D:\Work\Master Installer\Utils\SignMaster.exe" "D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web.exe" -d "SIL Software Package" -p "********"
+Wed Dec 10 12:01:54 CST 2014 - Running DOS command: cmd /D /C ""D:\Work\Master Installer\Installer Definitions\SEC 4.0 Web\SEC 4.0 Web.temp.bat""
+Wed Dec 10 12:01:56 CST 2014 - Ended.

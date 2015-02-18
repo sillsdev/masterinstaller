@@ -197,11 +197,10 @@
 				<VersionInfo>http://downloads.palaso.org/LiftBridge/</VersionInfo>
 			</Contact>
 		</Product>
-		<Product KeyId="2" Version="5.1">
+		<Product KeyId="8" Version="5.1">
 			<AutoConfigure>
 				<Title>TW5 Update 1 (From source control repository)</Title>
 				<Source NameWhenLocked="2.msi" SignAs="SIL Software Installer">Installers\Translator's Workplace 5 Update 1\SetupTW.msi</Source>
-				<Source>Documents\Translator's Workplace 5 Update 1\CopyToCd</Source>
 				<SetupHelp>Documents\Translator's Workplace 5 Update 1\ReadMe.rtf</SetupHelp>
 				<Destination>TW51</Destination>
 				<WhenLocked>
@@ -216,10 +215,10 @@
 			<Tag>TW51</Tag>
 			<MustBeAdmin>true</MustBeAdmin>
 			<CriticalFile>TW51\SetupTW.msi</CriticalFile>
-			<Install/>
+			<Install MsiUpgradeFrom="5.1" MsiUpgradeTo="5.1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Commentary>This installer may take a few minutes to start from the DVD.</Commentary>
-			<ProductCode>{3ED44B20-1AB3-4F08-A430-78E70BDDFA18}</ProductCode>
+			<ProductCode>{E98FADB8-031E-42E3-B581-268B126C81B6}</ProductCode>
 			<Help>TW51\ReadMe.rtf</Help>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Contact>
@@ -228,7 +227,7 @@
 				<Email>jim_devries@sil.org</Email>
 			</Contact>
 		</Product>
-		<Product KeyId="1" Version="5.3">
+		<Product KeyId="1" Version="5.3.1">
 			<AutoConfigure>
 				<Title>BART 5.3.1 (From source control repository)</Title>
 				<Source NameWhenLocked="3.msi" SignAs="SIL Software Installer">Installers\BART 5\SetupBart.msi</Source>
@@ -248,10 +247,10 @@
 			<MustBeAdmin>true</MustBeAdmin>
 			<Preinstall>QuitIfBart5BetaPresent</Preinstall>
 			<CriticalFile>BART5\SetupBart.msi</CriticalFile>
-			<Install/>
+			<Install MsiUpgradeFrom="5.3.1" MsiUpgradeTo="5.3.1"/>
 			<StatusWindow>Monitor 4000</StatusWindow>
 			<Help>BART5\SetupBART.rtf</Help>
-			<ProductCode>{3F4B1F76-BABC-433C-B0DF-19CC6C5B8D03}</ProductCode>
+			<ProductCode>{574CC5E0-54C0-4A8E-9F96-7F16734DCF35}</ProductCode>
 			<Prerequisite Tag="WI31" MinVersion="2.0"/>
 			<Contact>
 				<FirstName>Paul</FirstName>
@@ -875,57 +874,36 @@
 				<VersionInfo>http://www.tavultesoft.com/keyman</VersionInfo>
 			</Contact>
 		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Encoding Converters 4.0 Web Installer</Title>
-			</AutoConfigure>
-			<Title>SIL Converters and Repository 4.0</Title>
-			<Tag>EncCvtrs_4_0_Web</Tag>
-			<MinOS>5.1.2</MinOS>
-			<MustBeAdmin>true</MustBeAdmin>
-			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>http://downloads.sil.org/EncodingConverters/4.0/WebSetupEC.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
-			<StatusWindow>Monitor 8000</StatusWindow>
-			<ProductCode>{F28612B2-B73F-4561-9B9F-1DA1F538020B}</ProductCode>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<PostInstall>EncodingConvertersPostInstall</PostInstall>
-			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
-			<Contact>
-				<FirstName>Bob</FirstName>
-				<LastName>Eaton</LastName>
-				<Email>bob_eaton@sall.com</Email>
-			</Contact>
-		</Product>
-		<Product>
-			<AutoConfigure>
-				<Title>Encoding Converters 4.0 CD Installer (from \\cana\LSDev\Installers\FW.ww\SEC4.0\SIL Converters)</Title>
-				<Source>\\cana\LSDev\Installers\FW.ww\SEC4.0\SIL Converters\SetupEC.msi</Source>
-				<Source>Documents\Encoding Converters\SetupEC.rtf</Source>
-				<Source>Documents\Encoding Converters\Help for SIL Converters.pdf</Source>
-				<Source>Documents\Encoding Converters\SILConverters Installation Help.pdf</Source>
-				<Destination>SIL Converters</Destination>
-			</AutoConfigure>
-			<Title>SIL Converters and Repository 4.0</Title>
-			<Tag>EncCvtrs_4_0</Tag>
-			<MinOS>5.1.2</MinOS>
-			<MustBeAdmin>true</MustBeAdmin>
-			<Help>SIL Converters\SetupEC.rtf</Help>
-			<Preinstall>RemovePreviousECs</Preinstall>
-			<CriticalFile>SIL Converters\SetupEC.msi</CriticalFile>
-			<Install MsiFlags="MASTER_INSTALLER=1"/>
-			<StatusWindow>Monitor 5000</StatusWindow>
-			<ProductCode>{F28612B2-B73F-4561-9B9F-1DA1F538020B}</ProductCode>
-			<Commentary>Please follow instructions in installer.</Commentary>
-			<PostInstall>EncodingConvertersPostInstall</PostInstall>
-			<Prerequisite MaxOS="5.32767.32767" Tag=".NET2.0SP1ALT" MinVersion="2.0"/>
-			<Contact>
-				<FirstName>Bob</FirstName>
-				<LastName>Eaton</LastName>
-				<Email>bob_eaton@sall.com</Email>
-			</Contact>
-		</Product>
-		<Product>
+    <Product List="true">
+      <AutoConfigure>
+        <Title>Encoding Converters 4.0 CD Installer (from \\cana\LSDev\Installers\SEC4.0\SIL Converters)</Title>
+        <Source>\\cana\LSDev\Installers\SEC4.0\SIL Converters\SetupEC.msi</Source>
+        <Source>Documents\Encoding Converters\SetupEC.rtf</Source>
+        <Source>Documents\Encoding Converters\Help for SIL Converters.pdf</Source>
+        <Source>Documents\Encoding Converters\SILConverters Installation Help.pdf</Source>
+        <Destination>SIL Converters</Destination>
+      </AutoConfigure>
+      <Title>SIL Converters and Repository 4.0</Title>
+      <Tag>EncCvtrs_4_0</Tag>
+      <MinOS>5.1.2</MinOS>
+      <MustBeAdmin>true</MustBeAdmin>
+      <CriticalFile>SIL Converters\SetupEC.msi</CriticalFile>
+      <Install MsiFlags="MASTER_INSTALLER=1"/>
+      <StatusWindow>Monitor 5000</StatusWindow>
+      <ProductCode>{B8CC40C1-1EE9-4FE8-BC9F-F37CD8F60E1C}</ProductCode>
+      <Help>SIL Converters\SetupEC.rtf</Help>
+      <Prerequisite Tag=".NET4.0F" MinVersion="4 Full"/>
+      <Preinstall>RemovePreviousECs</Preinstall>
+      <Commentary>Please follow instructions in installer.</Commentary>
+      <PostInstall>EncodingConvertersPostInstall</PostInstall>
+      <Contact>
+        <FirstName>Bob</FirstName>
+        <LastName>Eaton</LastName>
+        <Email>bob_eaton@sall.com</Email>
+      </Contact>
+      <CD>0</CD>
+    </Product>
+    <Product>
 			<AutoConfigure>
 				<Title>Encoding Converters 3.0 Web Installer</Title>
 			</AutoConfigure>

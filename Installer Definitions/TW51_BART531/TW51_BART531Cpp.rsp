@@ -1,0 +1,2 @@
+/O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "INSTALLERHELP2_EXPORTS" /D "_VC80_UPGRADE=0x0710" /D "_WINDLL" /D "_UNICODE" /D "UNICODE" /FD /EHsc /MT /GS /W3 /c /Zi /TP /Fo"D:\Work\Master Installer\Installer Definitions\TW51_BART531\InstallerHelp2.obj"
+"D:\Work\Master Installer\Code and Projects\InstallerHelp2.cpp"

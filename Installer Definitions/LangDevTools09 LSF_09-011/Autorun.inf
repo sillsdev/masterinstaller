@@ -1,6 +1,0 @@
-[autorun]
-icon=setup.exe
-open=setup.exe -autorun
-shellsetup=&Install Language Development Tools Installation (LSF_09-011)
-shellsetupcommand=setup.exe
-label=Language Development Tools Installation (LSF_09-011)

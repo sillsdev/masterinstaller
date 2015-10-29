@@ -1,6 +1,0 @@
-[autorun]
-icon=setup.exe
-open=setup.exe -autorun
-shellsetup=&Install SIL FieldWorks 7.0 SE Alpha2 Installer
-shellsetupcommand=setup.exe
-label=SIL FieldWorks 7.0 SE Alpha2 Installer

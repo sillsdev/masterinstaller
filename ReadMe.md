@@ -1,3 +1,3 @@
-**Master Installer** is a set of tools which are used to help build and sign msi packages, handling extra depdendancies and making it easiter to produce packages using xml configuration files.
+**Master Installer** is a set of tools which are used to help build and sign msi packages, handling extra depdendencies and making it easier to produce packages using xml configuration files.
 
-This repository contains the code for the Master Installer tools as well as the configurations that are used to produce the packages for many SIL tools
+This repository contains the code and documentation for the Master Installer tools as well as the configurations used to produce the packages for many SIL tools.

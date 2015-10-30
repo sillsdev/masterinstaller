@@ -3,3 +3,4 @@
 *.suo
 *.pdb
 Utils/Interop.IWshRuntimeLibrary.dll
+Code and Projects/**/Debug/*

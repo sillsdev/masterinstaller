@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace MasterInstallerConfigurator
 {
-	[XmlRootAttribute("MasterInstaller", IsNullable = false)]
+	[XmlRoot("MasterInstaller", IsNullable = false)]
 	public class ConfigurationModel
 	{
 		public SetupOptions AutoConfigure { get; set; }
@@ -54,6 +54,41 @@ namespace MasterInstallerConfigurator
 		public class GeneralOptions
 		{
 			public string Title { get; set; }
+
+			public string ListSubtitle { get; set; }
+
+			public ListBackgroundOptions ListBackground { get; set; }
+
+			[XmlElement(ElementName = "ListEvenOneProduct")]
+			public bool ListEvenOne { get; set; }
+
+			public int ListSpacingAdjust { get; set; }
+
+			public int InfoButtonAdjust { get; set; }
+
+			public bool StartFromAnyCD { get; set; }
+
+			[XmlElement(ElementName = "KeyPromptNeedsShiftCtrl")]
+			public bool KeyPromptNeedsKeys { get; set; }
+
+			[XmlElement(ElementName = "GetKeyTitle")]
+			public string KeyTitle { get; set; }
+
+			[XmlElement(ElementName = "ExternalHelpFile")]
+			public string HelpFile { get; set; }
+
+			public string HelpButtonText { get; set; }
+
+			public string TermsOfUseFile { get; set; }
+
+			[XmlElement(ElementName = "TermsButtonText")]
+			public string TermsOfUseButtonText { get; set; }
+		}
+
+		public class ListBackgroundOptions
+		{
+			[XmlText]
+			public string ImagePath { get; set; }
 		}
 	}
 }

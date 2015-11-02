@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Security.Policy;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace MasterInstallerConfigurator
@@ -7,12 +7,34 @@ namespace MasterInstallerConfigurator
 	[XmlRoot("MasterInstaller", IsNullable = false)]
 	public class ConfigurationModel
 	{
+#region These properties are used in the build web Packages wizard
+		public List<FlavorOptions> Flavors { get; set; }
+
+		public class FlavorOptions
+		{
+			public string DownloadURL { get; set; }
+			public string FlavorName { get; set; }
+		}
+
+		public TasksToExecuteSettings Tasks { get; set; }
+
+		public class TasksToExecuteSettings
+		{
+			public string OutputFolder { get; set; }
+			public bool WriteInstallerXml { get; set; }
+			public bool WriteDownloadsXml { get; set; }
+			public bool Compile { get; set; }
+			public bool GatherFiles { get; set; }
+			public bool BuildSelfExtractingDownloadPackage { get; set; }
+			public bool RememberSettings { get; set; }
+		}
+
+#endregion
 		public SetupOptions AutoConfigure { get; set; }
 
 		public GeneralOptions General { get; set; }
 
 		public List<Product> Products { get; set; }
-
 
 		public class SetupOptions
 		{
@@ -153,6 +175,15 @@ namespace MasterInstallerConfigurator
 
 			[XmlAttribute(AttributeName = "FailMsg")]
 			public string FailMessage { get; set; }
+		}
+
+		public void Save(string installerFile)
+		{
+			var serializer = new XmlSerializer(typeof(ConfigurationModel));
+			using (var textWriter = new StreamWriter(installerFile))
+			{
+				serializer.Serialize(textWriter, this);
+			}
 		}
 	}
 

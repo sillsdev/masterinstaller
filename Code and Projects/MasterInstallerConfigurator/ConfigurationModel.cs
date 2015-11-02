@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Policy;
 using System.Xml.Serialization;
 
 namespace MasterInstallerConfigurator
@@ -49,6 +50,39 @@ namespace MasterInstallerConfigurator
 		public class Product
 		{
 			public object AutoConfigure { get; set; }
+
+			public string Title { get; set; }
+
+			public string Tag { get; set; }
+
+			public bool MustBeAdmin { get; set; }
+
+			public bool MustHaveWin2kOrBetter { get; set; }
+
+			public string CriticalFile { get; set; }
+
+			public string Install { get; set; }
+
+			public TestPresenceOptions TestPresence { get; set; }
+
+			public string DownloadURL { get; set; }
+
+			public string Commentary { get; set; }
+
+			public string StatusWindow { get; set; }
+
+			public bool FlushReboot { get; set; }
+
+			[XmlElement(ElementName = "Prerequisite")]
+			public List<PrerequisiteOptions> Prerequisite { get; set; }
+
+			public RequiresOption Requires { get; set; }
+
+			public string ProductCode { get; set; }
+
+			public string Help { get; set; }
+
+			public int CDNumber { get; set; }
 		}
 
 		public class GeneralOptions
@@ -89,6 +123,36 @@ namespace MasterInstallerConfigurator
 		{
 			[XmlText]
 			public string ImagePath { get; set; }
+		}
+
+		public class PrerequisiteOptions
+		{
+			[XmlAttribute]
+			public string Tag { get; set; }
+
+			[XmlAttribute]
+			public string Version { get; set; }
+		}
+
+		public class TestPresenceOptions
+		{
+			[XmlText]
+			public string TestValue { get; set; }
+
+			[XmlAttribute]
+			string Version { get; set; }
+		}
+
+		public class RequiresOption
+		{
+			[XmlAttribute]
+			public string Tag { get; set; }
+
+			[XmlAttribute]
+			public string MinVersion { get; set; }
+
+			[XmlAttribute(AttributeName = "FailMsg")]
+			public string FailMessage { get; set; }
 		}
 	}
 }

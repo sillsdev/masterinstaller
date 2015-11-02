@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Security.Policy;
 using System.Xml.Serialization;
 using MasterInstallerConfigurator;
 using NUnit.Framework;
@@ -131,6 +132,78 @@ namespace MasterInstallerConfiguratorTests
 				Assert.That(model.General.HelpButtonText, Is.EqualTo(helpBtnTxt), "Did not read HelpFile");
 				Assert.That(model.General.TermsOfUseFile, Is.EqualTo(TOUFile), "Did not read TermsOfUseFile");
 				Assert.That(model.General.TermsOfUseButtonText, Is.EqualTo(TOUBtnTxt), "Did not read TermsOfUseButtonText");
+			}
+		}
+
+
+		[Test]
+		public void CanReadProductSection()
+		{
+			var title = @"Title";
+			var tag = @"Subtitle";
+			var mustHaveWin2k = true;
+			var admin = true;
+			var criticalFile = "Utilities\\DotNet\\NDP1.1sp1-KB867460-X86.exe";
+			var install = "$Magic$";
+			var testPresence = "TestPresenceMagicWords";
+			var statusWindow = "Status";
+			var productCode = @"SIL Software Product Key";
+			var help = @"help.chm";
+			var tagAttribute = @"needstag";
+			var tagAttribute2 = @"needstag2";
+			var TOUBtnTxt = @"Can I use this?";
+			var version = "14.2";
+			var CDNumber = 0;
+			var downloadUrl = "http://test.com/";
+			var flushReboot = true;
+			var testVersion = "2.2.2";
+			var failMessage = "fail Message";
+			var basicModelXmlString =
+				string.Format(@"<MasterInstaller><Products><Product List='true'>
+					<AutoConfigure><Title>Test</Title></AutoConfigure>
+					<Title>{0}</Title>
+					<Tag>{1}</Tag>
+					<MustHaveWin2kOrBetter>{2}</MustHaveWin2kOrBetter>
+					<MustBeAdmin>{3}</MustBeAdmin>
+					<CriticalFile>{4}</CriticalFile>
+					<Install>{5}</Install>
+					<TestPresence Version='1.1'>{6}</TestPresence>
+					<StatusWindow>{7}</StatusWindow>
+					<ProductCode>{8}</ProductCode>
+					<Help>{9}</Help>
+					<Prerequisite Tag='{10}' Version='{15}'/>
+					<Prerequisite Tag='{11}' Version='{15}'/>
+					<CD>{12}</CD>
+					<DownloadURL>{13}</DownloadURL>
+					<FlushReboot>{14}</FlushReboot>
+					<Requires Tag='{10}' MinVersion='{15}' FailMsg='{16}'/>
+				</Product></Products></MasterInstaller>", title, tag, mustHaveWin2k.ToString().ToLower(), admin.ToString().ToLower(), criticalFile, install,
+													  testPresence, statusWindow, productCode, help, tagAttribute, tagAttribute2, CDNumber, downloadUrl, flushReboot.ToString().ToLower(), testVersion, failMessage);
+			var serializer = new XmlSerializer(typeof(ConfigurationModel));
+			using (var textReader = new StringReader(basicModelXmlString))
+			{
+				var model = (ConfigurationModel)serializer.Deserialize(textReader);
+				var testProduct = model.Products[0];
+				Assert.That(testProduct.Title, Is.StringEnding(title), "Did not read Title");
+				Assert.That(testProduct.Tag, Is.StringEnding(tag), "Did not read Tag");
+				Assert.That(testProduct.MustHaveWin2kOrBetter, Is.True, "Did not read MustHaveWin2kOrBetter");
+				Assert.That(testProduct.MustBeAdmin, Is.True, "Did not read MustBeAdmin");
+				Assert.That(testProduct.CriticalFile, Is.StringEnding(criticalFile), "Did not read CriticalFile");
+				Assert.That(testProduct.Install, Is.StringEnding(install), "Did not read Install");
+				Assert.That(testProduct.TestPresence.TestValue, Is.StringEnding(testPresence), "Did not read TestPresence");
+				Assert.That(testProduct.StatusWindow, Is.StringEnding(statusWindow), "Did not read StatusWindow");
+				Assert.That(testProduct.ProductCode, Is.StringEnding(productCode), "Did not read ProductCode");
+				Assert.That(testProduct.Help, Is.EqualTo(help), "Did not read HelpFile");
+				Assert.That(testProduct.Prerequisite.Count, Is.EqualTo(2), "Not enough prerequisite elements");
+				Assert.That(testProduct.Prerequisite[0].Tag, Is.StringEnding(tagAttribute), "Did not read first prereq Tag");
+				Assert.That(testProduct.Prerequisite[0].Version, Is.StringEnding(testVersion), "Did not read first prereq version");
+				Assert.That(testProduct.Prerequisite[1].Tag, Is.StringEnding(tagAttribute2), "Did not read second prereq Tag");
+				Assert.That(testProduct.CDNumber, Is.EqualTo(CDNumber), "Did not read CD Number");
+				Assert.That(testProduct.DownloadURL, Is.StringEnding(downloadUrl), "Did not read DownloadURL");
+				Assert.That(testProduct.FlushReboot, Is.True, "Did not read flushreboot");
+				Assert.That(testProduct.Requires.Tag, Is.StringEnding(tagAttribute), "Did not read Requires Tag attribute");
+				Assert.That(testProduct.Requires.MinVersion, Is.StringEnding(testVersion), "Did not read Requires testVersion");
+				Assert.That(testProduct.Requires.FailMessage, Is.StringEnding(failMessage), "Did not read Requires failMessage");
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 
 namespace MasterInstallerConfigurator
@@ -67,8 +69,35 @@ namespace MasterInstallerConfigurator
 							}
 							break;
 						case ReadingState.FlavorProducts:
+							// Handle lines that look like :
+							// SelectElement("IncludedF1P1", true);
+							// Note, these are 1 indexed Flavor and Product numbers
+							if (currentLine.StartsWith("SelectElement") && currentLine.Contains("true"))
+							{
+								var flavorProductStringStart = currentLine.IndexOf("F", StringComparison.Ordinal);
+								var flavorProductStringEnd = currentLine.IndexOf("\",", StringComparison.Ordinal);
+								var flavorProductIndexes = currentLine.Substring(flavorProductStringStart + 1,
+									flavorProductStringEnd - flavorProductStringStart - 1).Split('P');
+								var flavor = configurationModel.Flavors[int.Parse(flavorProductIndexes[0]) - 1];
+								var product = configurationModel.Products[int.Parse(flavorProductIndexes[1]) - 1];
+								if(flavor.IncludedProductTitles == null)
+									flavor.IncludedProductTitles = new List<string>();
+								flavor.IncludedProductTitles.Add(product.Title);
+							}
+							else if (currentLine.StartsWith("NextStage"))
+							{
+								currentState = ReadingState.Tasks;
+							}
 							break;
 						case ReadingState.Tasks:
+							if (currentLine.StartsWith("SetElement"))
+							{
+
+							}
+							else if (currentLine.StartsWith("SelectElement") && currentLine.Contains("true"))
+							{
+
+							}
 							break;
 					}
 				} // end while state machine

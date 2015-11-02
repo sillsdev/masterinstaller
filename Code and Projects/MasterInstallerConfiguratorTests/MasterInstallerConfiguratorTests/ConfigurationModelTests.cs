@@ -131,7 +131,7 @@ namespace MasterInstallerConfiguratorTests
 				Assert.That(model.General.HelpFile, Is.EqualTo(extHelpFile), "Did not read HelpFile");
 				Assert.That(model.General.HelpButtonText, Is.EqualTo(helpBtnTxt), "Did not read HelpFile");
 				Assert.That(model.General.TermsOfUseFile, Is.EqualTo(TOUFile), "Did not read TermsOfUseFile");
-				Assert.That(model.General.TermsOfUseButtonText, Is.EqualTo(TOUBtnTxt), "Did not read TermsOfUseButtonText");
+				Assert.That(model.General.TermsButtonText, Is.EqualTo(TOUBtnTxt), "Did not read TermsOfUseButtonText");
 			}
 		}
 

@@ -101,8 +101,10 @@ namespace MasterInstallerConfiguratorTests
 			var configuration = new ConfigurationModel();
 			// The configuration needs to have 2 Products for the given JavaScript 
 			configuration.Products = new List<ConfigurationModel.Product>();
-			configuration.Products.Add(new ConfigurationModel.Product { Title = "Main Product" });
-			configuration.Products.Add(new ConfigurationModel.Product { Title = "Dependency" });
+			var mainProduct = "Main Product";
+			configuration.Products.Add(new ConfigurationModel.Product { Title = mainProduct });
+			var dependency = "Dependency";
+			configuration.Products.Add(new ConfigurationModel.Product { Title = dependency });
 			var scriptFile = Path.Combine(TestFolder, "test.js");
 			var installerFile = Path.Combine(TestFolder, "installer.xml");
 			File.WriteAllText(scriptFile, complexScript);
@@ -118,8 +120,10 @@ namespace MasterInstallerConfiguratorTests
 				var secondFlavor = model.Flavors[1];
 				Assert.That(firstFlavor.FlavorName, Is.EqualTo(flavorName1));
 				Assert.That(firstFlavor.DownloadURL, Is.EqualTo(url1));
+				Assert.That(firstFlavor.IncludedProductTitles[0], Is.EqualTo(mainProduct));
 				Assert.That(secondFlavor.FlavorName, Is.EqualTo(flavorName2));
 				Assert.That(secondFlavor.DownloadURL, Is.EqualTo(url2));
+				Assert.That(secondFlavor.IncludedProductTitles[0], Is.EqualTo(dependency));
 				Assert.That(model.Tasks.OutputFolder, Is.EqualTo(outputPath));
 				Assert.That(model.Tasks.BuildSelfExtractingDownloadPackage, Is.True);
 				Assert.That(model.Tasks.Compile, Is.True);

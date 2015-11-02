@@ -14,6 +14,8 @@ namespace MasterInstallerConfigurator
 		{
 			public string DownloadURL { get; set; }
 			public string FlavorName { get; set; }
+
+			public List<string> IncludedProductTitles { get; set; }
 		}
 
 		public TasksToExecuteSettings Tasks { get; set; }
@@ -137,8 +139,7 @@ namespace MasterInstallerConfigurator
 
 			public string TermsOfUseFile { get; set; }
 
-			[XmlElement(ElementName = "TermsButtonText")]
-			public string TermsOfUseButtonText { get; set; }
+			public string TermsButtonText { get; set; }
 		}
 
 		public class ListBackgroundOptions

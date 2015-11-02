@@ -14,9 +14,10 @@ namespace MasterInstallerConfigurator
 		[STAThread]
 		static void Main()
 		{
+			var controller = new ConfigurationController(null);
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new ConfigurationWizard());
+			Application.Run(new ConfigurationWizard(controller));
 		}
 	}
 }

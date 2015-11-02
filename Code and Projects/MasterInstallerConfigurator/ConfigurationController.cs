@@ -6,7 +6,17 @@ using System.Threading.Tasks;
 
 namespace MasterInstallerConfigurator
 {
-	class ConfigurationController
+	public class ConfigurationController
 	{
+		private ConfigurationModel _model;
+		public ConfigurationController(ConfigurationModel model)
+		{
+			_model = model;
+		}
+
+		public void PopulateWithModelSettings(ConfigurationWizard configurationWizard)
+		{
+
+		}
 	}
 }

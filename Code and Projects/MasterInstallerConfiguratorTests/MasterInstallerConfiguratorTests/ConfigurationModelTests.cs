@@ -1,7 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using System.Security.Policy;
-using System.Xml;
 using System.Xml.Serialization;
 using MasterInstallerConfigurator;
 using NUnit.Framework;

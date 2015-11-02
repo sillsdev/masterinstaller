@@ -12,9 +12,12 @@ namespace MasterInstallerConfigurator
 {
 	public partial class ConfigurationWizard : Form
 	{
-		public ConfigurationWizard()
+		private ConfigurationController _controller;
+		public ConfigurationWizard(ConfigurationController controller)
 		{
+			_controller = controller;
 			InitializeComponent();
+			controller.PopulateWithModelSettings(this);
 		}
 	}
 }

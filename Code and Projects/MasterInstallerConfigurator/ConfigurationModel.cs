@@ -96,9 +96,9 @@ namespace MasterInstallerConfigurator
 			[XmlElement(ElementName = "ListEvenOneProduct")]
 			public bool ListEvenOne { get; set; }
 
-			public int ListSpacingAdjust { get; set; }
+			public SerializeableNullableInt ListSpacingAdjust { get; set; }
 
-			public int InfoButtonAdjust { get; set; }
+			public SerializeableNullableInt InfoButtonAdjust { get; set; }
 
 			public bool StartFromAnyCD { get; set; }
 
@@ -153,6 +153,17 @@ namespace MasterInstallerConfigurator
 
 			[XmlAttribute(AttributeName = "FailMsg")]
 			public string FailMessage { get; set; }
+		}
+	}
+
+	public class SerializeableNullableInt
+	{
+		[XmlText]
+		public string ValueString { get; set; }
+
+		public static implicit operator int(SerializeableNullableInt value)
+		{
+			return string.IsNullOrEmpty(value.ValueString) ? 0 : int.Parse(value.ValueString);
 		}
 	}
 }

@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Security.Policy;
+using System.Xml;
 using System.Xml.Serialization;
 using MasterInstallerConfigurator;
 using NUnit.Framework;
@@ -123,8 +125,8 @@ namespace MasterInstallerConfiguratorTests
 				Assert.That(model.General.ListSubtitle, Is.StringEnding(listSubtitle), "Did not read ListSubtitle");
 				Assert.That(model.General.ListBackground.ImagePath, Is.StringEnding(listBgPath), "Did not read ListBackground");
 				Assert.That(model.General.ListEvenOne, Is.True, "Did not read ListEvenOne");
-				Assert.That(model.General.ListSpacingAdjust, Is.EqualTo(listSpaceAdj), "Did not read ListSpacingAdjust");
-				Assert.That(model.General.InfoButtonAdjust, Is.EqualTo(infoButtonAdj), "Did not read InfoButtonAdjust");
+				Assert.That((int)model.General.ListSpacingAdjust, Is.EqualTo(listSpaceAdj), "Did not read ListSpacingAdjust");
+				Assert.That((int)model.General.InfoButtonAdjust, Is.EqualTo(infoButtonAdj), "Did not read InfoButtonAdjust");
 				Assert.That(model.General.StartFromAnyCD, Is.True, "Did not read StartFromAnyCD");
 				Assert.That(model.General.KeyPromptNeedsKeys, Is.True, "Did not read KeyPromptNeedsKeys");
 				Assert.That(model.General.KeyTitle, Is.StringEnding(keyTitle), "Did not read KeyTitle");
@@ -134,7 +136,6 @@ namespace MasterInstallerConfiguratorTests
 				Assert.That(model.General.TermsOfUseButtonText, Is.EqualTo(TOUBtnTxt), "Did not read TermsOfUseButtonText");
 			}
 		}
-
 
 		[Test]
 		public void CanReadProductSection()
@@ -204,6 +205,42 @@ namespace MasterInstallerConfiguratorTests
 				Assert.That(testProduct.Requires.Tag, Is.StringEnding(tagAttribute), "Did not read Requires Tag attribute");
 				Assert.That(testProduct.Requires.MinVersion, Is.StringEnding(testVersion), "Did not read Requires testVersion");
 				Assert.That(testProduct.Requires.FailMessage, Is.StringEnding(failMessage), "Did not read Requires failMessage");
+			}
+		}
+
+		[Test]
+		public void CanHandleEmptyAdjustElements()
+		{
+			var basicModelXmlString =
+				@"<MasterInstaller><General>
+					<Title>Title</Title>
+					<ListSpacingAdjust></ListSpacingAdjust>
+					<InfoButtonAdjust></InfoButtonAdjust>
+				</General></MasterInstaller>";
+			var serializer = new XmlSerializer(typeof(ConfigurationModel));
+			using (var textReader = new StringReader(basicModelXmlString))
+			{
+				var model = (ConfigurationModel)serializer.Deserialize(textReader);
+				// Make sure that the implicit cast to int is working when nothing is present in the element
+				Assert.True(model.General.ListSpacingAdjust == 0, "Did not read default ListSpacingAdjust");
+				Assert.True(model.General.ListSpacingAdjust == 0, "Did not read default InfoButtonAdjust");
+			}
+		}
+
+		[Test]
+		[Category("ByHand")]
+		public void CanReadExistingConfigurations()
+		{
+			var installerDefinitions = Directory.EnumerateDirectories("../../../../../Installer Definitions");
+			foreach (var dir in installerDefinitions)
+			{
+				var xmlFiles = Directory.EnumerateFiles(dir, "*.xml");
+
+				var serializer = new XmlSerializer(typeof(ConfigurationModel));
+				using (var textReader = new FileStream(xmlFiles.First(), FileMode.Open))
+				{
+					var result = serializer.Deserialize(textReader);
+				}
 			}
 		}
 	}

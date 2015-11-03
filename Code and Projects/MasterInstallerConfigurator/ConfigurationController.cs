@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿// Copyright (c) 2015 SIL International
+// This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 namespace MasterInstallerConfigurator
 {
 	public class ConfigurationController
@@ -16,7 +12,10 @@ namespace MasterInstallerConfigurator
 
 		public void PopulateWithModelSettings(ConfigurationWizard configurationWizard)
 		{
-
+			foreach (var flavor in _model.Flavors)
+			{
+				configurationWizard.AddFlavor(flavor.FlavorName, flavor.DownloadURL);
+			}
 		}
 	}
 }

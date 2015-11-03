@@ -1,1 +1,9 @@
-*.exe
+*.exe*
+**/obj/*
+*.suo
+*.pdb
+Utils/Interop.IWshRuntimeLibrary.dll
+Code and Projects/**/Debug/*
+*.vcxproj.user
+**/packages/*
+Setup.*sdf

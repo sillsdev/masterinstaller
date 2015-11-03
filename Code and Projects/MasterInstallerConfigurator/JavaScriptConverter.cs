@@ -90,13 +90,47 @@ namespace MasterInstallerConfigurator
 							}
 							break;
 						case ReadingState.Tasks:
-							if (currentLine.StartsWith("SetElement"))
+							// Handle lines that look like :
+							// SetElement("OutputPath", "G:\\Software Package Builder\\Web Downloads\\FW 8.2.2 SE");
+							// SelectElement("WriteXml", true);
+							// SetElement("SfxStyle", "UseFwSfx");
+							if (configurationModel.Tasks == null)
 							{
-
+								configurationModel.Tasks = new ConfigurationModel.TasksToExecuteSettings();
 							}
-							else if (currentLine.StartsWith("SelectElement") && currentLine.Contains("true"))
+							if (@currentLine.StartsWith("SetElement") || currentLine.StartsWith("SelectElement") && currentLine.Contains("true"))
 							{
-
+								var sections = currentLine.Split('"');
+								var elementName = sections[1];
+								switch (elementName)
+								{
+									case "OutputPath":
+										configurationModel.Tasks.OutputFolder = sections[3];
+										break;
+									case "WriteXml":
+										configurationModel.Tasks.WriteInstallerXml = true;
+										break;
+									case "WriteDownloadsXml":
+										configurationModel.Tasks.WriteDownloadsXml = true;
+										break;
+									case "Compile" :
+										configurationModel.Tasks.Compile = true;
+										break;
+									case "GatherFiles" :
+										configurationModel.Tasks.GatherFiles = true;
+										break;
+									case "BuildSfx":
+										configurationModel.Tasks.BuildSelfExtractingDownloadPackage = true;
+										break;
+									case "SaveSettings" :
+										configurationModel.Tasks.RememberSettings = true;
+										break;
+									case "SfxStyle" :
+										configurationModel.Tasks.SelfExtractingStyle = sections[3];
+										break;
+									default:
+										throw new Exception("Invalid javascript file, unknown option: " + elementName);
+								}
 							}
 							break;
 					}

@@ -29,6 +29,7 @@ namespace MasterInstallerConfigurator
 			public bool GatherFiles { get; set; }
 			public bool BuildSelfExtractingDownloadPackage { get; set; }
 			public bool RememberSettings { get; set; }
+			public string SelfExtractingStyle { get; set; }
 		}
 
 #endregion

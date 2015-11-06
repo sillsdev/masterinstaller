@@ -137,6 +137,7 @@ namespace MasterInstallerConfigurator
 					}
 				} // end while state machine
 				xmlConfigStream.Position = 0; // Reset the stream based on the safe assumption that we will always write at least as much as we read
+				xmlConfigStream.SetLength(0);
 				serializer.Serialize(xmlConfigStream, configurationModel);
 			} // end stream usings
 		}

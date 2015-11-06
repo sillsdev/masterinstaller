@@ -189,6 +189,18 @@ namespace MasterInstallerConfigurator
 				serializer.Serialize(textWriter, this);
 			}
 		}
+
+		public static ConfigurationModel Load(string javaScriptFile, string xmlConfigFile)
+		{
+			var destFileName = Path.Combine(Path.GetDirectoryName(xmlConfigFile), "NewMIConfig.xml");
+			File.Copy(xmlConfigFile, destFileName, true);
+			JavaScriptConverter.ConvertJsToXml(javaScriptFile, destFileName);
+			var serializer = new XmlSerializer(typeof(ConfigurationModel));
+			using (var textWriter = new StreamReader(destFileName))
+			{
+				return (ConfigurationModel)serializer.Deserialize(textWriter);
+			}
+		}
 	}
 
 	public class SerializeableNullableInt

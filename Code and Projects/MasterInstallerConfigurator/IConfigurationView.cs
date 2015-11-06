@@ -10,5 +10,13 @@ namespace MasterInstallerConfigurator
 	{
 		void AddFlavor(string flavorName, string flavorUrl);
 		void AddProductConfigurationRows(Dictionary<string, IEnumerable<string>> products, IList<string> flavors);
+		bool GatherFiles { get; set; }
+		bool Compile { get; set; }
+		bool BuildSelfExtractingDownloadPackage { get; set; }
+		bool RememberSettings { get; set; }
+		bool WriteInstallerXml { get; set; }
+		bool WriteDownloadsXml { get; set; }
+		string OutputFolder { get; set; }
+		string SelfExtractingStyle { get; set; }
 	}
 }

@@ -52,6 +52,7 @@
     <Compile Include="ConfigurationWizard.Designer.cs">
       <DependentUpon>ConfigurationWizard.cs</DependentUpon>
     </Compile>
+    <Compile Include="IConfigurationView.cs" />
     <Compile Include="JavaScriptConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

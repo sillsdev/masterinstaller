@@ -35,9 +35,12 @@ namespace MasterInstallerConfigurator
 			this._flavorSetupLabel = new System.Windows.Forms.Label();
 			this._flavorPanel = new System.Windows.Forms.TableLayoutPanel();
 			this._flavorConfigTab = new System.Windows.Forms.TabPage();
+			this._flavorConfigLabel = new System.Windows.Forms.Label();
+			this._flavorOptionTable = new System.Windows.Forms.TableLayoutPanel();
 			this._webDownloadTab = new System.Windows.Forms.TabPage();
 			this.ConfigTabControl.SuspendLayout();
 			this._flavorSetupPage.SuspendLayout();
+			this._flavorConfigTab.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ConfigTabControl
@@ -84,12 +87,14 @@ namespace MasterInstallerConfigurator
 			this._flavorPanel.Location = new System.Drawing.Point(56, 65);
 			this._flavorPanel.Name = "_flavorPanel";
 			this._flavorPanel.RowCount = 1;
-			this._flavorPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this._flavorPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 482F));
 			this._flavorPanel.Size = new System.Drawing.Size(475, 482);
 			this._flavorPanel.TabIndex = 0;
 			// 
 			// _flavorConfigTab
 			// 
+			this._flavorConfigTab.Controls.Add(this._flavorConfigLabel);
+			this._flavorConfigTab.Controls.Add(this._flavorOptionTable);
 			this._flavorConfigTab.Location = new System.Drawing.Point(4, 22);
 			this._flavorConfigTab.Name = "_flavorConfigTab";
 			this._flavorConfigTab.Padding = new System.Windows.Forms.Padding(3);
@@ -97,6 +102,29 @@ namespace MasterInstallerConfigurator
 			this._flavorConfigTab.TabIndex = 1;
 			this._flavorConfigTab.Text = "Flavor Configuration";
 			this._flavorConfigTab.UseVisualStyleBackColor = true;
+			// 
+			// _flavorConfigLabel
+			// 
+			this._flavorConfigLabel.AutoSize = true;
+			this._flavorConfigLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._flavorConfigLabel.Location = new System.Drawing.Point(31, 7);
+			this._flavorConfigLabel.Name = "_flavorConfigLabel";
+			this._flavorConfigLabel.Size = new System.Drawing.Size(312, 24);
+			this._flavorConfigLabel.TabIndex = 1;
+			this._flavorConfigLabel.Text = "Select Products For Each Flavor";
+			// 
+			// _flavorOptionTable
+			// 
+			this._flavorOptionTable.ColumnCount = 3;
+			this._flavorOptionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+			this._flavorOptionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+			this._flavorOptionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 109F));
+			this._flavorOptionTable.Location = new System.Drawing.Point(31, 64);
+			this._flavorOptionTable.Name = "_flavorOptionTable";
+			this._flavorOptionTable.RowCount = 1;
+			this._flavorOptionTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this._flavorOptionTable.Size = new System.Drawing.Size(409, 405);
+			this._flavorOptionTable.TabIndex = 0;
 			// 
 			// _webDownloadTab
 			// 
@@ -120,6 +148,8 @@ namespace MasterInstallerConfigurator
 			this.ConfigTabControl.ResumeLayout(false);
 			this._flavorSetupPage.ResumeLayout(false);
 			this._flavorSetupPage.PerformLayout();
+			this._flavorConfigTab.ResumeLayout(false);
+			this._flavorConfigTab.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -132,6 +162,8 @@ namespace MasterInstallerConfigurator
 		private System.Windows.Forms.TabPage _webDownloadTab;
 		private System.Windows.Forms.Label _flavorSetupLabel;
 		private System.Windows.Forms.TableLayoutPanel _flavorPanel;
+		private System.Windows.Forms.TableLayoutPanel _flavorOptionTable;
+		private System.Windows.Forms.Label _flavorConfigLabel;
 	}
 }
 

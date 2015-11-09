@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace MasterInstallerConfigurator
@@ -23,6 +24,7 @@ namespace MasterInstallerConfigurator
 				// If the model already has a version number then we must have converted it before, don't reconvert
 				if (!string.IsNullOrEmpty(configurationModel.Version))
 					return;
+				configurationModel.Version = ConfigurationModel.CurrentModelVersion;
 				string jsLine;
 				var currentState = ReadingState.Header;
 				ConfigurationModel.FlavorOptions currentFlavor = null;
@@ -36,7 +38,6 @@ namespace MasterInstallerConfigurator
 							if (currentLine.StartsWith("{"))
 							{
 								currentFlavor = new ConfigurationModel.FlavorOptions();
-								configurationModel.Flavors.Add(currentFlavor);
 								currentState = ReadingState.FlavorState;
 							}
 							break;
@@ -49,6 +50,10 @@ namespace MasterInstallerConfigurator
 								var sections = currentLine.Split('"');
 								if (sections[1].StartsWith("FlavorName"))
 								{
+									var flavorName = sections[3];
+									var existingFlavor = configurationModel.Flavors.FirstOrDefault(f => f.FlavorName == flavorName);
+									if (existingFlavor != null)
+										currentFlavor = existingFlavor;
 									// ReSharper disable once PossibleNullReferenceException - Only invalid js can cause this
 									currentFlavor.FlavorName = sections[3];
 								}
@@ -56,6 +61,8 @@ namespace MasterInstallerConfigurator
 								{
 									// ReSharper disable once PossibleNullReferenceException - Only invalid js can cause this
 									currentFlavor.DownloadURL = sections[3];
+									if(!configurationModel.Flavors.Contains(currentFlavor))
+										configurationModel.Flavors.Add(currentFlavor);
 								}
 								else
 								{
@@ -65,7 +72,6 @@ namespace MasterInstallerConfigurator
 							else if (currentLine.StartsWith("AddFlavor"))
 							{
 								currentFlavor = new ConfigurationModel.FlavorOptions();
-								configurationModel.Flavors.Add(currentFlavor);
 							}
 							else if (currentLine.StartsWith("NextStage"))
 							{

@@ -59,6 +59,38 @@ namespace MasterInstallerConfiguratorTests
 		}
 
 		[Test]
+		public void ExistingFeatureInModelIsNotDuplicated()
+		{
+			var simpleScript =
+				@"// Fills in details for download packages automatically.
+				// This instance created AUTOMATICALLY during a previous run.
+				function AutomatePackages()
+				{
+					SetElement(""FlavorName1"", ""NAME"");
+					SetElement(""FlavorUrl1"", ""URL"");
+					NextStage();
+					NextStage();
+				}";
+			var configuration = new ConfigurationModel();
+			configuration.Flavors = new List<ConfigurationModel.FlavorOptions> { new ConfigurationModel.FlavorOptions { FlavorName = "NAME"}};
+			var scriptFile = Path.Combine(TestFolder, "test.js");
+			var installerFile = Path.Combine(TestFolder, "installer.xml");
+			File.WriteAllText(scriptFile, simpleScript);
+			configuration.FileLocation = installerFile;
+			configuration.Save();
+			JavaScriptConverter.ConvertJsToXml(scriptFile, installerFile);
+			var serializer = new XmlSerializer(typeof(ConfigurationModel));
+			using (var textReader = new StreamReader(installerFile))
+			{
+				var model = (ConfigurationModel)serializer.Deserialize(textReader);
+				Assert.That(model.Flavors, Is.Not.Null);
+				Assert.That(model.Flavors.Count, Is.EqualTo(1));
+				Assert.That(model.Flavors.First().FlavorName, Is.EqualTo("NAME"));
+				Assert.That(model.Flavors.First().DownloadURL, Is.EqualTo("URL"));
+			}
+		}
+
+		[Test]
 		public void TestFeatureProductSelection()
 		{
 			var flavorName1 = "flavorA";

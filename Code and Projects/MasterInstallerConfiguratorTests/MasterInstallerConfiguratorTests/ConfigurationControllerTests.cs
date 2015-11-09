@@ -125,6 +125,14 @@ namespace MasterInstallerConfiguratorTests
 				}
 			}
 
+			public void ClearAll()
+			{
+				flavorNames.Clear();
+				flavorUrls.Clear();
+				productNames.Clear();
+				enabledFlavorsForProduct.Clear();
+			}
+
 			public bool GatherFiles { get; set; }
 			public bool Compile { get; set; }
 			public bool BuildSelfExtractingDownloadPackage { get; set; }

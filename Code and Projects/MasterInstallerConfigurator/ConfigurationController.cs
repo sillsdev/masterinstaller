@@ -51,6 +51,12 @@ namespace MasterInstallerConfigurator
 		{
 			if (configurationWizard.RememberSettings)
 			{
+				_model.Flavors.Clear();
+				foreach (var flavor in configurationWizard.GetFlavors())
+				{
+					_model.Flavors.Add(new ConfigurationModel.FlavorOptions { FlavorName = flavor.Item1, DownloadURL = flavor.Item2,
+						IncludedProductTitles = configurationWizard.GetIncludedProducts(flavor.Item1)});
+				}
 				_model.Tasks.OutputFolder = configurationWizard.OutputFolder;
 				_model.Tasks.Compile = configurationWizard.Compile;
 				_model.Tasks.BuildSelfExtractingDownloadPackage = configurationWizard.BuildSelfExtractingDownloadPackage;
@@ -61,6 +67,13 @@ namespace MasterInstallerConfigurator
 				_model.Tasks.WriteDownloadsXml = configurationWizard.WriteDownloadsXml;
 			}
 			_model.Save();
+		}
+
+		public void AddFlavor(IConfigurationView wizard, string flavorName, string flavorUrl)
+		{
+			_model.Flavors.Add(new ConfigurationModel.FlavorOptions { FlavorName = flavorName, DownloadURL = flavorUrl, IncludedProductTitles = new List<string>()});
+			wizard.ClearAll();
+			PopulateWithModelSettings(wizard);
 		}
 	}
 }

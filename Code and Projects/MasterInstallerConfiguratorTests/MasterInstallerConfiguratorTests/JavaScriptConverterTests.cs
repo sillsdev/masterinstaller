@@ -44,7 +44,8 @@ namespace MasterInstallerConfiguratorTests
 			var scriptFile = Path.Combine(TestFolder, "test.js");
 			var installerFile = Path.Combine(TestFolder, "installer.xml");
 			File.WriteAllText(scriptFile, simpleScript);
-			configuration.Save(installerFile);
+			configuration.FileLocation = installerFile;
+			configuration.Save();
 			JavaScriptConverter.ConvertJsToXml(scriptFile, installerFile);
 			var serializer = new XmlSerializer(typeof (ConfigurationModel));
 			using (var textReader = new StreamReader(installerFile))
@@ -64,8 +65,6 @@ namespace MasterInstallerConfiguratorTests
 			var flavorName2 = "flavorB";
 			var url1 = "http://a.com";
 			var url2 = "http://b.com";
-			var outputPath = "D:/Test";
-			var sfxStyle = "Hmm";
 			var complexScript =
 				@"// Fills in details for download packages automatically.
 				// This instance created AUTOMATICALLY during a previous run.
@@ -100,7 +99,8 @@ namespace MasterInstallerConfiguratorTests
 			var scriptFile = Path.Combine(TestFolder, "test.js");
 			var installerFile = Path.Combine(TestFolder, "installer.xml");
 			File.WriteAllText(scriptFile, complexScript);
-			configuration.Save(installerFile);
+			configuration.FileLocation = installerFile;
+			configuration.Save();
 			JavaScriptConverter.ConvertJsToXml(scriptFile, installerFile);
 			var serializer = new XmlSerializer(typeof(ConfigurationModel));
 			using (var textReader = new StreamReader(installerFile))
@@ -157,7 +157,8 @@ namespace MasterInstallerConfiguratorTests
 			var installerFile = Path.Combine(TestFolder, "installer.xml");
 			File.WriteAllText(scriptFile, complexScript);
 			configuration.Tasks = new ConfigurationModel.TasksToExecuteSettings();
-			configuration.Save(installerFile);
+			configuration.FileLocation = installerFile;
+			configuration.Save();
 			// Prove that values started as false
 			Assert.That(configuration.Tasks.BuildSelfExtractingDownloadPackage, Is.False, "Setup did not initiate values to false, test invalid");
 			Assert.That(configuration.Tasks.Compile, Is.False, "Setup did not initiate values to false, test invalid");
@@ -178,6 +179,69 @@ namespace MasterInstallerConfiguratorTests
 				Assert.That(model.Tasks.WriteDownloadsXml, Is.True);
 				Assert.That(model.Tasks.WriteInstallerXml, Is.True);
 				Assert.That(model.Tasks.RememberSettings, Is.True);
+			}
+		}
+
+		[Test]
+		public void TestSkipConversionOnNewModel()
+		{
+			var flavorName1 = "flavorA";
+			var url1 = "http://a.com";
+			var outputPath = "D:/Test";
+			var sfxStyle = "Hmm";
+			var complexScript =
+				@"// Fills in details for download packages automatically.
+				// This instance created AUTOMATICALLY during a previous run.
+				function AutomatePackages()
+				{
+				" +
+				string.Format(@"SetElement(""FlavorName1"", ""{0}"");
+					SetElement(""FlavorUrl1"", ""{1}"");
+					NextStage();
+					SelectElement(""IncludedF1P1"", true);
+					NextStage();
+
+					SetElement(""OutputPath"", ""{2}"");
+					SelectElement(""WriteXml"", true);
+					SelectElement(""WriteDownloadsXml"", true);
+					SelectElement(""Compile"", true);
+					SelectElement(""GatherFiles"", true);
+					SelectElement(""BuildSfx"", true);
+					SetElement(""SfxStyle"", ""{3}"");
+					SetElement(""SaveSettings"", true);", flavorName1, url1, outputPath, sfxStyle) +
+				@"
+				}";
+
+			var configuration = new ConfigurationModel {Version = "1.0"};
+			configuration.Products = new List<ConfigurationModel.Product>();
+			var mainProduct = "Main Product";
+			configuration.Products.Add(new ConfigurationModel.Product { Title = mainProduct });
+			var scriptFile = Path.Combine(TestFolder, "test.js");
+			var installerFile = Path.Combine(TestFolder, "installer.xml");
+			File.WriteAllText(scriptFile, complexScript);
+			configuration.Tasks = new ConfigurationModel.TasksToExecuteSettings();
+			configuration.FileLocation = installerFile;
+			configuration.Save();
+			// Prove that values started as false
+			Assert.That(configuration.Tasks.BuildSelfExtractingDownloadPackage, Is.False, "Setup did not initiate values to false, test invalid");
+			Assert.That(configuration.Tasks.Compile, Is.False, "Setup did not initiate values to false, test invalid");
+			Assert.That(configuration.Tasks.GatherFiles, Is.False, "Setup did not initiate values to false, test invalid");
+			Assert.That(configuration.Tasks.WriteDownloadsXml, Is.False, "Setup did not initiate values to false, test invalid");
+			Assert.That(configuration.Tasks.WriteInstallerXml, Is.False, "Setup did not initiate values to false, test invalid");
+			Assert.That(configuration.Tasks.RememberSettings, Is.False, "Setup did not initiate values to false, test invalid");
+			// SUT
+			JavaScriptConverter.ConvertJsToXml(scriptFile, installerFile);
+			var serializer = new XmlSerializer(typeof(ConfigurationModel));
+			using (var textReader = new StreamReader(installerFile))
+			{
+				var model = (ConfigurationModel)serializer.Deserialize(textReader);
+				Assert.That(model.Tasks.BuildSelfExtractingDownloadPackage, Is.False);
+				Assert.That(model.Tasks.Compile, Is.False);
+				Assert.That(model.Tasks.GatherFiles, Is.False);
+				Assert.That(model.Tasks.WriteDownloadsXml, Is.False);
+				Assert.That(model.Tasks.WriteInstallerXml, Is.False);
+				Assert.That(model.Tasks.RememberSettings, Is.False);
+				Assert.That(model.Tasks.OutputFolder, Is.Null);
 			}
 		}
 	}

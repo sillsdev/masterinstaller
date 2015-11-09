@@ -20,6 +20,9 @@ namespace MasterInstallerConfigurator
 			using (var jsReader = new StreamReader(javaScriptFile))
 			{
 				var configurationModel = (ConfigurationModel)serializer.Deserialize(xmlConfigStream);
+				// If the model already has a version number then we must have converted it before, don't reconvert
+				if (!string.IsNullOrEmpty(configurationModel.Version))
+					return;
 				string jsLine;
 				var currentState = ReadingState.Header;
 				ConfigurationModel.FlavorOptions currentFlavor = null;
@@ -83,7 +86,8 @@ namespace MasterInstallerConfigurator
 								var product = configurationModel.Products[int.Parse(flavorProductIndexes[1]) - 1];
 								if(flavor.IncludedProductTitles == null)
 									flavor.IncludedProductTitles = new List<string>();
-								flavor.IncludedProductTitles.Add(product.Title);
+								if(!flavor.IncludedProductTitles.Contains(product.Title))
+									flavor.IncludedProductTitles.Add(product.Title);
 							}
 							else if (currentLine.StartsWith("NextStage"))
 							{
@@ -137,6 +141,7 @@ namespace MasterInstallerConfigurator
 					}
 				} // end while state machine
 				xmlConfigStream.Position = 0; // Reset the stream based on the safe assumption that we will always write at least as much as we read
+				xmlConfigStream.SetLength(0);
 				serializer.Serialize(xmlConfigStream, configurationModel);
 			} // end stream usings
 		}

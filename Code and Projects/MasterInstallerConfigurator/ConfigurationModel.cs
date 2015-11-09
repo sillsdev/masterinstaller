@@ -9,6 +9,13 @@ namespace MasterInstallerConfigurator
 	[XmlRoot("MasterInstaller", IsNullable = false)]
 	public class ConfigurationModel
 	{
+		internal static string CurrentModelVersion = "1.0";
+		[XmlAttribute]
+		public string Version { get; set; }
+
+		[XmlIgnore]
+		public string FileLocation { get; set; }
+
 #region These properties are used in the build web Packages wizard
 		public List<FlavorOptions> Flavors { get; set; }
 
@@ -181,12 +188,34 @@ namespace MasterInstallerConfigurator
 			public string FailMessage { get; set; }
 		}
 
-		public void Save(string installerFile)
+		public void Save()
 		{
 			var serializer = new XmlSerializer(typeof(ConfigurationModel));
-			using (var textWriter = new StreamWriter(installerFile))
+			using (var textWriter = new StreamWriter(FileLocation))
 			{
 				serializer.Serialize(textWriter, this);
+			}
+		}
+
+		public static ConfigurationModel Load(string javaScriptFile, string xmlConfigFile)
+		{
+			JavaScriptConverter.ConvertJsToXml(javaScriptFile, xmlConfigFile);
+			var serializer = new XmlSerializer(typeof(ConfigurationModel));
+			using (var textWriter = new StreamReader(xmlConfigFile))
+			{
+				var model = (ConfigurationModel)serializer.Deserialize(textWriter);
+				model.FileLocation = xmlConfigFile;
+				return model;
+			}
+		}
+		public static ConfigurationModel Load(string xmlConfigFile)
+		{
+			var serializer = new XmlSerializer(typeof(ConfigurationModel));
+			using (var textWriter = new StreamReader(xmlConfigFile))
+			{
+				var model = (ConfigurationModel)serializer.Deserialize(textWriter);
+				model.FileLocation = xmlConfigFile;
+				return model;
 			}
 		}
 	}

@@ -17,9 +17,12 @@ namespace MasterInstallerConfigurator
 
 		public void PopulateWithModelSettings(IConfigurationView configurationWizard)
 		{
-			foreach (var flavor in _model.Flavors)
+			if (_model.Flavors != null)
 			{
-				configurationWizard.AddFlavor(flavor.FlavorName, flavor.DownloadURL);
+				foreach (var flavor in _model.Flavors)
+				{
+					configurationWizard.AddFlavor(flavor.FlavorName, flavor.DownloadURL);
+				}
 			}
 			var flavorProducts = new Dictionary<string, IEnumerable<string>>();
 			if (_model.Products != null)
@@ -31,6 +34,33 @@ namespace MasterInstallerConfigurator
 				}
 				configurationWizard.AddProductConfigurationRows(flavorProducts, new List<string>(_model.Flavors.Select(f => f.FlavorName)));
 			}
+			if (_model.Tasks != null)
+			{
+				configurationWizard.OutputFolder = _model.Tasks.OutputFolder;
+				configurationWizard.Compile = _model.Tasks.Compile;
+				configurationWizard.BuildSelfExtractingDownloadPackage = _model.Tasks.BuildSelfExtractingDownloadPackage;
+				configurationWizard.GatherFiles = _model.Tasks.GatherFiles;
+				configurationWizard.RememberSettings = _model.Tasks.RememberSettings;
+				configurationWizard.SelfExtractingStyle = _model.Tasks.SelfExtractingStyle;
+				configurationWizard.WriteInstallerXml = _model.Tasks.WriteInstallerXml;
+				configurationWizard.WriteDownloadsXml = _model.Tasks.WriteDownloadsXml;
+			}
+		}
+
+		public void ExecuteTasks(ConfigurationWizard configurationWizard)
+		{
+			if (configurationWizard.RememberSettings)
+			{
+				_model.Tasks.OutputFolder = configurationWizard.OutputFolder;
+				_model.Tasks.Compile = configurationWizard.Compile;
+				_model.Tasks.BuildSelfExtractingDownloadPackage = configurationWizard.BuildSelfExtractingDownloadPackage;
+				_model.Tasks.GatherFiles = configurationWizard.GatherFiles;
+				_model.Tasks.RememberSettings = configurationWizard.RememberSettings;
+				_model.Tasks.SelfExtractingStyle = configurationWizard.SelfExtractingStyle;
+				_model.Tasks.WriteInstallerXml = configurationWizard.WriteInstallerXml;
+				_model.Tasks.WriteDownloadsXml = configurationWizard.WriteDownloadsXml;
+			}
+			_model.Save();
 		}
 	}
 }

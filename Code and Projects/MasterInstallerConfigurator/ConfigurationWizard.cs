@@ -58,8 +58,8 @@ namespace MasterInstallerConfigurator
 			// Add the flavors in a 'Header' row
 			foreach (var flavor in flavors)
 			{
-				_flavorOptionTable.Controls.Add(new Label { Text = flavor, Anchor = AnchorStyles.Left | AnchorStyles.Top,
-						Font = new Font(FontFamily.GenericSansSerif, 12.0f) },
+				_flavorOptionTable.Controls.Add(new Label { Text = flavor, Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right,
+					TextAlign = ContentAlignment.TopLeft, Font = new Font(FontFamily.GenericSansSerif, 12.0f) },
 						columnCount, 0);
 				columnCount++;
 				_flavorOptionTable.ColumnCount++;
@@ -68,20 +68,73 @@ namespace MasterInstallerConfigurator
 			foreach (var product in products.Keys)
 			{
 				// Add the product names along the left
-				_flavorOptionTable.Controls.Add(new Label { Text = product, Anchor = AnchorStyles.Left | AnchorStyles.Top,
+				_flavorOptionTable.Controls.Add(new Label { Text = product, Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right,
 						Font = new Font(FontFamily.GenericSansSerif, 12.0f) }, 
 						0, rowCount);
 				// Add the checkboxes for this product checking the ones which each flavor has selected
 				for (var i = 1; i < _flavorOptionTable.ColumnCount; ++i)
 				{
 					_flavorOptionTable.Controls.Add(new CheckBox { Checked = products[product].Contains(flavors[i - 1]),
-						Anchor = AnchorStyles.None},
+						Anchor = AnchorStyles.Top},
 						i, rowCount);
 				}
 				++rowCount;
 				_flavorOptionTable.RowCount++;
 			}
 			_flavorOptionTable.ResumeLayout();
+		}
+
+		public bool GatherFiles
+		{
+			get { return _gatherFiles.Checked; }
+			set { _gatherFiles.Checked = value; }
+		}
+
+		public bool Compile
+		{
+			get { return _compile.Checked; }
+			set { _compile.Checked = value; }
+		}
+
+		public bool BuildSelfExtractingDownloadPackage
+		{
+			get { return _buildDLPackages.Checked; }
+			set { _buildDLPackages.Checked = value; }
+		}
+
+		public bool RememberSettings
+		{
+			get { return _saveSettings.Checked; }
+			set { _saveSettings.Checked = value; }
+		}
+
+		public bool WriteInstallerXml
+		{
+			get { return _writeInstallerXml.Checked; }
+			set { _writeInstallerXml.Checked = value; }
+		}
+
+		public bool WriteDownloadsXml
+		{
+			get { return _writeDownloadsXml.Checked; }
+			set { _writeDownloadsXml.Checked = value; }
+		}
+
+		public string OutputFolder
+		{
+			get { return _outputFolder.Text; }
+			set { _outputFolder.Text = value; }
+		}
+
+		public string SelfExtractingStyle
+		{
+			get { return _packageStyle.SelectedText; }
+			set { _packageStyle.SelectedText = value; }
+		}
+
+		private void goButton_Click(object sender, System.EventArgs e)
+		{
+			_controller.ExecuteTasks(this);
 		}
 	}
 }

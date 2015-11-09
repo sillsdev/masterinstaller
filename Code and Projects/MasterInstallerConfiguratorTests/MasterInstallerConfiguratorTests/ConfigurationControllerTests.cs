@@ -58,6 +58,33 @@ namespace MasterInstallerConfiguratorTests
 			TestThatProductIsSelectedForTheseFlavors(testView, model.Products[1], new List<string> { flavorNameB });
 		}
 
+		[Test]
+		public void AddTaskSelections()
+		{
+			var model = new ConfigurationModel();
+			model.Tasks = new ConfigurationModel.TasksToExecuteSettings
+			{
+				GatherFiles = true,
+				BuildSelfExtractingDownloadPackage = true,
+				Compile = true,
+				OutputFolder = "C:/temp",
+				RememberSettings = true,
+				SelfExtractingStyle = "SfxFw",
+				WriteInstallerXml = true,
+				WriteDownloadsXml = true
+			};
+			var controller = new ConfigurationController(model);
+			var testView = new ConfigViewForTests();
+			// Assert defaults to ensure a valid test
+			Assert.False(testView.GatherFiles || testView.Compile || testView.BuildSelfExtractingDownloadPackage ||
+			             testView.RememberSettings || testView.WriteInstallerXml || testView.WriteDownloadsXml, "Expected all booleans to default to false, test invalid");
+			controller.PopulateWithModelSettings(testView);
+			Assert.True(testView.GatherFiles && testView.Compile && testView.BuildSelfExtractingDownloadPackage &&
+							 testView.RememberSettings && testView.WriteInstallerXml && testView.WriteDownloadsXml, "Expected all booleans to be set to true");
+			Assert.That(testView.OutputFolder, Is.EqualTo(model.Tasks.OutputFolder));
+			Assert.That(testView.SelfExtractingStyle, Is.EqualTo(model.Tasks.SelfExtractingStyle));
+		}
+
 		private void TestThatProductIsSelectedForTheseFlavors(ConfigViewForTests testView, ConfigurationModel.Product product, List<string> list)
 		{
 			CollectionAssert.AreEquivalent(testView.enabledFlavorsForProduct[product.Title], list);
@@ -97,6 +124,15 @@ namespace MasterInstallerConfiguratorTests
 					enabledFlavorsForProduct[productName] = flavorsForProduct;
 				}
 			}
+
+			public bool GatherFiles { get; set; }
+			public bool Compile { get; set; }
+			public bool BuildSelfExtractingDownloadPackage { get; set; }
+			public bool RememberSettings { get; set; }
+			public bool WriteInstallerXml { get; set; }
+			public bool WriteDownloadsXml { get; set; }
+			public string OutputFolder { get; set; }
+			public string SelfExtractingStyle { get; set; }
 		}
 	}
 }

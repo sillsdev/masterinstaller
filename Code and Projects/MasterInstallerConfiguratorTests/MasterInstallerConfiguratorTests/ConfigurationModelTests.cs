@@ -1,5 +1,7 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -15,11 +17,13 @@ namespace MasterInstallerConfiguratorTests
 		public void CanPersistBasicModel()
 		{
 			var model = new ConfigurationModel();
+			model.Version = "1.0";
 			var serializer = new XmlSerializer(typeof(ConfigurationModel));
 			using (var textWriter = new StringWriter())
 			{
 				serializer.Serialize(textWriter, model);
 				Assert.That(textWriter.ToString(), Is.StringContaining("<MasterInstaller"), "Did not write out the MasterInstaller element");
+				Assert.That(textWriter.ToString(), Is.StringContaining("Version=\"1.0\""), "Did not write out the version attribute");
 			}
 		}
 
@@ -36,6 +40,7 @@ namespace MasterInstallerConfiguratorTests
 				Assert.NotNull(model);
 				Assert.NotNull(model.AutoConfigure);
 				Assert.NotNull(model.General);
+				Assert.That(string.IsNullOrEmpty(model.Version), "no model in file did not result in empty version");
 				CollectionAssert.IsNotEmpty(model.Products);
 			}
 		}
@@ -152,8 +157,6 @@ namespace MasterInstallerConfiguratorTests
 			var help = @"help.chm";
 			var tagAttribute = @"needstag";
 			var tagAttribute2 = @"needstag2";
-			var TOUBtnTxt = @"Can I use this?";
-			var version = "14.2";
 			var CDNumber = 0;
 			var downloadUrl = "http://test.com/";
 			var flushReboot = true;

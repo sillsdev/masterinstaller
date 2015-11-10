@@ -44,6 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddFlavorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddFlavorDialog.Designer.cs">
+      <DependentUpon>AddFlavorDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConfigurationController.cs" />
     <Compile Include="ConfigurationModel.cs" />
     <Compile Include="ConfigurationWizard.cs">
@@ -52,9 +58,13 @@
     <Compile Include="ConfigurationWizard.Designer.cs">
       <DependentUpon>ConfigurationWizard.cs</DependentUpon>
     </Compile>
+    <Compile Include="IConfigurationView.cs" />
     <Compile Include="JavaScriptConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AddFlavorDialog.resx">
+      <DependentUpon>AddFlavorDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ConfigurationWizard.resx">
       <DependentUpon>ConfigurationWizard.cs</DependentUpon>
     </EmbeddedResource>

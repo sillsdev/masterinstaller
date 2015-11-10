@@ -1,7 +1,9 @@
-﻿using System;
+﻿// Copyright (c) 2015 SIL International
+// This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace MasterInstallerConfigurator
@@ -19,6 +21,10 @@ namespace MasterInstallerConfigurator
 			using (var jsReader = new StreamReader(javaScriptFile))
 			{
 				var configurationModel = (ConfigurationModel)serializer.Deserialize(xmlConfigStream);
+				// If the model already has a version number then we must have converted it before, don't reconvert
+				if (!string.IsNullOrEmpty(configurationModel.Version))
+					return;
+				configurationModel.Version = ConfigurationModel.CurrentModelVersion;
 				string jsLine;
 				var currentState = ReadingState.Header;
 				ConfigurationModel.FlavorOptions currentFlavor = null;
@@ -32,7 +38,6 @@ namespace MasterInstallerConfigurator
 							if (currentLine.StartsWith("{"))
 							{
 								currentFlavor = new ConfigurationModel.FlavorOptions();
-								configurationModel.Flavors.Add(currentFlavor);
 								currentState = ReadingState.FlavorState;
 							}
 							break;
@@ -45,6 +50,10 @@ namespace MasterInstallerConfigurator
 								var sections = currentLine.Split('"');
 								if (sections[1].StartsWith("FlavorName"))
 								{
+									var flavorName = sections[3];
+									var existingFlavor = configurationModel.Flavors.FirstOrDefault(f => f.FlavorName == flavorName);
+									if (existingFlavor != null)
+										currentFlavor = existingFlavor;
 									// ReSharper disable once PossibleNullReferenceException - Only invalid js can cause this
 									currentFlavor.FlavorName = sections[3];
 								}
@@ -52,6 +61,8 @@ namespace MasterInstallerConfigurator
 								{
 									// ReSharper disable once PossibleNullReferenceException - Only invalid js can cause this
 									currentFlavor.DownloadURL = sections[3];
+									if(!configurationModel.Flavors.Contains(currentFlavor))
+										configurationModel.Flavors.Add(currentFlavor);
 								}
 								else
 								{
@@ -61,7 +72,6 @@ namespace MasterInstallerConfigurator
 							else if (currentLine.StartsWith("AddFlavor"))
 							{
 								currentFlavor = new ConfigurationModel.FlavorOptions();
-								configurationModel.Flavors.Add(currentFlavor);
 							}
 							else if (currentLine.StartsWith("NextStage"))
 							{
@@ -82,7 +92,8 @@ namespace MasterInstallerConfigurator
 								var product = configurationModel.Products[int.Parse(flavorProductIndexes[1]) - 1];
 								if(flavor.IncludedProductTitles == null)
 									flavor.IncludedProductTitles = new List<string>();
-								flavor.IncludedProductTitles.Add(product.Title);
+								if(!flavor.IncludedProductTitles.Contains(product.Title))
+									flavor.IncludedProductTitles.Add(product.Title);
 							}
 							else if (currentLine.StartsWith("NextStage"))
 							{
@@ -136,6 +147,7 @@ namespace MasterInstallerConfigurator
 					}
 				} // end while state machine
 				xmlConfigStream.Position = 0; // Reset the stream based on the safe assumption that we will always write at least as much as we read
+				xmlConfigStream.SetLength(0);
 				serializer.Serialize(xmlConfigStream, configurationModel);
 			} // end stream usings
 		}

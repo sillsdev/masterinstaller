@@ -182,7 +182,7 @@ namespace MasterInstallerConfigurator
 		public string SelfExtractingStyle
 		{
 			get { return _packageStyle.SelectedText; }
-			set { _packageStyle.SelectedText = value; }
+			set { _packageStyle.SelectedIndex = _packageStyle.FindString(value); }
 		}
 
 		private void goButton_Click(object sender, System.EventArgs e)
@@ -200,6 +200,11 @@ namespace MasterInstallerConfigurator
 					_controller.AddFlavor(this, addFlavorDlg.FlavorName, addFlavorDlg.FlavorUrl);
 				}
 			}
+		}
+
+		private void _deleteFlavor_Click(object sender, EventArgs e)
+		{
+			_controller.DeleteLastFlavor(this);
 		}
 	}
 }

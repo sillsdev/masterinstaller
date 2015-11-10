@@ -52,6 +52,7 @@ namespace MasterInstallerConfigurator
 			this._compile = new System.Windows.Forms.CheckBox();
 			this._folderLabel = new System.Windows.Forms.Label();
 			this._outputFolder = new System.Windows.Forms.TextBox();
+			this._deleteFlavor = new System.Windows.Forms.Button();
 			this.ConfigTabControl.SuspendLayout();
 			this._flavorSetupPage.SuspendLayout();
 			this._flavorConfigTab.SuspendLayout();
@@ -73,6 +74,7 @@ namespace MasterInstallerConfigurator
 			// 
 			// _flavorSetupPage
 			// 
+			this._flavorSetupPage.Controls.Add(this._deleteFlavor);
 			this._flavorSetupPage.Controls.Add(this._addFlavorBtn);
 			this._flavorSetupPage.Controls.Add(this._flavorSetupLabel);
 			this._flavorSetupPage.Controls.Add(this._flavorPanel);
@@ -146,7 +148,7 @@ namespace MasterInstallerConfigurator
 			this._flavorOptionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
 			this._flavorOptionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
 			this._flavorOptionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-			this._flavorOptionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+			this._flavorOptionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 243F));
 			this._flavorOptionTable.Location = new System.Drawing.Point(31, 64);
 			this._flavorOptionTable.Name = "_flavorOptionTable";
 			this._flavorOptionTable.RowCount = 1;
@@ -201,7 +203,8 @@ namespace MasterInstallerConfigurator
 			// 
 			this._packageStyle.FormattingEnabled = true;
 			this._packageStyle.Items.AddRange(new object[] {
-            "FLEx"});
+            "FLEx",
+            "Standard"});
 			this._packageStyle.Location = new System.Drawing.Point(258, 272);
 			this._packageStyle.Name = "_packageStyle";
 			this._packageStyle.Size = new System.Drawing.Size(121, 21);
@@ -300,6 +303,16 @@ namespace MasterInstallerConfigurator
 			this._outputFolder.Size = new System.Drawing.Size(375, 20);
 			this._outputFolder.TabIndex = 0;
 			// 
+			// _deleteFlavor
+			// 
+			this._deleteFlavor.Location = new System.Drawing.Point(117, 438);
+			this._deleteFlavor.Name = "_deleteFlavor";
+			this._deleteFlavor.Size = new System.Drawing.Size(75, 23);
+			this._deleteFlavor.TabIndex = 3;
+			this._deleteFlavor.Text = "Delete Last Flavor";
+			this._deleteFlavor.UseVisualStyleBackColor = true;
+			this._deleteFlavor.Click += new System.EventHandler(this._deleteFlavor_Click);
+			// 
 			// ConfigurationWizard
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -344,6 +357,7 @@ namespace MasterInstallerConfigurator
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button _goButton;
 		private System.Windows.Forms.Button _addFlavorBtn;
+		private System.Windows.Forms.Button _deleteFlavor;
 	}
 }
 

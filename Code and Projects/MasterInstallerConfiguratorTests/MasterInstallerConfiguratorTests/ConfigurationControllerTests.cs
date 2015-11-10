@@ -25,6 +25,28 @@ namespace MasterInstallerConfiguratorTests
 		}
 
 		[Test]
+		public void DeleteFlavorWorks()
+		{
+			var deleteFlavor = new ConfigurationModel.FlavorOptions { FlavorName = "DeletedFlavor", DownloadURL = "localhost" };
+			var model = new ConfigurationModel();
+			var flavorName = "TestFlavor";
+			model.Flavors = new List<ConfigurationModel.FlavorOptions>
+			{
+				new ConfigurationModel.FlavorOptions { FlavorName = flavorName },
+				deleteFlavor
+			};
+			var controller = new ConfigurationController(model);
+			var testView = new ConfigViewForTests();
+			controller.PopulateWithModelSettings(testView);
+			TestThatViewHasFlavor(testView, model.Flavors[0]);
+			TestThatViewHasFlavor(testView, model.Flavors[1]);
+			// SUT
+			controller.DeleteLastFlavor(testView);
+			TestThatViewHasFlavor(testView, model.Flavors[0]);
+			TestThatViewDoesNotHaveFlavor(testView, deleteFlavor);
+		}
+
+		[Test]
 		public void AddProductConfigurationRows()
 		{
 			var model = new ConfigurationModel();
@@ -94,6 +116,12 @@ namespace MasterInstallerConfiguratorTests
 		{
 			CollectionAssert.Contains(testView.flavorNames, flavorOptions.FlavorName);
 			CollectionAssert.Contains(testView.flavorUrls, flavorOptions.DownloadURL);
+		}
+
+		private void TestThatViewDoesNotHaveFlavor(ConfigViewForTests testView, ConfigurationModel.FlavorOptions flavorOptions)
+		{
+			CollectionAssert.DoesNotContain(testView.flavorNames, flavorOptions.FlavorName);
+			CollectionAssert.DoesNotContain(testView.flavorUrls, flavorOptions.DownloadURL);
 		}
 
 		private void TestThatViewHasProduct(ConfigViewForTests testView, ConfigurationModel.Product product)

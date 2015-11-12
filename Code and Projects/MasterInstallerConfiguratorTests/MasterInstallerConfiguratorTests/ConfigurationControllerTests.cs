@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using MasterInstallerConfigurator;
 using NUnit.Framework;
 
@@ -129,6 +130,11 @@ namespace MasterInstallerConfiguratorTests
 			CollectionAssert.Contains(testView.productNames, product.Title);
 		}
 
+		private void TestMessageLogged(ConfigViewForTests testView, string error)
+		{
+			testView.loggedText.ToString().Contains(error);
+		}
+
 		public class ConfigViewForTests : IConfigurationView
 		{
 			public List<string> flavorNames = new List<string>();
@@ -136,6 +142,8 @@ namespace MasterInstallerConfiguratorTests
 
 			public List<string> productNames = new List<string>();
 			public Dictionary<string, List<string>> enabledFlavorsForProduct = new Dictionary<string, List<string>>();
+
+			public StringBuilder loggedText = new StringBuilder();
 
 			public void AddFlavor(string flavorName, string flavorUrl)
 			{
@@ -169,6 +177,16 @@ namespace MasterInstallerConfiguratorTests
 			public bool WriteDownloadsXml { get; set; }
 			public string OutputFolder { get; set; }
 			public string SelfExtractingStyle { get; set; }
+
+			public void LogErrorLine(string errorMessage)
+			{
+				loggedText.AppendLine(errorMessage);
+			}
+
+			public void LogProgressLine(string errorMessage)
+			{
+				loggedText.AppendLine(errorMessage);
+			}
 		}
 	}
 }

@@ -104,11 +104,12 @@ namespace MasterInstallerConfiguratorTests
 			var helpBtnTxt = "Help me Rhonda";
 			var TOUFile = @"D:\Terms.txt";
 			var TOUBtnTxt = @"Can I use this?";
+			var listBgValue = 30;
 			var basicModelXmlString =
 				string.Format(@"<MasterInstaller><General>
 					<Title>{0}</Title>
 					<ListSubtitle>{1}</ListSubtitle>
-					<ListBackground DefaultFolder='Bitmaps' OffsetX='30' OffsetY='30' BlendLeft='30' BlendRight='30' BlendTop='30' BlendBottom='30'>{2}</ListBackground>
+					<ListBackground DefaultFolder='Bitmaps' Red='{13}' Green='{13}' Blue='{13}' OffsetX='{13}' OffsetY='{13}' BlendLeft='{13}' BlendRight='{13}' BlendTop='{13}' BlendBottom='{13}'>{2}</ListBackground>
 					<ListEvenOneProduct>{3}</ListEvenOneProduct>
 					<ListSpacingAdjust>{4}</ListSpacingAdjust>
 					<InfoButtonAdjust>{5}</InfoButtonAdjust>
@@ -119,8 +120,9 @@ namespace MasterInstallerConfiguratorTests
 					<HelpButtonText>{10}</HelpButtonText>
 					<TermsOfUseFile>{11}</TermsOfUseFile>
 					<TermsButtonText>{12}</TermsButtonText>
+					<ShowInstallCompleteMessage>true</ShowInstallCompleteMessage>
 				</General></MasterInstaller>", title, listSubtitle, listBgPath, listEvenOne.ToString().ToLower(), listSpaceAdj, infoButtonAdj,
-													  startFromAny.ToString().ToLower(), keyPromptNeedsKeys.ToString().ToLower(), keyTitle, extHelpFile, helpBtnTxt, TOUFile, TOUBtnTxt);
+													  startFromAny.ToString().ToLower(), keyPromptNeedsKeys.ToString().ToLower(), keyTitle, extHelpFile, helpBtnTxt, TOUFile, TOUBtnTxt, listBgValue);
 			var serializer = new XmlSerializer(typeof(ConfigurationModel));
 			using (var textReader = new StringReader(basicModelXmlString))
 			{
@@ -138,6 +140,16 @@ namespace MasterInstallerConfiguratorTests
 				Assert.That(model.General.HelpButtonText, Is.EqualTo(helpBtnTxt), "Did not read HelpFile");
 				Assert.That(model.General.TermsOfUseFile, Is.EqualTo(TOUFile), "Did not read TermsOfUseFile");
 				Assert.That(model.General.TermsButtonText, Is.EqualTo(TOUBtnTxt), "Did not read TermsOfUseButtonText");
+				Assert.That(model.General.ShowInstallCompleteMessage, Is.True);
+				Assert.AreEqual(model.General.ListBackground.Red, listBgValue);
+				Assert.AreEqual(model.General.ListBackground.Blue, listBgValue);
+				Assert.AreEqual(model.General.ListBackground.Green, listBgValue);
+				Assert.AreEqual(model.General.ListBackground.OffsetX, listBgValue);
+				Assert.AreEqual(model.General.ListBackground.OffsetY, listBgValue);
+				Assert.AreEqual(model.General.ListBackground.BlendBottom, listBgValue);
+				Assert.AreEqual(model.General.ListBackground.BlendLeft, listBgValue);
+				Assert.AreEqual(model.General.ListBackground.BlendRight, listBgValue);
+				Assert.AreEqual(model.General.ListBackground.BlendTop, listBgValue);
 			}
 		}
 

@@ -185,6 +185,17 @@ namespace MasterInstallerConfigurator
 			set { _packageStyle.SelectedIndex = _packageStyle.FindString(value); }
 		}
 
+		public void LogErrorLine(string errorMessage)
+		{
+			//TODO: Write errors bold or something
+			_logBox.Text += errorMessage + Environment.NewLine;
+		}
+
+		public void LogProgressLine(string errorMessage)
+		{
+			_logBox.Text += errorMessage + Environment.NewLine;
+		}
+
 		private void goButton_Click(object sender, System.EventArgs e)
 		{
 			_controller.ExecuteTasks(this);

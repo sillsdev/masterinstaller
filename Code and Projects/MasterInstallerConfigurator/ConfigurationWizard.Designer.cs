@@ -32,6 +32,7 @@ namespace MasterInstallerConfigurator
 		{
 			this.ConfigTabControl = new System.Windows.Forms.TabControl();
 			this._flavorSetupPage = new System.Windows.Forms.TabPage();
+			this._deleteFlavor = new System.Windows.Forms.Button();
 			this._addFlavorBtn = new System.Windows.Forms.Button();
 			this._flavorSetupLabel = new System.Windows.Forms.Label();
 			this._flavorPanel = new System.Windows.Forms.TableLayoutPanel();
@@ -52,11 +53,13 @@ namespace MasterInstallerConfigurator
 			this._compile = new System.Windows.Forms.CheckBox();
 			this._folderLabel = new System.Windows.Forms.Label();
 			this._outputFolder = new System.Windows.Forms.TextBox();
-			this._deleteFlavor = new System.Windows.Forms.Button();
+			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this._logBox = new System.Windows.Forms.RichTextBox();
 			this.ConfigTabControl.SuspendLayout();
 			this._flavorSetupPage.SuspendLayout();
 			this._flavorConfigTab.SuspendLayout();
 			this._webDownloadTab.SuspendLayout();
+			this.tabPage1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ConfigTabControl
@@ -64,6 +67,7 @@ namespace MasterInstallerConfigurator
 			this.ConfigTabControl.Controls.Add(this._flavorSetupPage);
 			this.ConfigTabControl.Controls.Add(this._flavorConfigTab);
 			this.ConfigTabControl.Controls.Add(this._webDownloadTab);
+			this.ConfigTabControl.Controls.Add(this.tabPage1);
 			this.ConfigTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ConfigTabControl.Location = new System.Drawing.Point(0, 0);
 			this.ConfigTabControl.Multiline = true;
@@ -85,6 +89,16 @@ namespace MasterInstallerConfigurator
 			this._flavorSetupPage.TabIndex = 0;
 			this._flavorSetupPage.Text = "Flavor Setup";
 			this._flavorSetupPage.UseVisualStyleBackColor = true;
+			// 
+			// _deleteFlavor
+			// 
+			this._deleteFlavor.Location = new System.Drawing.Point(117, 438);
+			this._deleteFlavor.Name = "_deleteFlavor";
+			this._deleteFlavor.Size = new System.Drawing.Size(75, 23);
+			this._deleteFlavor.TabIndex = 3;
+			this._deleteFlavor.Text = "Delete Last Flavor";
+			this._deleteFlavor.UseVisualStyleBackColor = true;
+			this._deleteFlavor.Click += new System.EventHandler(this._deleteFlavor_Click);
 			// 
 			// _addFlavorBtn
 			// 
@@ -303,15 +317,25 @@ namespace MasterInstallerConfigurator
 			this._outputFolder.Size = new System.Drawing.Size(375, 20);
 			this._outputFolder.TabIndex = 0;
 			// 
-			// _deleteFlavor
+			// tabPage1
 			// 
-			this._deleteFlavor.Location = new System.Drawing.Point(117, 438);
-			this._deleteFlavor.Name = "_deleteFlavor";
-			this._deleteFlavor.Size = new System.Drawing.Size(75, 23);
-			this._deleteFlavor.TabIndex = 3;
-			this._deleteFlavor.Text = "Delete Last Flavor";
-			this._deleteFlavor.UseVisualStyleBackColor = true;
-			this._deleteFlavor.Click += new System.EventHandler(this._deleteFlavor_Click);
+			this.tabPage1.Controls.Add(this._logBox);
+			this.tabPage1.Location = new System.Drawing.Point(4, 22);
+			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage1.Size = new System.Drawing.Size(1078, 555);
+			this.tabPage1.TabIndex = 3;
+			this.tabPage1.Text = "Results";
+			this.tabPage1.UseVisualStyleBackColor = true;
+			// 
+			// _logBox
+			// 
+			this._logBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._logBox.Location = new System.Drawing.Point(3, 3);
+			this._logBox.Name = "_logBox";
+			this._logBox.Size = new System.Drawing.Size(1072, 549);
+			this._logBox.TabIndex = 0;
+			this._logBox.Text = "";
 			// 
 			// ConfigurationWizard
 			// 
@@ -329,6 +353,7 @@ namespace MasterInstallerConfigurator
 			this._flavorConfigTab.PerformLayout();
 			this._webDownloadTab.ResumeLayout(false);
 			this._webDownloadTab.PerformLayout();
+			this.tabPage1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -358,6 +383,8 @@ namespace MasterInstallerConfigurator
 		private System.Windows.Forms.Button _goButton;
 		private System.Windows.Forms.Button _addFlavorBtn;
 		private System.Windows.Forms.Button _deleteFlavor;
+		private System.Windows.Forms.TabPage tabPage1;
+		private System.Windows.Forms.RichTextBox _logBox;
 	}
 }
 

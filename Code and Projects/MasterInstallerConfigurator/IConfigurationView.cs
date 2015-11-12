@@ -18,5 +18,7 @@ namespace MasterInstallerConfigurator
 		bool WriteDownloadsXml { get; set; }
 		string OutputFolder { get; set; }
 		string SelfExtractingStyle { get; set; }
+		void LogErrorLine(string errorMessage);
+		void LogProgressLine(string errorMessage);
 	}
 }

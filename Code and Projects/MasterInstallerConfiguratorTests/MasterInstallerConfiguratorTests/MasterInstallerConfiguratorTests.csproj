@@ -54,6 +54,7 @@
     <Compile Include="ConfigurationControllerTests.cs" />
     <Compile Include="ConfigurationModelTests.cs" />
     <Compile Include="JavaScriptConverterTests.cs" />
+    <Compile Include="MasterInstallerCompilerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

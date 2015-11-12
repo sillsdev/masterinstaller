@@ -50,6 +50,10 @@ namespace MasterInstallerConfigurator
 
 		public void ExecuteTasks(ConfigurationWizard configurationWizard)
 		{
+			if (configurationWizard.Compile)
+			{
+				MasterInstallerCompiler.Compile(_model, "", "C:/Repositories/masterinstaller/", configurationWizard);
+			}
 			if (configurationWizard.RememberSettings)
 			{
 				_model.Flavors.Clear();

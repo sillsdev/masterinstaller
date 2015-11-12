@@ -16,8 +16,8 @@ namespace MasterInstallerConfigurator
 			{
 				var tempFolder = CreateTempCompilationFolder(model);
 				GenerateConfigGeneralCpp(cppFilePath, model);
-				/*				 
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigDisks.xsl", CppFilePath + "\\ConfigDisks.cpp");
+				GenerateConfigDisksCpp(cppFilePath, model);
+				/*
 	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigProducts.xsl", CppFilePath + "\\ConfigProducts.cpp");
 	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigFunctions.xsl", CppFilePath + "\\ConfigFunctions.cpp");
 	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGlobals.xsl", CppFilePath + "\\AutoGlobals.h");
@@ -52,6 +52,14 @@ namespace MasterInstallerConfigurator
 			StampCppString("TOUBUTTONTEXT", model.General.TermsButtonText, ref fileContents);
 			StampCppBool("SHOWINSTALLCOMPLETE", model.General.ShowInstallCompleteMessage, ref fileContents);
 			File.WriteAllText(Path.Combine(cppFilePath, "ConfigGeneral.cpp"), fileContents);
+		}
+
+		private static void GenerateConfigDisksCpp(string cppFilePath, ConfigurationModel model)
+		{
+			var fileContents = File.ReadAllText(Path.Combine(cppFilePath, "ConfigDisks.cpp.template"));
+			StampCppString("PACKAGETITLE", model.CDs.CD[0].Title, ref fileContents);
+			StampCppString("VOLUMELABEL", model.CDs.CD[0].VolumeLabel, ref fileContents);
+			File.WriteAllText(Path.Combine(cppFilePath, "ConfigDisks.cpp"), fileContents);
 		}
 
 		private static void StampCppString(string replaceString, string modelString, ref string fileContents)

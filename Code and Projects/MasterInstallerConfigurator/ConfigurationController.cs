@@ -48,7 +48,7 @@ namespace MasterInstallerConfigurator
 			}
 		}
 
-		public void ExecuteTasks(ConfigurationWizard configurationWizard)
+		public void ExecuteTasks(IConfigurationView configurationWizard)
 		{
 			if (configurationWizard.Compile)
 			{

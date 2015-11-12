@@ -242,6 +242,21 @@ namespace MasterInstallerConfiguratorTests
 		}
 
 		[Test]
+		public void CanHandleCdsSection()
+		{
+			var title = "Title";
+			var volume = "volume";
+			var basicModelXmlString = string.Format(@"<MasterInstaller><CDs><CD><Title>{0}</Title><VolumeLabel>{1}</VolumeLabel></CD></CDs></MasterInstaller>", title, volume);
+			var serializer = new XmlSerializer(typeof(ConfigurationModel));
+			using (var textReader = new StringReader(basicModelXmlString))
+			{
+				var model = (ConfigurationModel)serializer.Deserialize(textReader);
+				Assert.That(model.CDs.CD[0].Title, Is.StringEnding(title));
+				Assert.That(model.CDs.CD[0].VolumeLabel, Is.StringEnding(volume));
+			}
+		}
+
+		[Test]
 		[Category("ByHand")]
 		public void CanReadExistingConfigurations()
 		{

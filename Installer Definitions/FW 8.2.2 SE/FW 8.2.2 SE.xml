@@ -215,4 +215,10 @@
       <CDNumber>0</CDNumber>
     </Product>
   </Products>
+  <CDs>
+	<CD>
+	  <Title>SIL FieldWorks 8.2.2 SE Installer Package</Title>
+	    <VolumeLabel>FW822SE</VolumeLabel>
+	</CD>
+  </CDs>
 </MasterInstaller>

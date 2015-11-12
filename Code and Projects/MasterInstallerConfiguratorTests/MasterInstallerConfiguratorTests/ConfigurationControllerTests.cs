@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using MasterInstallerConfigurator;
@@ -108,6 +109,36 @@ namespace MasterInstallerConfiguratorTests
 			Assert.That(testView.SelfExtractingStyle, Is.EqualTo(model.Tasks.SelfExtractingStyle));
 		}
 
+		[Test]
+		public void TestBadBitmapPathLogged()
+		{
+			var model = new ConfigurationModel { FileLocation = Path.GetTempFileName()};
+			var testPath = "C:\\Test.bmp";
+			model.General = new ConfigurationModel.GeneralOptions { ListBackground = new ConfigurationModel.ListBackgroundOptions { ImagePath = testPath}};
+			var controller = new ConfigurationController(model);
+			var testView = new ConfigViewForTests();
+			testView.Compile = true;
+			try
+			{
+				controller.ExecuteTasks(testView);
+				// The warning message complains about legacy projects when the bitmap has any path separaters
+				TestMessageLogged(testView, "Legacy");
+				// The warning message should contain the image path
+				TestMessageLogged(testView, testPath);
+			}
+			finally
+			{
+				try
+				{
+					File.Delete(model.FileLocation);
+				}
+				catch (Exception)
+				{
+					// We tried to delete it, but this test shouldn't fail if we couldn't
+				}
+			}
+		}
+
 		private void TestThatProductIsSelectedForTheseFlavors(ConfigViewForTests testView, ConfigurationModel.Product product, List<string> list)
 		{
 			CollectionAssert.AreEquivalent(testView.enabledFlavorsForProduct[product.Title], list);
@@ -132,7 +163,7 @@ namespace MasterInstallerConfiguratorTests
 
 		private void TestMessageLogged(ConfigViewForTests testView, string error)
 		{
-			testView.loggedText.ToString().Contains(error);
+			Assert.That(testView.loggedText, Is.StringContaining(error));
 		}
 
 		public class ConfigViewForTests : IConfigurationView
@@ -186,6 +217,16 @@ namespace MasterInstallerConfiguratorTests
 			public void LogProgressLine(string errorMessage)
 			{
 				loggedText.AppendLine(errorMessage);
+			}
+
+			public IEnumerable<Tuple<string, string>> GetFlavors()
+			{
+				throw new NotImplementedException();
+			}
+
+			public List<string> GetIncludedProducts(string flavorName)
+			{
+				throw new NotImplementedException();
 			}
 		}
 	}

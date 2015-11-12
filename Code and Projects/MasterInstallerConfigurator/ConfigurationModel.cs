@@ -48,6 +48,23 @@ namespace MasterInstallerConfigurator
 
 		public List<Product> Products { get; set; }
 
+		public CDOptionContianer CDs { get; set; }
+
+		public class CDOptionContianer
+		{
+			[XmlElement]
+			public List<CDOptions> CD;
+
+			public class CDOptions
+			{
+				[XmlElement]
+				public string Title;
+
+				[XmlElement]
+				public string VolumeLabel;
+			}
+		}
+
 		public class SetupOptions
 		{
 			[XmlElement(ElementName = "CppFilePath")]

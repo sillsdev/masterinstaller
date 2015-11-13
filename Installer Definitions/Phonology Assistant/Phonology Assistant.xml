@@ -16,7 +16,7 @@
 	<General>
 		<Title>Phonology Assistant 3.0 Installer</Title>
 		<ListSubtitle>    (c) 2008 SIL International</ListSubtitle>
-		<ListBackground DefaultFolder="Bitmaps" Red="196" Green="206" Blue="44" OffsetX="" OffsetY="0" BlendLeft="100" BlendRight="100" BlendTop="100" BlendBottom="100">F:\CD Builder\Master Installer\Bitmaps\green.bmp</ListBackground>
+		<ListBackground DefaultFolder="Bitmaps" Red="196" Green="206" Blue="44" BlendLeft="100" BlendRight="100" BlendTop="100" BlendBottom="100">F:\CD Builder\Master Installer\Bitmaps\green.bmp</ListBackground>
 		<ListEvenOneProduct>true</ListEvenOneProduct>
 		<ListSpacingAdjust>3</ListSpacingAdjust>
 		<InfoButtonAdjust></InfoButtonAdjust>

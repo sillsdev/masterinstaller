@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using MasterInstallerConfigurator;
 using NUnit.Framework;
 
@@ -22,6 +24,28 @@ namespace MasterInstallerConfiguratorTests
 			var testView = new ConfigViewForTests();
 			controller.PopulateWithModelSettings(testView);
 			TestThatViewHasFlavor(testView, model.Flavors[0]);
+		}
+
+		[Test]
+		public void DeleteFlavorWorks()
+		{
+			var deleteFlavor = new ConfigurationModel.FlavorOptions { FlavorName = "DeletedFlavor", DownloadURL = "localhost" };
+			var model = new ConfigurationModel();
+			var flavorName = "TestFlavor";
+			model.Flavors = new List<ConfigurationModel.FlavorOptions>
+			{
+				new ConfigurationModel.FlavorOptions { FlavorName = flavorName },
+				deleteFlavor
+			};
+			var controller = new ConfigurationController(model);
+			var testView = new ConfigViewForTests();
+			controller.PopulateWithModelSettings(testView);
+			TestThatViewHasFlavor(testView, model.Flavors[0]);
+			TestThatViewHasFlavor(testView, model.Flavors[1]);
+			// SUT
+			controller.DeleteLastFlavor(testView);
+			TestThatViewHasFlavor(testView, model.Flavors[0]);
+			TestThatViewDoesNotHaveFlavor(testView, deleteFlavor);
 		}
 
 		[Test]
@@ -85,6 +109,36 @@ namespace MasterInstallerConfiguratorTests
 			Assert.That(testView.SelfExtractingStyle, Is.EqualTo(model.Tasks.SelfExtractingStyle));
 		}
 
+		[Test]
+		public void TestBadBitmapPathLogged()
+		{
+			var model = new ConfigurationModel { FileLocation = Path.GetTempFileName()};
+			var testPath = "C:\\Test.bmp";
+			model.General = new ConfigurationModel.GeneralOptions { ListBackground = new ConfigurationModel.ListBackgroundOptions { ImagePath = testPath}};
+			var controller = new ConfigurationController(model);
+			var testView = new ConfigViewForTests();
+			testView.Compile = true;
+			try
+			{
+				controller.ExecuteTasks(testView);
+				// The warning message complains about legacy projects when the bitmap has any path separaters
+				TestMessageLogged(testView, "Legacy");
+				// The warning message should contain the image path
+				TestMessageLogged(testView, testPath);
+			}
+			finally
+			{
+				try
+				{
+					File.Delete(model.FileLocation);
+				}
+				catch (Exception)
+				{
+					// We tried to delete it, but this test shouldn't fail if we couldn't
+				}
+			}
+		}
+
 		private void TestThatProductIsSelectedForTheseFlavors(ConfigViewForTests testView, ConfigurationModel.Product product, List<string> list)
 		{
 			CollectionAssert.AreEquivalent(testView.enabledFlavorsForProduct[product.Title], list);
@@ -96,9 +150,20 @@ namespace MasterInstallerConfiguratorTests
 			CollectionAssert.Contains(testView.flavorUrls, flavorOptions.DownloadURL);
 		}
 
+		private void TestThatViewDoesNotHaveFlavor(ConfigViewForTests testView, ConfigurationModel.FlavorOptions flavorOptions)
+		{
+			CollectionAssert.DoesNotContain(testView.flavorNames, flavorOptions.FlavorName);
+			CollectionAssert.DoesNotContain(testView.flavorUrls, flavorOptions.DownloadURL);
+		}
+
 		private void TestThatViewHasProduct(ConfigViewForTests testView, ConfigurationModel.Product product)
 		{
 			CollectionAssert.Contains(testView.productNames, product.Title);
+		}
+
+		private void TestMessageLogged(ConfigViewForTests testView, string error)
+		{
+			Assert.That(testView.loggedText, Is.StringContaining(error));
 		}
 
 		public class ConfigViewForTests : IConfigurationView
@@ -108,6 +173,8 @@ namespace MasterInstallerConfiguratorTests
 
 			public List<string> productNames = new List<string>();
 			public Dictionary<string, List<string>> enabledFlavorsForProduct = new Dictionary<string, List<string>>();
+
+			public StringBuilder loggedText = new StringBuilder();
 
 			public void AddFlavor(string flavorName, string flavorUrl)
 			{
@@ -141,6 +208,26 @@ namespace MasterInstallerConfiguratorTests
 			public bool WriteDownloadsXml { get; set; }
 			public string OutputFolder { get; set; }
 			public string SelfExtractingStyle { get; set; }
+
+			public void LogErrorLine(string errorMessage)
+			{
+				loggedText.AppendLine(errorMessage);
+			}
+
+			public void LogProgressLine(string errorMessage)
+			{
+				loggedText.AppendLine(errorMessage);
+			}
+
+			public IEnumerable<Tuple<string, string>> GetFlavors()
+			{
+				throw new NotImplementedException();
+			}
+
+			public List<string> GetIncludedProducts(string flavorName)
+			{
+				throw new NotImplementedException();
+			}
 		}
 	}
 }

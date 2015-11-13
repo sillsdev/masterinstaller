@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="IConfigurationView.cs" />
     <Compile Include="JavaScriptConverter.cs" />
+    <Compile Include="MasterInstallerCompiler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AddFlavorDialog.resx">

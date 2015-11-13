@@ -2,6 +2,7 @@
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace MasterInstallerConfigurator
@@ -19,5 +20,9 @@ namespace MasterInstallerConfigurator
 		bool WriteDownloadsXml { get; set; }
 		string OutputFolder { get; set; }
 		string SelfExtractingStyle { get; set; }
+		void LogErrorLine(string errorMessage);
+		void LogProgressLine(string errorMessage);
+		IEnumerable<Tuple<string, string>> GetFlavors();
+		List<string> GetIncludedProducts(string flavorName);
 	}
 }

@@ -48,6 +48,23 @@ namespace MasterInstallerConfigurator
 
 		public List<Product> Products { get; set; }
 
+		public CDOptionContianer CDs { get; set; }
+
+		public class CDOptionContianer
+		{
+			[XmlElement]
+			public List<CDOptions> CD;
+
+			public class CDOptions
+			{
+				[XmlElement]
+				public string Title;
+
+				[XmlElement]
+				public string VolumeLabel;
+			}
+		}
+
 		public class SetupOptions
 		{
 			[XmlElement(ElementName = "CppFilePath")]
@@ -150,12 +167,41 @@ namespace MasterInstallerConfigurator
 			public string TermsOfUseFile { get; set; }
 
 			public string TermsButtonText { get; set; }
+
+			public bool ShowInstallCompleteMessage { get; set; }
 		}
 
 		public class ListBackgroundOptions
 		{
 			[XmlText]
 			public string ImagePath { get; set; }
+
+			[XmlAttribute]
+			public int Red { get; set; }
+
+			[XmlAttribute]
+			public int Green { get; set; }
+
+			[XmlAttribute]
+			public int Blue { get; set; }
+
+			[XmlAttribute]
+			public int OffsetX { get; set; }
+
+			[XmlAttribute]
+			public int OffsetY { get; set; }
+
+			[XmlAttribute]
+			public int BlendLeft { get; set; }
+
+			[XmlAttribute]
+			public int BlendRight { get; set; }
+
+			[XmlAttribute]
+			public int BlendTop { get; set; }
+
+			[XmlAttribute]
+			public int BlendBottom { get; set; }
 		}
 
 		public class PrerequisiteOptions

@@ -7,3 +7,5 @@ Code and Projects/**/Debug/*
 *.vcxproj.user
 **/packages/*
 Setup.*sdf
+Code and Projects/ConfigGeneral.cpp
+Code and Projects/ConfigDisks.cpp

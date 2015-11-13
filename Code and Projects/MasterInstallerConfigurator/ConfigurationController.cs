@@ -17,6 +17,7 @@ namespace MasterInstallerConfigurator
 
 		public void PopulateWithModelSettings(IConfigurationView configurationWizard)
 		{
+			configurationWizard.ClearAll();
 			if (_model.Flavors != null)
 			{
 				foreach (var flavor in _model.Flavors)
@@ -47,8 +48,12 @@ namespace MasterInstallerConfigurator
 			}
 		}
 
-		public void ExecuteTasks(ConfigurationWizard configurationWizard)
+		public void ExecuteTasks(IConfigurationView configurationWizard)
 		{
+			if (configurationWizard.Compile)
+			{
+				MasterInstallerCompiler.Compile(_model, "", "C:/Repositories/masterinstaller/", configurationWizard);
+			}
 			if (configurationWizard.RememberSettings)
 			{
 				_model.Flavors.Clear();
@@ -72,8 +77,16 @@ namespace MasterInstallerConfigurator
 		public void AddFlavor(IConfigurationView wizard, string flavorName, string flavorUrl)
 		{
 			_model.Flavors.Add(new ConfigurationModel.FlavorOptions { FlavorName = flavorName, DownloadURL = flavorUrl, IncludedProductTitles = new List<string>()});
-			wizard.ClearAll();
 			PopulateWithModelSettings(wizard);
+		}
+
+		public void DeleteLastFlavor(IConfigurationView wizard)
+		{
+			if (_model.Flavors.Count > 1)
+			{
+				_model.Flavors.RemoveAt(_model.Flavors.Count - 1);
+				PopulateWithModelSettings(wizard);
+			}
 		}
 	}
 }

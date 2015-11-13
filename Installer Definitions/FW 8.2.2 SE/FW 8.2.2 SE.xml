@@ -40,7 +40,7 @@
   <General>
     <Title>SIL FieldWorks 8.2.2 SE Installer</Title>
     <ListSubtitle>    © 2014 SIL International</ListSubtitle>
-    <ListBackground>green.bmp</ListBackground>
+    <ListBackground Red="0" Green="0" Blue="0" OffsetX="0" OffsetY="0" BlendLeft="0" BlendRight="0" BlendTop="0" BlendBottom="0">green.bmp</ListBackground>
     <ListEvenOneProduct>false</ListEvenOneProduct>
     <ListSpacingAdjust />
     <InfoButtonAdjust />
@@ -51,6 +51,7 @@
     <HelpButtonText />
     <TermsOfUseFile>License SIL Lang Dev SW.pdf</TermsOfUseFile>
     <TermsButtonText>Terms of Use...</TermsButtonText>
+    <ShowInstallCompleteMessage>false</ShowInstallCompleteMessage>
   </General>
   <Products>
     <Product>
@@ -216,9 +217,9 @@
     </Product>
   </Products>
   <CDs>
-	<CD>
-	  <Title>SIL FieldWorks 8.2.2 SE Installer Package</Title>
-	    <VolumeLabel>FW822SE</VolumeLabel>
-	</CD>
+    <CD>
+      <Title>SIL FieldWorks 8.2.2 SE Installer Package</Title>
+      <VolumeLabel>FW822SE</VolumeLabel>
+    </CD>
   </CDs>
 </MasterInstaller>

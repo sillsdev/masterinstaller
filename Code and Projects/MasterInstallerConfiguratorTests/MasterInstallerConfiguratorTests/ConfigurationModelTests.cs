@@ -204,8 +204,8 @@ namespace MasterInstallerConfiguratorTests
 				Assert.That(testProduct.MustHaveWin2kOrBetter, Is.True, "Did not read MustHaveWin2kOrBetter");
 				Assert.That(testProduct.MustBeAdmin, Is.True, "Did not read MustBeAdmin");
 				Assert.That(testProduct.CriticalFile, Is.StringEnding(criticalFile), "Did not read CriticalFile");
-				Assert.That(testProduct.Install, Is.StringEnding(install), "Did not read Install");
-				Assert.That(testProduct.TestPresence.TestValue, Is.StringEnding(testPresence), "Did not read TestPresence");
+				Assert.That(testProduct.Install.InstallFunction, Is.StringEnding(install), "Did not read Install");
+				Assert.That(testProduct.TestPresence.TestFunction, Is.StringEnding(testPresence), "Did not read TestPresence");
 				Assert.That(testProduct.StatusWindow, Is.StringEnding(statusWindow), "Did not read StatusWindow");
 				Assert.That(testProduct.ProductCode, Is.StringEnding(productCode), "Did not read ProductCode");
 				Assert.That(testProduct.Help, Is.EqualTo(help), "Did not read HelpFile");

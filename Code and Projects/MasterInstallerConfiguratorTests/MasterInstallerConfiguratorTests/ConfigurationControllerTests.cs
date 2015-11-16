@@ -122,7 +122,7 @@ namespace MasterInstallerConfiguratorTests
 			{
 				controller.ExecuteTasks(testView);
 				// The warning message complains about legacy projects when the bitmap has any path separaters
-				TestMessageLogged(testView, "Legacy");
+				TestMessageLogged(testView, "legacy data");
 				// The warning message should contain the image path
 				TestMessageLogged(testView, testPath);
 			}
@@ -163,7 +163,7 @@ namespace MasterInstallerConfiguratorTests
 
 		private void TestMessageLogged(ConfigViewForTests testView, string error)
 		{
-			Assert.That(testView.loggedText, Is.StringContaining(error));
+			Assert.That(testView.loggedText.ToString(), Is.StringContaining(error));
 		}
 
 		public class ConfigViewForTests : IConfigurationView

@@ -136,7 +136,7 @@ namespace MasterInstallerConfigurator
 
 			public string ProductCode { get; set; }
 
-			public string Help { get; set; }
+			public HelpOptions Help { get; set; }
 
 			public int CDNumber { get; set; }
 
@@ -272,7 +272,7 @@ namespace MasterInstallerConfigurator
 			public string TestFunction { get; set; }
 
 			[XmlAttribute]
-			string Version { get; set; }
+			public string Version { get; set; }
 		}
 
 		public class RequiresOption
@@ -317,6 +317,15 @@ namespace MasterInstallerConfigurator
 				return model;
 			}
 		}
+	}
+
+	public class HelpOptions
+	{
+		[XmlText]
+		public string HelpFile { get; set; }
+
+		[XmlAttribute]
+		public bool Internal { get; set; }
 	}
 
 	public class SerializeableNullableInt

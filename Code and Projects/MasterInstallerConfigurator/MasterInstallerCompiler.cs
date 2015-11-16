@@ -111,6 +111,43 @@ namespace MasterInstallerConfigurator
 				GenerateProductStringVariable(product.Commentary, "Commentary during installation", productConfigurations);
 				GenerateProductStringVariable(product.StatusWindow, "What to do with status window during installation", productConfigurations);
 				GenerateProductBoolVariable(false, "StatusPauseWin98 flag (Obsolete)", productConfigurations);
+				GenerateProductTestPresenceVariables(product.TestPresence, productConfigurations);
+				GenerateProductPostInstallationVariables(product.PostInstall, productConfigurations);
+				GenerateProductPathVariable(product.Help != null ? product.Help.HelpFile : null, "Help tag", productConfigurations);
+				GenerateProductBoolVariable(product.Help != null && product.Help.Internal, "Help tag", productConfigurations);
+				productConfigurations.AppendLine("\t},");
+			}
+			productConfigurations.AppendLine("};");
+			preInstallationDependencies.AppendLine("};");
+			postInstallationTests.AppendLine("};");
+		}
+
+		private static void GenerateProductPostInstallationVariables(ConfigurationModel.PostInstallOptions postInstall, StringBuilder productConfigurations)
+		{
+			if (postInstall != null)
+			{
+				GenerateProductFunctionVariable(postInstall.PostInstallFunction, "Postinstallation function", productConfigurations);
+			}
+			else
+			{
+				GenerateProductFunctionVariable(null, "No Postinstallation function", productConfigurations);
+			}
+			GenerateProductFunctionVariable(null, "No Postinstallation command (Obsolete)", productConfigurations);
+		}
+
+		private static void GenerateProductTestPresenceVariables(ConfigurationModel.TestPresenceOptions testPresenceOptions, StringBuilder productConfigurations)
+		{
+			if (testPresenceOptions != null)
+			{
+				GenerateProductFunctionVariable(testPresenceOptions.TestFunction, "TestPresence function", productConfigurations);
+				GenerateProductFunctionVariable(null, "No TestPresence command (Obsolete)", productConfigurations);
+				GenerateProductStringVariable(testPresenceOptions.Version, "TestPresence version parameter", productConfigurations);
+			}
+			else
+			{
+				GenerateProductFunctionVariable(null, "No TestPresence function", productConfigurations);
+				GenerateProductFunctionVariable(null, "No TestPresence command (Obsolete)", productConfigurations);
+				GenerateProductStringVariable(null, "No TestPresence version parameter", productConfigurations);
 			}
 		}
 

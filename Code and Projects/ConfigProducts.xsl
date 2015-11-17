@@ -13,66 +13,6 @@ project to make an executable master installer.
 <!-- Deleted since already implemented in MasterInstallerCompiler -->
 <xsl:for-each select="MasterInstaller/Products/Product">
 
-		<!-- TestPresence function -->
-		<xsl:text>&#09;&#09;</xsl:text>
-		<xsl:if test="TestPresence/@Type='External'">
-			<xsl:text>NULL, // No TestPresence function&#13;</xsl:text>
-			<xsl:text>&#09;&#09;</xsl:text>
-			<xsl:call-template name="QuotedCppPathStringOrNullIfEmpty">
-				<xsl:with-param name="str" select="TestPresence"/>
-			</xsl:call-template>
-		<xsl:text>, // TestPresence command&#13;</xsl:text>
-		</xsl:if>
-		<xsl:if test="not(TestPresence/@Type='External')">
-			<xsl:call-template name="StrOrNullIfEmpty">
-				<xsl:with-param name="str" select="TestPresence"/>
-			</xsl:call-template>
-			<xsl:text>, // TestPresence function&#13;</xsl:text>
-			<xsl:text>&#09;&#09;NULL, // No TestPresence command&#13;</xsl:text>
-		</xsl:if>
-
-		<!-- TestPresence version parameter -->
-		<xsl:text>&#09;&#09;</xsl:text>
-		<xsl:call-template name="QuotedStrOrNullIfEmpty">
-			<xsl:with-param name="str" select="TestPresence/@Version"/>
-		</xsl:call-template>
-		<xsl:text>, // TestPresence version parameter&#13;</xsl:text>
-
-		<!-- Post-installation function -->
-		<xsl:text>&#09;&#09;</xsl:text>
-		<xsl:if test="PostInstall/@Type='External'">
-			<xsl:text>NULL, // No Postinstallation function&#13;</xsl:text>
-			<xsl:text>&#09;&#09;</xsl:text>
-			<xsl:call-template name="QuotedCppPathStringOrNullIfEmpty">
-				<xsl:with-param name="str" select="PostInstall"/>
-			</xsl:call-template>
-		<xsl:text>, // Postinstallation command&#13;</xsl:text>
-		</xsl:if>
-		<xsl:if test="not(PostInstall/@Type='External')">
-			<xsl:call-template name="StrOrNullIfEmpty">
-				<xsl:with-param name="str" select="PostInstall"/>
-			</xsl:call-template>
-			<xsl:text>, // Postinstallation function&#13;</xsl:text>
-			<xsl:text>&#09;&#09;NULL, // No Postinstallation command&#13;</xsl:text>
-		</xsl:if>
-
-		<!-- Help tag -->
-		<xsl:text>&#09;&#09;</xsl:text>
-		<xsl:call-template name="QuotedCppPathStringOrNullIfEmpty">
-			<xsl:with-param name="str" select="Help"/>
-		</xsl:call-template>
-		<xsl:text>, // Help tag&#13;</xsl:text>
-		
-		<!-- Flag which determines if Help Tag is an external file or not -->
-		<xsl:text>&#09;&#09;</xsl:text>
-		<xsl:call-template name="StrOrFalseIfEmpty">
-			<xsl:with-param name="str" select="Help/@Internal"/>
-		</xsl:call-template>
-		<xsl:text>, // Flag which determines if Help Tag is an internal file or not&#13;</xsl:text>
-
-		<!-- End of array -->
-		<xsl:text>&#09;},&#13;</xsl:text>
-		
 		<!-- Add named features as "products" in their own right -->
 		<xsl:for-each select="Feature">
 			<xsl:text>&#09;{ // Product sub-feature, defined only for testing presence after installation&#13;</xsl:text>

@@ -54,7 +54,7 @@
     <ShowInstallCompleteMessage>false</ShowInstallCompleteMessage>
   </General>
   <Products>
-    <Product>
+    <Product List="false">
       <AutoConfigure>
         <Title>FW SE 8.2.2 (from \\LSDEV-SVN\GoogleDrive\Installers\FW8.2.2\SE\FieldWorks)</Title>
         <Source SignAs="SIL FieldWorks 8 Installer">\\LSDEV-SVN\GoogleDrive\Installers\FW8.2.2\SE\FieldWorks\SetupFW_SE.msi</Source>
@@ -74,10 +74,11 @@
       <Prerequisite Tag=".NET4.0F" />
       <Requires Tag="IE" MinVersion="5.5" FailMsg="The program may not display certain user interface controls." />
       <ProductCode>{8E80F1ED-826A-46d5-A59A-D8A203F2F0D9}</ProductCode>
-      <Help>FieldWorks\SetupFW.pdf</Help>
+      <Help Internal="false">FieldWorks\SetupFW.pdf</Help>
       <CDNumber>0</CDNumber>
+      <MustNotDelayReboot>false</MustNotDelayReboot>
     </Product>
-    <Product>
+    <Product List="false">
       <AutoConfigure>
         <Title>Windows 2000 Service Pack 4</Title>
         <Source>3rd Party\Win 2000 SP4</Source>
@@ -95,8 +96,9 @@
       <StatusWindow>Monitor 4000</StatusWindow>
       <FlushReboot>true</FlushReboot>
       <CDNumber>0</CDNumber>
+      <MustNotDelayReboot>false</MustNotDelayReboot>
     </Product>
-    <Product>
+    <Product List="false">
       <AutoConfigure>
         <Title>Windows XP Service Pack 3</Title>
         <Source>3rd Party\Win XP SP3</Source>
@@ -114,8 +116,9 @@
       <StatusWindow>Monitor 4000</StatusWindow>
       <FlushReboot>true</FlushReboot>
       <CDNumber>0</CDNumber>
+      <MustNotDelayReboot>false</MustNotDelayReboot>
     </Product>
-    <Product>
+    <Product List="false">
       <AutoConfigure>
         <Title>Windows Vista Service Pack 1</Title>
         <Source>3rd Party\Win Vista SP1</Source>
@@ -133,8 +136,9 @@
       <StatusWindow>Monitor 4000</StatusWindow>
       <FlushReboot>true</FlushReboot>
       <CDNumber>0</CDNumber>
+      <MustNotDelayReboot>false</MustNotDelayReboot>
     </Product>
-    <Product>
+    <Product List="false">
       <AutoConfigure>
         <Title>.NET Framework 4.0 Full</Title>
         <Source>3rd Party\DotNet 4.0\dotNetFx40_Full_x86_x64.exe</Source>
@@ -156,8 +160,9 @@
       <Prerequisite Tag="Win XP SP3" />
       <Prerequisite Tag="Win Vista SP1" />
       <CDNumber>0</CDNumber>
+      <MustNotDelayReboot>false</MustNotDelayReboot>
     </Product>
-    <Product>
+    <Product List="false">
       <AutoConfigure>
         <Title>Internet Explorer 6.0 SP1 (English)</Title>
         <Source>3rd Party\IE60</Source>
@@ -175,8 +180,9 @@
       <StatusWindow>Monitor</StatusWindow>
       <FlushReboot>true</FlushReboot>
       <CDNumber>0</CDNumber>
+      <MustNotDelayReboot>false</MustNotDelayReboot>
     </Product>
-    <Product>
+    <Product List="false">
       <AutoConfigure>
         <Title>Microsoft Text Services Framework (for Windows 2000)</Title>
         <Source>3rd Party\TSF</Source>
@@ -194,8 +200,9 @@
       <StatusWindow>Show</StatusWindow>
       <FlushReboot>false</FlushReboot>
       <CDNumber>0</CDNumber>
+      <MustNotDelayReboot>false</MustNotDelayReboot>
     </Product>
-    <Product>
+    <Product List="false">
       <AutoConfigure>
         <Title>Windows Installer 3.1 (Win 2K and up only)</Title>
         <Source>3rd Party\Windows Installer 3.1</Source>
@@ -214,6 +221,7 @@
       <FlushReboot>false</FlushReboot>
       <Prerequisite Tag="Win 2K SP4" />
       <CDNumber>0</CDNumber>
+      <MustNotDelayReboot>false</MustNotDelayReboot>
     </Product>
   </Products>
   <CDs>

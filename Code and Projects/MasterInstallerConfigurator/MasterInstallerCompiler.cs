@@ -1,13 +1,17 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace MasterInstallerConfigurator
 {
 	class MasterInstallerCompiler
 	{
+		private const string GeneratedCppHeaderString = "/*\tThis file is ALWAYS PRODUCED AUTOMATICALLY.\n\tDo not edit it, as it may be overwritten without warning.\n\tThe source for producing this file is an XML document.\n*/\n";
+
 		public static void Compile(ConfigurationModel model, string certificatePassword, string masterInstallerPath, IConfigurationView view)
 		{
 			var _utilsPath = Path.Combine(masterInstallerPath, "Utils");
@@ -18,8 +22,8 @@ namespace MasterInstallerConfigurator
 				var tempFolder = CreateTempCompilationFolder(model);
 				GenerateConfigGeneralCpp(cppFilePath, model);
 				GenerateConfigDisksCpp(cppFilePath, model);
+				GenerateProductsCpp(cppFilePath, model);
 				/*
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigProducts.xsl", CppFilePath + "\\ConfigProducts.cpp");
 	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigFunctions.xsl", CppFilePath + "\\ConfigFunctions.cpp");
 	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGlobals.xsl", CppFilePath + "\\AutoGlobals.h");
 	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigResources.xsl", CppFilePath + "\\AutoResources.rc");
@@ -70,20 +74,19 @@ namespace MasterInstallerConfigurator
 			var productConfigurations = new StringBuilder();
 			productConfigurations.AppendLine("// List of software products in this package.");
 			productConfigurations.AppendLine("static SoftwareProduct Products[] =\n{");
-			var preInstallationDependencies = new StringBuilder();
-			preInstallationDependencies.AppendLine("// List of pre-installation dependencies.");
-			preInstallationDependencies.AppendLine("static const Mapping Prerequisites[] =\n{");
+			var preInstallDeps = new StringBuilder();
 			var postInstallationTests = new StringBuilder();
-			postInstallationTests.AppendLine("// List of post-installation dependencies.");
-			postInstallationTests.AppendLine("static const Mapping RunDependencies[] =\n{");
 			foreach (var product in model.Products)
 			{
 				GenerateProductExternalFunctions(product, externalFunctions);
+				GenerateProductPrerequisites(product, preInstallDeps);
+				GenerateProductRequires(product, postInstallationTests);
 				productConfigurations.AppendLine("\t{");
 				GenerateProductStringVariable(product.Tag, "Name used in dependency lists", productConfigurations);
 				GenerateProductStringVariable(product.Title, "Title", productConfigurations);
 				GenerateProductStringVariable(product.ProductCode, "MSI Product Code", productConfigurations);
 				GenerateProductStringVariable(product.Version, "Version for Product Key test", productConfigurations);
+				GenerateProductStringVariable(null, "Feature (Obsolete)", productConfigurations);
 				GenerateProductIntVariable(product.KeyId, "-1", "Product Key ID", productConfigurations);
 				GenerateProductBoolVariable(product.List, "Flag saying if product should be offered to user (m_kOneOfOurs)",
 					productConfigurations);
@@ -118,8 +121,86 @@ namespace MasterInstallerConfigurator
 				productConfigurations.AppendLine("\t},");
 			}
 			productConfigurations.AppendLine("};");
-			preInstallationDependencies.AppendLine("};");
-			postInstallationTests.AppendLine("};");
+			CompleteDependencyArrays(preInstallDeps, postInstallationTests);
+			File.WriteAllText(Path.Combine(cppFilePath, "ConfigProducts.cpp"), GeneratedCppHeaderString + externalFunctions + productConfigurations + preInstallDeps + postInstallationTests);
+		}
+
+		private static void CompleteDependencyArrays(StringBuilder preInstallDeps, StringBuilder postInstallationTests)
+		{
+			if (preInstallDeps.Length > 0)
+			{
+				var deps = preInstallDeps.ToString();
+				var itemCount = deps.Count(x => x == '{');
+				preInstallDeps.Clear();
+				preInstallDeps.AppendLine("// List of pre-installation dependencies.");
+				preInstallDeps.AppendLine("static const Mapping Prerequisites[] =\n{");
+				preInstallDeps.AppendLine(deps);
+				preInstallDeps.AppendLine("};");
+				preInstallDeps.AppendLine(string.Format("static const int kctPrerequisites = {0};", itemCount));
+			}
+			else
+			{
+				preInstallDeps.AppendLine("// No pre-installation dependencies.");
+				preInstallDeps.AppendLine("static const Mapping * Prerequisites = NULL;");
+				preInstallDeps.AppendLine("static const int kctPrerequisites = 0;");
+			}
+			if (postInstallationTests.Length > 0)
+			{
+				var deps = postInstallationTests.ToString();
+				var itemCount = deps.Count(x => x == '{');
+				postInstallationTests.Clear();
+				postInstallationTests.AppendLine("// List of post-installation dependencies.");
+				postInstallationTests.AppendLine("static const Mapping RunDependencies[] =\n{");
+				postInstallationTests.AppendLine(deps);
+				postInstallationTests.AppendLine("};");
+				postInstallationTests.AppendLine(string.Format("static const int kctRunDependencies = {0};", itemCount));
+			}
+			else
+			{
+				postInstallationTests.AppendLine("// No post-installation dependencies.");
+				postInstallationTests.AppendLine("static const Mapping * RunDependencies = NULL;");
+				postInstallationTests.AppendLine("static const int kctRunDependencies = 0;");
+			}
+		}
+
+		private static void GenerateProductRequires(ConfigurationModel.Product product, StringBuilder postInstallTests)
+		{
+			if (product.Requires != null)
+			{
+				GenerateRequirementArrayEntries(product.Tag, product.Requires, postInstallTests);
+			}
+		}
+
+		private static void GenerateProductPrerequisites(ConfigurationModel.Product product, StringBuilder preInstallDeps)
+		{
+			if(product.Prerequisite != null)
+			{
+				GenerateRequirementArrayEntries(product.Tag, product.Prerequisite, preInstallDeps);
+			}
+		}
+
+		private static void GenerateRequirementArrayEntries(string productTag, List<ConfigurationModel.RequirementOption> requirements, StringBuilder builder)
+		{
+			foreach (var preReq in requirements)
+			{
+				builder.AppendLine("{");
+				GenerateProductStringVariable(productTag, "Product tag", builder);
+				GenerateProductStringVariable(preReq.Tag, "Requirement tag", builder);
+				if (!string.IsNullOrEmpty(preReq.Version))
+				{
+					GenerateProductStringVariable(preReq.Version, "Version (min)", builder);
+					GenerateProductStringVariable(preReq.Version, "Version (max)", builder);
+				}
+				else
+				{
+					GenerateProductStringVariable(preReq.MinVersion, "MinVersion", builder);
+					GenerateProductStringVariable(preReq.MaxVersion, "MinVersion", builder);
+				}
+				GenerateProductStringVariable(preReq.FailMsg, "Fail message (for post requirements)", builder);
+				GenerateProductStringVariable(preReq.MinOS, "Min OS version", builder);
+				GenerateProductStringVariable(preReq.MaxOS, "Max OS version", builder);
+				builder.AppendLine("},");
+			}
 		}
 
 		private static void GenerateProductPostInstallationVariables(ConfigurationModel.PostInstallOptions postInstall, StringBuilder productConfigurations)
@@ -190,21 +271,17 @@ namespace MasterInstallerConfigurator
 
 		private static void GenerateProductPathVariable(string path, string comment, StringBuilder builder)
 		{
-			if (!string.IsNullOrEmpty(path))
-			{
-				GenerateProductStringVariable(path.Replace(@"\", @"\\"), comment, builder);
-			}
-			GenerateProductStringVariable(path, comment, builder);
+			GenerateProductStringVariable(!string.IsNullOrEmpty(path) ? path.Replace(@"\", @"\\") : path, comment, builder);
 		}
 
 		private static void GenerateProductStringVariable(string variableValue, string comment, StringBuilder builder)
 		{
-			var pathValue = "NULL";
+			var stringValue = "NULL";
 			if (!string.IsNullOrEmpty(variableValue))
 			{
-				pathValue = string.Format("_T(\"{0}\")", variableValue);
+				stringValue = string.Format("_T(\"{0}\")", variableValue);
 			}
-			builder.AppendLine(string.Format("{0}, // {1}", pathValue, comment));
+			builder.AppendLine(string.Format("\t\t{0}, // {1}", stringValue, comment));
 		}
 
 		private static void GenerateProductFunctionVariable(string preInstall, string comment, StringBuilder builder)

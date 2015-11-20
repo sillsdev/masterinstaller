@@ -130,9 +130,10 @@ namespace MasterInstallerConfigurator
 			public bool FlushReboot { get; set; }
 
 			[XmlElement(ElementName = "Prerequisite")]
-			public List<PrerequisiteOptions> Prerequisite { get; set; }
+			public List<RequirementOption> Prerequisite { get; set; }
 
-			public RequiresOption Requires { get; set; }
+			[XmlElement(ElementName = "Requires")]
+			public List<RequirementOption> Requires { get; set; }
 
 			public string ProductCode { get; set; }
 
@@ -257,13 +258,28 @@ namespace MasterInstallerConfigurator
 			public int BlendBottom { get; set; }
 		}
 
-		public class PrerequisiteOptions
+		public class RequirementOption
 		{
 			[XmlAttribute]
 			public string Tag { get; set; }
 
 			[XmlAttribute]
 			public string Version { get; set; }
+
+			[XmlAttribute]
+			public string MinVersion { get; set; }
+
+			[XmlAttribute]
+			public string MaxVersion { get; set; }
+
+			[XmlAttribute]
+			public string MinOS { get; set; }
+
+			[XmlAttribute]
+			public string MaxOS { get; set; }
+
+			[XmlAttribute]
+			public string FailMsg { get; set; }
 		}
 
 		public class TestPresenceOptions

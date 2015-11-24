@@ -204,11 +204,11 @@ namespace MasterInstallerConfiguratorTests
 				Assert.That(testProduct.MustHaveWin2kOrBetter, Is.True, "Did not read MustHaveWin2kOrBetter");
 				Assert.That(testProduct.MustBeAdmin, Is.True, "Did not read MustBeAdmin");
 				Assert.That(testProduct.CriticalFile, Is.StringEnding(criticalFile), "Did not read CriticalFile");
-				Assert.That(testProduct.Install, Is.StringEnding(install), "Did not read Install");
-				Assert.That(testProduct.TestPresence.TestValue, Is.StringEnding(testPresence), "Did not read TestPresence");
+				Assert.That(testProduct.Install.InstallFunction, Is.StringEnding(install), "Did not read Install");
+				Assert.That(testProduct.TestPresence.TestFunction, Is.StringEnding(testPresence), "Did not read TestPresence");
 				Assert.That(testProduct.StatusWindow, Is.StringEnding(statusWindow), "Did not read StatusWindow");
 				Assert.That(testProduct.ProductCode, Is.StringEnding(productCode), "Did not read ProductCode");
-				Assert.That(testProduct.Help, Is.EqualTo(help), "Did not read HelpFile");
+				Assert.That(testProduct.Help.HelpFile, Is.EqualTo(help), "Did not read HelpFile");
 				Assert.That(testProduct.Prerequisite.Count, Is.EqualTo(2), "Not enough prerequisite elements");
 				Assert.That(testProduct.Prerequisite[0].Tag, Is.StringEnding(tagAttribute), "Did not read first prereq Tag");
 				Assert.That(testProduct.Prerequisite[0].Version, Is.StringEnding(testVersion), "Did not read first prereq version");
@@ -216,9 +216,9 @@ namespace MasterInstallerConfiguratorTests
 				Assert.That(testProduct.CDNumber, Is.EqualTo(CDNumber), "Did not read CD Number");
 				Assert.That(testProduct.DownloadURL, Is.StringEnding(downloadUrl), "Did not read DownloadURL");
 				Assert.That(testProduct.FlushReboot, Is.True, "Did not read flushreboot");
-				Assert.That(testProduct.Requires.Tag, Is.StringEnding(tagAttribute), "Did not read Requires Tag attribute");
-				Assert.That(testProduct.Requires.MinVersion, Is.StringEnding(testVersion), "Did not read Requires testVersion");
-				Assert.That(testProduct.Requires.FailMessage, Is.StringEnding(failMessage), "Did not read Requires failMessage");
+				Assert.That(testProduct.Requires[0].Tag, Is.StringEnding(tagAttribute), "Did not read Requires Tag attribute");
+				Assert.That(testProduct.Requires[0].MinVersion, Is.StringEnding(testVersion), "Did not read Requires testVersion");
+				Assert.That(testProduct.Requires[0].FailMessage, Is.StringEnding(failMessage), "Did not read Requires failMessage");
 			}
 		}
 

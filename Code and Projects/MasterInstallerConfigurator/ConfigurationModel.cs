@@ -2,6 +2,7 @@
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 
 namespace MasterInstallerConfigurator
@@ -112,9 +113,13 @@ namespace MasterInstallerConfigurator
 
 			public string CriticalFile { get; set; }
 
-			public string Install { get; set; }
+			public InstallOptions Install { get; set; }
 
 			public TestPresenceOptions TestPresence { get; set; }
+
+			public string Preinstall { get; set; }
+
+			public PostInstallOptions PostInstall { get; set; }
 
 			public string DownloadURL { get; set; }
 
@@ -125,15 +130,64 @@ namespace MasterInstallerConfigurator
 			public bool FlushReboot { get; set; }
 
 			[XmlElement(ElementName = "Prerequisite")]
-			public List<PrerequisiteOptions> Prerequisite { get; set; }
+			public List<RequirementOption> Prerequisite { get; set; }
 
-			public RequiresOption Requires { get; set; }
+			[XmlElement(ElementName = "Requires")]
+			public List<RequirementOption> Requires { get; set; }
 
 			public string ProductCode { get; set; }
 
-			public string Help { get; set; }
+			public HelpOptions Help { get; set; }
 
 			public int CDNumber { get; set; }
+
+			[XmlAttribute]
+			public string Version { get; set; }
+
+			[XmlAttribute]
+			public string KeyId { get; set; }
+
+			[XmlAttribute]
+			public bool List { get; set; }
+
+			[XmlElement]
+			public bool MustNotDelayReboot { get; set; }
+		}
+
+		public class InstallOptions
+		{
+			[XmlText]
+			public string InstallFunction { get; set; }
+
+			[XmlAttribute]
+			public string Type { get; set; }
+
+			[XmlAttribute]
+			public string MsiFlags { get; set; }
+
+			[XmlAttribute]
+			public string Flag { get; set; }
+
+			[XmlElement]
+			public string False { get; set; }
+
+			[XmlElement]
+			public string True { get; set; }
+
+			[XmlAttribute]
+			public string MsiUpgradeFrom { get; set; }
+
+			[XmlAttribute]
+			public string MsiUpgradeTo { get; set; }
+		}
+
+		public class PostInstallOptions
+		{
+			[XmlAttribute]
+			public bool IncludeResourcesFile { get; set; }
+
+			[XmlText]
+			public string PostInstallFunction { get; set; }
 		}
 
 		public class GeneralOptions
@@ -204,22 +258,37 @@ namespace MasterInstallerConfigurator
 			public int BlendBottom { get; set; }
 		}
 
-		public class PrerequisiteOptions
+		public class RequirementOption
 		{
 			[XmlAttribute]
 			public string Tag { get; set; }
 
 			[XmlAttribute]
 			public string Version { get; set; }
+
+			[XmlAttribute]
+			public string MinVersion { get; set; }
+
+			[XmlAttribute]
+			public string MaxVersion { get; set; }
+
+			[XmlAttribute]
+			public string MinOS { get; set; }
+
+			[XmlAttribute]
+			public string MaxOS { get; set; }
+
+			[XmlAttribute]
+			public string FailMsg { get; set; }
 		}
 
 		public class TestPresenceOptions
 		{
 			[XmlText]
-			public string TestValue { get; set; }
+			public string TestFunction { get; set; }
 
 			[XmlAttribute]
-			string Version { get; set; }
+			public string Version { get; set; }
 		}
 
 		public class RequiresOption
@@ -264,6 +333,15 @@ namespace MasterInstallerConfigurator
 				return model;
 			}
 		}
+	}
+
+	public class HelpOptions
+	{
+		[XmlText]
+		public string HelpFile { get; set; }
+
+		[XmlAttribute]
+		public bool Internal { get; set; }
 	}
 
 	public class SerializeableNullableInt

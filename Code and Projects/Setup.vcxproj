@@ -253,11 +253,9 @@
     <None Include="ConfigGeneral.cpp.template" />
     <None Include="Setup.ico" />
     <None Include="Active.avi" />
-    <None Include="ConfigDisks.xsl" />
     <None Include="ConfigFunctions.xsl">
       <SubType>Designer</SubType>
     </None>
-    <None Include="ConfigGeneral.xsl" />
     <None Include="ConfigGlobals.xsl" />
     <None Include="ConfigProducts.xsl" />
     <None Include="ConfigResources.xsl" />

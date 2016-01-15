@@ -24,12 +24,30 @@ namespace MasterInstallerConfigurator
 				GenerateConfigDisksCpp(cppFilePath, model);
 				GenerateProductsCpp(cppFilePath, model);
 				GenerateConfigFunctionsCpp(cppFilePath, model);
+				GenerateGlobalFlags(cppFilePath, model);
 				/*
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigFunctions.xsl", CppFilePath + "\\ConfigFunctions.cpp");
 	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGlobals.xsl", CppFilePath + "\\AutoGlobals.h");
 	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigResources.xsl", CppFilePath + "\\AutoResources.rc");
 				 */
 			}
+		}
+
+		private static void GenerateGlobalFlags(string cppFilePath, ConfigurationModel model)
+		{
+			var globalFlags = new StringBuilder();
+			globalFlags.AppendLine("// External global flags:");
+			foreach (var product in model.Products)
+			{
+				if (!string.IsNullOrEmpty(product.CriticalFile))
+				{
+					globalFlags.AppendLine(string.Format("extern bool {0};", product.CriticalFile));
+				}
+				if (product.Install != null && !string.IsNullOrEmpty(product.Install.Flag))
+				{
+					globalFlags.AppendLine(string.Format("extern bool {0};", product.Install.Flag));
+				}
+			}
+			File.WriteAllText(Path.Combine(cppFilePath, "AutoGlobals.h"), GeneratedCppHeaderString + globalFlags);
 		}
 
 		private static void GenerateConfigFunctionsCpp(string cppFilePath, ConfigurationModel model)

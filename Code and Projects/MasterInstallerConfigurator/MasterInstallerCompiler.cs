@@ -23,12 +23,45 @@ namespace MasterInstallerConfigurator
 				GenerateConfigGeneralCpp(cppFilePath, model);
 				GenerateConfigDisksCpp(cppFilePath, model);
 				GenerateProductsCpp(cppFilePath, model);
+				GenerateConfigFunctionsCpp(cppFilePath, model);
 				/*
 	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigFunctions.xsl", CppFilePath + "\\ConfigFunctions.cpp");
 	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGlobals.xsl", CppFilePath + "\\AutoGlobals.h");
 	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigResources.xsl", CppFilePath + "\\AutoResources.rc");
 				 */
 			}
+		}
+
+		private static void GenerateConfigFunctionsCpp(string cppFilePath, ConfigurationModel model)
+		{
+			var testPresence = new StringBuilder();
+			var preInstall = new StringBuilder();
+			var install = new StringBuilder();
+			var postInstall = new StringBuilder();
+			testPresence.AppendLine("// TestPresence functions:");
+			install.AppendLine("// Installation functions:");
+			preInstall.AppendLine("// Preinstallation functions:");
+			postInstall.AppendLine("// Postinstallation functions:");
+			foreach (var product in model.Products)
+			{
+				if (product.TestPresence != null) // The xslt used to test not(@Type='External') but Type attribute was not present in any Installer Definitions
+				{
+					testPresence.AppendLine(string.Format("#include {0}.cpp", product.TestPresence.TestFunction));
+				}
+				if (!string.IsNullOrEmpty(product.Preinstall)) // the xslt used to test not(@Type='External') and not(@ignoreError='true') but these are obsolete
+				{
+					preInstall.AppendLine(string.Format("#include {0}.cpp", product.Preinstall));
+				}
+				if (product.Install != null && product.Install.Type != null && product.Install.Type.ToLower() == "internal")
+				{
+					install.AppendLine(string.Format("#include {0}.cpp", product.Install.InstallFunction));
+				}
+				if (product.PostInstall != null) // The xslt used to test not(@Type='External') but Type attribute was not present in any Installer Definitions
+				{
+					install.AppendLine(string.Format("#include {0}.cpp", product.PostInstall.PostInstallFunction));
+				}
+			}
+			File.WriteAllText(Path.Combine(cppFilePath, "ConfigFunctions.cpp"), GeneratedCppHeaderString + testPresence + preInstall + install + postInstall);
 		}
 
 		private static void GenerateConfigGeneralCpp(string cppFilePath, ConfigurationModel model)

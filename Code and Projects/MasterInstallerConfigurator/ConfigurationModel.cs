@@ -184,7 +184,7 @@ namespace MasterInstallerConfigurator
 		public class PostInstallOptions
 		{
 			[XmlAttribute]
-			public bool IncludeResourcesFile { get; set; }
+			public bool IncludeResourceFile { get; set; }
 
 			[XmlText]
 			public string PostInstallFunction { get; set; }
@@ -280,6 +280,7 @@ namespace MasterInstallerConfigurator
 
 			[XmlAttribute]
 			public string FailMsg { get; set; }
+
 		}
 
 		public class TestPresenceOptions

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,7 +11,9 @@ namespace MasterInstallerConfigurator
 {
 	class MasterInstallerCompiler
 	{
-		private const string GeneratedCppHeaderString = "/*\tThis file is ALWAYS PRODUCED AUTOMATICALLY.\n\tDo not edit it, as it may be overwritten without warning.\n\tThe source for producing this file is an XML document.\n*/\n";
+		private static readonly string GeneratedCppHeaderString = "/*\tThis file is ALWAYS PRODUCED AUTOMATICALLY." +
+			Environment.NewLine + "\tDo not edit it, as it may be overwritten without warning." + Environment.NewLine + 
+			"\tThe source for producing this file is an XML document." + Environment.NewLine + "*/" + Environment.NewLine;
 
 		public static void Compile(ConfigurationModel model, string certificatePassword, string masterInstallerPath, IConfigurationView view)
 		{
@@ -24,24 +27,42 @@ namespace MasterInstallerConfigurator
 				GenerateConfigDisksCpp(cppFilePath, model);
 				GenerateProductsCpp(cppFilePath, model);
 				GenerateConfigFunctionsCpp(cppFilePath, model);
-				GenerateGlobalFlags(cppFilePath, model);
-				/*
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGlobals.xsl", CppFilePath + "\\AutoGlobals.h");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigResources.xsl", CppFilePath + "\\AutoResources.rc");
-				 */
+				GenerateGlobalFlagsHeader(cppFilePath, model);
+				GenerateResources(cppFilePath, model);
 			}
 		}
 
-		private static void GenerateGlobalFlags(string cppFilePath, ConfigurationModel model)
+		private static void GenerateResources(string cppFilePath, ConfigurationModel model)
+		{
+			var resourcesContent = new StringBuilder();
+			resourcesContent.AppendLine(GeneratedCppHeaderString);
+			if (model.General.ListBackground != null)
+			{
+				resourcesContent.AppendLine("// Bitmap for product selection dialog background:");
+				resourcesContent.AppendLine(string.Format("BACKGROUND_BMP BITMAP \"{0}\"", model.General.ListBackground.ImagePath.Replace(@"\", @"\\").Replace("\"", "\\\"")));
+				resourcesContent.AppendLine();
+			}
+			foreach (var product in model.Products)
+			{
+				if (product.PostInstall != null && product.PostInstall.IncludeResourceFile)
+				{
+					resourcesContent.AppendLine(string.Format("#include \"{0}.rc\"", product.PostInstall.PostInstallFunction));
+				}
+			}
+			File.WriteAllText(Path.Combine(cppFilePath, "AutoResources.rc"), resourcesContent.ToString());
+		}
+
+		private static void GenerateGlobalFlagsHeader(string cppFilePath, ConfigurationModel model)
 		{
 			var globalFlags = new StringBuilder();
 			globalFlags.AppendLine("// External global flags:");
 			foreach (var product in model.Products)
 			{
-				if (!string.IsNullOrEmpty(product.CriticalFile))
-				{
-					globalFlags.AppendLine(string.Format("extern bool {0};", product.CriticalFile));
-				}
+				// The xslt used the CriticalFile if a Flag variable was set to true, It was never true in any existing configurations
+				//if (!string.IsNullOrEmpty(product.CriticalFile))
+				//{
+				//	globalFlags.AppendLine(string.Format("extern bool {0};", product.CriticalFile));
+				//}
 				if (product.Install != null && !string.IsNullOrEmpty(product.Install.Flag))
 				{
 					globalFlags.AppendLine(string.Format("extern bool {0};", product.Install.Flag));
@@ -64,22 +85,27 @@ namespace MasterInstallerConfigurator
 			{
 				if (product.TestPresence != null) // The xslt used to test not(@Type='External') but Type attribute was not present in any Installer Definitions
 				{
-					testPresence.AppendLine(string.Format("#include {0}.cpp", product.TestPresence.TestFunction));
+					GenerateIncludeCppLine(testPresence, product.TestPresence.TestFunction);
 				}
 				if (!string.IsNullOrEmpty(product.Preinstall)) // the xslt used to test not(@Type='External') and not(@ignoreError='true') but these are obsolete
 				{
-					preInstall.AppendLine(string.Format("#include {0}.cpp", product.Preinstall));
+					GenerateIncludeCppLine(preInstall, product.Preinstall);
 				}
 				if (product.Install != null && product.Install.Type != null && product.Install.Type.ToLower() == "internal")
 				{
-					install.AppendLine(string.Format("#include {0}.cpp", product.Install.InstallFunction));
+					GenerateIncludeCppLine(install, product.Install.InstallFunction);
 				}
 				if (product.PostInstall != null) // The xslt used to test not(@Type='External') but Type attribute was not present in any Installer Definitions
 				{
-					install.AppendLine(string.Format("#include {0}.cpp", product.PostInstall.PostInstallFunction));
+					GenerateIncludeCppLine(postInstall, product.PostInstall.PostInstallFunction);
 				}
 			}
 			File.WriteAllText(Path.Combine(cppFilePath, "ConfigFunctions.cpp"), GeneratedCppHeaderString + testPresence + preInstall + install + postInstall);
+		}
+
+		private static void GenerateIncludeCppLine(StringBuilder builder, string fileName)
+		{
+			builder.AppendLine(string.Format("#include \"{0}.cpp\"", fileName));
 		}
 
 		private static void GenerateConfigGeneralCpp(string cppFilePath, ConfigurationModel model)

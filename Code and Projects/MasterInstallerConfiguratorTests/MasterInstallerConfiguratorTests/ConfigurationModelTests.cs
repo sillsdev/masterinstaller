@@ -218,7 +218,29 @@ namespace MasterInstallerConfiguratorTests
 				Assert.That(testProduct.FlushReboot, Is.True, "Did not read flushreboot");
 				Assert.That(testProduct.Requires[0].Tag, Is.StringEnding(tagAttribute), "Did not read Requires Tag attribute");
 				Assert.That(testProduct.Requires[0].MinVersion, Is.StringEnding(testVersion), "Did not read Requires testVersion");
-				Assert.That(testProduct.Requires[0].FailMessage, Is.StringEnding(failMessage), "Did not read Requires failMessage");
+				Assert.That(testProduct.Requires[0].FailMsg, Is.StringEnding(failMessage), "Did not read Requires failMessage");
+			}
+		}
+
+		[Test]
+		public void CanReadProductPostInstallSection()
+		{
+			var includeResources = true;
+			var postInstallFunction = "Fw8PostInstall";
+			var basicModelXmlString =
+				string.Format(@"<MasterInstaller><Products><Product List='true'>
+					<AutoConfigure><Title>Test</Title></AutoConfigure>
+					<Title>FieldWorks</Title>
+					<Tag>80.25</Tag>
+					<PostInstall IncludeResourceFile='{0}'>{1}</PostInstall>
+				</Product></Products></MasterInstaller>", includeResources.ToString().ToLower(), postInstallFunction);
+			var serializer = new XmlSerializer(typeof(ConfigurationModel));
+			using (var textReader = new StringReader(basicModelXmlString))
+			{
+				var model = (ConfigurationModel)serializer.Deserialize(textReader);
+				Assert.NotNull(model.Products[0].PostInstall, "Post install serialization completely failed.");
+				Assert.IsTrue(model.Products[0].PostInstall.IncludeResourceFile, "Include Resources not serialized properly");
+				Assert.That(model.Products[0].PostInstall.PostInstallFunction, Is.EqualTo(postInstallFunction), "Post install function not serialized correctly");
 			}
 		}
 

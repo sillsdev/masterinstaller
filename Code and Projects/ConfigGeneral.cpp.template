@@ -1,1 +1,68 @@
-/*	This file is ALWAYS PRODUCED AUTOMATICALLY.	Do not edit it, as it may be overwritten without warning.	The source for producing this file is an XML document.*/// Main title for master installer:const _TCHAR * g_pszTitle = MAINTITLE;// Subtitle for product list:const _TCHAR * g_pszListSubtitle = SUBTITLE;// Background color for product list:const int g_nListBackgroundR = BGCOLOR_R;const int g_nListBackgroundG = BGCOLOR_G;const int g_nListBackgroundB = BGCOLOR_B;// Background bitmap offsets for product list:const int g_nListBackgroundBmpOffsetX = BITMAPOFFSET_X;const int g_nListBackgroundBmpOffsetY = BITMAPOFFSET_Y;// Background bitmap blending weights for product list:const int g_nListBackgroundBmpWeightTop = BLENDTOP;const int g_nListBackgroundBmpWeightBottom = BLENDBOTTOM;const int g_nListBackgroundBmpWeightLeft = BLENDLEFT;const int g_nListBackgroundBmpWeightRight = BLENDRIGHT;// If you want to bother to list a single product, when only one is available, set this to true:const bool g_fListEvenOneProduct = LISTONEPRODUCT;// If you don't like the spacing of products in the selection menu, adjust it here:const int g_nListSpacingAdjust = LISTADJUST;// If you don't like the size of the "?" buttons in the selection menu, adjust it here:const int g_nInfoButtonAdjust = BUTTONADJUST;// This is set to true when user is allowed to start from any CD in the set (otherwise they must start from CD 1):const bool g_fStartFromAnyCd = STARTFROMANY;// If you need to hide the Product Key prompt unless the user is pressing Shift and Control, set this to true:const bool g_fKeyPromptNeedsShiftCtrl = HIDEKEYPROMPT;// Title for Product Key request dialog:const _TCHAR * g_pszGetKeyTitle = KEYPROMPTTITLE;// Initial text message:const _TCHAR * g_pszInitialText = NULL;// Alignment of initial text:const int g_nInitialTextAlign = 0;// Left edge offset of initial text:const int g_nInitialTextLeftEdge = 0;// Right edge offset of initial text:const int g_nInitialTextRightEdge = 0;// If you want external help to be available, set values for the file path and button text.// If not, set these both to NULL:const _TCHAR * g_pszExternalHelpFile = HELPBUTTONFILE;const _TCHAR * g_pszHelpButtonText = HELPBUTTONTEXT;// If you want terms of use to be available, set values for the file path and button text.// If not, set these both to NULL:const _TCHAR * g_pszTermsOfUseFile = TOUFILE;const _TCHAR * g_pszTermsButtonText = TOUBUTTONTEXT;// This is set to true when a message should be shown indicating that the whole installation process is complete:const bool g_fShowInstallCompleteMessage = SHOWINSTALLCOMPLETE;
+/*
+	This file is ALWAYS PRODUCED AUTOMATICALLY.
+	Do not edit it, as it may be overwritten without warning.
+
+	The source for producing this file is an XML document.
+*/
+
+// Main title for master installer:
+const _TCHAR * g_pszTitle = MAINTITLE;
+
+// Subtitle for product list:
+const _TCHAR * g_pszListSubtitle = SUBTITLE;
+
+// Background color for product list:
+const int g_nListBackgroundR = BGCOLOR_R;
+const int g_nListBackgroundG = BGCOLOR_G;
+const int g_nListBackgroundB = BGCOLOR_B;
+
+// Background bitmap offsets for product list:
+const int g_nListBackgroundBmpOffsetX = BITMAPOFFSET_X;
+const int g_nListBackgroundBmpOffsetY = BITMAPOFFSET_Y;
+
+// Background bitmap blending weights for product list:
+const int g_nListBackgroundBmpWeightTop = BLENDTOP;
+const int g_nListBackgroundBmpWeightBottom = BLENDBOTTOM;
+const int g_nListBackgroundBmpWeightLeft = BLENDLEFT;
+const int g_nListBackgroundBmpWeightRight = BLENDRIGHT;
+
+// If you want to bother to list a single product, when only one is available, set this to true:
+const bool g_fListEvenOneProduct = LISTONEPRODUCT;
+
+// If you don't like the spacing of products in the selection menu, adjust it here:
+const int g_nListSpacingAdjust = LISTADJUST;
+
+// If you don't like the size of the "?" buttons in the selection menu, adjust it here:
+const int g_nInfoButtonAdjust = BUTTONADJUST;
+
+// This is set to true when user is allowed to start from any CD in the set (otherwise they must start from CD 1):
+const bool g_fStartFromAnyCd = STARTFROMANY;
+
+// If you need to hide the Product Key prompt unless the user is pressing Shift and Control, set this to true:
+const bool g_fKeyPromptNeedsShiftCtrl = HIDEKEYPROMPT;
+
+// Title for Product Key request dialog:
+const _TCHAR * g_pszGetKeyTitle = KEYPROMPTTITLE;
+
+// Initial text message:
+const _TCHAR * g_pszInitialText = NULL;
+// Alignment of initial text:
+const int g_nInitialTextAlign = 0;
+// Left edge offset of initial text:
+const int g_nInitialTextLeftEdge = 0;
+// Right edge offset of initial text:
+const int g_nInitialTextRightEdge = 0;
+
+// If you want external help to be available, set values for the file path and button text.
+// If not, set these both to NULL:
+const _TCHAR * g_pszExternalHelpFile = HELPBUTTONFILE;
+const _TCHAR * g_pszHelpButtonText = HELPBUTTONTEXT;
+
+// If you want terms of use to be available, set values for the file path and button text.
+// If not, set these both to NULL:
+const _TCHAR * g_pszTermsOfUseFile = TOUFILE;
+const _TCHAR * g_pszTermsButtonText = TOUBUTTONTEXT;
+
+// This is set to true when a message should be shown indicating that the whole installation process is complete:
+const bool g_fShowInstallCompleteMessage = SHOWINSTALLCOMPLETE;
+

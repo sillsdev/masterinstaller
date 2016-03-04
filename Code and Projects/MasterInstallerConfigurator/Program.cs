@@ -14,7 +14,9 @@ namespace MasterInstallerConfigurator
 		[STAThread]
 		static void Main()
 		{
-			var controller = new ConfigurationController(null);
+			var model = ConfigurationModel.Load("C:\\Repositories\\masterinstaller\\Installer Definitions\\FW 8.2.1 BTE\\AutoBuildDownloadPackages.js",
+				"C:\\Repositories\\masterinstaller\\Installer Definitions\\FW 8.2.1 BTE\\FW 8.2.1 BTE.xml");
+			var controller = new ConfigurationController(model);
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new ConfigurationWizard(controller));

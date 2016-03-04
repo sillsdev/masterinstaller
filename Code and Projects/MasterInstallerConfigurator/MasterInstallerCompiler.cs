@@ -37,11 +37,58 @@ namespace MasterInstallerConfigurator
 			var compilationFolder = Path.Combine(Path.GetDirectoryName(model.FileLocation), "SetupExeComingSoon");
 			Directory.CreateDirectory(compilationFolder);
 			var settingsFile = GenerateCompilerSettingsFile(compilationFolder, cppFilePath);
+			var objSettingsFile = GenerateLinkerSettingsFile(compilationFolder, cppFilePath);
 
 			view.LogProgressLine("Compiling cpp files");
 			CompileSetupExe(settingsFile, view);
-			//view.LogProgressLine("Compiling rc files");
-			//CompileSetupExe(settingsFile, view);
+
+			view.LogProgressLine("Compiling rc files");
+			CompileResources(compilationFolder, bitmapFilePath, cppFilePath, view);
+
+			view.LogProgressLine("Linking the setup.exe");
+			LinkSetupExe(objSettingsFile, view);
+		}
+
+		private static void CompileResources(string compilationFolder, string bitmapFilePath, string cppFilePath, IConfigurationView view)
+		{
+			var compilerProcess = new Process
+			{
+				StartInfo =
+				{
+					FileName = Path.Combine(view.VSIncludePath, "..", "bin", "rc.exe"),
+					Arguments = string.Format("/I \"{0}\" /I \"{1}\" /I \"{2}\" /i\"{3}\" /fo\"{4}\" \"{5}\"", Settings.Default.VSIncludePath,
+					Path.Combine(Settings.Default.VSBinPath, "..", "atlmfc", "include"), Path.Combine(Settings.Default.VSBinPath, "..", "include"), 
+					 bitmapFilePath, Path.Combine(compilationFolder, "resources.res"), Path.Combine(cppFilePath, "resources.rc")),
+					//required to allow redirects
+					UseShellExecute = true,
+					// do not start process in new window
+					CreateNoWindow = false,
+					WorkingDirectory = compilationFolder
+				}
+			};
+			if (compilerProcess.Start())
+			{
+				//while (compilerProcess.StandardOutput.Peek() > -1)
+				//{
+				//	view.LogProgressLine(compilerProcess.StandardOutput.ReadLine());
+				//}
+
+				//while (compilerProcess.StandardError.Peek() > -1)
+				//{
+				//	view.LogErrorLine(compilerProcess.StandardError.ReadLine());
+				//}
+				compilerProcess.WaitForExit(2 * 60 * 1000);// wait for 2 minutes
+			}
+		}
+
+		private static string GenerateLinkerSettingsFile(string compilationFolder, string cppFilePath)
+		{
+			return "";
+		}
+
+		private static void LinkSetupExe(object objSettingsFile, IConfigurationView view)
+		{
+			throw new NotImplementedException();
 		}
 
 		private static void CompileSetupExe(string settingsFile, IConfigurationView view)

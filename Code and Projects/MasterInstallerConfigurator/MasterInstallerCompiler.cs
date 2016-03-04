@@ -37,7 +37,7 @@ namespace MasterInstallerConfigurator
 			var compilationFolder = Path.Combine(Path.GetDirectoryName(model.FileLocation), "SetupExeComingSoon");
 			Directory.CreateDirectory(compilationFolder);
 			var settingsFile = GenerateCompilerSettingsFile(compilationFolder, cppFilePath);
-			var objSettingsFile = GenerateLinkerSettingsFile(compilationFolder, cppFilePath);
+			var objSettingsFile = GenerateLinkerSettingsFile(compilationFolder, Path.GetDirectoryName(model.FileLocation));
 
 			view.LogProgressLine("Compiling cpp files");
 			CompileSetupExe(settingsFile, view);
@@ -68,27 +68,29 @@ namespace MasterInstallerConfigurator
 			};
 			if (compilerProcess.Start())
 			{
-				//while (compilerProcess.StandardOutput.Peek() > -1)
-				//{
-				//	view.LogProgressLine(compilerProcess.StandardOutput.ReadLine());
-				//}
-
-				//while (compilerProcess.StandardError.Peek() > -1)
-				//{
-				//	view.LogErrorLine(compilerProcess.StandardError.ReadLine());
-				//}
 				compilerProcess.WaitForExit(2 * 60 * 1000);// wait for 2 minutes
 			}
 		}
 
-		private static string GenerateLinkerSettingsFile(string compilationFolder, string cppFilePath)
+		private static void LinkSetupExe(string objSettingsFile, IConfigurationView view)
 		{
-			return "";
-		}
-
-		private static void LinkSetupExe(object objSettingsFile, IConfigurationView view)
-		{
-			throw new NotImplementedException();
+			var compilerProcess = new Process
+			{
+				StartInfo =
+				{
+					FileName = Path.Combine(view.VSBinPath, "link.exe"),
+					Arguments = string.Format("@\"{0}\"", objSettingsFile),
+					//required to allow redirects
+					UseShellExecute = true,
+					// do not start process in new window
+					CreateNoWindow = false,
+					WorkingDirectory = Path.GetDirectoryName(objSettingsFile)
+				}
+			};
+			if (compilerProcess.Start())
+			{
+				compilerProcess.WaitForExit(2 * 60 * 1000);// wait for 2 minutes
+			}
 		}
 
 		private static void CompileSetupExe(string settingsFile, IConfigurationView view)
@@ -108,17 +110,34 @@ namespace MasterInstallerConfigurator
 			};
 			if (compilerProcess.Start())
 			{
-				//while (compilerProcess.StandardOutput.Peek() > -1)
-				//{
-				//	view.LogProgressLine(compilerProcess.StandardOutput.ReadLine());
-				//}
-
-				//while (compilerProcess.StandardError.Peek() > -1)
-				//{
-				//	view.LogErrorLine(compilerProcess.StandardError.ReadLine());
-				//}
 				compilerProcess.WaitForExit(2 * 60 * 1000);// wait for 2 minutes
 			}
+		}
+
+		private static string GenerateLinkerSettingsFile(string compilationFolder, string outputFolder)
+		{
+			var compilerSettings = new StringBuilder();
+			compilerSettings.AppendFormat("/OUT:\"{0}\" /LIBPATH:\"{1}\" /LIBPATH:\"{2}\" /INCREMENTAL:NO /NOLOGO /LIBPATH:\"Msi.lib\" /MANIFEST /MANIFESTFILE:\"{3}\" ",
+				Path.Combine(outputFolder, "setup.exe"), Path.Combine(Settings.Default.VSBinPath, "..", "lib"), Path.Combine(Settings.Default.VSIncludePath, "..", "lib"),
+				Path.Combine(compilationFolder, "setup.exe.intermediate.manifest"));
+			compilerSettings.Append("/SUBSYSTEM:WINDOWS /SWAPRUN:CD /OPT:REF /OPT:ICF /LTCG /MACHINE:X86 ");
+			compilerSettings.AppendFormat("version.lib shlwapi.lib msi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib{0}", Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "Control.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "Dialogs.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "DiskManager.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "ErrorHandler.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "Globals.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "LogFile.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "main.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "PersistantProgress.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "ProductKeys.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "ProductManager.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "UsefulStuff.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "UniversalFixes.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "resources.res"), Environment.NewLine);
+			var settingsFile = Path.Combine(compilationFolder, "Obj.rsp");
+			File.WriteAllText(settingsFile, compilerSettings.ToString());
+			return settingsFile;
 		}
 
 		private static string GenerateCompilerSettingsFile(string compilationFolder, string cppFilePath)
@@ -137,6 +156,7 @@ namespace MasterInstallerConfigurator
 			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "Globals.cpp"), Environment.NewLine);
 			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "ErrorHandler.cpp"), Environment.NewLine);
 			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "DiskManager.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "Dialogs.cpp"), Environment.NewLine);
 			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "Control.cpp"), Environment.NewLine);
 			var settingsFile = Path.Combine(compilationFolder, "Cpp.rsp");
 			File.WriteAllText(settingsFile, compilerSettings.ToString());

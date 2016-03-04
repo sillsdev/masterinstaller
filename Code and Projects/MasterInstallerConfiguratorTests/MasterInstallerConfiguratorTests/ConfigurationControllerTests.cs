@@ -208,6 +208,8 @@ namespace MasterInstallerConfiguratorTests
 			public bool WriteDownloadsXml { get; set; }
 			public string OutputFolder { get; set; }
 			public string SelfExtractingStyle { get; set; }
+			public string VSIncludePath { get; set; }
+			public string VSBinPath { get; set; }
 
 			public void LogErrorLine(string errorMessage)
 			{
@@ -225,6 +227,11 @@ namespace MasterInstallerConfiguratorTests
 			}
 
 			public List<string> GetIncludedProducts(string flavorName)
+			{
+				throw new NotImplementedException();
+			}
+
+			public void SetCurrentTab(int lastOpenedTab)
 			{
 				throw new NotImplementedException();
 			}

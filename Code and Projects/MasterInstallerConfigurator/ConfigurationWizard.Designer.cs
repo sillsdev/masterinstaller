@@ -55,15 +55,22 @@ namespace MasterInstallerConfigurator
 			this._outputFolder = new System.Windows.Forms.TextBox();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this._logBox = new System.Windows.Forms.RichTextBox();
+			this._system = new System.Windows.Forms.TabPage();
+			this._vsIncludePath = new System.Windows.Forms.TextBox();
+			this._browseButton = new System.Windows.Forms.Button();
+			this._binBrowseBtn = new System.Windows.Forms.Button();
+			this._vsBinPath = new System.Windows.Forms.TextBox();
 			this.ConfigTabControl.SuspendLayout();
 			this._flavorSetupPage.SuspendLayout();
 			this._flavorConfigTab.SuspendLayout();
 			this._webDownloadTab.SuspendLayout();
 			this.tabPage1.SuspendLayout();
+			this._system.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ConfigTabControl
 			// 
+			this.ConfigTabControl.Controls.Add(this._system);
 			this.ConfigTabControl.Controls.Add(this._flavorSetupPage);
 			this.ConfigTabControl.Controls.Add(this._flavorConfigTab);
 			this.ConfigTabControl.Controls.Add(this._webDownloadTab);
@@ -337,6 +344,54 @@ namespace MasterInstallerConfigurator
 			this._logBox.TabIndex = 0;
 			this._logBox.Text = "";
 			// 
+			// _system
+			// 
+			this._system.Controls.Add(this._binBrowseBtn);
+			this._system.Controls.Add(this._vsBinPath);
+			this._system.Controls.Add(this._browseButton);
+			this._system.Controls.Add(this._vsIncludePath);
+			this._system.Location = new System.Drawing.Point(4, 22);
+			this._system.Name = "_system";
+			this._system.Padding = new System.Windows.Forms.Padding(3);
+			this._system.Size = new System.Drawing.Size(1078, 555);
+			this._system.TabIndex = 4;
+			this._system.Text = "System Settings";
+			this._system.UseVisualStyleBackColor = true;
+			// 
+			// _vsIncludePath
+			// 
+			this._vsIncludePath.Location = new System.Drawing.Point(25, 38);
+			this._vsIncludePath.Name = "_vsIncludePath";
+			this._vsIncludePath.Size = new System.Drawing.Size(272, 20);
+			this._vsIncludePath.TabIndex = 0;
+			// 
+			// _browseButton
+			// 
+			this._browseButton.Location = new System.Drawing.Point(320, 38);
+			this._browseButton.Name = "_browseButton";
+			this._browseButton.Size = new System.Drawing.Size(75, 23);
+			this._browseButton.TabIndex = 1;
+			this._browseButton.Text = "Browse";
+			this._browseButton.UseVisualStyleBackColor = true;
+			this._browseButton.Click += new System.EventHandler(this._browseButton_Click);
+			// 
+			// _binBrowseBtn
+			// 
+			this._binBrowseBtn.Location = new System.Drawing.Point(320, 91);
+			this._binBrowseBtn.Name = "_binBrowseBtn";
+			this._binBrowseBtn.Size = new System.Drawing.Size(75, 23);
+			this._binBrowseBtn.TabIndex = 3;
+			this._binBrowseBtn.Text = "Browse";
+			this._binBrowseBtn.UseVisualStyleBackColor = true;
+			this._binBrowseBtn.Click += new System.EventHandler(this._binBrowseBtn_Click);
+			// 
+			// _vsBinPath
+			// 
+			this._vsBinPath.Location = new System.Drawing.Point(25, 91);
+			this._vsBinPath.Name = "_vsBinPath";
+			this._vsBinPath.Size = new System.Drawing.Size(272, 20);
+			this._vsBinPath.TabIndex = 2;
+			// 
 			// ConfigurationWizard
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -346,6 +401,7 @@ namespace MasterInstallerConfigurator
 			this.Name = "ConfigurationWizard";
 			this.ShowIcon = false;
 			this.Text = "Master Installer Configurator";
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConfigurationWizard_FormClosed);
 			this.ConfigTabControl.ResumeLayout(false);
 			this._flavorSetupPage.ResumeLayout(false);
 			this._flavorSetupPage.PerformLayout();
@@ -354,6 +410,8 @@ namespace MasterInstallerConfigurator
 			this._webDownloadTab.ResumeLayout(false);
 			this._webDownloadTab.PerformLayout();
 			this.tabPage1.ResumeLayout(false);
+			this._system.ResumeLayout(false);
+			this._system.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -385,6 +443,11 @@ namespace MasterInstallerConfigurator
 		private System.Windows.Forms.Button _deleteFlavor;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.RichTextBox _logBox;
+		private System.Windows.Forms.TabPage _system;
+		private System.Windows.Forms.Button _browseButton;
+		private System.Windows.Forms.TextBox _vsIncludePath;
+		private System.Windows.Forms.Button _binBrowseBtn;
+		private System.Windows.Forms.TextBox _vsBinPath;
 	}
 }
 

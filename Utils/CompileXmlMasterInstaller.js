@@ -1,86 +1,21 @@
 // This script takes an XML file, and compiles/links it into a setup.exe Master Installer file.
 // Prerequisite: a suitable version of Microsoft Visual Studio must be installed. (VS 2005 and 2008 work.)
 
-var fso = new ActiveXObject("Scripting.FileSystemObject");
-var shellObj = new ActiveXObject("WScript.Shell");
 
-if (WScript.Arguments.Length < 1)
-{
-	WScript.Echo("ERROR: must specify master installer XML file.");
-	WScript.Quit();
-}
+//var MasterInstallerPath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
 
-var XmlFileName = "";
-var EasterEggs = false;
-var CertificatePassword = null;
+//if (MasterInstallerPath == "%MASTER_INSTALLER%")
+//{
+//	WScript.Echo("ERROR: the MASTER_INSTALLER environment variable has not been defined. This probably means you have not run the InitUtils.exe application in the Master Installer's Utils folder.");
+//	WScript.Quit();
+//}
+//var UtilsPath = fso.BuildPath(MasterInstallerPath, "Utils");
 
-for (i = 0; i < WScript.Arguments.Length; i++)
-{
-	var arg = WScript.Arguments.Item(i);
-
-	if (arg == "-E")
-		EasterEggs = true;
-	else if (arg.slice(0, 21) == "-certificatepassword:") // See if a certificate signing password was supplied
-		CertificatePassword = arg.slice(21);
-	else
-	{
-		XmlFileName = arg;
-
-		// Check that the input file is an XML file:
-		if (XmlFileName.slice(-4).toLowerCase() != ".xml")
-		{
-			WScript.Echo("ERROR in CompileXmlMasterInstaller.js - XML file must be specified: " + XmlFileName);
-			WScript.Quit();
-		}
-	}
-}
-
-var MasterInstallerPath = shellObj.ExpandEnvironmentStrings("%MASTER_INSTALLER%");
-
-if (MasterInstallerPath == "%MASTER_INSTALLER%")
-{
-	WScript.Echo("ERROR: the MASTER_INSTALLER environment variable has not been defined. This probably means you have not run the InitUtils.exe application in the Master Installer's Utils folder.");
-	WScript.Quit();
-}
-var UtilsPath = fso.BuildPath(MasterInstallerPath, "Utils");
-
-var CppFilePath = fso.BuildPath(MasterInstallerPath, "Code and Projects");
-var BitmapsPath = fso.BuildPath(CppFilePath, "Bitmaps");
-
-// Check that the XML file has a <MasterInstaller> node:
-var xmlDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument.3.0");
-xmlDoc.async = false;
-xmlDoc.load(XmlFileName);
-if (xmlDoc.parseError.errorCode != 0)
-{
-	var myErr = xmlDoc.parseError;
-	WScript.Echo("You have an XML error in " + XmlFileName + ": " + myErr.reason + " on line " + myErr.line + " at position " + myErr.linepos);
-	WScript.Quit();
-}
-if (xmlDoc.selectSingleNode("/MasterInstaller") == null)
-{
-	WScript.Echo("ERROR - " + XmlFileName + " is not a Master Installer configuration file." + xmlDoc.xml);
-	WScript.Quit();
-}
-
-// Do a test for legacy data that specified a full path to the background bitmap:
-var bmp = xmlDoc.selectSingleNode("/MasterInstaller/General/ListBackground").text;
-if (bmp.indexOf("\\") >= 0)
-{
-	if (!fso.FileExists(bmp))
-	{
-		WScript.Echo("Bitmap path '" + bmp + "' specified in XML node /MasterInstaller/General/ListBackground does not exist. This may be legacy data. Bitmaps should be stored in the '" + BitmapsPath + "' folder and referenced by file name only.");
-		WScript.Quit();
-	}
-}
-
-iLastBackslash = XmlFileName.lastIndexOf("\\");
-var InputFolder = XmlFileName.substr(0, iLastBackslash);
-var NewCompilationFolder = fso.BuildPath(InputFolder, "setup.exe coming soon");
-MakeSureFolderExists(NewCompilationFolder);
+//var CppFilePath = fso.BuildPath(MasterInstallerPath, "Code and Projects");
+//var BitmapsPath = fso.BuildPath(CppFilePath, "Bitmaps");
 
 // Write new C++ files to reflect this new configuration:
-PrepareCppFiles(CppFilePath, xmlDoc);
+// PrepareCppFiles(CppFilePath, xmlDoc);
 
 // Prepare the file containing all the compilation settings:
 var CppRspFilePath = NewCompilationFolder + "\\" + "Cpp.rsp";
@@ -157,66 +92,42 @@ DeleteIfExists(fso.BuildPath(CppFilePath, "Product??.cpp"));
 fso.DeleteFolder(NewCompilationFolder);
 
 
-// Create the specified folder path, if it doesn't already exist.
-// Thanks, Jeff!
-//	Note - Does not handle \\LS-ELMER\ type directory creation.
-function MakeSureFolderExists(strDir)
-{
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-
-	// See if the dir exists.
-	if (!fso.FolderExists(strDir))
-	{
-		var aFolder = new Array();
-		aFolder = strDir.split("\\");
-		var strNewFolder = fso.BuildPath(aFolder[0], "\\");
-
-		// Loop through each folder name and create if not already created
-		var iFolder;
-		for (iFolder = 1; iFolder < aFolder.length; iFolder++)
-		{
-			strNewFolder = fso.BuildPath(strNewFolder, aFolder[iFolder]);
-			if (!fso.FolderExists(strNewFolder))
-				fso.CreateFolder(strNewFolder);
-		}
-	}
-}
 
 // Processes the given xmlDoc to generate the C++ files needed to configure the Setup.exe program.
-function PrepareCppFiles(CppFilePath, xmlDoc)
-{
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGeneral.xsl", CppFilePath + "\\ConfigGeneral.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigDisks.xsl", CppFilePath + "\\ConfigDisks.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigProducts.xsl", CppFilePath + "\\ConfigProducts.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigFunctions.xsl", CppFilePath + "\\ConfigFunctions.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGlobals.xsl", CppFilePath + "\\AutoGlobals.h");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigResources.xsl", CppFilePath + "\\AutoResources.rc");
-}
+// function PrepareCppFiles(CppFilePath, xmlDoc)
+// {
+	// ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGeneral.xsl", CppFilePath + "\\ConfigGeneral.cpp");
+	// ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigDisks.xsl", CppFilePath + "\\ConfigDisks.cpp");
+	// ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigProducts.xsl", CppFilePath + "\\ConfigProducts.cpp");
+	// ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigFunctions.xsl", CppFilePath + "\\ConfigFunctions.cpp");
+	// ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGlobals.xsl", CppFilePath + "\\AutoGlobals.h");
+	// ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigResources.xsl", CppFilePath + "\\AutoResources.rc");
+// }
 
 // Uses the given XSL file (path) to process the given xmlDoc, outputting to strOutputFile (path).
-function ProcessConfigFile(xmlDoc, strInputXsl, strOutputFile)
-{
-	var xslt = new ActiveXObject("Msxml2.XSLTemplate.3.0");
-	var xslDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument.3.0");
-	var xslProc;
-	xslDoc.async = false;
-	xslDoc.load(strInputXsl);
-	if (xslDoc.parseError.errorCode != 0)
-	{
-		var myErr = xslDoc.parseError;
-		Exception = new Object();
-		Exception.description = "XSL error in " + strInputXsl + ": " + myErr.reason + "\non line " + myErr.line + " at position " + myErr.linepos;
-		throw (Exception);
-	}
-	xslt.stylesheet = xslDoc;
-	xslProc = xslt.createProcessor();
-	xslProc.input = xmlDoc;
-	xslProc.transform();
-	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	var tso = fso.OpenTextFile(strOutputFile, 2, true);
-	tso.Write(xslProc.output);
-	tso.Close();
-}
+// function ProcessConfigFile(xmlDoc, strInputXsl, strOutputFile)
+// {
+	// var xslt = new ActiveXObject("Msxml2.XSLTemplate.3.0");
+	// var xslDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument.3.0");
+	// var xslProc;
+	// xslDoc.async = false;
+	// xslDoc.load(strInputXsl);
+	// if (xslDoc.parseError.errorCode != 0)
+	// {
+		// var myErr = xslDoc.parseError;
+		// Exception = new Object();
+		// Exception.description = "XSL error in " + strInputXsl + ": " + myErr.reason + "\non line " + myErr.line + " at position " + myErr.linepos;
+		// throw (Exception);
+	// }
+	// xslt.stylesheet = xslDoc;
+	// xslProc = xslt.createProcessor();
+	// xslProc.input = xmlDoc;
+	// xslProc.transform();
+	// var fso = new ActiveXObject("Scripting.FileSystemObject");
+	// var tso = fso.OpenTextFile(strOutputFile, 2, true);
+	// tso.Write(xslProc.output);
+	// tso.Close();
+// }
 
 // Prepares a file of Setup.exe configuration settings for the C++ compiler.
 function PrepareCppRspFile(RspFilePath, CppFilePath, CompilationFolder)

@@ -137,6 +137,11 @@ namespace MasterInstallerConfigurator
 			return includedProducts;
 		}
 
+		public void SetCurrentTab(int lastOpenedTab)
+		{
+			ConfigTabControl.SelectedIndex = lastOpenedTab;
+		}
+
 		public bool GatherFiles
 		{
 			get { return _gatherFiles.Checked; }
@@ -185,6 +190,24 @@ namespace MasterInstallerConfigurator
 			set { _packageStyle.SelectedIndex = _packageStyle.FindString(value); }
 		}
 
+		public string VSIncludePath
+		{
+			get { return _vsIncludePath.Text; }
+			set { _vsIncludePath.Text = value; }
+		}
+
+		public string VSBinPath
+		{
+			get
+			{
+				return _vsBinPath.Text;
+			}
+			set
+			{
+				_vsBinPath.Text = value;
+			}
+		}
+
 		public void LogErrorLine(string errorMessage)
 		{
 			//TODO: Write errors bold or something
@@ -216,6 +239,49 @@ namespace MasterInstallerConfigurator
 		private void _deleteFlavor_Click(object sender, EventArgs e)
 		{
 			_controller.DeleteLastFlavor(this);
+		}
+
+		private void _browseButton_Click(object sender, EventArgs e)
+		{
+			var currentFolder = _vsIncludePath.Text;
+			using (var folderBrowser = new FolderBrowserDialog())
+			{
+				folderBrowser.RootFolder = Environment.SpecialFolder.ProgramFilesX86;
+				if (!string.IsNullOrEmpty(currentFolder))
+				{
+					folderBrowser.SelectedPath = currentFolder;
+				}
+				folderBrowser.ShowNewFolderButton = false;
+				var result = folderBrowser.ShowDialog(this);
+				if (result == DialogResult.OK)
+				{
+					_controller.SetIncludePath(folderBrowser.SelectedPath, this);
+				}
+			}
+		}
+
+		private void _binBrowseBtn_Click(object sender, EventArgs e)
+		{
+			var currentFolder = _vsBinPath.Text;
+			using (var folderBrowser = new FolderBrowserDialog())
+			{
+				folderBrowser.RootFolder = Environment.SpecialFolder.ProgramFilesX86;
+				if (!string.IsNullOrEmpty(currentFolder))
+				{
+					folderBrowser.SelectedPath = currentFolder;
+				}
+				folderBrowser.ShowNewFolderButton = false;
+				var result = folderBrowser.ShowDialog(this);
+				if (result == DialogResult.OK)
+				{
+					_controller.SetBinPath(folderBrowser.SelectedPath, this);
+				}
+			}
+		}
+
+		private void ConfigurationWizard_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			_controller.SetLastTab(ConfigTabControl.SelectedIndex);
 		}
 	}
 }

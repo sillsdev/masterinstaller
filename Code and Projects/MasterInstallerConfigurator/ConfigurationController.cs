@@ -1,7 +1,6 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,6 +17,8 @@ namespace MasterInstallerConfigurator
 		public void PopulateWithModelSettings(IConfigurationView configurationWizard)
 		{
 			configurationWizard.ClearAll();
+			configurationWizard.VSIncludePath = Properties.Settings.Default.VSIncludePath;
+			configurationWizard.VSBinPath = Properties.Settings.Default.VSBinPath;
 			if (_model.Flavors != null)
 			{
 				foreach (var flavor in _model.Flavors)
@@ -46,6 +47,7 @@ namespace MasterInstallerConfigurator
 				configurationWizard.WriteInstallerXml = _model.Tasks.WriteInstallerXml;
 				configurationWizard.WriteDownloadsXml = _model.Tasks.WriteDownloadsXml;
 			}
+			configurationWizard.SetCurrentTab(Properties.Settings.Default.LastOpenedTab);
 		}
 
 		public void ExecuteTasks(IConfigurationView configurationWizard)
@@ -87,6 +89,27 @@ namespace MasterInstallerConfigurator
 				_model.Flavors.RemoveAt(_model.Flavors.Count - 1);
 				PopulateWithModelSettings(wizard);
 			}
+		}
+
+		public void SetIncludePath(string vsIncludePath, ConfigurationWizard configurationWizard)
+		{
+			configurationWizard.VSIncludePath = vsIncludePath;
+			Properties.Settings.Default.VSIncludePath = vsIncludePath;
+			Properties.Settings.Default.Save();
+		}
+
+
+		public void SetBinPath(string vsBinPath, ConfigurationWizard configurationWizard)
+		{
+			configurationWizard.VSBinPath = vsBinPath;
+			Properties.Settings.Default.VSBinPath = vsBinPath;
+			Properties.Settings.Default.Save();
+		}
+
+		public void SetLastTab(int selectedIndex)
+		{
+			Properties.Settings.Default.LastOpenedTab = selectedIndex;
+			Properties.Settings.Default.Save();
 		}
 	}
 }

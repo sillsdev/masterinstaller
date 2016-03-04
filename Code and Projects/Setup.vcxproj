@@ -85,6 +85,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_VC80_UPGRADE=0x0710;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -103,6 +105,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>$(ProjectDir)\setup.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -245,37 +248,11 @@
     <ResourceCompile Include="resources.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\ConfigureMasterInstaller.xsl" />
-    <None Include="..\_Master Installer.xml">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="ConfigDisks.cpp.template" />
     <None Include="ConfigGeneral.cpp.template" />
     <None Include="Setup.ico" />
     <None Include="Active.avi" />
-    <None Include="ConfigFunctions.xsl">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="ConfigGlobals.xsl" />
-    <None Include="ConfigProducts.xsl" />
-    <None Include="ConfigResources.xsl" />
-    <CustomBuild Include="test.xml">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Active (Unicode)|Win32'">Translating %(Filename)%(Extension) to CPP</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Active (Unicode)|Win32'">WScript.exe Xml2Cpp.js %(Filename)%(Extension)
-</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Active (Unicode)|Win32'">$(ProjectDir)ConfigProducts.cpp;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Translating %(Filename)%(Extension) to CPP</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WScript.exe Xml2Cpp.js %(Filename)%(Extension)
-</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)ConfigProducts.cpp;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Translating %(Filename)%(Extension) to CPP</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WScript.exe Xml2Cpp.js %(Filename)%(Extension)
-</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)ConfigProducts.cpp;%(Outputs)</Outputs>
-      <SubType>Designer</SubType>
-    </CustomBuild>
     <None Include="Docs\XML configuration.doc" />
-    <None Include="Xml2Cpp.js" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="setup.manifest" />

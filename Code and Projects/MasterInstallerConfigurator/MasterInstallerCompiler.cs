@@ -1,19 +1,25 @@
 ﻿// Copyright (c) 2015 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MasterInstallerConfigurator.Properties;
 
 namespace MasterInstallerConfigurator
 {
 	class MasterInstallerCompiler
 	{
-		private const string GeneratedCppHeaderString = "/*\tThis file is ALWAYS PRODUCED AUTOMATICALLY.\n\tDo not edit it, as it may be overwritten without warning.\n\tThe source for producing this file is an XML document.\n*/\n";
+		private static readonly string GeneratedCppHeaderString = "/*\tThis file is ALWAYS PRODUCED AUTOMATICALLY." +
+			Environment.NewLine + "\tDo not edit it, as it may be overwritten without warning." + Environment.NewLine + 
+			"\tThe source for producing this file is an XML document." + Environment.NewLine + "*/" + Environment.NewLine;
 
 		public static void Compile(ConfigurationModel model, string certificatePassword, string masterInstallerPath, IConfigurationView view)
 		{
+			view.LogProgressLine("Generating source files for setup.exe");
 			var _utilsPath = Path.Combine(masterInstallerPath, "Utils");
 			var cppFilePath = Path.Combine(masterInstallerPath, "Code and Projects");
 			var bitmapFilePath = Path.Combine(cppFilePath, "Bitmaps");
@@ -23,12 +29,214 @@ namespace MasterInstallerConfigurator
 				GenerateConfigGeneralCpp(cppFilePath, model);
 				GenerateConfigDisksCpp(cppFilePath, model);
 				GenerateProductsCpp(cppFilePath, model);
-				/*
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigFunctions.xsl", CppFilePath + "\\ConfigFunctions.cpp");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigGlobals.xsl", CppFilePath + "\\AutoGlobals.h");
-	ProcessConfigFile(xmlDoc, CppFilePath + "\\ConfigResources.xsl", CppFilePath + "\\AutoResources.rc");
-				 */
+				GenerateConfigFunctionsCpp(cppFilePath, model);
+				GenerateGlobalFlagsHeader(cppFilePath, model);
+				GenerateResources(cppFilePath, model);
 			}
+			// Enhance: Everything following here could probably be replaced by an msbuild file, not taking that step yet
+			var compilationFolder = Path.Combine(Path.GetDirectoryName(model.FileLocation), "SetupExeComingSoon");
+			Directory.CreateDirectory(compilationFolder);
+			var settingsFile = GenerateCompilerSettingsFile(compilationFolder, cppFilePath);
+			var objSettingsFile = GenerateLinkerSettingsFile(compilationFolder, Path.GetDirectoryName(model.FileLocation));
+
+			view.LogProgressLine("Compiling cpp files");
+			CompileSetupExe(settingsFile, view);
+
+			view.LogProgressLine("Compiling rc files");
+			CompileResources(compilationFolder, bitmapFilePath, cppFilePath, view);
+
+			view.LogProgressLine("Linking the setup.exe");
+			LinkSetupExe(objSettingsFile, view);
+		}
+
+		private static void CompileResources(string compilationFolder, string bitmapFilePath, string cppFilePath, IConfigurationView view)
+		{
+			var compilerProcess = new Process
+			{
+				StartInfo =
+				{
+					FileName = Path.Combine(view.VSIncludePath, "..", "bin", "rc.exe"),
+					Arguments = string.Format("/I \"{0}\" /I \"{1}\" /I \"{2}\" /i\"{3}\" /fo\"{4}\" \"{5}\"", Settings.Default.VSIncludePath,
+					Path.Combine(Settings.Default.VSBinPath, "..", "atlmfc", "include"), Path.Combine(Settings.Default.VSBinPath, "..", "include"), 
+					 bitmapFilePath, Path.Combine(compilationFolder, "resources.res"), Path.Combine(cppFilePath, "resources.rc")),
+					//required to allow redirects
+					UseShellExecute = true,
+					// do not start process in new window
+					CreateNoWindow = false,
+					WorkingDirectory = compilationFolder
+				}
+			};
+			if (compilerProcess.Start())
+			{
+				compilerProcess.WaitForExit(2 * 60 * 1000);// wait for 2 minutes
+			}
+		}
+
+		private static void LinkSetupExe(string objSettingsFile, IConfigurationView view)
+		{
+			var compilerProcess = new Process
+			{
+				StartInfo =
+				{
+					FileName = Path.Combine(view.VSBinPath, "link.exe"),
+					Arguments = string.Format("@\"{0}\"", objSettingsFile),
+					//required to allow redirects
+					UseShellExecute = true,
+					// do not start process in new window
+					CreateNoWindow = false,
+					WorkingDirectory = Path.GetDirectoryName(objSettingsFile)
+				}
+			};
+			if (compilerProcess.Start())
+			{
+				compilerProcess.WaitForExit(2 * 60 * 1000);// wait for 2 minutes
+			}
+		}
+
+		private static void CompileSetupExe(string settingsFile, IConfigurationView view)
+		{
+			var compilerProcess = new Process
+			{
+				StartInfo =
+				{
+					FileName = Path.Combine(view.VSBinPath, "cl.exe"),
+					Arguments = string.Format("@\"{0}\" /nologo", settingsFile),
+					//required to allow redirects
+					UseShellExecute = true,
+					// do not start process in new window
+					CreateNoWindow = false,
+					WorkingDirectory = Path.GetDirectoryName(settingsFile),
+				}
+			};
+			if (compilerProcess.Start())
+			{
+				compilerProcess.WaitForExit(2 * 60 * 1000);// wait for 2 minutes
+			}
+		}
+
+		private static string GenerateLinkerSettingsFile(string compilationFolder, string outputFolder)
+		{
+			var compilerSettings = new StringBuilder();
+			compilerSettings.AppendFormat("/OUT:\"{0}\" /LIBPATH:\"{1}\" /LIBPATH:\"{2}\" /INCREMENTAL:NO /NOLOGO /LIBPATH:\"Msi.lib\" /MANIFEST /MANIFESTFILE:\"{3}\" ",
+				Path.Combine(outputFolder, "setup.exe"), Path.Combine(Settings.Default.VSBinPath, "..", "lib"), Path.Combine(Settings.Default.VSIncludePath, "..", "lib"),
+				Path.Combine(compilationFolder, "setup.exe.intermediate.manifest"));
+			compilerSettings.Append("/SUBSYSTEM:WINDOWS /SWAPRUN:CD /OPT:REF /OPT:ICF /LTCG /MACHINE:X86 ");
+			compilerSettings.AppendFormat("version.lib shlwapi.lib msi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib{0}", Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "Control.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "Dialogs.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "DiskManager.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "ErrorHandler.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "Globals.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "LogFile.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "main.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "PersistantProgress.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "ProductKeys.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "ProductManager.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "UsefulStuff.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "UniversalFixes.obj"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(compilationFolder, "resources.res"), Environment.NewLine);
+			var settingsFile = Path.Combine(compilationFolder, "Obj.rsp");
+			File.WriteAllText(settingsFile, compilerSettings.ToString());
+			return settingsFile;
+		}
+
+		private static string GenerateCompilerSettingsFile(string compilationFolder, string cppFilePath)
+		{
+			var compilerSettings = new StringBuilder();
+			compilerSettings.AppendFormat("/O1 /Ob1 /Os /Oy /GL /I \"{0}\" /I \"{1}\" {2}", Settings.Default.VSIncludePath, Path.Combine(Settings.Default.VSBinPath, "..", "Include"), Environment.NewLine);
+			compilerSettings.AppendFormat("/D \"WIN32\" /D \"NDEBUG\" /D \"_WINDOWS\" /D \"_UNICODE\" /D \"UNICODE\" /GF /EHsc /MT /GS /Gy /Fo\"{0}\\\\\" /Fd\"{1}\" /W3 /c /Zi {2}",
+				compilationFolder, Path.Combine(compilationFolder, "vc80.pdb"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "UsefulStuff.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "UniversalFixes.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "ProductManager.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "ProductKeys.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "PersistantProgress.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "main.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "LogFile.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "Globals.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "ErrorHandler.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "DiskManager.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "Dialogs.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "Control.cpp"), Environment.NewLine);
+			var settingsFile = Path.Combine(compilationFolder, "Cpp.rsp");
+			File.WriteAllText(settingsFile, compilerSettings.ToString());
+			return settingsFile;
+		}
+
+		private static void GenerateResources(string cppFilePath, ConfigurationModel model)
+		{
+			var resourcesContent = new StringBuilder();
+			resourcesContent.AppendLine(GeneratedCppHeaderString);
+			if (model.General.ListBackground != null)
+			{
+				resourcesContent.AppendLine("// Bitmap for product selection dialog background:");
+				resourcesContent.AppendLine(string.Format("BACKGROUND_BMP BITMAP \"{0}\"", model.General.ListBackground.ImagePath.Replace(@"\", @"\\").Replace("\"", "\\\"")));
+				resourcesContent.AppendLine();
+			}
+			foreach (var product in model.Products)
+			{
+				if (product.PostInstall != null && product.PostInstall.IncludeResourceFile)
+				{
+					resourcesContent.AppendLine(string.Format("#include \"{0}.rc\"", product.PostInstall.PostInstallFunction));
+				}
+			}
+			File.WriteAllText(Path.Combine(cppFilePath, "AutoResources.rc"), resourcesContent.ToString());
+		}
+
+		private static void GenerateGlobalFlagsHeader(string cppFilePath, ConfigurationModel model)
+		{
+			var globalFlags = new StringBuilder();
+			globalFlags.AppendLine("// External global flags:");
+			foreach (var product in model.Products)
+			{
+				// The xslt used the CriticalFile if a Flag variable was set to true, It was never true in any existing configurations
+				//if (!string.IsNullOrEmpty(product.CriticalFile))
+				//{
+				//	globalFlags.AppendLine(string.Format("extern bool {0};", product.CriticalFile));
+				//}
+				if (product.Install != null && !string.IsNullOrEmpty(product.Install.Flag))
+				{
+					globalFlags.AppendLine(string.Format("extern bool {0};", product.Install.Flag));
+				}
+			}
+			File.WriteAllText(Path.Combine(cppFilePath, "AutoGlobals.h"), GeneratedCppHeaderString + globalFlags);
+		}
+
+		private static void GenerateConfigFunctionsCpp(string cppFilePath, ConfigurationModel model)
+		{
+			var testPresence = new StringBuilder();
+			var preInstall = new StringBuilder();
+			var install = new StringBuilder();
+			var postInstall = new StringBuilder();
+			testPresence.AppendLine("// TestPresence functions:");
+			install.AppendLine("// Installation functions:");
+			preInstall.AppendLine("// Preinstallation functions:");
+			postInstall.AppendLine("// Postinstallation functions:");
+			foreach (var product in model.Products)
+			{
+				if (product.TestPresence != null) // The xslt used to test not(@Type='External') but Type attribute was not present in any Installer Definitions
+				{
+					GenerateIncludeCppLine(testPresence, product.TestPresence.TestFunction);
+				}
+				if (!string.IsNullOrEmpty(product.Preinstall)) // the xslt used to test not(@Type='External') and not(@ignoreError='true') but these are obsolete
+				{
+					GenerateIncludeCppLine(preInstall, product.Preinstall);
+				}
+				if (product.Install != null && product.Install.Type != null && product.Install.Type.ToLower() == "internal")
+				{
+					GenerateIncludeCppLine(install, product.Install.InstallFunction);
+				}
+				if (product.PostInstall != null) // The xslt used to test not(@Type='External') but Type attribute was not present in any Installer Definitions
+				{
+					GenerateIncludeCppLine(postInstall, product.PostInstall.PostInstallFunction);
+				}
+			}
+			File.WriteAllText(Path.Combine(cppFilePath, "ConfigFunctions.cpp"), GeneratedCppHeaderString + testPresence + preInstall + install + postInstall);
+		}
+
+		private static void GenerateIncludeCppLine(StringBuilder builder, string fileName)
+		{
+			builder.AppendLine(string.Format("#include \"{0}.cpp\"", fileName));
 		}
 
 		private static void GenerateConfigGeneralCpp(string cppFilePath, ConfigurationModel model)
@@ -94,7 +302,7 @@ namespace MasterInstallerConfigurator
 				GenerateProductBoolVariable(false, "IsContainer (Obsolete, always false)",
 					productConfigurations);
 				GenerateProductStringVariable(null, "Critical file condition flag (Obsolete)", productConfigurations);
-				GenerateProductStringVariable(product.CriticalFile, "Critical file (was critical file condition true)", productConfigurations);
+				GenerateProductPathVariable(product.CriticalFile, "Critical file (was critical file condition true)", productConfigurations);
 				GenerateProductStringVariable(null, "Critical file condition false (Obsolete)", productConfigurations);
 				GenerateProductIntVariable(product.CDNumber, "CD index (zero-based)", productConfigurations);
 				GenerateProductStringVariable(null, "MinOS (Obsolete)", productConfigurations);

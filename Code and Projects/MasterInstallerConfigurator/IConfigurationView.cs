@@ -20,9 +20,12 @@ namespace MasterInstallerConfigurator
 		bool WriteDownloadsXml { get; set; }
 		string OutputFolder { get; set; }
 		string SelfExtractingStyle { get; set; }
+		string VSIncludePath { get; set; }
+		string VSBinPath { get; set; }
 		void LogErrorLine(string errorMessage);
 		void LogProgressLine(string errorMessage);
 		IEnumerable<Tuple<string, string>> GetFlavors();
 		List<string> GetIncludedProducts(string flavorName);
+		void SetCurrentTab(int lastOpenedTab);
 	}
 }

@@ -3,9 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MasterInstallerConfigurator.Properties;
 
 namespace MasterInstallerConfigurator
 {
@@ -17,6 +19,7 @@ namespace MasterInstallerConfigurator
 
 		public static void Compile(ConfigurationModel model, string certificatePassword, string masterInstallerPath, IConfigurationView view)
 		{
+			view.LogProgressLine("Generating source files for setup.exe");
 			var _utilsPath = Path.Combine(masterInstallerPath, "Utils");
 			var cppFilePath = Path.Combine(masterInstallerPath, "Code and Projects");
 			var bitmapFilePath = Path.Combine(cppFilePath, "Bitmaps");
@@ -30,6 +33,67 @@ namespace MasterInstallerConfigurator
 				GenerateGlobalFlagsHeader(cppFilePath, model);
 				GenerateResources(cppFilePath, model);
 			}
+			// Enhance: Everything following here could probably be replaced by an msbuild file, not taking that step yet
+			var compilationFolder = Path.Combine(Path.GetDirectoryName(model.FileLocation), "SetupExeComingSoon");
+			Directory.CreateDirectory(compilationFolder);
+			var settingsFile = GenerateCompilerSettingsFile(compilationFolder, cppFilePath);
+
+			view.LogProgressLine("Compiling cpp files");
+			CompileSetupExe(settingsFile, view);
+			//view.LogProgressLine("Compiling rc files");
+			//CompileSetupExe(settingsFile, view);
+		}
+
+		private static void CompileSetupExe(string settingsFile, IConfigurationView view)
+		{
+			var compilerProcess = new Process
+			{
+				StartInfo =
+				{
+					FileName = Path.Combine(view.VSBinPath, "cl.exe"),
+					Arguments = string.Format("@\"{0}\" /nologo", settingsFile),
+					//required to allow redirects
+					UseShellExecute = true,
+					// do not start process in new window
+					CreateNoWindow = false,
+					WorkingDirectory = Path.GetDirectoryName(settingsFile),
+				}
+			};
+			if (compilerProcess.Start())
+			{
+				//while (compilerProcess.StandardOutput.Peek() > -1)
+				//{
+				//	view.LogProgressLine(compilerProcess.StandardOutput.ReadLine());
+				//}
+
+				//while (compilerProcess.StandardError.Peek() > -1)
+				//{
+				//	view.LogErrorLine(compilerProcess.StandardError.ReadLine());
+				//}
+				compilerProcess.WaitForExit(2 * 60 * 1000);// wait for 2 minutes
+			}
+		}
+
+		private static string GenerateCompilerSettingsFile(string compilationFolder, string cppFilePath)
+		{
+			var compilerSettings = new StringBuilder();
+			compilerSettings.AppendFormat("/O1 /Ob1 /Os /Oy /GL /I \"{0}\" /I \"{1}\" {2}", Settings.Default.VSIncludePath, Path.Combine(Settings.Default.VSBinPath, "..", "Include"), Environment.NewLine);
+			compilerSettings.AppendFormat("/D \"WIN32\" /D \"NDEBUG\" /D \"_WINDOWS\" /D \"_UNICODE\" /D \"UNICODE\" /GF /EHsc /MT /GS /Gy /Fo\"{0}\\\\\" /Fd\"{1}\" /W3 /c /Zi {2}",
+				compilationFolder, Path.Combine(compilationFolder, "vc80.pdb"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "UsefulStuff.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "UniversalFixes.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "ProductManager.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "ProductKeys.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "PersistantProgress.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "main.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "LogFile.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "Globals.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "ErrorHandler.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "DiskManager.cpp"), Environment.NewLine);
+			compilerSettings.AppendFormat("\"{0}\"{1}", Path.Combine(cppFilePath, "Control.cpp"), Environment.NewLine);
+			var settingsFile = Path.Combine(compilationFolder, "Cpp.rsp");
+			File.WriteAllText(settingsFile, compilerSettings.ToString());
+			return settingsFile;
 		}
 
 		private static void GenerateResources(string cppFilePath, ConfigurationModel model)
@@ -171,7 +235,7 @@ namespace MasterInstallerConfigurator
 				GenerateProductBoolVariable(false, "IsContainer (Obsolete, always false)",
 					productConfigurations);
 				GenerateProductStringVariable(null, "Critical file condition flag (Obsolete)", productConfigurations);
-				GenerateProductStringVariable(product.CriticalFile, "Critical file (was critical file condition true)", productConfigurations);
+				GenerateProductPathVariable(product.CriticalFile, "Critical file (was critical file condition true)", productConfigurations);
 				GenerateProductStringVariable(null, "Critical file condition false (Obsolete)", productConfigurations);
 				GenerateProductIntVariable(product.CDNumber, "CD index (zero-based)", productConfigurations);
 				GenerateProductStringVariable(null, "MinOS (Obsolete)", productConfigurations);
